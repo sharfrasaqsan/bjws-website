@@ -40,7 +40,7 @@ export function LanguageSwitcher({
       <div
         role="group"
         aria-label="Language selector"
-        className={cn("inline-flex items-center gap-2 text-xs", className)}
+        className={cn("inline-flex items-center gap-1 sm:gap-2 text-xs", className)}
       >
         <div className="flex items-center gap-1.5 text-emerald-200/80">
           <Globe className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
@@ -57,14 +57,15 @@ export function LanguageSwitcher({
                 onClick={() => handleLocaleChange(lang.code)}
                 aria-pressed={isActive}
                 className={cn(
-                  "px-2 py-0.5 rounded-xs transition-all font-medium text-[11px] sm:text-xs",
+                  "px-1.5 sm:px-2 py-0.5 rounded-xs transition-all font-medium text-[10px] sm:text-xs",
                   "focus-visible:ring-1 focus-visible:ring-amber-300 focus-visible:outline-none",
                   isActive
                     ? "bg-[#124d34] text-white font-semibold shadow-2xs"
                     : "text-emerald-100/75 hover:text-white hover:bg-white/10"
                 )}
               >
-                {lang.nativeName}
+                <span className="sm:hidden">{lang.code.toUpperCase()}</span>
+                <span className="hidden sm:inline">{lang.nativeName}</span>
               </button>
             );
           })}
@@ -79,7 +80,7 @@ export function LanguageSwitcher({
         role="group"
         aria-label="Language selector"
         className={cn(
-          "border-border bg-surface inline-flex items-center rounded-lg border p-1 shadow-2xs",
+          "border-border bg-surface grid grid-cols-3 gap-1 rounded-lg border p-1 shadow-2xs w-full",
           className
         )}
       >
@@ -93,7 +94,7 @@ export function LanguageSwitcher({
               onClick={() => handleLocaleChange(lang.code)}
               aria-pressed={isActive}
               className={cn(
-                "rounded-md px-2.5 py-1 text-xs font-medium transition-colors sm:text-sm",
+                "rounded-md px-1 py-1.5 text-center text-xs font-medium transition-colors sm:text-sm",
                 "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none",
                 isActive
                   ? "bg-primary text-primary-foreground font-semibold shadow-2xs"

@@ -189,25 +189,25 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
           className="pointer-events-none text-[#c99a45]"
         />
 
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex min-h-[42px] items-center justify-between gap-3 py-1.5 text-xs">
+        <div className="relative mx-auto max-w-7xl px-2.5 sm:px-6 lg:px-8">
+          <div className="flex min-h-[40px] sm:min-h-[42px] items-center justify-between gap-2 sm:gap-3 py-1 sm:py-1.5 text-xs">
             {/* Left: Pulsing Beacon & Institutional Category Badge */}
-            <div className="flex shrink-0 items-center gap-2 sm:gap-2.5">
-              <span className="relative flex h-2.5 w-2.5">
+            <div className="flex shrink-0 items-center gap-1.5 sm:gap-2.5">
+              <span className="relative flex h-2 w-2 sm:h-2.5 sm:w-2.5">
                 <span
                   className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 motion-reduce:hidden ${
                     isJanazaUrgent ? "bg-amber-400" : "bg-emerald-400"
                   }`}
                 />
                 <span
-                  className={`relative inline-flex h-2.5 w-2.5 rounded-full ${
+                  className={`relative inline-flex h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full ${
                     isJanazaUrgent ? "bg-[#c99a45]" : "bg-emerald-500"
                   }`}
                 />
               </span>
 
               <span
-                className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-0.5 font-serif text-[10px] font-bold tracking-wider uppercase shadow-2xs ${
+                className={`inline-flex items-center gap-1 sm:gap-1.5 rounded-md px-1.5 sm:px-2.5 py-0.5 font-serif text-[10px] font-bold tracking-wider uppercase shadow-2xs ${
                   isJanazaUrgent
                     ? "bg-[#c99a45] text-[#041a10] ring-1 ring-[#c99a45]/40"
                     : "bg-[#14553a] text-white ring-1 ring-[#c99a45]/30"
@@ -219,13 +219,27 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
                   <Megaphone className="h-3 w-3 shrink-0 text-[#c99a45]" aria-hidden="true" />
                 )}
                 <span>
-                  {isJanazaUrgent
-                    ? locale === "ta"
-                      ? "ஜனாஸா அறிவித்தல்"
-                      : locale === "si"
-                        ? "ජනාසා නිවේදනය"
-                        : "Janaza Notice"
-                    : t("janazaNotice")}
+                  {isJanazaUrgent ? (
+                    <>
+                      <span className="sm:hidden">
+                        {locale === "ta" ? "ஜனாஸா" : locale === "si" ? "ජනාසා" : "Janaza"}
+                      </span>
+                      <span className="hidden sm:inline">
+                        {locale === "ta"
+                          ? "ஜனாஸா அறிவித்தல்"
+                          : locale === "si"
+                            ? "ජනාසා නිවේදනය"
+                            : "Janaza Notice"}
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="sm:hidden">
+                        {locale === "ta" ? "அறிவித்தல்" : locale === "si" ? "නිවේදනය" : "Notice"}
+                      </span>
+                      <span className="hidden sm:inline">{t("janazaNotice")}</span>
+                    </>
+                  )}
                 </span>
               </span>
             </div>
@@ -244,7 +258,7 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
                   </span>
 
                   {formattedDate && (
-                    <span className="hidden text-[11px] font-normal text-[#a7c5b6] md:inline">
+                    <span className="hidden text-[11px] font-normal text-[#a7c5b6] md:inline shrink-0">
                       ({formattedDate})
                     </span>
                   )}
@@ -259,10 +273,10 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
             </div>
 
             {/* Right: Controls (Pagination, View Action, Close) */}
-            <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+            <div className="flex shrink-0 items-center gap-1 sm:gap-2">
               {/* Carousel Pagination Arrows (if > 1 notice) */}
               {totalNotices > 1 && (
-                <div className="flex items-center gap-1 border-r border-[#1a432f] pr-1.5 text-[10px] text-[#a7c5b6]">
+                <div className="flex items-center gap-0.5 sm:gap-1 border-r border-[#1a432f] pr-1 sm:pr-1.5 text-[10px] text-[#a7c5b6]">
                   <span className="font-mono text-[10px] font-bold text-[#c99a45]">
                     {currentIndex + 1}/{totalNotices}
                   </span>
@@ -291,9 +305,9 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
               <button
                 type="button"
                 onClick={() => setActiveModalNotice(currentNotice)}
-                className="inline-flex cursor-pointer items-center gap-1 rounded px-2 py-0.5 text-[11px] font-bold text-[#c99a45] hover:text-white hover:underline transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#c99a45]"
+                className="inline-flex cursor-pointer items-center gap-1 rounded px-1.5 sm:px-2 py-0.5 text-[11px] font-bold text-[#c99a45] hover:text-white hover:underline transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#c99a45]"
               >
-                <span>{t("viewNotice")}</span>
+                <span className="hidden sm:inline">{t("viewNotice")}</span>
                 <ArrowRight className="h-3 w-3" aria-hidden="true" />
               </button>
 

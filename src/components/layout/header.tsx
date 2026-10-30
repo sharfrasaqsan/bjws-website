@@ -46,33 +46,33 @@ export function Header({ notices = [] }: HeaderProps) {
   return (
     <>
       {/* 1. TOP UTILITY BAR (Email, Phone, Language Switcher, Social Link) */}
-      <div className="relative z-50 bg-[#062115] text-emerald-100/90 border-b border-emerald-950/80 text-xs">
+      <div className="relative z-50 bg-[#062115] text-emerald-100/90 border-b border-emerald-950/80 text-xs overflow-x-clip">
         {/* Subtle Islamic lattice texture */}
         <IslamicPattern opacity={0.03} className="text-emerald-200 pointer-events-none" />
 
         <Container size="xl">
-          <div className="flex min-h-[38px] items-center justify-between gap-3 py-1">
+          <div className="flex min-h-[38px] items-center justify-between gap-2 sm:gap-3 py-1">
             {/* Left: Contact Info & Reg No */}
-            <div className="flex items-center gap-4 text-xs font-normal">
+            <div className="flex items-center gap-2.5 sm:gap-4 text-xs font-normal min-w-0">
               {/* Phone / Emergency Hotline */}
               <a
                 href="tel:+94753738349"
-                className="inline-flex items-center gap-1.5 text-emerald-100 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-300 rounded"
+                className="inline-flex items-center gap-1.5 text-emerald-100 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-300 rounded shrink-0"
               >
                 <Phone className="h-3.5 w-3.5 text-[#c99a45] shrink-0" aria-hidden="true" />
-                <span className="font-medium">
+                <span className="font-medium text-[11px] sm:text-xs">
                   <span className="hidden sm:inline text-emerald-200/70">{t("common.hotline")}: </span>
                   075 373 8349
                 </span>
               </a>
 
               {/* Divider */}
-              <span className="hidden sm:inline text-emerald-800/80" aria-hidden="true">|</span>
+              <span className="hidden md:inline text-emerald-800/80" aria-hidden="true">|</span>
 
               {/* Email */}
               <a
                 href="mailto:mbjwsociety@gmail.com"
-                className="hidden sm:inline-flex items-center gap-1.5 text-emerald-100 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-300 rounded"
+                className="hidden md:inline-flex items-center gap-1.5 text-emerald-100 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-300 rounded"
               >
                 <Mail className="h-3.5 w-3.5 text-emerald-300/80 shrink-0" aria-hidden="true" />
                 <span>mbjwsociety@gmail.com</span>
@@ -89,7 +89,7 @@ export function Header({ notices = [] }: HeaderProps) {
             </div>
 
             {/* Right: Language Switcher, Theme Switcher & Social Link */}
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
               {/* Theme Toggle (Dark / Light) */}
               <ThemeToggle variant="topbar" />
 
@@ -99,16 +99,16 @@ export function Header({ notices = [] }: HeaderProps) {
               {/* Language Switcher */}
               <LanguageSwitcher variant="topbar" />
 
-              {/* Divider */}
-              <span className="text-emerald-800/80" aria-hidden="true">|</span>
+              {/* Divider (Desktop only) */}
+              <span className="hidden sm:inline text-emerald-800/80" aria-hidden="true">|</span>
 
-              {/* Facebook Link */}
+              {/* Facebook Link (Desktop only) */}
               <a
                 href="https://www.facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="BJWS Facebook Community"
-                className="inline-flex items-center justify-center h-6 w-6 rounded text-emerald-200/80 hover:text-white hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-300"
+                className="hidden sm:inline-flex items-center justify-center h-6 w-6 rounded text-emerald-200/80 hover:text-white hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-300"
               >
                 <svg
                   className="h-3.5 w-3.5 fill-current"
@@ -126,14 +126,14 @@ export function Header({ notices = [] }: HeaderProps) {
       {/* 2. STICKY HEADER (Logo, Nav, Solid "Donate" Button) */}
       <header className="sticky top-0 z-40 w-full border-b border-[#e6e4dc] bg-surface/98 backdrop-blur-md transition-colors shadow-2xs">
         <Container size="xl">
-          <div className="flex h-20 items-center justify-between gap-4">
+          <div className="flex min-h-[4.25rem] sm:h-20 items-center justify-between gap-2 sm:gap-4 py-2 sm:py-0">
             {/* Brand Logo & Title */}
             <Link
               href="/"
-              className="group focus-visible:ring-ring flex items-center gap-3 rounded-md focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              className="group focus-visible:ring-ring flex items-center gap-2.5 sm:gap-3 rounded-md focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none min-w-0"
             >
               {/* Real BJWS Logo WebP */}
-              <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg border border-emerald-900/15 bg-white p-1 shadow-2xs transition-transform group-hover:scale-105">
+              <div className="relative h-10 w-10 sm:h-12 sm:w-12 shrink-0 overflow-hidden rounded-lg border border-emerald-900/15 bg-white p-1 shadow-2xs transition-transform group-hover:scale-105">
                 <Image
                   src="/image/bjws logo.webp"
                   alt="Buhary Janaza Welfare Society Logo"
@@ -145,11 +145,11 @@ export function Header({ notices = [] }: HeaderProps) {
               </div>
 
               {/* Brand Typography */}
-              <div className="flex flex-col">
-                <span className="font-display text-base font-bold tracking-tight text-[#0b2e1e] leading-snug sm:text-lg lg:text-xl">
+              <div className="flex flex-col min-w-0">
+                <span className="font-display text-sm font-bold tracking-tight text-[#0b2e1e] leading-snug sm:text-lg lg:text-xl truncate sm:overflow-visible">
                   {t("common.societyName")}
                 </span>
-                <div className="flex items-center gap-2 text-[11px] font-medium text-text-muted">
+                <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-[11px] font-medium text-text-muted truncate">
                   <span>{t("common.location")}</span>
                   <span className="text-[#c99a45] font-bold">•</span>
                   <span>{t("common.foundedYear")}</span>

@@ -222,7 +222,7 @@ export default async function ContactPage({
                   {contacts.map((c, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center justify-between gap-3 py-3.5"
+                      className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 sm:gap-3 py-3.5"
                     >
                       <div className="flex items-center gap-3">
                         <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#0b2e1e] font-display text-[10px] font-bold text-[#d4af37]">
@@ -239,7 +239,7 @@ export default async function ContactPage({
                       </div>
                       <a
                         href={`tel:${c.tel}`}
-                        className="inline-flex items-center gap-1.5 rounded-lg bg-[#e8f3ee] px-3 py-1.5 text-xs font-bold text-[#0b2e1e] transition-colors hover:bg-[#0b2e1e] hover:text-white"
+                        className="inline-flex w-full sm:w-auto items-center justify-center gap-1.5 rounded-lg bg-[#e8f3ee] px-3 py-1.5 text-xs font-bold text-[#0b2e1e] transition-colors hover:bg-[#0b2e1e] hover:text-white"
                       >
                         <PhoneCall className="h-3 w-3" />
                         {c.phone}

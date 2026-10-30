@@ -163,17 +163,17 @@ export default async function HomePage({
             </div>
 
             {/* Trust line */}
-            <div className="mt-12 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-emerald-800/40 pt-6 text-xs font-medium text-emerald-200/70">
+            <div className="mt-8 sm:mt-12 flex flex-wrap items-center gap-x-4 sm:gap-x-6 gap-y-2 border-t border-emerald-800/40 pt-5 sm:pt-6 text-xs font-medium text-emerald-200/70">
               <span className="inline-flex items-center gap-1.5">
                 <ShieldCheck className="h-3.5 w-3.5 text-[#c99a45]" />
                 {tCommon("regNo")}
               </span>
-              <span>•</span>
+              <span className="hidden sm:inline text-emerald-700/60">•</span>
               <span className="inline-flex items-center gap-1.5">
                 <MapPin className="h-3.5 w-3.5 text-emerald-300" />
                 {tCommon("location")}
               </span>
-              <span>•</span>
+              <span className="hidden sm:inline text-emerald-700/60">•</span>
               <span className="inline-flex items-center gap-1.5">
                 <Clock className="h-3.5 w-3.5 text-emerald-300" />
                 {tCommon("foundedYear")}
@@ -184,7 +184,7 @@ export default async function HomePage({
       </section>
 
       {/* 4. Overlapping Info Bar with 3 items (Report a Janaza, Become a Member, Ration Support) */}
-      <section className="relative z-30 -mt-20 sm:-mt-24 lg:-mt-28 mb-16">
+      <section className="relative z-30 -mt-10 sm:-mt-20 lg:-mt-28 mb-12 sm:mb-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6">
             {/* Item 1: Report a Janaza (24/7 Hotline) */}
@@ -292,7 +292,7 @@ export default async function HomePage({
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             {/* Visual Column with 2 Overlapping Real Photos + Badge */}
-            <div className="lg:col-span-6 relative">
+            <div className="lg:col-span-6 relative pb-6 sm:pb-0">
               {/* Primary Large Photo */}
               <div className="relative aspect-[4/3] sm:aspect-[14/11] rounded-2xl overflow-hidden shadow-xl border-4 border-white bg-surface">
                 <Image
@@ -305,7 +305,7 @@ export default async function HomePage({
               </div>
 
               {/* Secondary Overlapping Photo */}
-              <div className="absolute -bottom-6 -right-4 sm:-bottom-8 sm:-right-6 w-3/5 sm:w-1/2 aspect-[4/3] rounded-xl overflow-hidden shadow-2xl border-4 border-white bg-surface">
+              <div className="absolute -bottom-2 right-2 sm:-bottom-8 sm:-right-6 w-1/2 sm:w-1/2 aspect-[4/3] rounded-xl overflow-hidden shadow-2xl border-4 border-white bg-surface">
                 <Image
                   src="/images/gallery/water-concrete-01.webp"
                   alt="BJWS Cemetery Water Supply Infrastructure"
@@ -316,12 +316,12 @@ export default async function HomePage({
               </div>
 
               {/* Floating "Serving since 2023" Badge */}
-              <div className="absolute -top-4 -left-3 sm:-top-6 sm:-left-6 bg-[#0b2e1e] text-white border-2 border-[#c99a45] rounded-xl p-3 sm:p-4 shadow-xl flex items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#c99a45] text-[#072015]">
-                  <Award className="h-5 w-5" />
+              <div className="absolute top-3 left-3 sm:-top-6 sm:-left-6 bg-[#0b2e1e] text-white border-2 border-[#c99a45] rounded-xl p-2.5 sm:p-4 shadow-xl flex items-center gap-2.5 sm:gap-3">
+                <div className="flex h-8 w-8 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-lg bg-[#c99a45] text-[#072015]">
+                  <Award className="h-4 w-4 sm:h-5 sm:w-5" />
                 </div>
                 <div>
-                  <span className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#d4a359]">
+                  <span className="block text-[9px] sm:text-[11px] font-bold uppercase tracking-wider text-[#d4a359]">
                     {tCommon("foundedYear")}
                   </span>
                   <span className="block font-display text-xs sm:text-sm font-bold text-white">
@@ -769,13 +769,17 @@ export default async function HomePage({
               <Link
                 key={i}
                 href="/gallery"
-                className="group relative aspect-square sm:aspect-[4/5] rounded-xl overflow-hidden shadow-2xs border border-[#e6e4dc] bg-muted block"
+                className={`group relative rounded-xl overflow-hidden shadow-2xs border border-[#e6e4dc] bg-muted block ${
+                  i === 4
+                    ? "col-span-2 sm:col-span-1 lg:col-span-1 aspect-[2/1] sm:aspect-[4/5]"
+                    : "aspect-square sm:aspect-[4/5]"
+                }`}
               >
                 <Image
                   src={photo.src}
                   alt={photo.caption}
                   fill
-                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 20vw"
                   className="object-cover object-center transition-transform duration-500 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3 text-white">

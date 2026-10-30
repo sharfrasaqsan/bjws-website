@@ -197,11 +197,11 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar: Copyright & Reg No */}
-        <div className="mt-12 border-t border-emerald-900/60 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-emerald-200/70">
+        <div className="mt-12 border-t border-emerald-900/60 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-emerald-200/70 text-center sm:text-left">
           <p>© 2026 {t("footer.rights")}</p>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5 sm:gap-4">
             <span className="font-mono text-[#d4a359]">{t("common.regNo")}</span>
-            <span>•</span>
+            <span className="hidden sm:inline">•</span>
             <span>Mullipothanai, Sri Lanka</span>
           </div>
         </div>
