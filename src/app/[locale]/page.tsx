@@ -15,7 +15,6 @@ import {
   MapPin,
   Clock,
   Award,
-  CheckCircle2,
   Calendar,
   Camera,
   Eye,
@@ -351,39 +350,6 @@ export default async function HomePage({
               <p className="text-sm sm:text-base text-text-muted leading-relaxed">
                 {t("aboutSectionBody")}
               </p>
-
-              {/* 3 Value Pillars */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-                <div className="rounded-lg bg-surface border border-[#e6e4dc] p-3 shadow-2xs">
-                  <div className="flex items-center gap-2 text-xs font-bold text-[#0b2e1e]">
-                    <CheckCircle2 className="h-4 w-4 text-[#124d34] shrink-0" />
-                    <span>24/7 Janaza Care</span>
-                  </div>
-                  <p className="mt-1 text-[11px] text-text-muted leading-tight">
-                    Immediate Sunnah rites and logistics assistance.
-                  </p>
-                </div>
-
-                <div className="rounded-lg bg-surface border border-[#e6e4dc] p-3 shadow-2xs">
-                  <div className="flex items-center gap-2 text-xs font-bold text-[#0b2e1e]">
-                    <CheckCircle2 className="h-4 w-4 text-[#124d34] shrink-0" />
-                    <span>1.5 Acre Upkeep</span>
-                  </div>
-                  <p className="mt-1 text-[11px] text-text-muted leading-tight">
-                    Clean pathways, water points, and perimeter fencing.
-                  </p>
-                </div>
-
-                <div className="rounded-lg bg-surface border border-[#e6e4dc] p-3 shadow-2xs">
-                  <div className="flex items-center gap-2 text-xs font-bold text-[#0b2e1e]">
-                    <CheckCircle2 className="h-4 w-4 text-[#124d34] shrink-0" />
-                    <span>Reg #01 NGO</span>
-                  </div>
-                  <p className="mt-1 text-[11px] text-text-muted leading-tight">
-                    Audited accounts and transparent shura oversight.
-                  </p>
-                </div>
-              </div>
 
               <div className="pt-2">
                 <Link href="/about">

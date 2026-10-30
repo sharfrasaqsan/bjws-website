@@ -9,6 +9,7 @@ import {
 } from "@/content/gallery";
 import { buildPageMetadata } from "@/lib/seo";
 import { JsonLd, getBreadcrumbJsonLd } from "@/components/seo/json-ld";
+import { ShieldCheck } from "lucide-react";
 
 export async function generateMetadata({
   params,
@@ -84,34 +85,24 @@ export default async function GalleryPage({
         ]}
       />
 
-      <div className="py-12 sm:py-16">
+      <div className="bg-[#fbfaf6] py-16 sm:py-24">
         <Container size="xl">
-
           {/* Privacy & Consent Notice Banner */}
-          <div className="bg-surface border-border mb-10 flex items-start gap-3.5 rounded-xl border p-5 shadow-2xs sm:p-6">
+          <div className="mb-12 flex items-start gap-4 rounded-3xl border border-[#0b2e1e]/15 bg-[#f4efe6] p-6 shadow-xs sm:p-8">
             <div
-              className="text-primary mt-0.5 shrink-0 rounded-lg bg-[#e8f3ee] p-2"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#0b2e1e] text-[#d4af37] shadow-xs"
               aria-hidden="true"
             >
-              <svg
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                />
-              </svg>
+              <ShieldCheck className="h-6 w-6" strokeWidth={2} />
             </div>
             <div className="space-y-1">
-              <h2 className="text-text text-sm font-bold">
+              <span className="font-sans text-xs font-bold uppercase tracking-wider text-[#b8952b]">
+                Community Protection & Dignity Policy
+              </span>
+              <h2 className="font-display text-lg font-bold text-[#0b2e1e] sm:text-xl">
                 {t("privacyNoticeTitle")}
               </h2>
-              <p className="text-text-muted text-xs leading-relaxed sm:text-sm">
+              <p className="text-sm leading-relaxed text-[#4b5563]">
                 {t("privacyNoticeDesc")}
               </p>
             </div>

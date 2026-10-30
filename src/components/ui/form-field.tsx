@@ -28,18 +28,27 @@ export function FormField({
 
   const describedBy = [hintId, errorId].filter(Boolean).join(" ") || undefined;
 
-  // Enhance child input/textarea with accessibility attributes
+  const isCustomComponent =
+    React.isValidElement(children) && typeof children.type !== "string";
+
+  // Enhance child input/textarea with accessibility attributes without injecting invalid props into native DOM nodes
   const enhancedChildren = React.isValidElement<{
     id?: string;
     error?: boolean;
     "aria-describedby"?: string;
+    "aria-invalid"?: boolean | "true";
   }>(children)
     ? React.cloneElement(children, {
         id: children.props.id || id,
-        error:
-          children.props.error !== undefined
-            ? children.props.error
-            : Boolean(error),
+        ...(isCustomComponent && {
+          error:
+            children.props.error !== undefined
+              ? children.props.error
+              : Boolean(error),
+        }),
+        ...(!isCustomComponent && error && {
+          "aria-invalid": "true",
+        }),
         "aria-describedby":
           [children.props["aria-describedby"], describedBy]
             .filter(Boolean)

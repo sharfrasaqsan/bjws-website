@@ -1,17 +1,26 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { Container } from "@/components/ui/container";
-import { Card, CardTitle, CardDescription } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/layout/page-header";
+import { IslamicPattern } from "@/components/ui/islamic-pattern";
 import { buildPageMetadata } from "@/lib/seo";
 import {
   JsonLd,
   getBreadcrumbJsonLd,
   getServicesJsonLd,
 } from "@/components/seo/json-ld";
+import {
+  Clock,
+  HeartHandshake,
+  BookOpen,
+  Sparkles,
+  PhoneCall,
+  ArrowRight,
+  Check,
+  ShieldCheck,
+} from "lucide-react";
 
 export async function generateMetadata({
   params,
@@ -41,26 +50,18 @@ export default async function ServicesPage({
   const t = await getTranslations("servicesPage");
   const tCommon = await getTranslations("common");
 
-  const programs = [
+  const services = [
     {
-      title: t("service1Title"),
+      id: "funeral-services",
       badge: t("service1Badge"),
+      title: t("service1Title"),
       desc: t("service1Desc"),
-      icon: (
-        <svg
-          className="text-primary h-7 w-7"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={1.75}
-            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-        </svg>
-      ),
+      icon: Clock,
+      image: "/images/gallery/ghusl-02.webp",
+      imageAlt: "BJWS Ritual Ghusl and Kafan Services",
+      imageBadge: "24/7 Response Available",
+      reverse: false,
+      isEmergency: true,
       items: [
         t("service1Item1"),
         t("service1Item2"),
@@ -70,24 +71,16 @@ export default async function ServicesPage({
       ],
     },
     {
-      title: t("service2Title"),
+      id: "cemetery-maintenance",
       badge: t("service2Badge"),
+      title: t("service2Title"),
       desc: t("service2Desc"),
-      icon: (
-        <svg
-          className="text-primary h-7 w-7"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={1.75}
-            d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
-          />
-        </svg>
-      ),
+      icon: Sparkles,
+      image: "/images/gallery/shramadana-02.webp",
+      imageAlt: "Mahallah Cemetery Shramadhana Clean-Up",
+      imageBadge: "1.5 Acres Under Care",
+      reverse: true,
+      isEmergency: false,
       items: [
         t("service2Item1"),
         t("service2Item2"),
@@ -97,24 +90,16 @@ export default async function ServicesPage({
       ],
     },
     {
-      title: t("service3Title"),
+      id: "ration-distribution",
       badge: t("service3Badge"),
+      title: t("service3Title"),
       desc: t("service3Desc"),
-      icon: (
-        <svg
-          className="text-primary h-7 w-7"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={1.75}
-            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-          />
-        </svg>
-      ),
+      icon: HeartHandshake,
+      image: "/images/gallery/iftar-01.webp",
+      imageAlt: "BJWS Monthly Dry Ration and Food Welfare",
+      imageBadge: "750+ Families Supported",
+      reverse: false,
+      isEmergency: false,
       items: [
         t("service3Item1"),
         t("service3Item2"),
@@ -123,24 +108,16 @@ export default async function ServicesPage({
       ],
     },
     {
-      title: t("service4Title"),
+      id: "education-workshops",
       badge: t("service4Badge"),
+      title: t("service4Title"),
       desc: t("service4Desc"),
-      icon: (
-        <svg
-          className="text-primary h-7 w-7"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={1.75}
-            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-          />
-        </svg>
-      ),
+      icon: BookOpen,
+      image: "/images/gallery/livelihood-01.webp",
+      imageAlt: "Youth and Volunteer Funeral Training Seminar",
+      imageBadge: "Sunnah Education",
+      reverse: true,
+      isEmergency: false,
       items: [
         t("service4Item1"),
         t("service4Item2"),
@@ -162,6 +139,8 @@ export default async function ServicesPage({
         )}
       />
       <JsonLd data={getServicesJsonLd(locale)} />
+
+      {/* Hero Page Header */}
       <PageHeader
         title={t("pageTitle")}
         subtitle={t("subtitle")}
@@ -174,85 +153,166 @@ export default async function ServicesPage({
         ]}
       />
 
-      <div className="py-12 sm:py-16">
+      {/* Main Services Alternating Showcase */}
+      <section className="bg-[#fbfaf6] py-16 sm:py-24">
         <Container size="xl">
-          {/* Programs Grid */}
-          <div className="space-y-10">
-            {programs.map((program, idx) => (
-              <Card key={idx} className="p-6 sm:p-8">
-                <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-start">
-                  {/* Left column: Header & Description */}
-                  <div className="max-w-xl">
-                    <div className="mb-3 flex items-center gap-3">
-                      <div
-                        className="rounded-xl bg-[#e8f3ee] p-2.5"
-                        aria-hidden="true"
-                      >
-                        {program.icon}
-                      </div>
-                      <Badge variant="primary">{program.badge}</Badge>
-                    </div>
+          <div className="space-y-16 sm:space-y-24">
+            {services.map((svc, index) => {
+              const Icon = svc.icon;
+              return (
+                <article
+                  key={svc.id}
+                  id={svc.id}
+                  className={`scroll-mt-24 rounded-3xl border border-[#0b2e1e]/10 bg-white p-6 sm:p-10 lg:p-12 shadow-sm transition-all duration-300 hover:shadow-md ${
+                    svc.isEmergency ? "ring-2 ring-[#0b2e1e]/15" : ""
+                  }`}
+                >
+                  <div
+                    className={`grid grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-12 ${
+                      svc.reverse ? "lg:[&>*:first-child]:order-2" : ""
+                    }`}
+                  >
+                    {/* Visual Media Column */}
+                    <div className="lg:col-span-5">
+                      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-[#0b2e1e]/10 bg-[#0b2e1e]/5 shadow-sm">
+                        <Image
+                          src={svc.image}
+                          alt={svc.imageAlt}
+                          fill
+                          sizes="(max-width: 1024px) 100vw, 40vw"
+                          className="object-cover transition-transform duration-500 hover:scale-105"
+                        />
+                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
 
-                    <CardTitle as="h2" className="mb-3 text-2xl sm:text-3xl">
-                      {program.title}
-                    </CardTitle>
-
-                    <CardDescription className="text-text-muted text-base leading-relaxed">
-                      {program.desc}
-                    </CardDescription>
-
-                    <div className="mt-6 hidden lg:block">
-                      <Link href="/contact">
-                        <Button variant="outline" size="sm">
-                          Inquire About This Service →
-                        </Button>
-                      </Link>
-                    </div>
-                  </div>
-
-                  {/* Right column: Actionable Checklist */}
-                  <div className="bg-surface-muted border-border rounded-xl border p-6 lg:w-1/2">
-                    <h3 className="text-text-muted mb-4 text-xs font-semibold tracking-wider uppercase">
-                      Key Activities & Operational Scope
-                    </h3>
-                    <ul className="text-text space-y-3 text-sm">
-                      {program.items.map((item, itemIdx) => (
-                        <li key={itemIdx} className="flex items-start gap-3">
-                          <span className="text-primary mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#e8f3ee] text-xs font-bold">
-                            ✓
+                        {/* Floating Status / Key Stat Badge */}
+                        <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
+                          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#0b2e1e]/90 px-3.5 py-1.5 text-xs font-semibold text-[#fbfaf6] shadow-md backdrop-blur-xs">
+                            <span className="h-2 w-2 rounded-full bg-[#d4af37]" />
+                            {svc.imageBadge}
                           </span>
-                          <span className="leading-relaxed">{item}</span>
-                        </li>
-                      ))}
-                    </ul>
+                          <span className="font-mono text-xs font-bold text-white/80">
+                            0{index + 1}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Content & Operational Checklist Column */}
+                    <div className="lg:col-span-7">
+                      {/* Eyebrow & Category */}
+                      <div className="mb-3 flex flex-wrap items-center gap-2.5">
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#e8f3ee] px-3 py-1 text-xs font-semibold text-[#0b2e1e]">
+                          <Icon className="h-3.5 w-3.5 text-[#0b2e1e]" strokeWidth={2} />
+                          {svc.badge}
+                        </span>
+                        {svc.isEmergency && (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2.5 py-0.5 text-[11px] font-semibold text-red-700">
+                            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-red-600" />
+                            24/7 Active
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Title */}
+                      <h2 className="font-display text-2xl font-bold tracking-tight text-[#0b2e1e] sm:text-3xl">
+                        {svc.title}
+                      </h2>
+
+                      {/* Description */}
+                      <p className="mt-3 text-base leading-relaxed text-[#4b5563]">
+                        {svc.desc}
+                      </p>
+
+                      {/* Operational Checklist Box */}
+                      <div className="mt-6 rounded-2xl border border-[#0b2e1e]/10 bg-[#fbfaf6] p-5 sm:p-6">
+                        <div className="mb-3.5 flex items-center gap-2">
+                          <ShieldCheck className="h-4 w-4 text-[#0b2e1e]" strokeWidth={2} />
+                          <h3 className="font-sans text-xs font-bold uppercase tracking-wider text-[#0b2e1e]">
+                            {t("operationalScope")}
+                          </h3>
+                        </div>
+                        <ul className="space-y-2.5">
+                          {svc.items.map((item, itemIdx) => (
+                            <li
+                              key={itemIdx}
+                              className="flex items-start gap-3 text-sm text-[#2d3748]"
+                            >
+                              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#0b2e1e] text-[10px] font-bold text-[#d4af37]">
+                                <Check className="h-3 w-3" strokeWidth={2.5} />
+                              </span>
+                              <span className="leading-snug">{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Action Links */}
+                      <div className="mt-6 flex flex-wrap items-center gap-3">
+                        {svc.isEmergency ? (
+                          <a
+                            href="tel:0753738349"
+                            className="inline-flex items-center gap-2 rounded-xl bg-[#0b2e1e] px-5 py-2.5 text-sm font-semibold text-white shadow-xs transition-colors hover:bg-[#12422c]"
+                          >
+                            <PhoneCall className="h-4 w-4 text-[#d4af37]" />
+                            {t("callEmergency")}: 075 373 8349
+                          </a>
+                        ) : null}
+                        <Link
+                          href="/contact"
+                          className="inline-flex items-center gap-1.5 rounded-xl border border-[#0b2e1e]/20 bg-white px-4 py-2.5 text-sm font-semibold text-[#0b2e1e] shadow-2xs transition-colors hover:bg-[#e8f3ee]"
+                        >
+                          {t("inquireService")}
+                          <ArrowRight className="h-4 w-4" />
+                        </Link>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </Card>
-            ))}
+                </article>
+              );
+            })}
           </div>
 
-          {/* Emergency Callout Card */}
-          <div className="bg-surface border-primary/20 mt-16 flex flex-col items-center justify-between gap-6 rounded-2xl border p-8 shadow-xs sm:flex-row sm:p-10">
-            <div>
-              <Badge variant="primary" size="sm" className="mb-2">
-                {tCommon("emergencyBadge")}
-              </Badge>
-              <h2 className="text-text text-xl font-bold sm:text-2xl">
-                Immediate Funeral Coordination Needed?
-              </h2>
-              <p className="text-text-muted mt-1 text-sm">
-                Our funeral management team is on call round the clock to
-                support families upon bereavement.
-              </p>
+          {/* Emergency Callout Card Banner */}
+          <div className="relative mt-20 overflow-hidden rounded-3xl bg-[#0b2e1e] p-8 text-white shadow-xl sm:p-12 lg:p-14">
+            <IslamicPattern
+              className="pointer-events-none absolute inset-0 text-white"
+              opacity={0.04}
+              id="services-emergency-pattern"
+            />
+            <div className="relative z-10 flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-center">
+              <div className="max-w-2xl">
+                <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-[#d4af37]/40 bg-[#d4af37]/15 px-3 py-1 text-xs font-semibold text-[#d4af37]">
+                  <span className="h-2 w-2 animate-pulse rounded-full bg-[#d4af37]" />
+                  {tCommon("emergencyBadge")}
+                </div>
+                <h2 className="font-display text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-4xl">
+                  {t("emergencyTitle")}
+                </h2>
+                <p className="mt-3 text-sm leading-relaxed text-[#fbfaf6]/85 sm:text-base">
+                  {t("emergencyDesc")}
+                </p>
+              </div>
+
+              <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+                <a
+                  href="tel:0753738349"
+                  className="inline-flex items-center justify-center gap-2.5 rounded-xl bg-[#d4af37] px-6 py-3.5 text-base font-bold text-[#0b2e1e] shadow-md transition-all hover:bg-[#b8952b]"
+                >
+                  <PhoneCall className="h-5 w-5" />
+                  075 373 8349
+                </a>
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/25 bg-white/10 px-6 py-3.5 text-base font-semibold text-white backdrop-blur-xs transition-colors hover:bg-white/20"
+                >
+                  {t("contactCommittee")}
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
             </div>
-            <Link href="/contact" className="w-full shrink-0 sm:w-auto">
-              <Button variant="primary" size="lg" className="w-full sm:w-auto">
-                Contact Funeral Team
-              </Button>
-            </Link>
           </div>
         </Container>
-      </div>
+      </section>
     </>
   );
 }

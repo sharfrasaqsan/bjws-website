@@ -27,15 +27,19 @@ export function Header({ notices = [] }: HeaderProps) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
-  const navLinks = [
+  const desktopNavLinks = [
     { href: "/", label: t("nav.home") },
     { href: "/about", label: t("nav.about") },
     { href: "/services", label: t("nav.services") },
     { href: "/achievements", label: t("nav.achievements") },
     { href: "/gallery", label: t("nav.gallery") },
     { href: "/membership", label: t("nav.membership") },
-    { href: "/reports", label: t("nav.reports") },
     { href: "/contact", label: t("nav.contact") },
+  ];
+
+  const mobileNavLinks = [
+    ...desktopNavLinks,
+    { href: "/reports", label: t("nav.reports") },
   ];
 
   return (
@@ -148,10 +152,10 @@ export function Header({ notices = [] }: HeaderProps) {
 
             {/* Desktop Navigation */}
             <nav
-              className="hidden items-center gap-0.5 xl:gap-1 lg:flex"
+              className="hidden items-center gap-0.5 xl:gap-1.5 lg:flex"
               aria-label="Main Navigation"
             >
-              {navLinks.map((link) => {
+              {desktopNavLinks.map((link) => {
                 const isActive =
                   link.href === "/"
                     ? pathname === "/"
@@ -163,10 +167,10 @@ export function Header({ notices = [] }: HeaderProps) {
                     href={link.href}
                     aria-current={isActive ? "page" : undefined}
                     className={cn(
-                      "relative rounded-md px-2.5 py-1.5 text-sm font-medium transition-colors",
+                      "relative rounded-md px-2 xl:px-2.5 py-1.5 text-xs xl:text-sm font-medium whitespace-nowrap transition-colors",
                       "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none",
                       isActive
-                        ? "text-[#0b2e1e] font-semibold after:absolute after:bottom-0 after:left-2.5 after:right-2.5 after:h-0.5 after:bg-[#124d34] after:rounded-full"
+                        ? "text-[#0b2e1e] font-semibold after:absolute after:bottom-0 after:left-2 after:right-2 after:h-0.5 after:bg-[#124d34] after:rounded-full"
                         : "text-[#374151] hover:text-[#124d34] hover:bg-[#f4f2ea]/60"
                     )}
                   >
@@ -216,7 +220,7 @@ export function Header({ notices = [] }: HeaderProps) {
       <MobileMenu
         isOpen={mobileMenuOpen}
         onClose={() => setMobileMenuOpen(false)}
-        navLinks={navLinks}
+        navLinks={mobileNavLinks}
       />
     </>
   );

@@ -128,6 +128,47 @@ export async function createNoticeAction(
   }
 
   revalidatePath("/admin/notices");
+  revalidatePath("/admin");
+  revalidatePath("/[locale]", "layout");
+  revalidatePath("/[locale]/reports", "page");
+  return { success: true };
+}
+
+export async function updateNoticeAction(
+  id: string,
+  _prevState: { error?: string; success?: boolean } | null,
+  formData: FormData
+) {
+  const session = await getAdminSession();
+  if (!session) return { error: "Unauthorized" };
+
+  const title = (formData.get("title") as string)?.trim();
+  const body = (formData.get("body") as string)?.trim();
+  const locale = (formData.get("locale") as string) || "ta";
+  const is_published = formData.get("is_published") === "on";
+
+  if (!title || !body) {
+    return { error: "Both title and body are required." };
+  }
+
+  if (isSupabaseConfigured()) {
+    const supabase = await createClient();
+    const { error } = await supabase
+      .from("notices")
+      .update({
+        title,
+        body,
+        locale,
+        is_published,
+      })
+      .eq("id", id);
+
+    if (error) return { error: error.message };
+  }
+
+  revalidatePath("/admin/notices");
+  revalidatePath("/admin");
+  revalidatePath("/[locale]", "layout");
   revalidatePath("/[locale]/reports", "page");
   return { success: true };
 }
@@ -150,6 +191,8 @@ export async function toggleNoticePublishAction(
   }
 
   revalidatePath("/admin/notices");
+  revalidatePath("/admin");
+  revalidatePath("/[locale]", "layout");
   revalidatePath("/[locale]/reports", "page");
   return { success: true };
 }
@@ -166,6 +209,8 @@ export async function deleteNoticeAction(id: string) {
   }
 
   revalidatePath("/admin/notices");
+  revalidatePath("/admin");
+  revalidatePath("/[locale]", "layout");
   revalidatePath("/[locale]/reports", "page");
   return { success: true };
 }

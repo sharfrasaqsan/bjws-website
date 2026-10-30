@@ -180,7 +180,13 @@
     "service4Item1": "Conducting practical Islamic funeral education sessions on Ghusl and Kafan",
     "service4Item2": "Training volunteers on providing emotional support to grieving families",
     "service4Item3": "Instructing in health, safety, and hygiene protocols for funeral attendants",
-    "service4Item4": "Volunteer appreciation sessions to foster brotherhood and dedication"
+    "service4Item4": "Volunteer appreciation sessions to foster brotherhood and dedication",
+    "inquireService": "Inquire About This Service",
+    "operationalScope": "Key Activities & Operational Scope",
+    "emergencyTitle": "Immediate Funeral Coordination Needed?",
+    "emergencyDesc": "Our funeral management team is on call round the clock to support families upon bereavement. Call our emergency hotline directly for immediate assistance.",
+    "callEmergency": "Call Emergency Hotline",
+    "contactCommittee": "Contact Committee"
   },
   "achievementsPage": {
     "pageTitle": "Achievements & Future Goals",
@@ -389,5 +395,35 @@
     "description": "We apologize for the inconvenience. For urgent Janaza arrangements, please reach out to our emergency phone numbers directly.",
     "retry": "Try Again",
     "backHome": "Return Home"
+  },
+  "donatePage": {
+    "pageTitle": "Support Our Welfare & Funeral Mission",
+    "breadcrumbs": "Donate",
+    "eyebrow": "Sadaqah & Contributions",
+    "subtitle": "Your charitable donations directly support ritual funeral rites for needy families, dry ration packages for widows and orphans, and dignified cemetery maintenance.",
+    "bankDetailsTitle": "Direct Bank Transfer Information",
+    "bankDetailsSubtitle": "Contributions can be deposited or transferred directly into the official Society bank account:",
+    "accountNameLabel": "Account Name",
+    "accountName": "Buhary Janaza Welfare Society",
+    "bankNameLabel": "Bank Name",
+    "bankName": "Bank of Ceylon / Commercial Bank",
+    "accountNumberLabel": "Account Identifier",
+    "accountNumber": "Contact Treasurer (075 651 0050) for Current Dedicated Account",
+    "branchLabel": "Branch / Region",
+    "branch": "Thampalakamam / Mullipothanai",
+    "confirmationTitle": "Donation Confirmation & Official Receipts",
+    "confirmationDesc": "After completing your deposit or transfer, please WhatsApp or message the transaction receipt to the Society Treasurer for verified ledger entry and an official receipt.",
+    "treasurerContact": "Treasurer: M.S. Faisarkhan (075 651 0050)",
+    "sendReceiptWhatsapp": "Send Deposit Slip via WhatsApp",
+    "causesTitle": "How Your Donations Are Utilized",
+    "cause1Title": "1. Janaza Emergency Burial Aid",
+    "cause1Desc": "Providing Kafan cloth, washing essentials, and covering burial supplies for financially struggling bereaved families.",
+    "cause2Title": "2. Monthly Dry Ration Welfare",
+    "cause2Desc": "Delivering vital food packs (rice, dhal, sugar, flour, oil) to widows, elderly individuals, and impoverished households.",
+    "cause3Title": "3. Cemetery Upkeep & Water Facilities",
+    "cause3Desc": "Maintaining 1.5 acres of sacred resting grounds, safe pathways, solar water pumps, and visitor shade structures.",
+    "membershipAltTitle": "Looking for Ongoing Mahallah Membership?",
+    "membershipAltDesc": "If you are a resident family of the Buhary Mosque Mahallah, consider enrolling in the mutual community welfare plan.",
+    "membershipAltButton": "Explore Membership Plans"
   }
 }

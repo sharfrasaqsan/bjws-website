@@ -18,6 +18,12 @@ export default async function middleware(request: NextRequest) {
 
     let isAuthenticated = false;
 
+    // 1. Instant check for demo session cookie
+    const demoCookie = request.cookies.get("bjws_admin_demo_session");
+    if (demoCookie?.value === "active") {
+      isAuthenticated = true;
+    }
+
     const supabaseUrl =
       process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
     const supabaseAnonKey =
@@ -33,42 +39,43 @@ export default async function middleware(request: NextRequest) {
       !supabaseAnonKey.endsWith("...")
     );
 
-    if (isConfigured) {
-      try {
-        const supabase = createServerClient(supabaseUrl!, supabaseAnonKey!, {
-          cookies: {
-            getAll() {
-              return request.cookies.getAll();
-            },
-            setAll(cookiesToSet) {
-              cookiesToSet.forEach(({ name, value }) =>
-                request.cookies.set(name, value)
-              );
-              response = NextResponse.next({
-                request,
-              });
-              cookiesToSet.forEach(({ name, value, options }) =>
-                response.cookies.set(name, value, options)
-              );
-            },
-          },
-        });
+    // 2. Check Supabase auth only if not already authenticated and Supabase session cookies exist
+    if (!isAuthenticated && isConfigured) {
+      const hasSupabaseCookie = request.cookies
+        .getAll()
+        .some((c) => c.name.startsWith("sb-"));
 
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
+      if (hasSupabaseCookie) {
+        try {
+          const supabase = createServerClient(supabaseUrl!, supabaseAnonKey!, {
+            cookies: {
+              getAll() {
+                return request.cookies.getAll();
+              },
+              setAll(cookiesToSet) {
+                cookiesToSet.forEach(({ name, value }) =>
+                  request.cookies.set(name, value)
+                );
+                response = NextResponse.next({
+                  request,
+                });
+                cookiesToSet.forEach(({ name, value, options }) =>
+                  response.cookies.set(name, value, options)
+                );
+              },
+            },
+          });
 
-        if (user) {
-          isAuthenticated = true;
+          const {
+            data: { user },
+          } = await supabase.auth.getUser();
+
+          if (user) {
+            isAuthenticated = true;
+          }
+        } catch (err) {
+          console.error("Middleware Supabase auth error:", err);
         }
-      } catch (err) {
-        console.error("Middleware Supabase auth error:", err);
-      }
-    } else {
-      // Check local demo cookie for development preview
-      const demoCookie = request.cookies.get("bjws_admin_demo_session");
-      if (demoCookie?.value === "active") {
-        isAuthenticated = true;
       }
     }
 

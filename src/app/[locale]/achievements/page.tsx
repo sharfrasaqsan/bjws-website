@@ -1,12 +1,22 @@
 import type { Metadata } from "next";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Container } from "@/components/ui/container";
-import { Section } from "@/components/ui/section";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/layout/page-header";
+import { IslamicPattern } from "@/components/ui/islamic-pattern";
 import { buildPageMetadata } from "@/lib/seo";
 import { JsonLd, getBreadcrumbJsonLd } from "@/components/seo/json-ld";
+import {
+  Clock,
+  Users,
+  Sparkles,
+  HeartHandshake,
+  BookOpen,
+  Check,
+  Calendar,
+  Target,
+  ArrowRight,
+} from "lucide-react";
+import { Link } from "@/i18n/routing";
 
 export async function generateMetadata({
   params,
@@ -39,111 +49,46 @@ export default async function AchievementsPage({
   const achievementCategories = [
     {
       title: t("categoryFuneralTitle"),
-      badge: "28 Janazahs Completed",
+      metric: "28",
+      metricLabel: "Janazas Completed",
       items: [
         t("categoryFuneralItem1"),
         t("categoryFuneralItem2"),
         t("categoryFuneralItem3"),
       ],
-      icon: (
-        <svg
-          className="text-primary h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-        </svg>
-      ),
+      icon: Clock,
     },
     {
       title: t("categoryMembershipTitle"),
-      badge: "300+ Members",
+      metric: "300+",
+      metricLabel: "Active Members",
       items: [t("categoryMembershipItem1"), t("categoryMembershipItem2")],
-      icon: (
-        <svg
-          className="text-primary h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"
-          />
-        </svg>
-      ),
+      icon: Users,
     },
     {
       title: t("categoryCemeteryTitle"),
-      badge: "1.5 Acres Renovated",
+      metric: "1.5",
+      metricLabel: "Acres Renovated",
       items: [
         t("categoryCemeteryItem1"),
         t("categoryCemeteryItem2"),
         t("categoryCemeteryItem3"),
       ],
-      icon: (
-        <svg
-          className="text-primary h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"
-          />
-        </svg>
-      ),
+      icon: Sparkles,
     },
     {
       title: t("categoryWelfareTitle"),
-      badge: "750+ Dry Rations",
+      metric: "750+",
+      metricLabel: "Rations Distributed",
       items: [t("categoryWelfareItem1"), t("categoryWelfareItem2")],
-      icon: (
-        <svg
-          className="text-primary h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-          />
-        </svg>
-      ),
+      icon: HeartHandshake,
     },
     {
       title: t("categoryEducationTitle"),
-      badge: "4 Workshops & 2 Events",
+      metric: "4",
+      metricLabel: "Workshops & Events",
       items: [t("categoryEducationItem1"), t("categoryEducationItem2")],
-      icon: (
-        <svg
-          className="text-primary h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-          />
-        </svg>
-      ),
+      icon: BookOpen,
     },
   ];
 
@@ -184,119 +129,165 @@ export default async function AchievementsPage({
         ]}
       />
 
-      <div className="py-12 sm:py-16">
+      <div className="bg-[#fbfaf6] py-16 sm:py-24">
         <Container size="xl">
-          {/* Achievements by Category */}
+          {/* Section 1: Verified Achievements by Category (Deduplicated Integrated Dashboard) */}
           <div className="mb-20">
-            <div className="mb-8">
-              <span className="text-primary text-xs font-semibold tracking-wider uppercase">
-                Section 8
+            <div className="mb-10 text-center sm:text-left">
+              <span className="font-sans text-xs font-bold uppercase tracking-wider text-[#b8952b]">
+                Accountability & Verified Milestones
               </span>
-              <h2 className="text-text mt-1 text-2xl font-bold tracking-tight sm:text-3xl">
-                Verified Achievements (2023 – 2025)
+              <h2 className="mt-1 font-display text-2xl font-bold tracking-tight text-[#0b2e1e] sm:text-3xl lg:text-4xl">
+                Verified Community Achievements (2023 – 2025)
               </h2>
+              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#4b5563] sm:text-base">
+                Tangible milestones achieved through community shura consultation, volunteer labor, and transparent donor contributions.
+              </p>
             </div>
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {achievementCategories.map((cat, idx) => (
-                <Card key={idx} className="flex flex-col justify-between">
-                  <CardHeader>
-                    <div className="mb-2 flex items-center justify-between gap-3">
-                      <div
-                        className="rounded-lg bg-[#e8f3ee] p-2"
-                        aria-hidden="true"
-                      >
-                        {cat.icon}
-                      </div>
-                      <Badge variant="primary" size="sm">
-                        {cat.badge}
-                      </Badge>
-                    </div>
-                    <CardTitle as="h3" className="text-xl">
-                      {cat.title}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="text-text-muted space-y-2.5 text-sm">
-                      {cat.items.map((item, itemIdx) => (
-                        <li key={itemIdx} className="flex items-start gap-2">
-                          <span className="text-primary font-bold select-none">
-                            •
+              {achievementCategories.map((cat, idx) => {
+                const Icon = cat.icon;
+                return (
+                  <article
+                    key={idx}
+                    className="flex flex-col justify-between rounded-3xl border border-[#0b2e1e]/10 bg-white p-6 sm:p-8 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-[#0b2e1e]/25 hover:shadow-md"
+                  >
+                    <div>
+                      <div className="mb-4 flex items-center justify-between gap-3 border-b border-[#0b2e1e]/10 pb-4">
+                        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#e8f3ee] text-[#0b2e1e]">
+                          <Icon className="h-5 w-5" strokeWidth={2} />
+                        </div>
+                        <div className="text-right">
+                          <span className="block font-display text-2xl font-bold text-[#0b2e1e]">
+                            {cat.metric}
                           </span>
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-              ))}
+                          <span className="block text-[11px] font-semibold uppercase tracking-wider text-[#b8952b]">
+                            {cat.metricLabel}
+                          </span>
+                        </div>
+                      </div>
+                      <h3 className="font-display text-xl font-bold text-[#0b2e1e]">
+                        {cat.title}
+                      </h3>
+                      <ul className="mt-4 space-y-2.5 text-sm text-[#4b5563]">
+                        {cat.items.map((item, itemIdx) => (
+                          <li key={itemIdx} className="flex items-start gap-2.5">
+                            <span className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#0b2e1e] text-[9px] font-bold text-[#d4af37]">
+                              ✓
+                            </span>
+                            <span className="leading-snug">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           </div>
 
-          {/* Future Goals Roadmap / Timeline */}
-          <Section
-            variant="surface"
-            title={t("goalsTitle")}
-            eyebrow={t("goalsEyebrow")}
-            description={t("goalsDesc")}
-            className="rounded-2xl"
-          >
-            <div className="border-primary/30 relative my-6 space-y-12 border-l-2 pl-6 sm:pl-8">
-              {/* Timeline Item 1: Short Term */}
-              <div className="relative">
-                {/* Dot */}
-                <div className="border-primary bg-surface absolute top-1.5 -left-[31px] h-4 w-4 rounded-full border-2 sm:-left-[39px]" />
+          {/* Section 2: Future Goals Roadmap / Strategic Timeline */}
+          <div className="space-y-12">
+            <div className="text-center sm:text-left">
+              <span className="font-sans text-xs font-bold uppercase tracking-wider text-[#b8952b]">
+                {t("goalsEyebrow")}
+              </span>
+              <h2 className="mt-1 font-display text-2xl font-bold tracking-tight text-[#0b2e1e] sm:text-3xl lg:text-4xl">
+                {t("goalsTitle")}
+              </h2>
+              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#4b5563] sm:text-base">
+                {t("goalsDesc")}
+              </p>
+            </div>
 
-                <div className="bg-surface border-border rounded-xl border p-6 shadow-2xs">
-                  <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                    <h3 className="text-text text-xl font-bold">
-                      {t("shortTermTitle")}
-                    </h3>
-                    <Badge variant="primary">Year 1 Milestones</Badge>
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+              {/* Short Term Goals Card */}
+              <div className="rounded-3xl border border-[#0b2e1e]/10 bg-white p-8 sm:p-10 shadow-sm">
+                <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-[#0b2e1e]/10 pb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e8f3ee] text-[#0b2e1e]">
+                      <Calendar className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <h3 className="font-display text-xl font-bold text-[#0b2e1e]">
+                        {t("shortTermTitle")}
+                      </h3>
+                      <div className="text-xs text-[#6b7280]">Next 12 Months Priority</div>
+                    </div>
                   </div>
-
-                  <ul className="text-text grid grid-cols-1 gap-3 text-sm md:grid-cols-2">
-                    {shortTermGoals.map((goal, idx) => (
-                      <li
-                        key={idx}
-                        className="bg-surface-muted flex items-start gap-2.5 rounded-lg p-3"
-                      >
-                        <span className="text-primary font-bold">✓</span>
-                        <span>{goal}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  <span className="rounded-full bg-[#e8f3ee] px-3 py-1 text-xs font-semibold text-[#0b2e1e]">
+                    Phase 1
+                  </span>
                 </div>
+
+                <ul className="space-y-3.5">
+                  {shortTermGoals.map((goal, idx) => (
+                    <li
+                      key={idx}
+                      className="flex items-start gap-3 rounded-2xl border border-[#0b2e1e]/10 bg-[#fbfaf6] p-4 text-sm font-medium text-[#2d3748]"
+                    >
+                      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#0b2e1e] text-[10px] font-bold text-[#d4af37]">
+                        <Check className="h-3 w-3" strokeWidth={2.5} />
+                      </span>
+                      <span className="leading-relaxed">{goal}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
 
-              {/* Timeline Item 2: Long Term */}
-              <div className="relative">
-                {/* Dot */}
-                <div className="border-accent bg-surface absolute top-1.5 -left-[31px] h-4 w-4 rounded-full border-2 sm:-left-[39px]" />
-
-                <div className="bg-surface border-border rounded-xl border p-6 shadow-2xs">
-                  <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                    <h3 className="text-text text-xl font-bold">
-                      {t("longTermTitle")}
-                    </h3>
-                    <Badge variant="accent">Vision Horizon (3–5 Years)</Badge>
+              {/* Long Term Goals Card */}
+              <div className="relative overflow-hidden rounded-3xl bg-[#0b2e1e] p-8 text-white shadow-xl sm:p-10">
+                <IslamicPattern
+                  className="pointer-events-none absolute inset-0 text-white"
+                  opacity={0.04}
+                  id="achievements-roadmap-pattern"
+                />
+                <div className="relative z-10">
+                  <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-t-0 border-b border-white/15 pb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#d4af37]/20 text-[#d4af37]">
+                        <Target className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <h3 className="font-display text-xl font-bold text-white">
+                          {t("longTermTitle")}
+                        </h3>
+                        <div className="text-xs text-[#fbfaf6]/70">Vision Horizon (Next 3–5 Years)</div>
+                      </div>
+                    </div>
+                    <span className="rounded-full bg-[#d4af37] px-3 py-1 text-xs font-bold text-[#0b2e1e]">
+                      Phase 2
+                    </span>
                   </div>
 
-                  <ul className="text-text grid grid-cols-1 gap-3 text-sm md:grid-cols-2">
+                  <ul className="space-y-3.5">
                     {longTermGoals.map((goal, idx) => (
                       <li
                         key={idx}
-                        className="bg-surface-muted flex items-start gap-2.5 rounded-lg p-3"
+                        className="flex items-start gap-3 rounded-2xl border border-white/15 bg-white/10 p-4 text-sm font-medium text-[#fbfaf6] backdrop-blur-xs"
                       >
-                        <span className="text-accent font-bold">★</span>
-                        <span>{goal}</span>
+                        <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#d4af37] text-[10px] font-bold text-[#0b2e1e]">
+                          ★
+                        </span>
+                        <span className="leading-relaxed">{goal}</span>
                       </li>
                     ))}
                   </ul>
+
+                  <div className="mt-8 border-t border-white/15 pt-6">
+                    <Link
+                      href="/donate"
+                      className="inline-flex items-center gap-2 text-sm font-semibold text-[#d4af37] hover:underline"
+                    >
+                      Support These Long-Term Projects
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
-          </Section>
+          </div>
         </Container>
       </div>
     </>
