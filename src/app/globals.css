@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   :root {
     /* Brand Foundation: Deep Evergreen & Black on Warm Ivory */
@@ -44,6 +46,86 @@
     --ring: #124d34;
   }
 
+  .dark {
+    /* Dark Mode Foundation: Deep Islamic Midnight Green & Charcoal */
+    --background: #06170f;
+    --foreground: #eef4f0;
+
+    /* Surfaces */
+    --surface: #0c2117;
+    --surface-hover: #112d20;
+    --surface-muted: #153526;
+
+    /* Primary: Luminous Islamic Forest Green */
+    --primary: #1e7a53;
+    --primary-dark: #14553a;
+    --primary-hover: #269466;
+    --primary-foreground: #ffffff;
+
+    /* Accent & Gold */
+    --accent: #228b5e;
+    --accent-hover: #2ba873;
+    --accent-foreground: #ffffff;
+    --gold: #e0b85c;
+    --gold-light: #2c2512;
+
+    /* Neutral & Muted */
+    --muted: #10291d;
+    --muted-foreground: #9ab3a5;
+
+    /* Borders */
+    --border: #1a3e2e;
+    --border-hover: #265942;
+
+    /* Typography */
+    --text: #eef4f0;
+    --text-muted: #9ab3a5;
+
+    /* Feedback */
+    --destructive: #ef4444;
+    --destructive-foreground: #ffffff;
+
+    /* Focus Rings */
+    --ring: #1e7a53;
+  }
+
+  /* Seamless Dark Mode Bridges for Hardcoded Theme Classes */
+  .dark .bg-white {
+    background-color: var(--surface) !important;
+  }
+  .dark .bg-\[\#fbfaf6\] {
+    background-color: var(--background) !important;
+  }
+  .dark .bg-\[\#f4f7f5\] {
+    background-color: var(--background) !important;
+  }
+  .dark .text-\[\#1c2420\],
+  .dark .text-\[\#0b2e1e\],
+  .dark .text-\[\#111827\] {
+    color: var(--text) !important;
+  }
+  .dark .text-\[\#4b5563\],
+  .dark .text-\[\#6b7280\],
+  .dark .text-\[\#374151\] {
+    color: var(--text-muted) !important;
+  }
+  .dark .border-\[\#e6e4dc\],
+  .dark .border-\[\#cbd5e1\],
+  .dark .border-\[\#f3f1ea\] {
+    border-color: var(--border) !important;
+  }
+  .dark .divide-\[\#f3f1ea\] > * + * {
+    border-color: var(--border) !important;
+  }
+  .dark .bg-\[\#f5eedf\] {
+    background-color: rgba(224, 184, 92, 0.15) !important;
+    color: #e0b85c !important;
+  }
+  .dark .bg-\[\#e8f3ee\] {
+    background-color: rgba(30, 122, 83, 0.22) !important;
+    color: #8be0b6 !important;
+  }
+
   body {
     background-color: var(--background);
     color: var(--foreground);
@@ -59,6 +141,7 @@
     letter-spacing: -0.01em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 
   /* Accessible Generous Line Heights for Tamil and Sinhala scripts */

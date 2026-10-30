@@ -4,6 +4,8 @@ import { Inter, Playfair_Display } from "next/font/google";
 import { getAdminSession, logoutAdminAction } from "@/lib/admin-auth";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { AdminNav } from "@/components/admin/admin-nav";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { ThemeScript } from "@/components/theme-script";
 import { ExternalLink, LogOut, ShieldCheck } from "lucide-react";
 import "../globals.css";
 
@@ -77,6 +79,9 @@ export default async function AdminLayout({
       suppressHydrationWarning
       className={`${inter.variable} ${playfair.variable} h-full antialiased`}
     >
+      <head>
+        <ThemeScript />
+      </head>
       <body
         suppressHydrationWarning
         className="flex min-h-full flex-col bg-[#fbfaf6] font-sans text-[#1c2420] antialiased selection:bg-[#124d34]/15 selection:text-[#0b2e1e]"
@@ -114,6 +119,9 @@ export default async function AdminLayout({
 
                 {/* Right Side Identity & Controls */}
                 <div className="flex items-center gap-2 sm:gap-3">
+                  {/* Theme Switcher */}
+                  <ThemeToggle variant="admin" />
+
                   {/* Live Public Site Button */}
                   <Link
                     href="/"

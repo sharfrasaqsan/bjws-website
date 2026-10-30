@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/routing";
 import { LanguageSwitcher } from "./language-switcher";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { cn } from "@/lib/utils";
 import { X, Heart, Phone, Mail, MapPin } from "lucide-react";
 
@@ -180,6 +181,14 @@ export function MobileMenu({ isOpen, onClose, navLinks }: MobileMenuProps) {
               <Mail className="h-3.5 w-3.5 text-text-muted" />
               <span>mbjwsociety@gmail.com</span>
             </a>
+          </div>
+
+          {/* Appearance / Theme Toggle */}
+          <div>
+            <div className="text-text-muted mb-2 text-xs font-semibold tracking-wider uppercase">
+              Theme / Appearance
+            </div>
+            <ThemeToggle variant="menu" />
           </div>
 
           {/* Language selection */}

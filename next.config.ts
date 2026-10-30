@@ -54,6 +54,9 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  images: {
+    qualities: [75, 85],
+  },
   turbopack: {
     rules: {
       "*.css": {

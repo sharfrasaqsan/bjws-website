@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/routing";
 import { Container } from "@/components/ui/container";
 import { LanguageSwitcher } from "./language-switcher";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { MobileMenu } from "./mobile-menu";
 import { JanazaTicker, type NoticeItem } from "./janaza-ticker";
 import { IslamicPattern } from "@/components/ui/islamic-pattern";
@@ -87,8 +88,14 @@ export function Header({ notices = [] }: HeaderProps) {
               </div>
             </div>
 
-            {/* Right: Language Switcher & Social Link */}
-            <div className="flex items-center gap-3">
+            {/* Right: Language Switcher, Theme Switcher & Social Link */}
+            <div className="flex items-center gap-2 sm:gap-3">
+              {/* Theme Toggle (Dark / Light) */}
+              <ThemeToggle variant="topbar" />
+
+              {/* Divider */}
+              <span className="text-emerald-800/80" aria-hidden="true">|</span>
+
               {/* Language Switcher */}
               <LanguageSwitcher variant="topbar" />
 

@@ -19,6 +19,7 @@ import { createPublicClient } from "@/lib/supabase/server";
 import { SITE_URL } from "@/lib/seo";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { ThemeScript } from "@/components/theme-script";
 import "../globals.css";
 
 const inter = Inter({
@@ -173,8 +174,12 @@ export default async function LocaleLayout({
     <html
       lang={locale}
       dir="ltr"
+      suppressHydrationWarning
       className={`${inter.variable} ${playfair.variable} ${notoSansTamil.variable} ${notoSansSinhala.variable} ${scriptClass} h-full antialiased`}
     >
+      <head>
+        <ThemeScript />
+      </head>
       <body className="bg-background text-text selection:bg-primary/15 selection:text-primary flex min-h-full flex-col">
         <NextIntlClientProvider messages={messages}>
           {/* Skip-to-content accessibility link */}
