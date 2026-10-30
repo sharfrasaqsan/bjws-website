@@ -1,26 +1,151 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Brand Foundation: Deep Evergreen & Black on Warm Ivory */
+    --background: #fbfaf6;
+    --foreground: #1c2420;
+
+    /* Surfaces */
+    --surface: #ffffff;
+    --surface-hover: #f9fafb;
+    --surface-muted: #f4f2ea;
+
+    /* Primary: Deep Islamic Forest Green (#0b2e1e & #124d34 - Contrast 10+:1 with white) */
+    --primary: #124d34;
+    --primary-dark: #0b2e1e;
+    --primary-hover: #0a291b;
+    --primary-foreground: #ffffff;
+
+    /* Accent: Warm Sand / Gold (#c99a45) & Calm Emerald (#1b6e4b) */
+    --accent: #1b6e4b;
+    --accent-hover: #14553a;
+    --accent-foreground: #ffffff;
+    --gold: #c99a45;
+    --gold-light: #f5eedf;
+
+    /* Neutral & Muted */
+    --muted: #f3f1ea;
+    --muted-foreground: #475569;
+
+    /* Borders */
+    --border: #e6e4dc;
+    --border-hover: #cbd5e1;
+
+    /* Typography */
+    --text: #1c2420;
+    --text-muted: #4b5563;
+
+    /* Feedback / Destructive */
+    --destructive: #b91c1c;
+    --destructive-foreground: #ffffff;
+
+    /* Focus Rings */
+    --ring: #124d34;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family:
+      var(--font-inter),
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      Roboto,
+      sans-serif;
+    line-height: 1.7;
+    letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Accessible Generous Line Heights for Tamil and Sinhala scripts */
+  [lang="ta"],
+  .font-tamil {
+    font-family:
+      var(--font-noto-tamil), var(--font-inter), system-ui, sans-serif;
+    line-height: 1.85 !important;
+  }
+
+  [lang="si"],
+  .font-sinhala {
+    font-family:
+      var(--font-noto-sinhala), var(--font-inter), system-ui, sans-serif;
+    line-height: 1.85 !important;
+  }
+
+  /* Display Typography: Elegant Serif for Latin Display Headings, localized for Tamil/Sinhala */
+  .font-display {
+    font-family: var(--font-playfair), Georgia, "Times New Roman", serif;
+  }
+  [lang="ta"] .font-display,
+  .font-tamil .font-display {
+    font-family: var(--font-noto-tamil), var(--font-inter), system-ui, sans-serif;
+    letter-spacing: normal;
+  }
+  [lang="si"] .font-display,
+  .font-sinhala .font-display {
+    font-family: var(--font-noto-sinhala), var(--font-inter), system-ui, sans-serif;
+    letter-spacing: normal;
+  }
+
+  /* Motion reduction */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-muted: var(--surface-muted);
+
+  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-gold: var(--gold);
+  --color-gold-light: var(--gold-light);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-border: var(--border);
+  --color-border-hover: var(--border-hover);
+
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-ring: var(--ring);
+
+  --font-sans:
+    var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  --font-serif:
+    var(--font-playfair), Georgia, "Times New Roman", serif;
+  --font-display:
+    var(--font-playfair), Georgia, "Times New Roman", serif;
+  --font-tamil:
+    var(--font-noto-tamil), var(--font-inter), system-ui, sans-serif;
+  --font-sinhala:
+    var(--font-noto-sinhala), var(--font-inter), system-ui, sans-serif;
 }
