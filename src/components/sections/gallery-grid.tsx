@@ -15,6 +15,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { ScrollRevealGroup } from "@/components/ui/scroll-reveal";
 import { cn } from "@/lib/utils";
 
 // Dynamically load Lightbox so initial page load JS is minimal (Lighthouse 95+ target)
@@ -92,8 +93,8 @@ export function GalleryGrid({ images, translations }: GalleryGridProps) {
         })}
       </div>
 
-      {/* Image Grid */}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {/* Image Grid with Staggered Scroll Reveal */}
+      <ScrollRevealGroup staggerMs={50} className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {filteredImages.map((image, index) => {
           return (
             <Card
@@ -174,7 +175,7 @@ export function GalleryGrid({ images, translations }: GalleryGridProps) {
             </Card>
           );
         })}
-      </div>
+      </ScrollRevealGroup>
 
       {/* Dynamic Lightbox Modal */}
       {activeImageIndex !== null && (

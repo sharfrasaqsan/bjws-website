@@ -3,6 +3,7 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Container } from "@/components/ui/container";
 import { PageHeader } from "@/components/layout/page-header";
 import { MembershipForm } from "@/components/sections/membership-form";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { buildPageMetadata } from "@/lib/seo";
 import { JsonLd, getBreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { Check, ShieldCheck, HeartHandshake, Sparkles, Users } from "lucide-react";
@@ -101,7 +102,7 @@ export default async function MembershipPage({
         <Container size="xl">
           <div className="mb-16 grid grid-cols-1 gap-12 lg:grid-cols-12">
             {/* Left Column: Membership Structure & Benefit Cards */}
-            <div className="space-y-8 lg:col-span-5">
+            <ScrollReveal variant="fade-up" className="space-y-8 lg:col-span-5">
               {/* Plan Overview & Comparison Tiers */}
               <div className="rounded-3xl border border-[#0b2e1e]/10 bg-white p-6 sm:p-8 shadow-sm">
                 <span className="font-sans text-xs font-bold uppercase tracking-wider text-[#b8952b]">
@@ -212,10 +213,10 @@ export default async function MembershipPage({
                   <span>Serving resident families across Buhary Mosque Mahallah.</span>
                 </div>
               </div>
-            </div>
+            </ScrollReveal>
 
             {/* Right Column: Premium Registration Form Card */}
-            <div className="lg:col-span-7">
+            <ScrollReveal variant="fade-up" delay={2} className="lg:col-span-7">
               <div className="rounded-3xl border border-[#0b2e1e]/10 bg-white p-8 sm:p-10 lg:p-12 shadow-sm">
                 <div className="mb-8 border-b border-[#0b2e1e]/10 pb-6">
                   <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-[#e8f3ee] px-3 py-1 text-xs font-semibold text-[#0b2e1e]">
@@ -232,7 +233,7 @@ export default async function MembershipPage({
 
                 <MembershipForm translations={formTranslations} />
               </div>
-            </div>
+            </ScrollReveal>
           </div>
         </Container>
       </div>

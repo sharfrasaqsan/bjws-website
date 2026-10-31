@@ -102,7 +102,7 @@ Facilitated by Funeral Welfare Lead M.I. Mohamed Farook alongside respected loca
 3. **Kafan Tailoring & Shrouding:** Demonstrating standard cutting, wrapping, and knotting of shrouding sheets for both males and females according to authentic Sunnah.
 4. **Emotional Intelligence & Bereavement Etiquette:** How to comfort grieving relatives with tact, empathy, and Qur'anic supplications.
 
-"Passing down these essential communal responsibilities ensures our community remains self-reliant and rooted in pure Islamic character," stated Coordinator A. Aboohuraira.
+"Passing down these essential communal responsibilities ensures our community remains self-reliant and rooted in pure Islamic character," stated Coordinator A. Abuhuraira.
 
 Participants received official BJWS Volunteer Certificates and were formally integrated into our 24/7 on-call emergency response roster.`,
     category: "sunnah",

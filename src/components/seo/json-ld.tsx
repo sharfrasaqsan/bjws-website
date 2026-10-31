@@ -42,7 +42,7 @@ export function getOrganizationJsonLd() {
     taxID: "DS/TH/SS/VSSO/2023/01",
     email: "mbjwsociety@gmail.com",
     telephone: [
-      "+94776227323", // 24/7 Immediate Hotline (Organizer A. Aboohuraira)
+      "+94776227323", // 24/7 Immediate Hotline (Organizer A. Abuhuraira)
       "+94724409574", // President (A.M. Sahibullah)
       "+94772782829", // Secretary (M.S.M. Shajahan)
       "+94756510050", // Treasurer (M.N. Fahim)

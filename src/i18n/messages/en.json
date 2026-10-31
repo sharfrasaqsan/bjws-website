@@ -36,7 +36,8 @@
     "galleryDesc": "Cemetery drives & event photos",
     "membership": "Membership",
     "contact": "Contact",
-    "donate": "Donate"
+    "donate": "Donate",
+    "privacy": "Privacy Policy"
   },
   "footer": {
     "tagline": "Serving the Muslim community of the Buhary Jummah Mosque area with dignified funeral services, cemetery care, and monthly welfare aid.",
@@ -74,7 +75,7 @@
     "statFuneralsValue": "28",
     "statFuneralsLabel": "Funerals Arranged",
     "statFuneralsDesc": "Completed with full community coordination and Islamic rites",
-    "statMembersValue": "300+",
+    "statMembersValue": "50+",
     "statMembersLabel": "Active Members",
     "statMembersDesc": "Growing steadily from 25 founding members",
     "statRationsValue": "750+",
@@ -170,7 +171,7 @@
     "leadershipPresident": "A.M. Sahibullah (President)",
     "leadershipSecretary": "A.L.M. Siyam (Secretary)",
     "leadershipTreasurer": "M.S. Faisarkhan (Treasurer)",
-    "leadershipCoordinator": "A. Aboohuraira (Coordinator)",
+    "leadershipCoordinator": "A. Abuhuraira (Coordinator)",
     "membershipTitle": "Membership & Contribution Structure",
     "membershipDesc": "To promote affordability and inclusivity, the Society operates on a transparent dual payment system. Each member is issued an ID number and contributions are recorded in monthly ledgers:",
     "monthlyContribution": "Monthly Contribution: LKR 50",
@@ -251,7 +252,7 @@
     "categoryFuneralItem2": "Coordinated with local Imams and health authorities for timely burials.",
     "categoryFuneralItem3": "Assisted 7 financially struggling families with burial supplies and costs.",
     "categoryMembershipTitle": "2. Membership Growth",
-    "categoryMembershipItem1": "Expanded steadily from 25 founding members to over 300 active registered members.",
+    "categoryMembershipItem1": "Expanded steadily from 25 founding members to over 50 active registered members.",
     "categoryMembershipItem2": "Introduced transparent digital record-keeping for membership contributions.",
     "categoryCemeteryTitle": "3. Cemetery Upkeep",
     "categoryCemeteryItem1": "Cleared and renovated 1.5 acres of community cemetery land through shramadhana.",
@@ -293,7 +294,7 @@
     "phoneLeader1": "President (A.M. Sahibullah): 072 440 9574",
     "phoneLeader2": "Secretary (A.L.M. Siyam): 077 278 2829",
     "phoneLeader3": "Treasurer (M.S. Faisarkhan): 075 651 0050",
-    "phoneLeader4": "Organizer & Immediate Contact (A. Aboohuraira): 077 622 7323",
+    "phoneLeader4": "Organizer & Immediate Contact (A. Abuhuraira): 077 622 7323",
     "phoneLeader5": "English Inquiries & Liaison (M.N.M. Nashraff): 077 227 1248",
     "mapTitle": "Location & Map",
     "mapPlaceholderHeading": "Buhary Jummah Mosque, Mullipothanai",
@@ -423,7 +424,7 @@
     "noticesBadge": "Official Notice",
     "emergencyReportTitle": "Need to Report an Immediate Janaza?",
     "emergencyReportSubtitle": "For immediate 24/7 funeral assistance, Ghusl washing, shroud (Kafan), ambulance transport, and cemetery coordination, contact our Organizer & Field Coordinator directly:",
-    "organizerLabel": "Organizer & Field Operations: A. Aboohuraira (24/7 Hotline)",
+    "organizerLabel": "Organizer & Field Operations: A. Abuhuraira (24/7 Hotline)",
     "callOrganizer": "Call 077 622 7323"
   },
   "privacyPage": {

@@ -267,7 +267,7 @@ We thank every member, donor, volunteer, and leader who has contributed to our j
 | 1      | **President**   | A.M.Sahibullah | 420/7,Mullipothanai              | 075 373 8349 |
 | 2      | **Secretary**   | A.L.M.Siyam    | 85,Eacha<br>Nagar,Mullipothanai  | 077 278 2829 |
 | 3      | **Treasurer**   | M.S.Faisarkhan | 93D,Eacha<br>Nagar,Mullipothanai | 075 651 0050 |
-| 4      | **Coordinator** | A.Aboohuraira  | 353/7,Mullipothanai              | 077 622 7323 |
+| 4      | **Coordinator** | A.Abuhuraira  | 353/7,Mullipothanai              | 077 622 7323 |
 
 Email : mbjwsociety@gmail.com Email : mbjwsociety@gmail.com
 

@@ -3,6 +3,7 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Container } from "@/components/ui/container";
 import { PageHeader } from "@/components/layout/page-header";
 import { IslamicPattern } from "@/components/ui/islamic-pattern";
+import { ScrollReveal, ScrollRevealGroup } from "@/components/ui/scroll-reveal";
 import { buildPageMetadata } from "@/lib/seo";
 import { JsonLd, getBreadcrumbJsonLd } from "@/components/seo/json-ld";
 import {
@@ -60,7 +61,7 @@ export default async function AchievementsPage({
     },
     {
       title: t("categoryMembershipTitle"),
-      metric: "300+",
+      metric: "50+",
       metricLabel: "Active Members",
       items: [t("categoryMembershipItem1"), t("categoryMembershipItem2")],
       icon: Users,
@@ -133,7 +134,7 @@ export default async function AchievementsPage({
         <Container size="xl">
           {/* Section 1: Verified Achievements by Category (Deduplicated Integrated Dashboard) */}
           <div className="mb-20">
-            <div className="mb-10 text-center sm:text-left">
+            <ScrollReveal variant="fade-up" className="mb-10 text-center sm:text-left">
               <span className="font-sans text-xs font-bold uppercase tracking-wider text-[#b8952b]">
                 Accountability & Verified Milestones
               </span>
@@ -143,9 +144,9 @@ export default async function AchievementsPage({
               <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#4b5563] sm:text-base">
                 Tangible milestones achieved through community shura consultation, volunteer labor, and transparent donor contributions.
               </p>
-            </div>
+            </ScrollReveal>
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <ScrollRevealGroup staggerMs={60} className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {achievementCategories.map((cat, idx) => {
                 const Icon = cat.icon;
                 return (
@@ -184,11 +185,11 @@ export default async function AchievementsPage({
                   </article>
                 );
               })}
-            </div>
+            </ScrollRevealGroup>
           </div>
 
           {/* Section 2: Future Goals Roadmap / Strategic Timeline */}
-          <div className="space-y-12">
+          <ScrollReveal variant="fade-up" className="space-y-12">
             <div className="text-center sm:text-left">
               <span className="font-sans text-xs font-bold uppercase tracking-wider text-[#b8952b]">
                 {t("goalsEyebrow")}
@@ -287,7 +288,7 @@ export default async function AchievementsPage({
                 </div>
               </div>
             </div>
-          </div>
+          </ScrollReveal>
         </Container>
       </div>
     </>

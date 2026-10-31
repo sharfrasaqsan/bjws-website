@@ -21,6 +21,7 @@ import { SITE_URL } from "@/lib/seo";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeScript } from "@/components/theme-script";
+import { ScrollProgress } from "@/components/ui/scroll-progress";
 import "../globals.css";
 
 const inter = Inter({
@@ -195,6 +196,7 @@ export default async function LocaleLayout({
             {t("skipToContent")}
           </a>
 
+          <ScrollProgress />
           <Header notices={notices} />
           <main
             id="main-content"

@@ -3,6 +3,7 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Container } from "@/components/ui/container";
 import { PageHeader } from "@/components/layout/page-header";
 import { ContactForm } from "@/components/sections/contact-form";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { buildPageMetadata } from "@/lib/seo";
 import {
   JsonLd,
@@ -54,7 +55,6 @@ export default async function ContactPage({
       phone: "072 440 9574",
       tel: "0724409574",
       initials: "AMS",
-      tag: "Executive Leadership",
     },
     {
       role: "Secretary",
@@ -62,7 +62,6 @@ export default async function ContactPage({
       phone: "077 278 2829",
       tel: "0772782829",
       initials: "ALMS",
-      tag: "Administration & Records",
     },
     {
       role: "Treasurer",
@@ -70,15 +69,13 @@ export default async function ContactPage({
       phone: "075 651 0050",
       tel: "0756510050",
       initials: "MSF",
-      tag: "Finance & Accounts",
     },
     {
       role: "Organizer & Field Ops",
-      name: "A. Aboohuraira",
+      name: "A. Abuhuraira",
       phone: "077 622 7323",
       tel: "0776227323",
       initials: "AA",
-      tag: "Immediate / 24/7 Hotline",
     },
     {
       role: "English Communications",
@@ -86,7 +83,6 @@ export default async function ContactPage({
       phone: "077 227 1248",
       tel: "0772271248",
       initials: "MNMN",
-      tag: "English Inquiries & Liaison",
     },
   ];
 
@@ -148,7 +144,7 @@ export default async function ContactPage({
         <Container size="xl">
           <div className="mb-16 grid grid-cols-1 gap-12 lg:grid-cols-12">
             {/* Left Column: Office Details, Officers, and Location */}
-            <div className="space-y-8 lg:col-span-5">
+            <ScrollReveal variant="fade-up" className="space-y-8 lg:col-span-5">
               {/* Office Headquarters Card */}
               <div className="rounded-3xl border border-[#0b2e1e]/10 bg-white p-6 sm:p-8 shadow-sm">
                 <span className="font-sans text-xs font-bold uppercase tracking-wider text-[#b8952b]">
@@ -238,7 +234,7 @@ export default async function ContactPage({
                         </span>
                         <div>
                           <div className="text-xs font-medium text-[#6b7280]">
-                            {c.role} ({c.tag})
+                            {c.role}
                           </div>
                           <div className="text-sm font-bold text-[#0b2e1e]">
                             {c.name}
@@ -285,10 +281,10 @@ export default async function ContactPage({
                   </a>
                 </div>
               </div>
-            </div>
+            </ScrollReveal>
 
             {/* Right Column: Contact Inquiry Form */}
-            <div className="lg:col-span-7">
+            <ScrollReveal variant="fade-up" delay={2} className="lg:col-span-7">
               <div className="rounded-3xl border border-[#0b2e1e]/10 bg-white p-8 sm:p-10 lg:p-12 shadow-sm">
                 <div className="mb-8 border-b border-[#0b2e1e]/10 pb-6">
                   <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-[#e8f3ee] px-3 py-1 text-xs font-semibold text-[#0b2e1e]">
@@ -310,7 +306,7 @@ export default async function ContactPage({
                   <span>All communications are treated with strict confidentiality and community respect.</span>
                 </div>
               </div>
-            </div>
+            </ScrollReveal>
           </div>
         </Container>
       </div>

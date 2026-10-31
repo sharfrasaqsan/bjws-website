@@ -3,7 +3,7 @@
 import * as React from "react";
 import Image from "next/image";
 import { type TeamMember } from "@/content/team";
-import { Phone, MessageCircle, Mail, MapPin, ShieldCheck, CheckCircle2, Search } from "lucide-react";
+import { Phone, MessageCircle, Mail, MapPin, CheckCircle2, Search } from "lucide-react";
 import { IslamicPattern } from "@/components/ui/islamic-pattern";
 import { ScrollRevealGroup } from "@/components/ui/scroll-reveal";
 
@@ -24,71 +24,28 @@ interface TeamGridProps {
 }
 
 export function TeamGrid({ members, locale, translations }: TeamGridProps) {
-  const [selectedCategory, setSelectedCategory] = React.useState<string>("all");
   const [searchQuery, setSearchQuery] = React.useState<string>("");
 
-  const categories = React.useMemo(() => {
-    const map = new Map<string, string>();
-    members.forEach((m) => {
-      map.set(m.category, m.categoryLabel[locale] || m.categoryLabel.en);
-    });
-    return Array.from(map.entries()).map(([key, label]) => ({ key, label }));
-  }, [members, locale]);
-
   const filteredMembers = React.useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return members;
+
     return members.filter((m) => {
-      const matchesCategory =
-        selectedCategory === "all" || m.category === selectedCategory;
-
-      const q = searchQuery.toLowerCase().trim();
-      if (!q) return matchesCategory;
-
       const nameMatch = m.name.toLowerCase().includes(q);
       const roleMatch = (m.role[locale] || m.role.en).toLowerCase().includes(q);
       const addressMatch = m.address.toLowerCase().includes(q);
       const phoneMatch = m.phone.includes(q);
 
-      return matchesCategory && (nameMatch || roleMatch || addressMatch || phoneMatch);
+      return nameMatch || roleMatch || addressMatch || phoneMatch;
     });
-  }, [members, selectedCategory, searchQuery, locale]);
+  }, [members, searchQuery, locale]);
 
   return (
     <div className="space-y-8">
-      {/* Controls Strip: Search and Filter Pills */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-[#e6e4dc] pb-6">
-        {/* Category Filter Pills */}
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setSelectedCategory("all")}
-            aria-pressed={selectedCategory === "all"}
-            className={`cursor-pointer rounded-full px-4 py-1.5 text-xs font-semibold transition-all shadow-2xs ${
-              selectedCategory === "all"
-                ? "bg-[#124d34] text-white shadow-xs"
-                : "bg-surface text-text-muted hover:text-text hover:bg-muted border border-border"
-            }`}
-          >
-            {translations.filterAll} ({members.length})
-          </button>
-          {categories.map((cat) => {
-            const count = members.filter((m) => m.category === cat.key).length;
-            const isSelected = selectedCategory === cat.key;
-            return (
-              <button
-                key={cat.key}
-                type="button"
-                onClick={() => setSelectedCategory(cat.key)}
-                aria-pressed={isSelected}
-                className={`cursor-pointer rounded-full px-4 py-1.5 text-xs font-semibold transition-all shadow-2xs ${
-                  isSelected
-                    ? "bg-[#124d34] text-white shadow-xs"
-                    : "bg-surface text-text-muted hover:text-text hover:bg-muted border border-border"
-                }`}
-              >
-                {cat.label} ({count})
-              </button>
-            );
-          })}
+      {/* Controls Strip: Member Count and Search */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-[#e6e4dc] pb-6">
+        <div className="text-xs sm:text-sm font-semibold text-text-muted">
+          <span>{translations.filterAll} ({filteredMembers.length})</span>
         </div>
 
         {/* Search Input */}
@@ -115,7 +72,6 @@ export function TeamGrid({ members, locale, translations }: TeamGridProps) {
       <ScrollRevealGroup staggerMs={60} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
         {filteredMembers.map((member) => {
           const roleLabel = member.role[locale] || member.role.en;
-          const categoryName = member.categoryLabel[locale] || member.categoryLabel.en;
           const responsibilitiesList =
             member.responsibilities[locale] || member.responsibilities.en;
           const bioText = member.bio[locale] || member.bio.en;
@@ -123,7 +79,7 @@ export function TeamGrid({ members, locale, translations }: TeamGridProps) {
           return (
             <article
               key={member.id}
-              className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-[#e6e4dc] bg-surface shadow-xs transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/40 hover:shadow-xl"
+              className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-[#e6e4dc] bg-surface shadow-xs transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/40 hover:shadow-xl h-full"
             >
               {/* Card Header & Photo */}
               <div className="relative">
@@ -144,13 +100,8 @@ export function TeamGrid({ members, locale, translations }: TeamGridProps) {
                     className="pointer-events-none text-[#d4af37]"
                   />
 
-                  {/* Badges on Photo */}
-                  <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-[#062115]/85 px-3 py-1 font-serif text-[10px] font-bold tracking-wider uppercase text-[#d4af37] ring-1 ring-[#d4af37]/40 backdrop-blur-xs">
-                      <ShieldCheck className="h-3 w-3" />
-                      <span>{categoryName}</span>
-                    </span>
-
+                  {/* Active Status Badge on Photo */}
+                  <div className="absolute top-3 right-3 flex items-center">
                     <span className="inline-flex items-center gap-1 rounded-full bg-emerald-950/80 px-2.5 py-0.5 text-[10px] font-bold text-emerald-300 ring-1 ring-emerald-500/30 backdrop-blur-xs">
                       <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
                       <span>{translations.activeBadge}</span>
@@ -190,18 +141,18 @@ export function TeamGrid({ members, locale, translations }: TeamGridProps) {
                   </p>
 
                   {/* Responsibilities */}
-                  <div className="rounded-xl border border-border bg-surface-muted/60 p-3 space-y-2">
+                  <div className="rounded-xl border border-border bg-surface-muted/60 p-3 space-y-2 min-h-[110px] flex flex-col justify-start">
                     <div className="text-[10px] font-bold uppercase tracking-wider text-primary">
                       {translations.responsibilitiesLabel}
                     </div>
-                    <ul className="space-y-1.5">
+                    <ul className="space-y-1.5 flex-1">
                       {responsibilitiesList.slice(0, 3).map((item, i) => (
                         <li
                           key={i}
                           className="flex items-start gap-2 text-[11px] text-text leading-snug"
                         >
                           <CheckCircle2 className="h-3 w-3 shrink-0 text-[#c99a45] mt-0.5" />
-                          <span>{item}</span>
+                          <span className="line-clamp-1">{item}</span>
                         </li>
                       ))}
                     </ul>

@@ -4,6 +4,7 @@ import { Link } from "@/i18n/routing";
 import { Container } from "@/components/ui/container";
 import { PageHeader } from "@/components/layout/page-header";
 import { IslamicPattern } from "@/components/ui/islamic-pattern";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { buildPageMetadata } from "@/lib/seo";
 import { JsonLd, getBreadcrumbJsonLd } from "@/components/seo/json-ld";
 import {
@@ -95,7 +96,7 @@ export default async function DonatePage({
         <Container size="xl">
           <div className="mb-20 grid grid-cols-1 gap-12 lg:grid-cols-12">
             {/* Left Column: Official Bank Account Card */}
-            <div className="space-y-8 lg:col-span-7">
+            <ScrollReveal variant="fade-up" className="space-y-8 lg:col-span-7">
               <div className="relative overflow-hidden rounded-3xl bg-[#0b2e1e] p-8 text-white shadow-xl sm:p-10 lg:p-12">
                 <IslamicPattern
                   className="pointer-events-none absolute inset-0 text-white"
@@ -201,10 +202,10 @@ export default async function DonatePage({
                   </a>
                 </div>
               </div>
-            </div>
+            </ScrollReveal>
 
             {/* Right Column: Cause Breakdown & Alternative Membership */}
-            <div className="space-y-8 lg:col-span-5">
+            <ScrollReveal variant="fade-up" delay={2} className="space-y-8 lg:col-span-5">
               {/* How Funds Are Allocated */}
               <div className="rounded-3xl border border-[#0b2e1e]/10 bg-white p-8 shadow-sm sm:p-10">
                 <span className="font-sans text-xs font-bold uppercase tracking-wider text-[#b8952b]">
@@ -260,7 +261,7 @@ export default async function DonatePage({
                   </Link>
                 </div>
               </div>
-            </div>
+            </ScrollReveal>
           </div>
         </Container>
       </div>

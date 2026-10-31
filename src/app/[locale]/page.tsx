@@ -189,15 +189,13 @@ export default async function HomePage({
       phone: "072 440 9574",
       tel: "+94724409574",
       initials: "AMS",
-      tag: "Executive Leadership",
     },
     {
       role: t("organizerRole"),
-      name: "A. Aboohuraira",
+      name: "A. Abuhuraira",
       phone: "077 622 7323",
       tel: "+94776227323",
       initials: "AA",
-      tag: "Immediate 24/7 Hotline",
       isEmergency: true,
     },
     {
@@ -206,7 +204,6 @@ export default async function HomePage({
       phone: "077 227 1248",
       tel: "+94772271248",
       initials: "MNMN",
-      tag: "English Inquiries & Liaison",
     },
   ];
 
@@ -361,7 +358,7 @@ export default async function HomePage({
                     <Users className="h-6 w-6" />
                   </div>
                   <span className="inline-flex items-center gap-1 rounded-full bg-[#e8f3ee] text-[#124d34] border border-[#124d34]/20 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider">
-                    300+ Members
+                    50+ Members
                   </span>
                 </div>
 
@@ -530,18 +527,11 @@ export default async function HomePage({
                             : "bg-[#e8f3ee] text-[#124d34]"
                         }`}
                       >
-                        {leader.tag}
+                        {leader.role}
                       </span>
                     </div>
                     <div className="font-display text-base sm:text-lg font-bold">
                       {leader.name}
-                    </div>
-                    <div
-                      className={`text-xs mt-0.5 ${
-                        leader.isEmergency ? "text-emerald-200/90" : "text-[#6b7280]"
-                      }`}
-                    >
-                      {leader.role}
                     </div>
                     <a
                       href={`tel:${leader.tel}`}
@@ -681,7 +671,7 @@ export default async function HomePage({
             {/* Stat 2: Active Members */}
             <div className="relative overflow-hidden rounded-xl bg-white/5 border border-white/10 p-6 backdrop-blur-xs transition-all hover:bg-white/8 hover:border-emerald-500/30 group">
               <div className="font-display text-4xl sm:text-5xl font-bold text-[#d4a359]">
-                <AnimatedCounter value={300} suffix="+" />
+                <AnimatedCounter value={50} suffix="+" />
               </div>
               <h3 className="mt-2 text-base sm:text-lg font-bold text-white tracking-tight">
                 {t("statMembersLabel")}
