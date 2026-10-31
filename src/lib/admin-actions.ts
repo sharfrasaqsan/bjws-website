@@ -3,6 +3,12 @@
 import { revalidatePath } from "next/cache";
 import { getAdminSession } from "@/lib/admin-auth";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import {
+  addArticleStore,
+  updateArticleStore,
+  deleteArticleStore,
+  type Article,
+} from "@/content/news";
 
 // ====================================================================
 // Contact Messages Actions
@@ -332,5 +338,215 @@ export async function deleteReportAction(id: string, filePath?: string) {
 
   revalidatePath("/admin/reports");
   revalidatePath("/[locale]/reports", "page");
+  return { success: true };
+}
+
+// ====================================================================
+// News & Blog Articles Actions
+// ====================================================================
+
+export async function createArticleAction(
+  _prevState: { error?: string; success?: boolean } | null,
+  formData: FormData
+) {
+  const session = await getAdminSession();
+  if (!session) return { error: "Unauthorized" };
+
+  const title = (formData.get("title") as string)?.trim();
+  const slugInput = (formData.get("slug") as string)?.trim();
+  const excerpt = (formData.get("excerpt") as string)?.trim();
+  const content = (formData.get("content") as string)?.trim();
+  const category = (formData.get("category") as Article["category"]) || "general";
+  const author = (formData.get("author") as string)?.trim() || "BJWS Editorial Board";
+  const locale = (formData.get("locale") as "en" | "ta" | "si") || "en";
+  const image_url = (formData.get("image_url") as string)?.trim() || "/images/gallery/shramadana-01.webp";
+  const is_published = formData.get("is_published") === "on";
+
+  if (!title || !content) {
+    return { error: "Title and content are required." };
+  }
+
+  const slug = (slugInput || title)
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/--+/g, "-")
+    .trim();
+
+  const id = `art-${Date.now()}`;
+  const published_at = new Date().toISOString();
+  const wordCount = content.split(/\s+/).length;
+  const read_time_minutes = Math.max(1, Math.ceil(wordCount / 180));
+
+  const categoryLabels: Record<Article["category"], { en: string; ta: string; si: string }> = {
+    cemetery: { en: "Cemetery Care", ta: "மையவாடி பராமரிப்பு", si: "සුසාන භූමි නඩත්තුව" },
+    welfare: { en: "Welfare Relief", ta: "உலர் உணவு நிவாரணம்", si: "සුභසාධන සහන" },
+    sunnah: { en: "Sunnah Education", ta: "சுன்னாஹ் வழிகாட்டல்", si: "ඉස්ලාමීය අධ්‍යාපනය" },
+    announcements: { en: "Announcements", ta: "அறிவித்தல்கள்", si: "නිවේදන" },
+    general: { en: "General News", ta: "பொதுச் செய்திகள்", si: "පොදු පුවත්" },
+  };
+
+  const newArticle: Article = {
+    id,
+    slug,
+    title,
+    excerpt: excerpt || content.slice(0, 160) + "...",
+    content,
+    category,
+    categoryLabel: categoryLabels[category] || categoryLabels.general,
+    author,
+    image_url,
+    locale,
+    published_at,
+    is_published,
+    read_time_minutes,
+  };
+
+  addArticleStore(newArticle);
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createClient();
+      await supabase.from("articles").insert({
+        id,
+        slug,
+        title,
+        excerpt: newArticle.excerpt,
+        content,
+        category,
+        author,
+        image_url,
+        locale,
+        is_published,
+        published_at,
+      });
+    } catch (err) {
+      console.warn("Supabase insert article warning:", err);
+    }
+  }
+
+  revalidatePath("/admin/news");
+  revalidatePath("/[locale]/news", "page");
+  revalidatePath(`/[locale]/news/${slug}`, "page");
+  return { success: true };
+}
+
+export async function updateArticleAction(
+  _prevState: { error?: string; success?: boolean } | null,
+  formData: FormData
+) {
+  const session = await getAdminSession();
+  if (!session) return { error: "Unauthorized" };
+
+  const id = formData.get("id") as string;
+  const title = (formData.get("title") as string)?.trim();
+  const slug = (formData.get("slug") as string)?.trim();
+  const excerpt = (formData.get("excerpt") as string)?.trim();
+  const content = (formData.get("content") as string)?.trim();
+  const category = (formData.get("category") as Article["category"]) || "general";
+  const author = (formData.get("author") as string)?.trim() || "BJWS Editorial Board";
+  const locale = (formData.get("locale") as "en" | "ta" | "si") || "en";
+  const image_url = (formData.get("image_url") as string)?.trim();
+  const is_published = formData.get("is_published") === "on";
+
+  if (!id || !title || !content) {
+    return { error: "ID, title, and content are required." };
+  }
+
+  const categoryLabels: Record<Article["category"], { en: string; ta: string; si: string }> = {
+    cemetery: { en: "Cemetery Care", ta: "மையவாடி பராமரிப்பு", si: "සුසාන භූමි නඩත්තුව" },
+    welfare: { en: "Welfare Relief", ta: "உலர் உணவு நிவாரணம்", si: "සුභසාධන සහන" },
+    sunnah: { en: "Sunnah Education", ta: "சுன்னாஹ் வழிகாட்டல்", si: "ඉස්ලාමීය අධ්‍යාපනය" },
+    announcements: { en: "Announcements", ta: "அறிவித்தல்கள்", si: "නිවේදන" },
+    general: { en: "General News", ta: "பொதுச் செய்திகள்", si: "පොදු පුවත්" },
+  };
+
+  const updates: Partial<Article> = {
+    title,
+    slug,
+    excerpt: excerpt || content.slice(0, 160) + "...",
+    content,
+    category,
+    categoryLabel: categoryLabels[category] || categoryLabels.general,
+    author,
+    locale,
+    is_published,
+    ...(image_url ? { image_url } : {}),
+  };
+
+  updateArticleStore(id, updates);
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createClient();
+      await supabase
+        .from("articles")
+        .update({
+          title,
+          slug,
+          excerpt: updates.excerpt,
+          content,
+          category,
+          author,
+          locale,
+          is_published,
+          ...(image_url ? { image_url } : {}),
+        })
+        .eq("id", id);
+    } catch (err) {
+      console.warn("Supabase update article warning:", err);
+    }
+  }
+
+  revalidatePath("/admin/news");
+  revalidatePath("/[locale]/news", "page");
+  revalidatePath(`/[locale]/news/${slug}`, "page");
+  return { success: true };
+}
+
+export async function toggleArticlePublishAction(
+  id: string,
+  currentState: boolean
+) {
+  const session = await getAdminSession();
+  if (!session) throw new Error("Unauthorized");
+
+  const newState = !currentState;
+  updateArticleStore(id, { is_published: newState });
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createClient();
+      await supabase
+        .from("articles")
+        .update({ is_published: newState })
+        .eq("id", id);
+    } catch (err) {
+      console.warn("Supabase toggle publish warning:", err);
+    }
+  }
+
+  revalidatePath("/admin/news");
+  revalidatePath("/[locale]/news", "page");
+  return { success: true };
+}
+
+export async function deleteArticleAction(id: string) {
+  const session = await getAdminSession();
+  if (!session) throw new Error("Unauthorized");
+
+  deleteArticleStore(id);
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createClient();
+      await supabase.from("articles").delete().eq("id", id);
+    } catch (err) {
+      console.warn("Supabase delete article warning:", err);
+    }
+  }
+
+  revalidatePath("/admin/news");
+  revalidatePath("/[locale]/news", "page");
   return { success: true };
 }

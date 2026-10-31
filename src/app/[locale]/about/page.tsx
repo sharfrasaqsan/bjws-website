@@ -66,13 +66,13 @@ export default async function AboutPage({
   ];
 
   const structureRoles = [
-    { title: t("rolePresident"), tier: "Tier 01", desc: "Society Leadership & Assembly Chair" },
-    { title: t("roleVicePresident"), tier: "Tier 02", desc: "Executive Support & Deputization" },
-    { title: t("roleSecretary"), tier: "Tier 03", desc: "Secretariat, Minutes & Registry" },
-    { title: t("roleTreasurer"), tier: "Tier 04", desc: "Accounts, Audits & Contributions" },
-    { title: t("roleCommittee"), tier: "Tier 05", desc: "Community Consultation & Shura" },
-    { title: t("roleFuneralTeam"), tier: "Tier 06", desc: "24/7 Ghusl, Kafan & Burials" },
-    { title: t("roleVolunteers"), tier: "Tier 07", desc: "Cemetery Maintenance & Upkeep" },
+    { title: t("rolePresident"), number: "01", desc: "Society Leadership & Assembly Chair" },
+    { title: t("roleVicePresident"), number: "02", desc: "Executive Support & Deputization" },
+    { title: t("roleSecretary"), number: "03", desc: "Secretariat, Minutes & Registry" },
+    { title: t("roleTreasurer"), number: "04", desc: "Accounts, Audits & Contributions" },
+    { title: t("roleCommittee"), number: "05", desc: "Community Consultation & Shura" },
+    { title: t("roleFuneralTeam"), number: "06", desc: "24/7 Ghusl, Kafan & Burials" },
+    { title: t("roleVolunteers"), number: "07", desc: "Cemetery Maintenance & Upkeep" },
   ];
 
   const executiveOfficers = [
@@ -80,7 +80,7 @@ export default async function AboutPage({
       name: "A.M. Sahibullah",
       role: t("rolePresident"),
       category: "Executive Head",
-      phone: "075 373 8349",
+      phone: "072 440 9574",
       initials: "AMS",
     },
     {
@@ -99,10 +99,17 @@ export default async function AboutPage({
     },
     {
       name: "A. Aboohuraira",
-      role: "Coordinator",
-      category: "Logistics & Operations",
+      role: "Organizer & Field Operations",
+      category: "24/7 Immediate Contact",
       phone: "077 622 7323",
       initials: "AA",
+    },
+    {
+      name: "M.N.M. Nashraff",
+      role: "English Communications Liaison",
+      category: "Media & External Inquiries",
+      phone: "077 227 1248",
+      initials: "MNMN",
     },
   ];
 
@@ -355,7 +362,7 @@ export default async function AboutPage({
                       </div>
                     </div>
                     <span className="rounded-full bg-[#f4efe6] px-2.5 py-1 font-mono text-[11px] font-bold text-[#0b2e1e]">
-                      {role.tier}
+                      {role.number}
                     </span>
                   </li>
                 ))}
@@ -363,7 +370,7 @@ export default async function AboutPage({
             </div>
 
             {/* Right: Executive Committee Officers */}
-            <div className="rounded-3xl border border-[#0b2e1e]/10 bg-white p-8 shadow-sm sm:p-10 lg:col-span-7">
+            <div id="team" className="rounded-3xl border border-[#0b2e1e]/10 bg-white p-8 shadow-sm sm:p-10 lg:col-span-7">
               <span className="font-sans text-xs font-bold uppercase tracking-wider text-[#b8952b]">
                 Elected Leadership
               </span>
@@ -405,6 +412,16 @@ export default async function AboutPage({
                     </a>
                   </div>
                 ))}
+              </div>
+
+              <div className="mt-6 border-t border-[#0b2e1e]/10 pt-4 text-center sm:text-left">
+                <Link
+                  href="/team"
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#0b2e1e] px-5 py-2.5 text-xs font-bold text-white transition-colors hover:bg-[#12422c]"
+                >
+                  <span>View All Society Team Profiles</span>
+                  <ArrowRight className="h-3.5 w-3.5 text-[#d4af37]" />
+                </Link>
               </div>
             </div>
           </div>

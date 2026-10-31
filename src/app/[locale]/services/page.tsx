@@ -5,6 +5,7 @@ import { Link } from "@/i18n/routing";
 import { Container } from "@/components/ui/container";
 import { PageHeader } from "@/components/layout/page-header";
 import { IslamicPattern } from "@/components/ui/islamic-pattern";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { buildPageMetadata } from "@/lib/seo";
 import {
   JsonLd,
@@ -20,6 +21,9 @@ import {
   ArrowRight,
   Check,
   ShieldCheck,
+  Users,
+  Heart,
+  LifeBuoy,
 } from "lucide-react";
 
 export async function generateMetadata({
@@ -113,7 +117,7 @@ export default async function ServicesPage({
       title: t("service4Title"),
       desc: t("service4Desc"),
       icon: BookOpen,
-      image: "/images/gallery/livelihood-01.webp",
+      image: "/images/gallery/ghusl-01.webp",
       imageAlt: "Youth and Volunteer Funeral Training Seminar",
       imageBadge: "Sunnah Education",
       reverse: true,
@@ -123,6 +127,60 @@ export default async function ServicesPage({
         t("service4Item2"),
         t("service4Item3"),
         t("service4Item4"),
+      ],
+    },
+    {
+      id: "shramadana-campaigns",
+      badge: t("service5Badge"),
+      title: t("service5Title"),
+      desc: t("service5Desc"),
+      icon: Users,
+      image: "/images/gallery/shramadana-01.webp",
+      imageAlt: "BJWS Community Shramadana and Environmental Cleanliness Campaign",
+      imageBadge: "Community Shramadana",
+      reverse: false,
+      isEmergency: false,
+      items: [
+        t("service5Item1"),
+        t("service5Item2"),
+        t("service5Item3"),
+        t("service5Item4"),
+      ],
+    },
+    {
+      id: "orphan-care",
+      badge: t("service6Badge"),
+      title: t("service6Title"),
+      desc: t("service6Desc"),
+      icon: Heart,
+      image: "/images/gallery/livelihood-01.webp",
+      imageAlt: "BJWS Orphan Support and Vulnerable Household Care",
+      imageBadge: "Kafalah Care",
+      reverse: true,
+      isEmergency: false,
+      items: [
+        t("service6Item1"),
+        t("service6Item2"),
+        t("service6Item3"),
+        t("service6Item4"),
+      ],
+    },
+    {
+      id: "disaster-relief",
+      badge: t("service7Badge"),
+      title: t("service7Title"),
+      desc: t("service7Desc"),
+      icon: LifeBuoy,
+      image: "/images/gallery/water-concrete-01.webp",
+      imageAlt: "BJWS Emergency Flood and Disaster Relief Response",
+      imageBadge: "Crisis Response",
+      reverse: false,
+      isEmergency: false,
+      items: [
+        t("service7Item1"),
+        t("service7Item2"),
+        t("service7Item3"),
+        t("service7Item4"),
       ],
     },
   ];
@@ -160,9 +218,11 @@ export default async function ServicesPage({
             {services.map((svc, index) => {
               const Icon = svc.icon;
               return (
-                <article
+                <ScrollReveal
                   key={svc.id}
                   id={svc.id}
+                  as="article"
+                  variant={svc.reverse ? "left" : "right"}
                   className={`scroll-mt-24 rounded-3xl border border-[#0b2e1e]/10 bg-white p-6 sm:p-10 lg:p-12 shadow-sm transition-all duration-300 hover:shadow-md ${
                     svc.isEmergency ? "ring-2 ring-[#0b2e1e]/15" : ""
                   }`}
@@ -250,11 +310,11 @@ export default async function ServicesPage({
                       <div className="mt-6 flex flex-wrap items-center gap-3">
                         {svc.isEmergency ? (
                           <a
-                            href="tel:0753738349"
+                            href="tel:0776227323"
                             className="inline-flex items-center gap-2 rounded-xl bg-[#0b2e1e] px-5 py-2.5 text-sm font-semibold text-white shadow-xs transition-colors hover:bg-[#12422c]"
                           >
                             <PhoneCall className="h-4 w-4 text-[#d4af37]" />
-                            {t("callEmergency")}: 075 373 8349
+                            {t("callEmergency")}: 077 622 7323
                           </a>
                         ) : null}
                         <Link
@@ -267,13 +327,13 @@ export default async function ServicesPage({
                       </div>
                     </div>
                   </div>
-                </article>
+                </ScrollReveal>
               );
             })}
           </div>
 
           {/* Emergency Callout Card Banner */}
-          <div className="relative mt-20 overflow-hidden rounded-3xl bg-[#0b2e1e] p-8 text-white shadow-xl sm:p-12 lg:p-14">
+          <ScrollReveal variant="scale" className="relative mt-20 overflow-hidden rounded-3xl bg-[#0b2e1e] p-8 text-white shadow-xl sm:p-12 lg:p-14">
             <IslamicPattern
               className="pointer-events-none absolute inset-0 text-white"
               opacity={0.04}
@@ -295,11 +355,11 @@ export default async function ServicesPage({
 
               <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
                 <a
-                  href="tel:0753738349"
+                  href="tel:0776227323"
                   className="inline-flex items-center justify-center gap-2.5 rounded-xl bg-[#d4af37] px-6 py-3.5 text-base font-bold text-[#0b2e1e] shadow-md transition-all hover:bg-[#b8952b]"
                 >
                   <PhoneCall className="h-5 w-5" />
-                  075 373 8349
+                  077 622 7323
                 </a>
                 <Link
                   href="/contact"
@@ -310,7 +370,7 @@ export default async function ServicesPage({
                 </Link>
               </div>
             </div>
-          </div>
+          </ScrollReveal>
         </Container>
       </section>
     </>

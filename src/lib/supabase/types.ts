@@ -144,6 +144,51 @@ export interface Database {
         };
         Relationships: [];
       };
+      articles: {
+        Row: {
+          id: string;
+          slug: string;
+          title: string;
+          excerpt: string;
+          content: string;
+          category: string;
+          author: string;
+          image_url: string | null;
+          locale: string;
+          is_published: boolean;
+          published_at: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          slug: string;
+          title: string;
+          excerpt: string;
+          content: string;
+          category: string;
+          author?: string;
+          image_url?: string | null;
+          locale?: string;
+          is_published?: boolean;
+          published_at?: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          slug?: string;
+          title?: string;
+          excerpt?: string;
+          content?: string;
+          category?: string;
+          author?: string;
+          image_url?: string | null;
+          locale?: string;
+          is_published?: boolean;
+          published_at?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;

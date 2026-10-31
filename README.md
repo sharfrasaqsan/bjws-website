@@ -212,7 +212,7 @@ All user-facing text lives in 3 JSON files inside `src/i18n/messages/`:
 To change any wording (e.g., an address or service description), simply edit the text inside the quotation marks:
 
 ```json
-"phoneLeader1": "President (A.M. Sahibullah): 075 373 8349"
+"phoneLeader1": "President (A.M. Sahibullah): 072 440 9574"
 ```
 
 _Never change the key name before the colon (`:`)._

@@ -10,3 +10,5 @@ export * from "./textarea";
 export * from "./label";
 export * from "./form-field";
 export * from "./breadcrumb";
+export * from "./skeleton";
+export * from "./scroll-reveal";

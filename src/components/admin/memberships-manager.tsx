@@ -280,8 +280,8 @@ export function MembershipsManager({
                         }`}
                       >
                         {item.plan === "monthly"
-                          ? "Monthly Plan (LKR 200)"
-                          : "Annual Plan (LKR 2,400)"}
+                          ? "Monthly Plan (LKR 50)"
+                          : "Annual Plan (LKR 500)"}
                       </span>
                     </div>
 

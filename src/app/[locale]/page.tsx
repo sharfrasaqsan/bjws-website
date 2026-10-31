@@ -4,6 +4,7 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { IslamicPattern } from "@/components/ui/islamic-pattern";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
+import { ScrollReveal, ScrollRevealGroup } from "@/components/ui/scroll-reveal";
 import {
   PhoneCall,
   Phone,
@@ -19,6 +20,12 @@ import {
   Camera,
   Eye,
   Mail,
+  Sparkles,
+  BookOpen,
+  LifeBuoy,
+  Building2,
+  CheckCircle2,
+  ExternalLink,
 } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import {
@@ -26,6 +33,11 @@ import {
   getOrganizationJsonLd,
   getServicesJsonLd,
 } from "@/components/seo/json-ld";
+import { getArticles, type Article } from "@/content/news";
+import {
+  createPublicClient,
+  isSupabaseConfigured,
+} from "@/lib/supabase/server";
 
 export async function generateMetadata({
   params,
@@ -56,34 +68,145 @@ export default async function HomePage({
   const tCommon = await getTranslations("common");
   const tServices = await getTranslations("servicesPage");
 
-  const programCards = [
+  // Fetch top 3 latest published news articles
+  let latestArticles: Article[] = [];
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = createPublicClient();
+      const { data, error } = await supabase
+        .from("articles")
+        .select("*")
+        .eq("is_published", true)
+        .eq("locale", locale)
+        .order("published_at", { ascending: false })
+        .limit(3);
+
+      if (!error && data && data.length > 0) {
+        latestArticles = data.map((d) => ({
+          id: d.id,
+          slug: d.slug,
+          title: d.title,
+          excerpt: d.excerpt,
+          content: d.content,
+          category: (d.category as Article["category"]) || "general",
+          categoryLabel: {
+            en: d.category || "General News",
+            ta: "செய்திகள்",
+            si: "පුවත්",
+          },
+          author: d.author || "BJWS Secretariat",
+          image_url: d.image_url || "/images/gallery/shramadana-01.webp",
+          locale: (d.locale as "en" | "ta" | "si") || "en",
+          published_at: d.published_at || d.created_at,
+          is_published: true,
+          read_time_minutes: Math.max(
+            1,
+            Math.ceil((d.content?.split(/\s+/).length || 200) / 180)
+          ),
+        }));
+      }
+    } catch {
+      // Fallback handled below
+    }
+  }
+
+  if (latestArticles.length === 0) {
+    latestArticles = getArticles(locale).slice(0, 3);
+  }
+
+  // All 7 Core Programs of BJWS
+  const coreServices = [
     {
+      id: "funeral-assistance",
       title: tServices("service1Title"),
       badge: tServices("service1Badge"),
       desc: tServices("service1Desc"),
       image: "/images/gallery/ghusl-02.webp",
-      href: "/services",
+      icon: Clock,
+      highlightBadge: "24/7 Immediate Response",
     },
     {
+      id: "cemetery-maintenance",
       title: tServices("service2Title"),
       badge: tServices("service2Badge"),
       desc: tServices("service2Desc"),
       image: "/images/gallery/shramadana-02.webp",
-      href: "/services",
+      icon: Sparkles,
+      highlightBadge: "1.5 Acres Maintained",
     },
     {
+      id: "relief-services",
       title: tServices("service3Title"),
       badge: tServices("service3Badge"),
       desc: tServices("service3Desc"),
       image: "/images/gallery/iftar-01.webp",
-      href: "/services",
+      icon: HeartHandshake,
+      highlightBadge: "750+ Families Supported",
     },
     {
+      id: "education-workshops",
       title: tServices("service4Title"),
       badge: tServices("service4Badge"),
       desc: tServices("service4Desc"),
+      image: "/images/gallery/ghusl-01.webp",
+      icon: BookOpen,
+      highlightBadge: "Youth Sunnah Seminars",
+    },
+    {
+      id: "shramadana-campaigns",
+      title: tServices("service5Title"),
+      badge: tServices("service5Badge"),
+      desc: tServices("service5Desc"),
+      image: "/images/gallery/shramadana-01.webp",
+      icon: Users,
+      highlightBadge: "Community Volunteering",
+    },
+    {
+      id: "orphan-care",
+      title: tServices("service6Title"),
+      badge: tServices("service6Badge"),
+      desc: tServices("service6Desc"),
       image: "/images/gallery/livelihood-01.webp",
-      href: "/services",
+      icon: Heart,
+      highlightBadge: "Kafalah Sponsorship",
+    },
+    {
+      id: "disaster-relief",
+      title: tServices("service7Title"),
+      badge: tServices("service7Badge"),
+      desc: tServices("service7Desc"),
+      image: "/images/gallery/water-concrete-01.webp",
+      icon: LifeBuoy,
+      highlightBadge: "Emergency Crisis Aid",
+    },
+  ];
+
+  // Key Leadership & 24/7 Field Contacts
+  const keyLeaders = [
+    {
+      role: t("presidentRole"),
+      name: "A.M. Sahibullah",
+      phone: "072 440 9574",
+      tel: "+94724409574",
+      initials: "AMS",
+      tag: "Executive Leadership",
+    },
+    {
+      role: t("organizerRole"),
+      name: "A. Aboohuraira",
+      phone: "077 622 7323",
+      tel: "+94776227323",
+      initials: "AA",
+      tag: "Immediate 24/7 Hotline",
+      isEmergency: true,
+    },
+    {
+      role: t("englishLiaisonRole"),
+      name: "M.N.M. Nashraff",
+      phone: "077 227 1248",
+      tel: "+94772271248",
+      initials: "MNMN",
+      tag: "English Inquiries & Liaison",
     },
   ];
 
@@ -91,7 +214,8 @@ export default async function HomePage({
     <>
       <JsonLd data={getOrganizationJsonLd()} />
       <JsonLd data={getServicesJsonLd(locale)} />
-      {/* 3. Full-Bleed Photo Hero with Dark Green Overlay */}
+
+      {/* 1. Full-Bleed Photo Hero with Dark Green Overlay */}
       <section className="relative overflow-hidden bg-[#072115] text-white">
         {/* Real photo background with next/image */}
         <div className="absolute inset-0 z-0">
@@ -183,11 +307,14 @@ export default async function HomePage({
         </div>
       </section>
 
-      {/* 4. Overlapping Info Bar with 3 items (Report a Janaza, Become a Member, Ration Support) */}
+      {/* 2. Overlapping Info Bar with 3 items (Report a Janaza, Become a Member, Relief Services) */}
       <section className="relative z-30 -mt-10 sm:-mt-20 lg:-mt-28 mb-12 sm:mb-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6">
-            {/* Item 1: Report a Janaza (24/7 Hotline) */}
+          <ScrollRevealGroup
+            staggerMs={90}
+            className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6"
+          >
+            {/* Item 1: Report a Janaza (24/7 Immediate Contact 077 622 7323) */}
             <div className="relative overflow-hidden rounded-xl bg-[#0c3121] p-6 lg:p-7 text-white shadow-xl border border-emerald-700/50 transition-all duration-200 hover:border-[#c99a45]/60 hover:-translate-y-1 group">
               <IslamicPattern
                 opacity={0.05}
@@ -201,7 +328,7 @@ export default async function HomePage({
                     </div>
                     <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider">
                       <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />
-                      24/7 Hotline
+                      24/7 Immediate Hotline
                     </span>
                   </div>
 
@@ -214,7 +341,7 @@ export default async function HomePage({
                 </div>
 
                 <a
-                  href="tel:+94753738349"
+                  href="tel:+94776227323"
                   className="mt-6 inline-flex items-center justify-between rounded-md bg-[#c99a45] hover:bg-[#b88937] text-[#072015] font-bold px-4 py-2.5 text-xs sm:text-sm shadow-sm transition-all duration-150"
                 >
                   <span className="inline-flex items-center gap-1.5">
@@ -226,7 +353,7 @@ export default async function HomePage({
               </div>
             </div>
 
-            {/* Item 2: Become a Member */}
+            {/* Item 2: Become a Member (LKR 50/mo or LKR 500/yr) */}
             <div className="rounded-xl bg-surface p-6 lg:p-7 text-foreground shadow-xl border border-[#e6e4dc] transition-all duration-200 hover:border-[#124d34]/40 hover:-translate-y-1 group flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between gap-2 mb-4">
@@ -255,7 +382,7 @@ export default async function HomePage({
               </Link>
             </div>
 
-            {/* Item 3: Ration Support */}
+            {/* Item 3: Relief & Humanitarian Aid */}
             <div className="rounded-xl bg-surface p-6 lg:p-7 text-foreground shadow-xl border border-[#e6e4dc] transition-all duration-200 hover:border-[#124d34]/40 hover:-translate-y-1 group flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between gap-2 mb-4">
@@ -263,7 +390,7 @@ export default async function HomePage({
                     <HeartHandshake className="h-6 w-6" />
                   </div>
                   <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider">
-                    Welfare Aid
+                    Welfare & Relief
                   </span>
                 </div>
 
@@ -283,17 +410,19 @@ export default async function HomePage({
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </div>
-          </div>
+          </ScrollRevealGroup>
         </div>
       </section>
 
-      {/* 5. About Split (Large photo with smaller overlapping photo and "Serving since 2023" badge) */}
+      {/* 3. About Split & Key Leadership Contact Quick-Bar */}
       <section className="relative overflow-hidden bg-[#fbfaf6] py-16 sm:py-24 border-b border-[#e6e4dc]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             {/* Visual Column with 2 Overlapping Real Photos + Badge */}
-            <div className="lg:col-span-6 relative pb-6 sm:pb-0">
-              {/* Primary Large Photo */}
+            <ScrollReveal
+              variant="left"
+              className="lg:col-span-6 relative pb-6 sm:pb-0"
+            >
               <div className="relative aspect-[4/3] sm:aspect-[14/11] rounded-2xl overflow-hidden shadow-xl border-4 border-white bg-surface">
                 <Image
                   src="/images/gallery/ghusl-01.webp"
@@ -304,8 +433,7 @@ export default async function HomePage({
                 />
               </div>
 
-              {/* Secondary Overlapping Photo */}
-              <div className="absolute -bottom-2 right-2 sm:-bottom-8 sm:-right-6 w-1/2 sm:w-1/2 aspect-[4/3] rounded-xl overflow-hidden shadow-2xl border-4 border-white bg-surface">
+              <div className="absolute -bottom-2 right-2 sm:-bottom-8 sm:-right-6 w-1/2 aspect-[4/3] rounded-xl overflow-hidden shadow-2xl border-4 border-white bg-surface">
                 <Image
                   src="/images/gallery/water-concrete-01.webp"
                   alt="BJWS Cemetery Water Supply Infrastructure"
@@ -315,7 +443,6 @@ export default async function HomePage({
                 />
               </div>
 
-              {/* Floating "Serving since 2023" Badge */}
               <div className="absolute top-3 left-3 sm:-top-6 sm:-left-6 bg-[#0b2e1e] text-white border-2 border-[#c99a45] rounded-xl p-2.5 sm:p-4 shadow-xl flex items-center gap-2.5 sm:gap-3">
                 <div className="flex h-8 w-8 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-lg bg-[#c99a45] text-[#072015]">
                   <Award className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -329,11 +456,10 @@ export default async function HomePage({
                   </span>
                 </div>
               </div>
-            </div>
+            </ScrollReveal>
 
             {/* Narrative Column */}
-            <div className="lg:col-span-6 space-y-6">
-              {/* Eyebrow badge */}
+            <ScrollReveal variant="right" className="lg:col-span-6 space-y-6">
               <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-[#e8f3ee] px-3.5 py-1 text-xs font-semibold text-primary">
                 <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                 <span>{t("aboutSectionEyebrow")}</span>
@@ -362,16 +488,85 @@ export default async function HomePage({
                   </button>
                 </Link>
               </div>
-            </div>
+            </ScrollReveal>
           </div>
+
+          {/* Key Leadership & 24/7 Immediate Contact Bar */}
+          <ScrollReveal variant="fade-up" className="mt-16 sm:mt-20">
+            <div className="rounded-2xl border border-[#0b2e1e]/15 bg-white p-6 sm:p-8 shadow-sm">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#0b2e1e]/10 pb-5">
+                <div>
+                  <span className="font-sans text-xs font-bold uppercase tracking-wider text-[#c99a45]">
+                    {t("leadershipBarEyebrow")}
+                  </span>
+                  <h3 className="mt-1 font-display text-xl sm:text-2xl font-bold text-[#0b2e1e]">
+                    {t("leadershipBarTitle")}
+                  </h3>
+                </div>
+                <Link
+                  href="/team"
+                  className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-[#124d34] hover:text-[#0b2e1e] transition-colors"
+                >
+                  <span>{t("meetFullTeamButton")}</span>
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+
+              <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+                {keyLeaders.map((leader, idx) => (
+                  <div
+                    key={idx}
+                    className={`rounded-xl p-4 sm:p-5 transition-all ${
+                      leader.isEmergency
+                        ? "bg-[#0b2e1e] text-white border-2 border-[#c99a45]/60 shadow-md"
+                        : "bg-[#fbfaf6] border border-[#e6e4dc] text-[#1c2420]"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <span
+                        className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
+                          leader.isEmergency
+                            ? "bg-[#c99a45] text-[#072015]"
+                            : "bg-[#e8f3ee] text-[#124d34]"
+                        }`}
+                      >
+                        {leader.tag}
+                      </span>
+                    </div>
+                    <div className="font-display text-base sm:text-lg font-bold">
+                      {leader.name}
+                    </div>
+                    <div
+                      className={`text-xs mt-0.5 ${
+                        leader.isEmergency ? "text-emerald-200/90" : "text-[#6b7280]"
+                      }`}
+                    >
+                      {leader.role}
+                    </div>
+                    <a
+                      href={`tel:${leader.tel}`}
+                      className={`mt-4 inline-flex items-center gap-2 text-xs sm:text-sm font-bold transition-all ${
+                        leader.isEmergency
+                          ? "text-[#d4a359] hover:text-white"
+                          : "text-[#124d34] hover:text-[#0b2e1e]"
+                      }`}
+                    >
+                      <Phone className="h-3.5 w-3.5" />
+                      <span>{leader.phone}</span>
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
-      {/* 6. Programs (Four image-led cards with real photos, titles, short text, "Learn more") */}
+      {/* 4. Programs / All 7 Core Community Services */}
       <section className="relative overflow-hidden bg-surface py-16 sm:py-24 border-b border-[#e6e4dc]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
-          <div className="mx-auto max-w-2xl text-center mb-12 sm:mb-16">
+          <ScrollReveal className="mx-auto max-w-3xl text-center mb-12 sm:mb-16">
             <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-[#e8f3ee] px-3.5 py-1 text-xs font-semibold text-primary mb-3">
               <span className="h-1.5 w-1.5 rounded-full bg-primary" />
               <span>{t("servicesOverviewEyebrow")}</span>
@@ -382,44 +577,50 @@ export default async function HomePage({
             <p className="mt-3 text-sm sm:text-base text-text-muted leading-relaxed">
               {t("servicesOverviewDesc")}
             </p>
-          </div>
+          </ScrollReveal>
 
-          {/* 4 Image-Led Program Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {programCards.map((program, idx) => (
+          {/* 7 Core Services Responsive Grid */}
+          <ScrollRevealGroup
+            staggerMs={70}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
+          >
+            {coreServices.map((service, idx) => (
               <div
-                key={idx}
-                className="group flex flex-col justify-between overflow-hidden rounded-xl border border-[#e6e4dc] bg-surface shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg"
+                key={service.id || idx}
+                className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-[#e6e4dc] bg-surface shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg"
               >
-                {/* Photo with Intentional Next/Image Cropping */}
+                {/* Photo with Aspect Ratio for Zero CLS */}
                 <div className="relative aspect-[16/10] overflow-hidden bg-muted">
                   <Image
-                    src={program.image}
-                    alt={program.title}
+                    src={service.image}
+                    alt={service.title}
                     fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none" />
                   <span className="absolute top-3 left-3 rounded-md bg-[#0b2e1e]/90 text-[#d4a359] text-[10px] font-bold px-2.5 py-1 uppercase tracking-wider backdrop-blur-xs">
-                    {program.badge}
+                    {service.badge}
+                  </span>
+                  <span className="absolute bottom-3 left-3 rounded-md bg-black/50 text-white text-[11px] font-medium px-2 py-0.5 backdrop-blur-xs">
+                    {service.highlightBadge}
                   </span>
                 </div>
 
-                {/* Body Content */}
-                <div className="p-5 flex flex-col justify-between flex-1">
+                {/* Card Content */}
+                <div className="p-5 sm:p-6 flex flex-col justify-between flex-1">
                   <div>
                     <h3 className="font-display text-base sm:text-lg font-bold text-[#0b2e1e] group-hover:text-primary transition-colors leading-snug">
-                      {program.title}
+                      {service.title}
                     </h3>
                     <p className="mt-2 text-xs sm:text-sm text-text-muted leading-relaxed line-clamp-3">
-                      {program.desc}
+                      {service.desc}
                     </p>
                   </div>
 
                   <Link
-                    href={program.href}
-                    className="mt-4 inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-primary hover:text-primary-hover group/link"
+                    href="/services"
+                    className="mt-5 inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-primary hover:text-primary-hover group/link"
                   >
                     <span>{tCommon("learnMore")}</span>
                     <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/link:translate-x-1" />
@@ -427,20 +628,29 @@ export default async function HomePage({
                 </div>
               </div>
             ))}
+          </ScrollRevealGroup>
+
+          {/* Direct CTA to Services Page */}
+          <div className="mt-12 text-center">
+            <Link
+              href="/services"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#0b2e1e] px-7 py-3.5 text-sm font-bold text-white shadow-md transition-all hover:bg-[#12422c] hover:shadow-lg hover:-translate-y-0.5"
+            >
+              <span>{t("servicesViewAll")}</span>
+              <ArrowRight className="h-4 w-4 text-[#d4af37]" />
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* 7. Impact Band (Dark green with pattern and large animated counters) */}
+      {/* 5. Impact Band (Counters & Community Milestones) */}
       <section className="relative overflow-hidden bg-[#072115] py-16 sm:py-24 text-white border-b border-emerald-950">
-        {/* Islamic geometric pattern texture */}
         <IslamicPattern
           opacity={0.05}
           className="text-[#d4a359] pointer-events-none"
         />
 
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          {/* Header */}
           <div className="mx-auto max-w-2xl text-center mb-12 sm:mb-16">
             <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-950/80 px-4 py-1 text-xs font-semibold text-[#d4a359] mb-3">
               <span className="h-1.5 w-1.5 rounded-full bg-[#d4a359]" />
@@ -451,8 +661,10 @@ export default async function HomePage({
             </h2>
           </div>
 
-          {/* 4 Animated Counter Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+          <ScrollRevealGroup
+            staggerMs={80}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8"
+          >
             {/* Stat 1: Funerals Arranged */}
             <div className="relative overflow-hidden rounded-xl bg-white/5 border border-white/10 p-6 backdrop-blur-xs transition-all hover:bg-white/8 hover:border-emerald-500/30 group">
               <div className="font-display text-4xl sm:text-5xl font-bold text-[#d4a359]">
@@ -504,147 +716,105 @@ export default async function HomePage({
                 {t("statCemeteryDesc")}
               </p>
             </div>
-          </div>
+          </ScrollRevealGroup>
         </div>
       </section>
 
-      {/* 8. Recent Activities Grid with dates and photos */}
+      {/* 6. Dynamic Latest News & Community Bulletins */}
       <section className="relative overflow-hidden bg-[#fbfaf6] py-16 sm:py-24 border-b border-[#e6e4dc]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center mb-12 sm:mb-16">
-            <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-[#e8f3ee] px-3.5 py-1 text-xs font-semibold text-primary mb-3">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-              <span>{t("galleryTeaserEyebrow")}</span>
+          <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-12 sm:mb-16">
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-[#e8f3ee] px-3.5 py-1 text-xs font-semibold text-primary mb-3">
+                <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                <span>{t("newsTeaserEyebrow")}</span>
+              </div>
+              <h2 className="font-display text-2xl sm:text-4xl font-bold tracking-tight text-[#0b2e1e]">
+                {t("newsTeaserTitle")}
+              </h2>
+              <p className="mt-2 text-sm sm:text-base text-text-muted max-w-2xl leading-relaxed">
+                {t("newsTeaserDesc")}
+              </p>
             </div>
-            <h2 className="font-display text-2xl sm:text-4xl font-bold tracking-tight text-[#0b2e1e]">
-              {t("galleryTeaserTitle")}
-            </h2>
-            <p className="mt-3 text-sm sm:text-base text-text-muted leading-relaxed">
-              {t("galleryTeaserDesc")}
-            </p>
+            <Link
+              href="/news"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#e8f3ee] hover:bg-[#124d34] hover:text-white text-[#124d34] px-5 py-2.5 text-xs sm:text-sm font-semibold transition-colors duration-200 shrink-0"
+            >
+              <span>{t("viewAllNewsButton")}</span>
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-            {/* Activity 1: Cemetery Shramadhana */}
-            <div className="group flex flex-col justify-between overflow-hidden rounded-xl border border-[#e6e4dc] bg-surface shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg">
-              <div className="relative aspect-[16/10] overflow-hidden bg-muted">
-                <Image
-                  src="/images/gallery/shramadana-01.webp"
-                  alt={t("galleryCard1Title")}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" />
-                <span className="absolute top-3 left-3 rounded-md bg-[#c99a45] text-[#072015] text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider">
-                  Cemetery Care
-                </span>
-                <span className="absolute bottom-3 left-3 inline-flex items-center gap-1.5 text-white text-[11px] font-medium bg-black/40 px-2.5 py-1 rounded backdrop-blur-xs">
-                  <Calendar className="h-3 w-3 text-[#d4a359]" />
-                  <span>March 2026</span>
-                </span>
-              </div>
-              <div className="p-5 sm:p-6 flex flex-col justify-between flex-1">
-                <div>
-                  <h3 className="font-display text-lg font-bold text-[#0b2e1e] group-hover:text-primary transition-colors leading-snug">
-                    {t("galleryCard1Title")}
-                  </h3>
-                  <p className="mt-2 text-xs sm:text-sm text-text-muted leading-relaxed">
-                    {t("galleryCard1Desc")}
-                  </p>
-                </div>
-                <Link
-                  href="/gallery"
-                  className="mt-4 inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-primary hover:text-primary-hover group/link"
-                >
-                  <span>{tCommon("learnMore")}</span>
-                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/link:translate-x-1" />
-                </Link>
-              </div>
-            </div>
+          <ScrollRevealGroup
+            staggerMs={80}
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8"
+          >
+            {latestArticles.map((article) => {
+              const formattedDate = new Date(article.published_at).toLocaleDateString(
+                locale === "ta" ? "ta-LK" : locale === "si" ? "si-LK" : "en-US",
+                {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                }
+              );
 
-            {/* Activity 2: Ghusl & Kafan Training */}
-            <div className="group flex flex-col justify-between overflow-hidden rounded-xl border border-[#e6e4dc] bg-surface shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg">
-              <div className="relative aspect-[16/10] overflow-hidden bg-muted">
-                <Image
-                  src="/images/gallery/ghusl-01.webp"
-                  alt={t("galleryCard2Title")}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" />
-                <span className="absolute top-3 left-3 rounded-md bg-[#c99a45] text-[#072015] text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider">
-                  Sunnah Workshop
-                </span>
-                <span className="absolute bottom-3 left-3 inline-flex items-center gap-1.5 text-white text-[11px] font-medium bg-black/40 px-2.5 py-1 rounded backdrop-blur-xs">
-                  <Calendar className="h-3 w-3 text-[#d4a359]" />
-                  <span>February 2026</span>
-                </span>
-              </div>
-              <div className="p-5 sm:p-6 flex flex-col justify-between flex-1">
-                <div>
-                  <h3 className="font-display text-lg font-bold text-[#0b2e1e] group-hover:text-primary transition-colors leading-snug">
-                    {t("galleryCard2Title")}
-                  </h3>
-                  <p className="mt-2 text-xs sm:text-sm text-text-muted leading-relaxed">
-                    {t("galleryCard2Desc")}
-                  </p>
-                </div>
-                <Link
-                  href="/gallery"
-                  className="mt-4 inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-primary hover:text-primary-hover group/link"
+              return (
+                <article
+                  key={article.id}
+                  className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-[#e6e4dc] bg-surface shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg"
                 >
-                  <span>{tCommon("learnMore")}</span>
-                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/link:translate-x-1" />
-                </Link>
-              </div>
-            </div>
+                  <div className="relative aspect-[16/10] overflow-hidden bg-muted">
+                    <Image
+                      src={article.image_url}
+                      alt={article.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" />
+                    <span className="absolute top-3 left-3 rounded-md bg-[#c99a45] text-[#072015] text-[10px] font-bold px-2.5 py-1 uppercase tracking-wider">
+                      {article.categoryLabel[locale as "en" | "ta" | "si"] ||
+                        article.category}
+                    </span>
+                    <span className="absolute bottom-3 left-3 inline-flex items-center gap-1.5 text-white text-[11px] font-medium bg-black/40 px-2.5 py-1 rounded backdrop-blur-xs">
+                      <Calendar className="h-3 w-3 text-[#d4a359]" />
+                      <span>{formattedDate}</span>
+                    </span>
+                  </div>
 
-            {/* Activity 3: Monthly Dry Ration Distribution */}
-            <div className="group flex flex-col justify-between overflow-hidden rounded-xl border border-[#e6e4dc] bg-surface shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg">
-              <div className="relative aspect-[16/10] overflow-hidden bg-muted">
-                <Image
-                  src="/images/gallery/iftar-02.webp"
-                  alt={t("galleryCard3Title")}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" />
-                <span className="absolute top-3 left-3 rounded-md bg-[#c99a45] text-[#072015] text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider">
-                  Welfare Relief
-                </span>
-                <span className="absolute bottom-3 left-3 inline-flex items-center gap-1.5 text-white text-[11px] font-medium bg-black/40 px-2.5 py-1 rounded backdrop-blur-xs">
-                  <Calendar className="h-3 w-3 text-[#d4a359]" />
-                  <span>January 2026</span>
-                </span>
-              </div>
-              <div className="p-5 sm:p-6 flex flex-col justify-between flex-1">
-                <div>
-                  <h3 className="font-display text-lg font-bold text-[#0b2e1e] group-hover:text-primary transition-colors leading-snug">
-                    {t("galleryCard3Title")}
-                  </h3>
-                  <p className="mt-2 text-xs sm:text-sm text-text-muted leading-relaxed">
-                    {t("galleryCard3Desc")}
-                  </p>
-                </div>
-                <Link
-                  href="/gallery"
-                  className="mt-4 inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-primary hover:text-primary-hover group/link"
-                >
-                  <span>{tCommon("learnMore")}</span>
-                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/link:translate-x-1" />
-                </Link>
-              </div>
-            </div>
-          </div>
+                  <div className="p-5 sm:p-6 flex flex-col justify-between flex-1">
+                    <div>
+                      <h3 className="font-display text-lg font-bold text-[#0b2e1e] group-hover:text-primary transition-colors leading-snug line-clamp-2">
+                        {article.title}
+                      </h3>
+                      <p className="mt-2 text-xs sm:text-sm text-text-muted leading-relaxed line-clamp-3">
+                        {article.excerpt}
+                      </p>
+                    </div>
+
+                    <div className="mt-5 flex items-center justify-between border-t border-[#e6e4dc] pt-4">
+                      <span className="text-[11px] font-medium text-[#6b7280]">
+                        {article.read_time_minutes} min read
+                      </span>
+                      <Link
+                        href={`/news/${article.slug}`}
+                        className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-primary hover:text-primary-hover group/link"
+                      >
+                        <span>{t("readArticle")}</span>
+                        <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/link:translate-x-1" />
+                      </Link>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </ScrollRevealGroup>
         </div>
       </section>
 
-      {/* 9. Join/volunteer full-width photo banner with CTA */}
+      {/* 7. Support, Membership & Official BOC Bank Details Section */}
       <section className="relative overflow-hidden bg-[#072115] py-20 sm:py-28 text-white">
-        {/* Full-width photo background */}
         <div className="absolute inset-0 z-0">
           <Image
             src="/images/gallery/shramadana-01.webp"
@@ -657,56 +827,132 @@ export default async function HomePage({
           <div className="absolute inset-0 bg-gradient-to-r from-[#062115]/95 via-[#0b2e1e]/90 to-[#062115]/95" />
         </div>
 
-        {/* Islamic lattice overlay */}
         <IslamicPattern
           opacity={0.06}
           className="text-[#d4a359] z-10 pointer-events-none"
         />
 
-        <div className="relative z-20 mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
-          <p className="font-display italic text-xs sm:text-sm text-[#d4a359] mb-4 tracking-wide max-w-2xl mx-auto">
-            {t("ctaQuote")}
-          </p>
+        <div className="relative z-20 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <ScrollReveal variant="scale" className="text-center">
+            <p className="font-display italic text-xs sm:text-sm text-[#d4a359] mb-4 tracking-wide max-w-2xl mx-auto">
+              {t("ctaQuote")}
+            </p>
 
-          <h2 className="font-display text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight">
-            {t("ctaTitle")}
-          </h2>
+            <h2 className="font-display text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight">
+              {t("ctaTitle")}
+            </h2>
 
-          <p className="mt-4 text-sm sm:text-base lg:text-lg text-emerald-100/90 max-w-2xl mx-auto leading-relaxed">
-            {t("ctaDesc")}
-          </p>
+            <p className="mt-4 text-sm sm:text-base lg:text-lg text-emerald-100/90 max-w-2xl mx-auto leading-relaxed">
+              {t("ctaDesc")}
+            </p>
 
-          {/* Action CTAs */}
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/membership" className="w-full sm:w-auto">
-              <button
-                type="button"
-                className="w-full sm:w-auto cursor-pointer inline-flex items-center justify-center gap-2 rounded-md bg-[#c99a45] hover:bg-[#b88937] text-[#072015] font-bold px-8 py-3.5 text-sm sm:text-base shadow-xl transition-all duration-200 hover:-translate-y-0.5"
-              >
-                <Users className="h-4 w-4" />
-                <span>{t("ctaJoinButton")}</span>
-              </button>
-            </Link>
+            {/* Action CTAs */}
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link href="/membership" className="w-full sm:w-auto">
+                <button
+                  type="button"
+                  className="w-full sm:w-auto cursor-pointer inline-flex items-center justify-center gap-2 rounded-md bg-[#c99a45] hover:bg-[#b88937] text-[#072015] font-bold px-8 py-3.5 text-sm sm:text-base shadow-xl transition-all duration-200 hover:-translate-y-0.5"
+                >
+                  <Users className="h-4 w-4" />
+                  <span>{t("ctaJoinButton")}</span>
+                </button>
+              </Link>
 
-            <Link href="/donate" className="w-full sm:w-auto">
-              <button
-                type="button"
-                className="w-full sm:w-auto cursor-pointer inline-flex items-center justify-center gap-2 rounded-md border-2 border-white/80 bg-white/10 hover:bg-white/20 hover:border-white text-white font-semibold px-8 py-3.5 text-sm sm:text-base shadow-sm backdrop-blur-xs transition-all duration-200 hover:-translate-y-0.5"
-              >
-                <Heart className="h-4 w-4 fill-white/20" />
-                <span>{t("ctaDonateButton")}</span>
-              </button>
-            </Link>
-          </div>
+              <Link href="/donate" className="w-full sm:w-auto">
+                <button
+                  type="button"
+                  className="w-full sm:w-auto cursor-pointer inline-flex items-center justify-center gap-2 rounded-md border-2 border-white/80 bg-white/10 hover:bg-white/20 hover:border-white text-white font-semibold px-8 py-3.5 text-sm sm:text-base shadow-sm backdrop-blur-xs transition-all duration-200 hover:-translate-y-0.5"
+                >
+                  <Heart className="h-4 w-4 fill-white/20" />
+                  <span>{t("ctaDonateButton")}</span>
+                </button>
+              </Link>
+            </div>
+          </ScrollReveal>
+
+          {/* Official Bank of Ceylon (BOC) Direct Deposit Card */}
+          <ScrollReveal variant="fade-up" className="mt-14 sm:mt-16">
+            <div className="overflow-hidden rounded-2xl border border-emerald-500/30 bg-emerald-950/80 p-6 sm:p-8 backdrop-blur-md shadow-2xl">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-b border-emerald-800/60 pb-6">
+                <div className="flex items-center gap-3.5">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#c99a45] text-[#072015]">
+                    <Building2 className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#d4a359]">
+                      Direct Support Channel
+                    </span>
+                    <h3 className="font-display text-lg sm:text-xl font-bold text-white">
+                      {t("bankTransferTitle")}
+                    </h3>
+                  </div>
+                </div>
+
+                <div className="inline-flex items-center gap-2 rounded-full bg-emerald-900/60 px-3.5 py-1 text-xs text-emerald-200 border border-emerald-700/50">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-[#d4a359]" />
+                  <span>Verified Official Account</span>
+                </div>
+              </div>
+
+              <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-left">
+                <div className="rounded-xl bg-black/25 p-4 border border-emerald-800/40">
+                  <span className="block text-[11px] font-medium text-emerald-300/80 uppercase tracking-wider">
+                    {t("bankNameLabel")}
+                  </span>
+                  <span className="block mt-1 text-sm font-bold text-white">
+                    {t("bankNameValue")}
+                  </span>
+                </div>
+
+                <div className="rounded-xl bg-black/25 p-4 border border-emerald-800/40">
+                  <span className="block text-[11px] font-medium text-emerald-300/80 uppercase tracking-wider">
+                    {t("branchLabel")}
+                  </span>
+                  <span className="block mt-1 text-sm font-bold text-white">
+                    {t("branchValue")}
+                  </span>
+                </div>
+
+                <div className="rounded-xl bg-black/25 p-4 border border-[#c99a45]/50 bg-[#c99a45]/10">
+                  <span className="block text-[11px] font-medium text-[#d4a359] uppercase tracking-wider">
+                    {t("accountNoLabel")}
+                  </span>
+                  <span className="block mt-1 font-mono text-base font-bold text-white tracking-wider">
+                    90941571
+                  </span>
+                </div>
+
+                <div className="rounded-xl bg-black/25 p-4 border border-emerald-800/40">
+                  <span className="block text-[11px] font-medium text-emerald-300/80 uppercase tracking-wider">
+                    {t("accountNameLabel")}
+                  </span>
+                  <span className="block mt-1 text-xs font-bold text-white leading-snug">
+                    {t("accountNameValue")}
+                  </span>
+                </div>
+              </div>
+
+              <div className="mt-6 flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-emerald-800/40 text-xs text-emerald-200/80">
+                <p>{t("bankTransferDesc")}</p>
+                <Link
+                  href="/donate"
+                  className="inline-flex items-center gap-1.5 font-bold text-[#d4a359] hover:text-white transition-colors"
+                >
+                  <span>Bank Slip & Donation Guidelines</span>
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </div>
+          </ScrollReveal>
 
           {/* Quick contact helpline link */}
-          <div className="mt-8 pt-6 border-t border-emerald-800/40 text-xs text-emerald-200/80 flex flex-wrap items-center justify-center gap-4">
+          <div className="mt-10 pt-6 border-t border-emerald-800/40 text-xs text-emerald-200/80 flex flex-wrap items-center justify-center gap-4">
             <a
-              href="tel:+94753738349"
+              href="tel:+94776227323"
               className="hover:text-white transition-colors flex items-center gap-1.5"
             >
               <Phone className="h-3.5 w-3.5 text-[#c99a45]" />
-              <span>24/7 Hotline: 075 373 8349</span>
+              <span>24/7 Hotline: 077 622 7323</span>
             </a>
             <span>•</span>
             <a
@@ -720,7 +966,7 @@ export default async function HomePage({
         </div>
       </section>
 
-      {/* 10. Gallery Strip linking to the gallery page */}
+      {/* 8. Photographic Documentation Strip */}
       <section className="relative overflow-hidden bg-surface py-16 sm:py-24 border-b border-[#e6e4dc]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-8">
@@ -743,7 +989,10 @@ export default async function HomePage({
           </div>
 
           {/* 5-Photo Showcase Strip */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+          <ScrollRevealGroup
+            staggerMs={50}
+            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4"
+          >
             {[
               {
                 src: "/images/gallery/cemetery-road-01.webp",
@@ -790,7 +1039,7 @@ export default async function HomePage({
                 </div>
               </Link>
             ))}
-          </div>
+          </ScrollRevealGroup>
         </div>
       </section>
     </>

@@ -7,19 +7,40 @@ import { Link, usePathname } from "@/i18n/routing";
 import { LanguageSwitcher } from "./language-switcher";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { cn } from "@/lib/utils";
-import { X, Heart, Phone, Mail, MapPin } from "lucide-react";
+import { X, Heart, Phone, Mail, MapPin, ChevronDown } from "lucide-react";
+import type { NavItem } from "./nav-items";
 
 interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
-  navLinks: { href: string; label: string }[];
+  navItems: NavItem[];
 }
 
-export function MobileMenu({ isOpen, onClose, navLinks }: MobileMenuProps) {
+export function MobileMenu({ isOpen, onClose, navItems }: MobileMenuProps) {
   const t = useTranslations();
   const pathname = usePathname();
   const menuRef = React.useRef<HTMLDivElement>(null);
   const closeButtonRef = React.useRef<HTMLButtonElement>(null);
+
+  // Keep track of which dropdown accordions are expanded
+  const [expandedDropdowns, setExpandedDropdowns] = React.useState<Record<string, boolean>>(() => {
+    const initial: Record<string, boolean> = { about: true, media: true };
+    navItems.forEach((item) => {
+      if (item.type === "dropdown") {
+        if (item.items.some((sub) => pathname.startsWith(sub.href))) {
+          initial[item.id] = true;
+        }
+      }
+    });
+    return initial;
+  });
+
+  const toggleDropdown = (id: string) => {
+    setExpandedDropdowns((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
 
   // Focus trapping and Escape key handling
   React.useEffect(() => {
@@ -111,7 +132,7 @@ export function MobileMenu({ isOpen, onClose, navLinks }: MobileMenuProps) {
                 />
               </div>
               <div>
-                <div className="font-display text-sm font-bold text-[#0b2e1e] leading-tight">
+                <div className="font-display text-sm font-bold text-[#0b2e1e] dark:text-[#f5eedf] leading-tight">
                   {t("common.societyShort")}
                 </div>
                 <div className="text-text-muted flex items-center gap-1 text-[11px]">
@@ -132,32 +153,118 @@ export function MobileMenu({ isOpen, onClose, navLinks }: MobileMenuProps) {
             </button>
           </div>
 
-          {/* Navigation Links */}
+          {/* Navigation Links with Accordion Sub-sections */}
           <nav
-            className="mt-6 flex flex-col space-y-1"
+            className="mt-6 flex flex-col space-y-1.5"
             aria-label="Mobile Navigation"
           >
-            {navLinks.map((link) => {
-              const isActive =
-                link.href === "/"
-                  ? pathname === "/"
-                  : pathname.startsWith(link.href);
+            {navItems.map((item) => {
+              if (item.type === "link") {
+                const isActive =
+                  item.href === "/"
+                    ? pathname === "/"
+                    : pathname.startsWith(item.href);
+
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={onClose}
+                    aria-current={isActive ? "page" : undefined}
+                    className={cn(
+                      "rounded-lg px-3.5 py-2.5 text-sm font-medium transition-colors",
+                      isActive
+                        ? "bg-[#124d34] text-white font-semibold shadow-2xs"
+                        : "text-text hover:bg-muted hover:text-primary"
+                    )}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              }
+
+              // Accordion Dropdown Group
+              const isExpanded = !!expandedDropdowns[item.id];
+              const isAnyChildActive = item.items.some((sub) =>
+                pathname.startsWith(sub.href)
+              );
 
               return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={onClose}
-                  aria-current={isActive ? "page" : undefined}
-                  className={cn(
-                    "rounded-md px-3.5 py-2.5 text-sm font-medium transition-colors",
-                    isActive
-                      ? "bg-[#124d34] text-white font-semibold shadow-2xs"
-                      : "text-text hover:bg-muted hover:text-primary"
-                  )}
+                <div
+                  key={item.id}
+                  className="rounded-xl border border-border/50 bg-surface-muted/30 overflow-hidden"
                 >
-                  {link.label}
-                </Link>
+                  <button
+                    type="button"
+                    onClick={() => toggleDropdown(item.id)}
+                    aria-expanded={isExpanded}
+                    className={cn(
+                      "flex w-full items-center justify-between px-3.5 py-2.5 text-sm font-medium transition-colors cursor-pointer",
+                      isAnyChildActive
+                        ? "text-primary font-semibold"
+                        : "text-text hover:text-primary"
+                    )}
+                  >
+                    <span className="flex items-center gap-2">
+                      <span>{item.label}</span>
+                      {isAnyChildActive && (
+                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 dark:bg-[#c99a45]" />
+                      )}
+                    </span>
+                    <ChevronDown
+                      className={cn(
+                        "h-4 w-4 text-text-muted transition-transform duration-200",
+                        isExpanded && "rotate-180 text-primary"
+                      )}
+                    />
+                  </button>
+
+                  {isExpanded && (
+                    <div className="border-t border-border/40 bg-surface/50 p-1.5 space-y-1">
+                      {item.items.map((sub) => {
+                        const isSubActive = pathname.startsWith(sub.href);
+                        const SubIcon = sub.icon;
+                        return (
+                          <Link
+                            key={sub.href}
+                            href={sub.href}
+                            onClick={onClose}
+                            className={cn(
+                              "flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-medium transition-colors",
+                              isSubActive
+                                ? "bg-[#124d34] text-white font-semibold shadow-2xs"
+                                : "text-text hover:bg-muted hover:text-primary"
+                            )}
+                          >
+                            <div
+                              className={cn(
+                                "flex h-7 w-7 shrink-0 items-center justify-center rounded-md",
+                                isSubActive
+                                  ? "bg-white/20 text-white"
+                                  : "bg-emerald-100 text-[#124d34] dark:bg-emerald-950/60 dark:text-[#52b788]"
+                              )}
+                            >
+                              <SubIcon className="h-3.5 w-3.5" />
+                            </div>
+                            <div className="flex flex-col min-w-0">
+                              <span className="leading-tight">{sub.label}</span>
+                              <span
+                                className={cn(
+                                  "text-[10px] truncate",
+                                  isSubActive
+                                    ? "text-emerald-100/80"
+                                    : "text-text-muted"
+                                )}
+                              >
+                                {sub.description}
+                              </span>
+                            </div>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
               );
             })}
           </nav>
@@ -168,11 +275,11 @@ export function MobileMenu({ isOpen, onClose, navLinks }: MobileMenuProps) {
           {/* Quick Contact */}
           <div className="space-y-1.5 text-xs text-text-muted">
             <a
-              href="tel:+94753738349"
+              href="tel:+94776227323"
               className="flex items-center gap-2 text-primary font-medium hover:underline"
             >
               <Phone className="h-3.5 w-3.5" />
-              <span>075 373 8349 ({t("common.emergencyBadge")})</span>
+              <span>077 622 7323 ({t("common.emergencyBadge")})</span>
             </a>
             <a
               href="mailto:mbjwsociety@gmail.com"

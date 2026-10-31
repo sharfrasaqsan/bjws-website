@@ -57,11 +57,13 @@ export function ThemeToggle({
       document.documentElement.classList.add("dark");
       try {
         localStorage.setItem("bjws-theme", "dark");
+        document.cookie = "bjws-theme=dark; path=/; max-age=31536000; SameSite=Lax";
       } catch {}
     } else {
       document.documentElement.classList.remove("dark");
       try {
         localStorage.setItem("bjws-theme", "light");
+        document.cookie = "bjws-theme=light; path=/; max-age=31536000; SameSite=Lax";
       } catch {}
     }
   };

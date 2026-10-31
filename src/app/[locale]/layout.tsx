@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
 import {
   Inter,
   Playfair_Display,
@@ -163,6 +164,10 @@ export default async function LocaleLayout({
     notices = [];
   }
 
+  const cookieStore = await cookies();
+  const themeCookie = cookieStore.get("bjws-theme")?.value;
+  const isDark = themeCookie === "dark";
+
   const scriptClass =
     locale === "ta"
       ? "font-tamil"
@@ -175,7 +180,7 @@ export default async function LocaleLayout({
       lang={locale}
       dir="ltr"
       suppressHydrationWarning
-      className={`${inter.variable} ${playfair.variable} ${notoSansTamil.variable} ${notoSansSinhala.variable} ${scriptClass} h-full antialiased`}
+      className={`${isDark ? "dark" : ""} ${inter.variable} ${playfair.variable} ${notoSansTamil.variable} ${notoSansSinhala.variable} ${scriptClass} h-full antialiased`}
     >
       <head>
         <ThemeScript />

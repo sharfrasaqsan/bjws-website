@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Container } from "@/components/ui/container";
 import { PageHeader } from "@/components/layout/page-header";
+import { ScrollReveal, ScrollRevealGroup } from "@/components/ui/scroll-reveal";
 import {
   createPublicClient,
   isSupabaseConfigured,
@@ -9,7 +10,7 @@ import {
 import { NoticesSection } from "@/components/sections/notices-section";
 import { buildPageMetadata } from "@/lib/seo";
 import { JsonLd, getBreadcrumbJsonLd } from "@/components/seo/json-ld";
-import { FileText, Download, ShieldCheck, FileCheck } from "lucide-react";
+import { FileText, Download, ShieldCheck, FileCheck, PhoneCall } from "lucide-react";
 
 // Incremental Static Regeneration (ISR) every hour
 export const revalidate = 3600;
@@ -123,7 +124,7 @@ export default async function ReportsPage({
       <div className="bg-[#fbfaf6] py-16 sm:py-24">
         <Container size="xl">
           {/* Financial Transparency Declaration */}
-          <div className="mb-16 rounded-3xl border border-[#0b2e1e]/15 bg-white p-8 shadow-sm sm:p-10">
+          <ScrollReveal variant="fade-up" className="mb-16 rounded-3xl border border-[#0b2e1e]/15 bg-white p-8 shadow-sm sm:p-10">
             <div className="flex items-start gap-4">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#e8f3ee] text-[#0b2e1e]">
                 <ShieldCheck className="h-6 w-6" strokeWidth={2} />
@@ -145,20 +146,20 @@ export default async function ReportsPage({
                 </div>
               </div>
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* Published Reports List */}
           <div className="mb-20">
-            <div className="mb-8 border-b border-[#0b2e1e]/10 pb-4">
+            <ScrollReveal className="mb-8 border-b border-[#0b2e1e]/10 pb-4">
               <span className="font-sans text-xs font-bold uppercase tracking-wider text-[#b8952b]">
                 Public Records
               </span>
               <h2 className="mt-1 font-display text-2xl font-bold tracking-tight text-[#0b2e1e] sm:text-3xl">
                 {t("reportsListTitle")}
               </h2>
-            </div>
+            </ScrollReveal>
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <ScrollRevealGroup staggerMs={80} className="grid grid-cols-1 gap-6 md:grid-cols-2">
               {reports.map((report) => (
                 <div
                   key={report.id}
@@ -206,8 +207,51 @@ export default async function ReportsPage({
                   </div>
                 </div>
               ))}
-            </div>
+            </ScrollRevealGroup>
           </div>
+
+          {/* Immediate Janaza Reporting / 24/7 Organizer Contact Banner */}
+          <ScrollReveal
+            variant="scale"
+            className="relative mb-20 overflow-hidden rounded-3xl bg-[#0b2e1e] p-8 text-white shadow-xl sm:p-10 lg:p-12"
+          >
+            <div className="relative z-10 flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-center">
+              <div className="max-w-2xl">
+                <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-[#d4af37]/40 bg-[#d4af37]/15 px-3 py-1 text-xs font-semibold text-[#d4af37]">
+                  <span className="h-2 w-2 animate-pulse rounded-full bg-[#d4af37]" />
+                  24/7 Immediate Funeral Response
+                </div>
+                <h2 className="font-display text-2xl font-bold tracking-tight text-white sm:text-3xl">
+                  {t("emergencyReportTitle")}
+                </h2>
+                <p className="mt-2 text-sm leading-relaxed text-[#fbfaf6]/85 sm:text-base">
+                  {t("emergencyReportSubtitle")}
+                </p>
+                <div className="mt-3 flex items-center gap-2 text-xs font-semibold text-[#d4af37]">
+                  <PhoneCall className="h-4 w-4" />
+                  <span>{t("organizerLabel")}</span>
+                </div>
+              </div>
+
+              <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+                <a
+                  href="tel:0776227323"
+                  className="inline-flex items-center justify-center gap-2.5 rounded-xl bg-[#d4af37] px-6 py-3.5 text-base font-bold text-[#0b2e1e] shadow-md transition-all hover:bg-[#b8952b]"
+                >
+                  <PhoneCall className="h-5 w-5" />
+                  077 622 7323
+                </a>
+                <a
+                  href="https://wa.me/94776227323"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/25 bg-white/10 px-6 py-3.5 text-base font-semibold text-white backdrop-blur-xs transition-colors hover:bg-white/20"
+                >
+                  WhatsApp
+                </a>
+              </div>
+            </div>
+          </ScrollReveal>
 
           {/* Live Community Notices Section */}
           <NoticesSection locale={locale} translations={noticeTranslations} />

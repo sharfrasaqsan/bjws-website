@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { Inter, Playfair_Display } from "next/font/google";
 import { getAdminSession, logoutAdminAction } from "@/lib/admin-auth";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
@@ -73,11 +74,15 @@ export default async function AdminLayout({
     }
   }
 
+  const cookieStore = await cookies();
+  const themeCookie = cookieStore.get("bjws-theme")?.value;
+  const isDark = themeCookie === "dark";
+
   return (
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${inter.variable} ${playfair.variable} h-full antialiased`}
+      className={`${isDark ? "dark" : ""} ${inter.variable} ${playfair.variable} h-full antialiased`}
     >
       <head>
         <ThemeScript />

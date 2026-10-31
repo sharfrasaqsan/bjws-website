@@ -8,6 +8,7 @@ import {
   Users,
   Megaphone,
   FileText,
+  Newspaper,
 } from "lucide-react";
 
 interface AdminNavProps {
@@ -40,6 +41,11 @@ const navItems = [
     href: "/admin/notices",
     label: "Community Notices",
     icon: Megaphone,
+  },
+  {
+    href: "/admin/news",
+    label: "News & Blog",
+    icon: Newspaper,
   },
   {
     href: "/admin/reports",

@@ -19,7 +19,9 @@ export function Footer() {
   const navLinks = [
     { href: "/", label: t("nav.home") },
     { href: "/about", label: t("nav.about") },
+    { href: "/team", label: t("nav.team") },
     { href: "/services", label: t("nav.services") },
+    { href: "/news", label: t("nav.news") },
     { href: "/achievements", label: t("nav.achievements") },
     { href: "/gallery", label: t("nav.gallery") },
     { href: "/membership", label: t("nav.membership") },
@@ -32,6 +34,9 @@ export function Footer() {
     { label: t("servicesPage.service2Title"), href: "/services" },
     { label: t("servicesPage.service3Title"), href: "/services" },
     { label: t("servicesPage.service4Title"), href: "/services" },
+    { label: t("servicesPage.service5Title"), href: "/services" },
+    { label: t("servicesPage.service6Title"), href: "/services" },
+    { label: t("servicesPage.service7Title"), href: "/services" },
   ];
 
   return (
@@ -154,10 +159,10 @@ export function Footer() {
                     24/7 Emergency Line
                   </span>
                   <a
-                    href="tel:+94753738349"
+                    href="tel:+94776227323"
                     className="text-white hover:text-amber-200 font-bold transition-colors"
                   >
-                    075 373 8349
+                    077 622 7323
                   </a>
                 </div>
               </div>
@@ -203,6 +208,13 @@ export function Footer() {
             <span className="font-mono text-[#d4a359]">{t("common.regNo")}</span>
             <span className="hidden sm:inline">•</span>
             <span>Mullipothanai, Sri Lanka</span>
+            <span className="hidden sm:inline">•</span>
+            <Link
+              href="/privacy"
+              className="text-emerald-300/80 hover:text-white transition-colors underline-offset-2 hover:underline"
+            >
+              {t("nav.privacy") || "Privacy Policy"}
+            </Link>
           </div>
         </div>
       </Container>

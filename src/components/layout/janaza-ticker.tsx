@@ -48,14 +48,14 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
         {
           id: "seed-ta-1",
           title: "மஹல்லா மையவாடி சிரமதானப் பணி அழைப்பு",
-          body: "முள்ளிப்பொத்தானை புகாரி ஜும்ஆ பள்ளிவாசல் மையவாடியை துப்புரவு செய்யும் வருடாந்த சிரமதானப் பணியில் அனைத்து இளைஞர்களையும் பொதுமக்களையும் பங்குபற்றுமாறு அன்புடன் அழைக்கின்றோம். உபகரணங்கள் மற்றும் சிற்றுண்டிகள் சங்கத்தினால் வழங்கப்படும்.\n\nகாலம்: எதிர்வரும் ஞாயிறு காலை 7:00 மணி\nஇடம்: முள்ளிப்பொத்தானை மையவாடி வளாகம்\nதொடர்புகளுக்கு: 075 373 8349",
+          body: "முள்ளிப்பொத்தானை புகாரி ஜும்ஆ பள்ளிவாசல் மையவாடியை துப்புரவு செய்யும் வருடாந்த சிரமதானப் பணியில் அனைத்து இளைஞர்களையும் பொதுமக்களையும் பங்குபற்றுமாறு அன்புடன் அழைக்கின்றோம். உபகரணங்கள் மற்றும் சிற்றுண்டிகள் சங்கத்தினால் வழங்கப்படும்.\n\nகாலம்: எதிர்வரும் ஞாயிறு காலை 7:00 மணி\nஇடம்: முள்ளிப்பொத்தானை மையவாடி வளாகம்\nதொடர்புகளுக்கு: 077 622 7323",
           locale: "ta",
           published_at: "2026-03-01T08:00:00Z",
         },
         {
           id: "seed-ta-2",
           title: "2026 ஆம் ஆண்டிற்கான புதிய அங்கத்துவ பதிவு ஆரம்பம்",
-          body: "எமது சங்கத்தின் மாதாந்த மற்றும் வருடாந்த நலன்புரி திட்டத்தில் இணைந்து கொள்ள விரும்பும் மஹல்லா வாசிகள் இணையத்தளம் மூலமாக அல்லது காரியாலயத்தில் விண்ணப்பிக்கலாம்.\n\nமாதாந்த சந்தா: ரூபா 200 | வருடாந்த சந்தா: ரூபா 2,400\nதொடர்புகளுக்கு: 075 373 8349",
+          body: "எமது சங்கத்தின் மாதாந்த மற்றும் வருடாந்த நலன்புரி திட்டத்தில் இணைந்து கொள்ள விரும்பும் மஹல்லா வாசிகள் இணையத்தளம் மூலமாக அல்லது காரியாலயத்தில் விண்ணப்பிக்கலாம்.\n\nமாதாந்த சந்தா: ரூபா 50 | வருடாந்த சந்தா: ரூபா 500\nதொடர்புகளுக்கு: 077 622 7323",
           locale: "ta",
           published_at: "2026-02-25T10:00:00Z",
         },
@@ -64,14 +64,14 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
         {
           id: "seed-en-1",
           title: "Annual Cemetery Shramadhana & Grounds Maintenance Drive",
-          body: "The Buhary Janaza Welfare Society warmly invites all community members and youth volunteers to take part in the upcoming cemetery clean-up drive.\n\nDate: Coming Sunday at 7:00 AM\nVenue: Mahallah Cemetery Grounds, Mullipothanai\nTools and refreshments will be provided. Hotline: 075 373 8349",
+          body: "The Buhary Janaza Welfare Society warmly invites all community members and youth volunteers to take part in the upcoming cemetery clean-up drive.\n\nDate: Coming Sunday at 7:00 AM\nVenue: Mahallah Cemetery Grounds, Mullipothanai\nTools and refreshments will be provided. Hotline: 077 622 7323",
           locale: "en",
           published_at: "2026-03-01T08:00:00Z",
         },
         {
           id: "seed-en-2",
           title: "Membership Enrollment Open for 2026/2027",
-          body: "Mahallah residents can now enroll under the comprehensive funeral welfare assistance scheme online or via the administrative desk.\n\nMonthly Plan: LKR 200 | Annual Plan: LKR 2,400\nHelpline: 075 373 8349",
+          body: "Mahallah residents can now enroll under the comprehensive funeral welfare assistance scheme online or via the administrative desk.\n\nMonthly Plan: LKR 50 | Annual Plan: LKR 500\nHelpline: 077 622 7323",
           locale: "en",
           published_at: "2026-02-25T10:00:00Z",
         },
@@ -80,14 +80,14 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
         {
           id: "seed-si-1",
           title: "මහල්ල සුසාන භූමි වාර්ෂික ශ්‍රමදාන වැඩසටහන",
-          body: "මුල්ලිපොத்தான බුහාරි සුසාන භූමිය පිරිසිදු කිරීමේ වාර්ෂික ශ්‍රමදාන කටයුතු සඳහා ප්‍රජාවේ සියලු දෙනාට සහභාගී වන ලෙස ගෞරවයෙන් ආරාධනා කරමු.\n\nදිනය: එළඹෙන ඉරිදා පෙ.ව. 7:00 ට\nස්ථානය: මුල්ලිපොத்தான සුසාන භූමි පරිශ්‍රය\nවිමසීම්: 075 373 8349",
+          body: "මුල්ලිපොத்தான බුහාරි සුසාන භූමිය පිරිසිදු කිරීමේ වාර්ෂික ශ්‍රමදාන කටයුතු සඳහා ප්‍රජාවේ සියලු දෙනාට සහභාගී වන ලෙස ගෞරවයෙන් ආරාධනා කරමු.\n\nදිනය: එළඹෙන ඉරිදා පෙ.ව. 7:00 ට\nස්ථානය: මුල්ලිපොத்தான සුසාන භූමි පරිශ්‍රය\nවිමසීම්: 077 622 7323",
           locale: "si",
           published_at: "2026-03-01T08:00:00Z",
         },
         {
           id: "seed-si-2",
           title: "2026 වසර සඳහා නව සාමාජික ලියාපදිංචිය ආරම්භයි",
-          body: "අප සමිතියේ ජනාසා සුභසාධක ආවරණය ලබා ගැනීම සඳහා මාර්ගගතව හෝ ලේකම් කාර්යාලය හරහා ලියාපදිංචි විය හැක.\n\nමාසික දායකත්වය: රු. 200 | වාර්ෂික දායකත්වය: රු. 2,400\nවිමසීම්: 075 373 8349",
+          body: "අප සමිතියේ ජනාසා සුභසාධක ආවරණය ලබා ගැනීම සඳහා මාර්ගගතව හෝ ලේකම් කාර්යාලය හරහා ලියාපදිංචි විය හැක.\n\nමාසික දායකත්වය: රු. 50 | වාර්ෂික දායකත්වය: රු. 500\nවිමසීම්: 077 622 7323",
           locale: "si",
           published_at: "2026-02-25T10:00:00Z",
         },
@@ -402,14 +402,14 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
             <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-[#f3f1ea] pt-4">
               <div className="flex items-center gap-2">
                 <a
-                  href="tel:+94753738349"
+                  href="tel:+94776227323"
                   className="inline-flex items-center gap-1.5 rounded-lg border border-[#e6e4dc] bg-white px-3 py-1.5 text-xs font-semibold text-[#124d34] shadow-2xs hover:bg-[#fbfaf6]"
                 >
                   <Phone className="h-3.5 w-3.5 text-[#c99a45]" />
-                  <span>Call 075 373 8349</span>
+                  <span>Call 077 622 7323</span>
                 </a>
                 <a
-                  href="https://wa.me/94753738349"
+                  href="https://wa.me/94776227323"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800 hover:bg-emerald-100"

@@ -51,10 +51,10 @@ export default async function ContactPage({
     {
       role: "President",
       name: "A.M. Sahibullah",
-      phone: "075 373 8349",
-      tel: "0753738349",
+      phone: "072 440 9574",
+      tel: "0724409574",
       initials: "AMS",
-      tag: "Executive",
+      tag: "Executive Leadership",
     },
     {
       role: "Secretary",
@@ -62,7 +62,7 @@ export default async function ContactPage({
       phone: "077 278 2829",
       tel: "0772782829",
       initials: "ALMS",
-      tag: "Administration",
+      tag: "Administration & Records",
     },
     {
       role: "Treasurer",
@@ -70,15 +70,23 @@ export default async function ContactPage({
       phone: "075 651 0050",
       tel: "0756510050",
       initials: "MSF",
-      tag: "Finance",
+      tag: "Finance & Accounts",
     },
     {
-      role: "Coordinator",
+      role: "Organizer & Field Ops",
       name: "A. Aboohuraira",
       phone: "077 622 7323",
       tel: "0776227323",
       initials: "AA",
-      tag: "Logistics",
+      tag: "Immediate / 24/7 Hotline",
+    },
+    {
+      role: "English Communications",
+      name: "M.N.M. Nashraff",
+      phone: "077 227 1248",
+      tel: "0772271248",
+      initials: "MNMN",
+      tag: "English Inquiries & Liaison",
     },
   ];
 

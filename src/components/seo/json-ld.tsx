@@ -41,7 +41,13 @@ export function getOrganizationJsonLd() {
     foundingDate: "2023",
     taxID: "DS/TH/SS/VSSO/2023/01",
     email: "mbjwsociety@gmail.com",
-    telephone: ["+94753738349", "+94772782829", "+94756510050", "+94776227323"],
+    telephone: [
+      "+94776227323", // 24/7 Immediate Hotline (Organizer A. Aboohuraira)
+      "+94724409574", // President (A.M. Sahibullah)
+      "+94772782829", // Secretary (M.S.M. Shajahan)
+      "+94756510050", // Treasurer (M.N. Fahim)
+      "+94772271248", // English Inquiries & Liaison (M.N.M. Nashraff)
+    ],
     address: {
       "@type": "PostalAddress",
       streetAddress: "95th Buhary Jummah Mosque, Kandy Road",
@@ -108,27 +114,27 @@ export function getServicesJsonLd(locale: string) {
         "@type": "Service",
         name: "24/7 Janaza & Funeral Assistance",
         description:
-          "Complete Islamic funeral arrangement, Ghusl (washing), Kafan (shroud), ambulance transport, and burial coordination.",
+          "Complete Islamic funeral arrangement, Ghusl (washing), Kafan (shroud), ambulance transport including far-away & inter-district transfers across Sri Lanka, and burial coordination.",
         provider,
-        areaServed: "Mullipothanai, Eastern Province, Sri Lanka",
+        areaServed: "Sri Lanka",
         serviceType: "Funeral Services",
       },
       {
         "@type": "Service",
         name: "Cemetery Maintenance & Renovation",
         description:
-          "Seasonal shramadhana clean-ups, road access construction, ground leveling, boundary walling, and water infrastructure.",
+          "Seasonal clean-ups, road access construction, ground leveling, boundary walling, solar lighting, and water infrastructure.",
         provider,
         areaServed: "Mullipothanai Cemetery",
         serviceType: "Community Maintenance",
       },
       {
         "@type": "Service",
-        name: "Monthly Dry Ration Distribution",
+        name: "Relief Services (Welfare & Humanitarian Aid)",
         description:
-          "Targeted humanitarian food relief packs distributed to verified low-income households, widows, and vulnerable community families.",
+          "Targeted humanitarian food relief packs, emergency medical assistance, and essential welfare support distributed to verified low-income households, widows, and vulnerable community families.",
         provider,
-        areaServed: "Mullipothanai",
+        areaServed: "Mullipothanai & Surrounding Areas",
         serviceType: "Humanitarian Aid",
       },
       {
@@ -139,6 +145,33 @@ export function getServicesJsonLd(locale: string) {
         provider,
         areaServed: "Mullipothanai",
         serviceType: "Community Education",
+      },
+      {
+        "@type": "Service",
+        name: "Shramadana Campaigns (Community Clean-up)",
+        description:
+          "Organized community volunteer cleanup drives, cemetery landscaping, flood drainage clearing, and environmental preservation activities.",
+        provider,
+        areaServed: "Mullipothanai",
+        serviceType: "Environmental & Volunteer Service",
+      },
+      {
+        "@type": "Service",
+        name: "Orphan Caring & Education Support (Kafalah)",
+        description:
+          "Sponsorships, school supplies, nutritional assistance, and welfare support for orphaned children and vulnerable families.",
+        provider,
+        areaServed: "Mullipothanai & Trincomalee District",
+        serviceType: "Child Welfare & Education",
+      },
+      {
+        "@type": "Service",
+        name: "Disaster Relief Services (Emergency Response)",
+        description:
+          "Rapid emergency deployment during monsoon floods, seasonal droughts, and crises including emergency cooked meals, clean drinking water, and dry ration distribution.",
+        provider,
+        areaServed: "Eastern Province, Sri Lanka",
+        serviceType: "Emergency Crisis Relief",
       },
     ],
   };
@@ -158,7 +191,7 @@ export function getContactPageJsonLd(locale: string) {
     mainEntity: {
       "@type": "NGO",
       name: "Buhary Janaza Welfare Society",
-      telephone: "+94753738349",
+      telephone: "+94776227323",
       email: "mbjwsociety@gmail.com",
       address: {
         "@type": "PostalAddress",

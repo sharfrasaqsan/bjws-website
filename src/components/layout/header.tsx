@@ -11,12 +11,20 @@ import { MobileMenu } from "./mobile-menu";
 import { JanazaTicker, type NoticeItem } from "./janaza-ticker";
 import { IslamicPattern } from "@/components/ui/islamic-pattern";
 import { cn } from "@/lib/utils";
+import type { NavItem } from "./nav-items";
 import {
   Phone,
   Mail,
   Heart,
   Menu,
   ShieldCheck,
+  ChevronDown,
+  Info,
+  Users,
+  Award,
+  FileText,
+  Newspaper,
+  Images,
 } from "lucide-react";
 
 interface HeaderProps {
@@ -27,20 +35,110 @@ export function Header({ notices = [] }: HeaderProps) {
   const t = useTranslations();
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const [openDropdown, setOpenDropdown] = React.useState<string | null>(null);
+  const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+  const navRef = React.useRef<HTMLElement>(null);
 
-  const desktopNavLinks = [
-    { href: "/", label: t("nav.home") },
-    { href: "/about", label: t("nav.about") },
-    { href: "/services", label: t("nav.services") },
-    { href: "/achievements", label: t("nav.achievements") },
-    { href: "/gallery", label: t("nav.gallery") },
-    { href: "/membership", label: t("nav.membership") },
-    { href: "/contact", label: t("nav.contact") },
-  ];
+  // Reset dropdown when pathname changes
+  const [prevPathname, setPrevPathname] = React.useState(pathname);
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname);
+    setOpenDropdown(null);
+  }
 
-  const mobileNavLinks = [
-    ...desktopNavLinks,
-    { href: "/reports", label: t("nav.reports") },
+  // Click outside and Escape key to close dropdown
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(event.target as Node)) {
+        setOpenDropdown(null);
+      }
+    };
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpenDropdown(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, []);
+
+  const handleMouseEnter = (id: string) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    setOpenDropdown(id);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setOpenDropdown(null);
+    }, 150);
+  };
+
+  const toggleDropdown = (id: string) => {
+    setOpenDropdown((prev) => (prev === id ? null : id));
+  };
+
+  const navItems: NavItem[] = [
+    { type: "link", href: "/", label: t("nav.home") },
+    {
+      type: "dropdown",
+      id: "about",
+      label: t("nav.aboutGroup"),
+      items: [
+        {
+          href: "/about",
+          label: t("nav.aboutBJWS"),
+          description: t("nav.aboutDesc"),
+          icon: Info,
+        },
+        {
+          href: "/team",
+          label: t("nav.team"),
+          description: t("nav.teamDesc"),
+          icon: Users,
+        },
+        {
+          href: "/achievements",
+          label: t("nav.achievements"),
+          description: t("nav.achievementsDesc"),
+          icon: Award,
+        },
+        {
+          href: "/reports",
+          label: t("nav.reports"),
+          description: t("nav.reportsDesc"),
+          icon: FileText,
+        },
+      ],
+    },
+    { type: "link", href: "/services", label: t("nav.services") },
+    {
+      type: "dropdown",
+      id: "media",
+      label: t("nav.mediaGroup"),
+      items: [
+        {
+          href: "/news",
+          label: t("nav.news"),
+          description: t("nav.newsDesc"),
+          icon: Newspaper,
+        },
+        {
+          href: "/gallery",
+          label: t("nav.gallery"),
+          description: t("nav.galleryDesc"),
+          icon: Images,
+        },
+      ],
+    },
+    { type: "link", href: "/membership", label: t("nav.membership") },
+    { type: "link", href: "/contact", label: t("nav.contact") },
   ];
 
   return (
@@ -56,13 +154,13 @@ export function Header({ notices = [] }: HeaderProps) {
             <div className="flex items-center gap-2.5 sm:gap-4 text-xs font-normal min-w-0">
               {/* Phone / Emergency Hotline */}
               <a
-                href="tel:+94753738349"
+                href="tel:+94776227323"
                 className="inline-flex items-center gap-1.5 text-emerald-100 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-300 rounded shrink-0"
               >
                 <Phone className="h-3.5 w-3.5 text-[#c99a45] shrink-0" aria-hidden="true" />
                 <span className="font-medium text-[11px] sm:text-xs">
                   <span className="hidden sm:inline text-emerald-200/70">{t("common.hotline")}: </span>
-                  075 373 8349
+                  077 622 7323
                 </span>
               </a>
 
@@ -157,49 +255,155 @@ export function Header({ notices = [] }: HeaderProps) {
               </div>
             </Link>
 
-            {/* Desktop Navigation */}
+            {/* Desktop Navigation with Sub-Section Dropdowns */}
             <nav
-              className="hidden items-center gap-0.5 xl:gap-1.5 lg:flex"
+              ref={navRef}
+              className="hidden items-center gap-1 xl:gap-2 lg:flex"
               aria-label="Main Navigation"
             >
-              {desktopNavLinks.map((link) => {
-                const isActive =
-                  link.href === "/"
-                    ? pathname === "/"
-                    : pathname.startsWith(link.href);
+              {navItems.map((item) => {
+                if (item.type === "link") {
+                  const isActive =
+                    item.href === "/"
+                      ? pathname === "/"
+                      : pathname.startsWith(item.href);
+
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      aria-current={isActive ? "page" : undefined}
+                      className={cn(
+                        "relative rounded-md px-3 py-2 text-xs xl:text-sm font-medium whitespace-nowrap transition-colors",
+                        "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none",
+                        isActive
+                          ? "text-[#0b2e1e] dark:text-[#f5eedf] font-semibold after:absolute after:bottom-0 after:left-3 after:right-3 after:h-0.5 after:bg-[#124d34] dark:after:bg-[#c99a45] after:rounded-full"
+                          : "text-[#374151] dark:text-emerald-100/80 hover:text-[#124d34] dark:hover:text-white hover:bg-[#f4f2ea]/60 dark:hover:bg-white/5"
+                      )}
+                    >
+                      {item.label}
+                    </Link>
+                  );
+                }
+
+                // Dropdown Item
+                const isAnyChildActive = item.items.some((sub) =>
+                  pathname.startsWith(sub.href)
+                );
+                const isOpen = openDropdown === item.id;
 
                 return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    aria-current={isActive ? "page" : undefined}
-                    className={cn(
-                      "relative rounded-md px-2 xl:px-2.5 py-1.5 text-xs xl:text-sm font-medium whitespace-nowrap transition-colors",
-                      "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none",
-                      isActive
-                        ? "text-[#0b2e1e] font-semibold after:absolute after:bottom-0 after:left-2 after:right-2 after:h-0.5 after:bg-[#124d34] after:rounded-full"
-                        : "text-[#374151] hover:text-[#124d34] hover:bg-[#f4f2ea]/60"
-                    )}
+                  <div
+                    key={item.id}
+                    className="relative"
+                    onMouseEnter={() => handleMouseEnter(item.id)}
+                    onMouseLeave={handleMouseLeave}
                   >
-                    {link.label}
-                  </Link>
+                    <button
+                      type="button"
+                      onClick={() => toggleDropdown(item.id)}
+                      aria-expanded={isOpen}
+                      aria-haspopup="true"
+                      className={cn(
+                        "relative inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-xs xl:text-sm font-medium whitespace-nowrap transition-colors cursor-pointer",
+                        "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none",
+                        isAnyChildActive
+                          ? "text-[#0b2e1e] dark:text-[#f5eedf] font-semibold after:absolute after:bottom-0 after:left-3 after:right-3 after:h-0.5 after:bg-[#124d34] dark:after:bg-[#c99a45] after:rounded-full"
+                          : "text-[#374151] dark:text-emerald-100/80 hover:text-[#124d34] dark:hover:text-white hover:bg-[#f4f2ea]/60 dark:hover:bg-white/5",
+                        isOpen &&
+                          "bg-[#f4f2ea]/80 dark:bg-white/10 text-[#124d34] dark:text-white"
+                      )}
+                    >
+                      <span>{item.label}</span>
+                      <ChevronDown
+                        className={cn(
+                          "h-3.5 w-3.5 transition-transform duration-200 text-[#6b7280] dark:text-emerald-200/70",
+                          isOpen && "rotate-180 text-primary"
+                        )}
+                        aria-hidden="true"
+                      />
+                    </button>
+
+                    {/* Dropdown Popover Panel */}
+                    <div
+                      className={cn(
+                        "absolute left-0 top-full pt-2 z-50 transition-all duration-150 origin-top-left",
+                        isOpen
+                          ? "opacity-100 scale-100 pointer-events-auto"
+                          : "opacity-0 scale-95 pointer-events-none"
+                      )}
+                    >
+                      <div className="w-[300px] sm:w-[320px] rounded-2xl border border-emerald-950/10 dark:border-emerald-800/40 bg-surface/98 dark:bg-[#062115] p-2 shadow-xl ring-1 ring-black/5 backdrop-blur-md">
+                        <div className="space-y-1">
+                          {item.items.map((sub) => {
+                            const isSubActive = pathname.startsWith(sub.href);
+                            const IconComponent = sub.icon;
+                            return (
+                              <Link
+                                key={sub.href}
+                                href={sub.href}
+                                onClick={() => setOpenDropdown(null)}
+                                className={cn(
+                                  "group flex items-start gap-3 rounded-xl p-2.5 transition-all",
+                                  isSubActive
+                                    ? "bg-emerald-50 dark:bg-[#0c3121] ring-1 ring-emerald-500/20"
+                                    : "hover:bg-emerald-50/70 dark:hover:bg-white/5"
+                                )}
+                              >
+                                <div
+                                  className={cn(
+                                    "mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors",
+                                    isSubActive
+                                      ? "bg-[#124d34] text-white dark:bg-[#c99a45] dark:text-[#062115]"
+                                      : "bg-emerald-100/70 text-[#124d34] group-hover:bg-[#124d34] group-hover:text-white dark:bg-emerald-900/40 dark:text-[#52b788] dark:group-hover:bg-[#c99a45] dark:group-hover:text-[#062115]"
+                                  )}
+                                >
+                                  <IconComponent className="h-4 w-4" />
+                                </div>
+                                <div className="flex flex-col min-w-0">
+                                  <div className="flex items-center gap-1.5">
+                                    <span
+                                      className={cn(
+                                        "text-xs font-semibold leading-tight",
+                                        isSubActive
+                                          ? "text-primary dark:text-[#e0b85c]"
+                                          : "text-text group-hover:text-primary dark:text-emerald-100 dark:group-hover:text-white"
+                                      )}
+                                    >
+                                      {sub.label}
+                                    </span>
+                                    {isSubActive && (
+                                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 dark:bg-amber-400" />
+                                    )}
+                                  </div>
+                                  <span className="mt-0.5 text-[11px] leading-snug text-text-muted dark:text-emerald-300/70">
+                                    {sub.description}
+                                  </span>
+                                </div>
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 );
               })}
             </nav>
 
             {/* Right Side: Solid "Donate" Button & Mobile Toggle */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
               {/* Solid ThemeForest Charity "Donate" Button */}
               <Link href="/donate" className="hidden sm:inline-flex">
                 <button
                   type="button"
                   className={cn(
-                    "cursor-pointer inline-flex items-center gap-2 rounded-md bg-[#124d34] px-5 py-2.5 text-sm font-semibold text-white shadow-xs transition-all duration-200",
+                    "cursor-pointer inline-flex items-center gap-1.5 xl:gap-2 rounded-md bg-[#124d34] px-4 xl:px-5 py-2 xl:py-2.5 text-xs xl:text-sm font-semibold text-white shadow-xs transition-all duration-200",
                     "hover:bg-[#0b2e1e] hover:shadow-md hover:-translate-y-0.5",
                     "focus-visible:ring-2 focus-visible:ring-[#124d34] focus-visible:ring-offset-2 focus-visible:outline-none"
                   )}
                 >
-                  <Heart className="h-4 w-4 fill-white/20 transition-transform hover:scale-110" aria-hidden="true" />
+                  <Heart className="h-3.5 w-3.5 xl:h-4 xl:w-4 fill-white/20 transition-transform hover:scale-110" aria-hidden="true" />
                   <span>{t("nav.donate")}</span>
                 </button>
               </Link>
@@ -211,7 +415,7 @@ export function Header({ notices = [] }: HeaderProps) {
                 aria-expanded={mobileMenuOpen}
                 aria-controls="mobile-menu"
                 aria-label={t("common.openMenu")}
-                className="text-[#1c2420] hover:bg-muted focus-visible:ring-ring rounded-md p-2 focus-visible:ring-2 focus-visible:outline-none lg:hidden transition-colors"
+                className="text-[#1c2420] dark:text-emerald-100 hover:bg-muted focus-visible:ring-ring rounded-md p-2 focus-visible:ring-2 focus-visible:outline-none lg:hidden transition-colors"
               >
                 <Menu className="h-6 w-6" aria-hidden="true" />
               </button>
@@ -227,7 +431,7 @@ export function Header({ notices = [] }: HeaderProps) {
       <MobileMenu
         isOpen={mobileMenuOpen}
         onClose={() => setMobileMenuOpen(false)}
-        navLinks={mobileNavLinks}
+        navItems={navItems}
       />
     </>
   );
