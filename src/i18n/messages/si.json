@@ -499,7 +499,8 @@
     "termLabel": "සේවා කාලය",
     "addressLabel": "ලිපිනය",
     "noResults": "කිසිදු නිලධාරියෙකු සොයාගත නොහැකි විය.",
-    "activeBadge": "සක්‍රීය සේවයේ"
+    "activeBadge": "සක්‍රීය සේවයේ",
+    "inactiveBadge": "තාවකාලිකව අක්‍රියයි"
   },
   "newsPage": {
     "pageTitle": "පුවත් සහ ප්‍රජා නිවේදන",

@@ -499,7 +499,8 @@
     "termLabel": "Term",
     "addressLabel": "Address",
     "noResults": "No team members matched your search criteria.",
-    "activeBadge": "Active Duty"
+    "activeBadge": "Active Duty",
+    "inactiveBadge": "Temporary Inactive"
   },
   "newsPage": {
     "pageTitle": "News & Community Bulletin",

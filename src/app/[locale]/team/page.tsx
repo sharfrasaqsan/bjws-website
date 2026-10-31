@@ -51,6 +51,7 @@ export default async function TeamPage({
     addressLabel: t("addressLabel"),
     noResults: t("noResults"),
     activeBadge: t("activeBadge"),
+    inactiveBadge: t("inactiveBadge"),
   };
 
   return (
