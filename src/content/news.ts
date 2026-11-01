@@ -26,7 +26,7 @@ export const SEED_ARTICLES: Article[] = [
     excerpt: "Over 80 community volunteers and youth joined hands to clear, beautify, and reinforce pathways across the 1.5-acre cemetery grounds.",
     content: `The Buhary Janaza Welfare Society (BJWS) successfully concluded its flagship Annual Cemetery Shramadhana and Maintenance Drive this past weekend at the Buhary Jummah Mosque Mahallah Cemetery in Mullipothanai.
 
-Under the active guidance of Society President A.M. Sahibullah and Cemetery Warden K.M. Niyas, more than 80 volunteers—comprising community elders, youth, and local residents—participated in this noble collective effort for the pleasure of Allah (SWT).
+Under the active guidance of Society President A.M. Sahibullah and Cemetery Warden A.G.M. Niyas, more than 80 volunteers—comprising community elders, youth, and local residents—participated in this noble collective effort for the pleasure of Allah (SWT).
 
 ### Key Accomplishments of the Clean-Up Drive:
 1. **Vegetation & Weed Clearing:** Thorough clearing of invasive overgrowth, wild bushes, and debris across the entire 1.5-acre resting grounds.
@@ -54,13 +54,13 @@ The Society extends its heartfelt prayers and Jazakallah Khair to every voluntee
     id: "art-membership-2026",
     slug: "membership-enrollment-update-2026",
     title: "BJWS Annual Membership & Mutual Safety Net Scheme Open for 2026",
-    excerpt: "Revised affordable welfare contributions: Monthly plan is now LKR 60, and annual one-time settlement is LKR 500.",
+    excerpt: "Revised affordable welfare contributions: Monthly plan is now LKR 50, and annual one-time settlement is LKR 500.",
     content: `The Executive Committee of Buhary Janaza Welfare Society announces that membership enrollment and renewal for the 2026/2027 term is now officially open for all resident Muslim households of the Buhary Mahallah in Mullipothanai.
 
 To ensure maximum inclusivity and alleviate economic burdens on families, the society assembly has established an affordable dual contribution schedule:
 
 ### Contribution Schedule:
-- **Monthly Welfare Subscription:** LKR 60 per month (collected via designated area collectors or digital transfer).
+- **Monthly Welfare Subscription:** LKR 50 per month (collected via designated area collectors or digital transfer).
 - **Annual Welfare Settlement:** LKR 500 per year (one-time settlement covering the complete operational cycle).
 
 ### What Your Membership Guarantees:
@@ -71,7 +71,7 @@ Every registered member household receives full, round-the-clock funeral assista
 - Cemetery grave digging, burial permits, and logistical transport coordination.
 - Comprehensive exemption from funeral fees for financially struggling households.
 
-"Our goal is that no family in Mullipothanai should ever face the pain of losing a loved one with financial anxiety," said Treasurer M.S. Faisarkhan. "The modest subscription of LKR 60 per month forms a collective safety net that shields every neighbor."
+"Our goal is that no family in Mullipothanai should ever face the pain of losing a loved one with financial anxiety," said Treasurer M.S. Faizarkhan. "The modest subscription of LKR 50 per month forms a collective safety net that shields every neighbor."
 
 Enrollment can be completed online via our website or in-person at the Society Administrative Desk at the 95th Mile Post Buhary Jummah Mosque.`,
     category: "announcements",
@@ -94,7 +94,7 @@ Enrollment can be completed online via our website or in-person at the Society A
     excerpt: "Practical demonstration conducted for 45 youth volunteers under senior Islamic scholars to ensure adherence to authentic Prophetic traditions.",
     content: `In accordance with our objective to empower the younger generation with essential religious competencies, the Buhary Janaza Welfare Society recently hosted a comprehensive Janaza Preparation Seminar and Hands-on Workshop at the Jamiya Mosque Hall.
 
-Facilitated by Funeral Welfare Lead M.I. Mohamed Farook alongside respected local Imams, the intensive training brought together 45 young volunteers from across Mullipothanai and surrounding Mahallahs.
+Facilitated by Vice Secretary M.S. Riyas alongside respected local Imams, the intensive training brought together 45 young volunteers from across Mullipothanai and surrounding Mahallahs.
 
 ### Core Modules Covered During the Seminar:
 1. **The Islamic Perspective on Death & Dignity:** Understanding the rights of the deceased and the supreme etiquette required when handling a Janaza.
@@ -125,7 +125,7 @@ Participants received official BJWS Volunteer Certificates and were formally int
     excerpt: "Essential food security packages comprising rice, flour, dhal, and cooking essentials delivered quietly to doorstep of vulnerable households.",
     content: `Amidst ongoing economic challenges affecting low-income families and daily wage earners, the Buhary Janaza Welfare Society completed another major phase of its ongoing Food Assistance Initiative.
 
-Supervised by Welfare Officer S.H. Mohamed Rizan, volunteers packaged and distributed nutritious dry food packs directly to the doorsteps of deserving families across the Mahallah, focusing on widows, orphans, elderly persons without support, and households facing acute hardship.
+Supervised by Welfare Coordinator S.M. Jaisar, volunteers packaged and distributed nutritious dry food packs directly to the doorsteps of deserving families across the Mahallah, focusing on widows, orphans, elderly persons without support, and households facing acute hardship.
 
 ### Each Ration Parcel Included:
 - 10 kg of Samba & Nadu rice
@@ -159,7 +159,7 @@ Plans are underway to expand the upcoming round into special Ramadan Blessing Ha
     slug: "annual-cemetery-shramadhana-2026-ta",
     title: "முள்ளிப்பொத்தானை மஹல்லா மையவாடி வருடாந்த சிரமதானப் பணி வெற்றிகரமாக நிறைவு",
     excerpt: "80 க்கும் மேற்பட்ட இளைஞர்கள் மற்றும் பொதுமக்கள் ஒன்றிணைந்து 1.5 ஏக்கர் மையவாடி நிலத்தை துப்புரவு செய்து புனரமைத்தனர்.",
-    content: `முள்ளிப்பொத்தானை புகாரி ஜும்ஆ பள்ளிவாசல் பகுதி மையவாடியை தூய்மைப்படுத்தி பராமரிக்கும் வருடாந்த சிரமதானப் பணி கடந்த ஞாயிற்றுக்கிழமை சங்கத் தலைவர் A.M. சாகிபுல்லாஹ் மற்றும் மையவாடி பொறுப்பாளர் K.M. நியாஸ் ஆகியோரின் வழிகாட்டலில் வெகு சிறப்பாக நடைபெற்றது.
+    content: `முள்ளிப்பொத்தானை புகாரி ஜும்ஆ பள்ளிவாசல் பகுதி மையவாடியை தூய்மைப்படுத்தி பராமரிக்கும் வருடாந்த சிரமதானப் பணி கடந்த ஞாயிற்றுக்கிழமை சங்கத் தலைவர் A.M. சாகிபுல்லாஹ் மற்றும் மையவாடி பொறுப்பாளர் A.G.M. நியாஸ் ஆகியோரின் வழிகாட்டலில் வெகு சிறப்பாக நடைபெற்றது.
 
 இப்பணியில் 80 க்கும் மேற்பட்ட இளைஞர்கள், பொதுமக்கள் மற்றும் நலன்விரும்பிகள் தன்னார்வத்துடன் கலந்துகொண்டு மையவாடியை சீரமைக்கும் பணியில் ஈடுபட்டனர்.
 
@@ -187,13 +187,13 @@ Plans are underway to expand the upcoming round into special Ramadan Blessing Ha
     id: "art-membership-2026-ta",
     slug: "membership-enrollment-update-2026-ta",
     title: "2026 ஆம் ஆண்டிற்கான புதிய அங்கத்துவ பதிவு மற்றும் கட்டண விபரம்",
-    excerpt: "சமூகத்தின் நலன் கருதி திருத்தப்பட்ட சந்தா: மாதாந்தம் ரூபா 60 மற்றும் வருடாந்தம் ரூபா 500.",
+    excerpt: "சமூகத்தின் நலன் கருதி திருத்தப்பட்ட சந்தா: மாதாந்தம் ரூபா 50 மற்றும் வருடாந்தம் ரூபா 500.",
     content: `புகாரி ஜனாஸா நலன்புரிச் சங்கத்தின் (BJWS) 2026 ஆம் ஆண்டிற்கான அங்கத்துவப் பதிவுகளும் புதுப்பித்தல்களும் தற்போது உத்தியோகபூர்வமாக ஆரம்பிக்கப்பட்டுள்ளன.
 
 சமூகத்தின் பொருளாதார நிலையைக் கருத்தில் கொண்டு, எளிய மாதாந்த மற்றும் வருடாந்த சந்தா நிர்ணயிக்கப்பட்டுள்ளது:
 
 ### அங்கத்துவ சந்தா விபரம்:
-- **மாதாந்த சந்தா:** ரூபா 60 (மஹல்லா பகுதி வசூலிப்பாளர்கள் அல்லது வங்கி வைப்பிலிடல் மூலம்).
+- **மாதாந்த சந்தா:** ரூபா 50 (மஹல்லா பகுதி வசூலிப்பாளர்கள் அல்லது வங்கி வைப்பிலிடல் மூலம்).
 - **வருடாந்த சந்தா:** ரூபா 500 (ஒருமுறை முழு வருடத்திற்கான கொடுப்பனவு).
 
 ### அங்கத்துவம் வழங்குவது என்ன?
@@ -224,7 +224,7 @@ Plans are underway to expand the upcoming round into special Ramadan Blessing Ha
     excerpt: "තරුණයින් සහ ප්‍රජා නායකයින් 80 කට අධික පිරිසකගේ සහභාගීත්වයෙන් අක්කර 1.5 ක සුසාන භූමිය පිරිසිදු කරන ලදී.",
     content: `බුහාරි ජනාසා සුභසාධක සමිතිය (BJWS) විසින් වාර්ෂිකව සංවිධානය කරනු ලබන මහල්ල සුසාන භූමි ශ්‍රමදාන වැඩසටහන පසුගියදා මුල්ලිපොத்தான බුහාරි සුසාන භූමි පරිශ්‍රයේදී සාර්ථකව පවත්වන ලදී.
 
-සමිතියේ සභාපති A.M. සාහිබුල්ලාහ් සහ සුසාන භූමි පාලක K.M. නියාස් යන මහත්වරුන්ගේ මඟපෙන්වීම යටතේ ස්වේච්ඡා සේවකයින් 80 කට අධික පිරිසක් මේ සඳහා එක්වූහ.
+සමිතියේ සභාපති A.M. සාහිබුල්ලාහ් සහ සුසාන භූමි පාලක A.G.M. නියාස් යන මහත්වරුන්ගේ මඟපෙන්වීම යටතේ ස්වේච්ඡා සේවකයින් 80 කට අධික පිරිසක් මේ සඳහා එක්වූහ.
 
 ### ශ්‍රමදානයේදී සිදුකළ ප්‍රධාන කටයුතු:
 1. අක්කර 1.5 ක භූමියේ වල් පැලෑටි සහ අපද්‍රව්‍ය ඉවත් කිරීම.
@@ -250,7 +250,7 @@ Plans are underway to expand the upcoming round into special Ramadan Blessing Ha
     id: "art-membership-2026-si",
     slug: "membership-enrollment-update-2026-si",
     title: "2026 වසර සඳහා නව සාමාජික ලියාපදිංචිය සහ දායකත්ව විස්තර",
-    excerpt: "ප්‍රජාවගේ පහසුව තකා සංශෝධිත දායකත්වය: මසකට රු. 60 සහ වසරකට රු. 500.",
+    excerpt: "ප්‍රජාවගේ පහසුව තකා සංශෝධිත දායකත්වය: මසකට රු. 50 සහ වසරකට රු. 500.",
     content: `මුල්ලිපොத்தான බුහාරි ජුම්මා මස්ජිද ප්‍රදේශයේ පදිංචි මුස්ලිම් ප්‍රජාව වෙනුවෙන් 2026 වසර සඳහා සාමාජික ලියාපදිංචිය දැන් විවෘතව පවතී.
 
 ### සාමාජික දායකත්ව විස්තර:

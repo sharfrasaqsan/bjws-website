@@ -134,7 +134,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
   },
   {
     id: "abuhuraira",
-    name: "Abuthalib Abuhuraira",
+    name: "A. Abuhuraira",
     role: {
       en: "Operations Coordinator",
       ta: "கள ஒருங்கிணைப்பாளர்",
@@ -192,6 +192,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
     },
     phone: "077 529 0417",
     whatsapp: "+94775290417",
+    email: "niays.agm@gmail.com",
     address: "No. 356, Unit 07, Mullipothana",
     initials: "AGMN",
     photo: "/images/team/niyas.webp",
@@ -221,7 +222,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
   },
   {
     id: "rikas",
-    name: "Mohamed Iqbal Rikas Ahamed",
+    name: "M.I. Rikas Ahamed",
     role: {
       en: "Executive Committee Member",
       ta: "நிர்வாகக் குழு உறுப்பினர்",
@@ -257,7 +258,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
     },
     phone: "077 278 2829",
     whatsapp: "+94772782829",
-    address: "Eacha Nagar, Mullipothana",
+    address: "No. 307, Unit 07, Mullipothana",
     initials: "SMJ",
     term: "2023 - Present",
   },
@@ -345,6 +346,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
     email: "Nawsath1986@gmail.com",
     address: "No. 68/1, Echcha Nagar, Mullippothana",
     initials: "AMN",
+    photo: "/images/team/nawshad.webp",
     term: "2023 - Present",
   },
   {
@@ -395,9 +397,9 @@ export const TEAM_MEMBERS: TeamMember[] = [
     id: "aqsan",
     name: "A.M. Sharfras Aqsan",
     role: {
-      en: "Digital & Media Officer",
-      ta: "டிஜிட்டல் & ஊடகப் பொறுப்பாளர்",
-      si: "ඩිජිටල් සහ මාධ්‍ය නිලධාරී",
+      en: "Digital & Media",
+      ta: "டிஜிட்டல் & ஊடகம்",
+      si: "ඩිජිටල් සහ මාධ්‍ය",
     },
     category: "operations",
     categoryLabel: {
@@ -427,8 +429,10 @@ export const TEAM_MEMBERS: TeamMember[] = [
       ta: "நிர்வாகக் குழு",
       si: "විධායක කමිටුව",
     },
-    phone: "072 440 9574",
-    address: "95th Mile Post, Mullipothana",
+    phone: "077 082 6535",
+    whatsapp: "+94770826535",
+    email: "Tfmyaseer013@gmail.com",
+    address: "No. 93/D, Echcha Nagar, Mullipothana",
     initials: "TFMY",
     photo: "/images/team/yaseer.webp",
     term: "2023 - 2024",

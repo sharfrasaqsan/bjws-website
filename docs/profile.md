@@ -184,7 +184,7 @@ We conduct **Islamic funeral education workshops** for youth and volunteers, cov
 
 ##### **Social Assistance**
 
-- Over **750 dry ration packs** distributed
+- Continuous distribution of basic and essential living necessities across vulnerable families (uncounted continuous relief)
 
 - Assisted **7 financially struggling families** with funeral costs
 
@@ -262,12 +262,15 @@ We thank every member, donor, volunteer, and leader who has contributed to our j
 
 #### **<u>Mullipothanai Buhary Janaza Welfare Society Committee Members Details.</u>**
 
-| **No** | **Position**    | **Name**       | **Address**                      | **Phone No** |
-| ------ | --------------- | -------------- | -------------------------------- | ------------ |
-| 1      | **President**   | A.M.Sahibullah | 420/7,Mullipothanai              | 075 373 8349 |
-| 2      | **Secretary**   | A.L.M.Siyam    | 85,Eacha<br>Nagar,Mullipothanai  | 077 278 2829 |
-| 3      | **Treasurer**   | M.S.Faisarkhan | 93D,Eacha<br>Nagar,Mullipothanai | 075 651 0050 |
-| 4      | **Coordinator** | A.Abuhuraira  | 353/7,Mullipothanai              | 077 622 7323 |
+| **No** | **Position**           | **Name**                 | **Address**                       | **Phone No** |
+| ------ | ---------------------- | ------------------------ | --------------------------------- | ------------ |
+| 1      | **President**          | A.M. Sahibullah          | No. 420, Unit 07, Mullipothana    | 072 440 9574 |
+| 2      | **Vice President**     | A.M.A. Gafoor            | No. 101, Eacha Nagar, Mullipothana| 075 343 2627 |
+| 3      | **Secretary**          | A.L.M. Siyam             | No. 85, Eacha Nagar, Mullipothana | 077 278 2829 |
+| 4      | **Vice Secretary**     | M.S. Riyas               | Kandy Road, Mullipothana          | 072 440 9574 |
+| 5      | **Treasurer**          | M.S. Faizarkhan          | No. 335, Unit 07, Mullipothana    | 075 651 0050 |
+| 6      | **Coordinator**        | A. Abuhuraira            | No. 415/R1, Unit 07, Mullipothana | 077 622 7323 |
+| 7      | **English Inquiries**  | N.M. Shamed Nashraff     | No. 323, Unit 07, Mullipothana    | 077 227 1248 |
 
 Email : mbjwsociety@gmail.com Email : mbjwsociety@gmail.com
 
@@ -281,7 +284,7 @@ al Lani Ronco KUNE amid - wnstoahiQuisaTmar<br>ron Buhary Janaza Welfare Society
 
 i QoS FOOomMEDWAS seenda sSGa<br>ews |LIOMMS) agement HevsLyps Fmd<br>a<br>gum: | BUHARY JANAZA WELFARE SOCIETY<br>Mullipathere Reg: DS/TH/SS/VSSO/2023/01 Date: 2025.03.06<br><!-- End of picture text -->
 
-President : A.M Sahibullah 075 373 8349 Secretary: AL.MSiyam 077 278 2829 Treasurer: M.S Faisarkhan 075 651 0050
+President : A.M. Sahibullah 072 440 9574 Secretary: A.L.M. Siyam 077 278 2829 Treasurer: M.S. Faizarkhan 075 651 0050
 
 Beg Email: mi ; " : _ Buhary Janaza Welfare Society t] Bubary Jum-Ah Mosque, 95% Mile Post, Mullipothanai.
 

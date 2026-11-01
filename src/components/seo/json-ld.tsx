@@ -44,9 +44,10 @@ export function getOrganizationJsonLd() {
     telephone: [
       "+94776227323", // 24/7 Immediate Hotline (Organizer A. Abuhuraira)
       "+94724409574", // President (A.M. Sahibullah)
-      "+94772782829", // Secretary (M.S.M. Shajahan)
-      "+94756510050", // Treasurer (M.N. Fahim)
-      "+94772271248", // English Inquiries & Liaison (M.N.M. Nashraff)
+      "+94753432627", // Vice President (A.M.A. Gafoor)
+      "+94772782829", // Secretary (A.L.M. Siyam)
+      "+94756510050", // Treasurer (M.S. Faizarkhan)
+      "+94772271248", // English Inquiries & Liaison (N.M. Shamed Nashraff)
     ],
     address: {
       "@type": "PostalAddress",

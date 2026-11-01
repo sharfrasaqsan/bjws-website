@@ -50,39 +50,88 @@ export default async function ContactPage({
 
   const contacts = [
     {
-      role: "President",
+      role:
+        locale === "ta"
+          ? "தலைவர்"
+          : locale === "si"
+          ? "සභාපති"
+          : "President",
       name: "A.M. Sahibullah",
       phone: "072 440 9574",
       tel: "0724409574",
       initials: "AMS",
     },
     {
-      role: "Secretary",
+      role:
+        locale === "ta"
+          ? "உப தலைவர்"
+          : locale === "si"
+          ? "උප සභාපති"
+          : "Vice President",
+      name: "A.M.A. Gafoor",
+      phone: "075 343 2627",
+      tel: "0753432627",
+      initials: "AMAG",
+    },
+    {
+      role:
+        locale === "ta"
+          ? "செயலாளர்"
+          : locale === "si"
+          ? "ලේකම්"
+          : "Secretary",
       name: "A.L.M. Siyam",
       phone: "077 278 2829",
       tel: "0772782829",
       initials: "ALMS",
     },
     {
-      role: "Treasurer",
-      name: "M.S. Faisarkhan",
+      role:
+        locale === "ta"
+          ? "உப செயலாளர்"
+          : locale === "si"
+          ? "උප ලේකම්"
+          : "Vice Secretary",
+      name: "M.S. Riyas",
+      phone: "072 440 9574",
+      tel: "0724409574",
+      initials: "MSR",
+    },
+    {
+      role:
+        locale === "ta"
+          ? "பொருளாளர்"
+          : locale === "si"
+          ? "භාණ්ඩාගාරික"
+          : "Treasurer",
+      name: "M.S. Faizarkhan",
       phone: "075 651 0050",
       tel: "0756510050",
       initials: "MSF",
     },
     {
-      role: "Organizer & Field Ops",
+      role:
+        locale === "ta"
+          ? "ஒருங்கிணைப்பாளர் & களப் பணிகள்"
+          : locale === "si"
+          ? "සංවිධායක සහ ක්ෂේත්‍ර මෙහෙයුම්"
+          : "Organizer & Field Ops",
       name: "A. Abuhuraira",
       phone: "077 622 7323",
       tel: "0776227323",
       initials: "AA",
     },
     {
-      role: "English Communications",
-      name: "M.N.M. Nashraff",
+      role:
+        locale === "ta"
+          ? "ஆங்கில தொடர்பாளர்"
+          : locale === "si"
+          ? "ඉංග්‍රීසි සන්නිවේදන"
+          : "English Communications",
+      name: "N.M. Shamed Nashraff",
       phone: "077 227 1248",
       tel: "0772271248",
-      initials: "MNMN",
+      initials: "NMSN",
     },
   ];
 

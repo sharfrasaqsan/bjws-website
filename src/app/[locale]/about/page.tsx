@@ -67,13 +67,76 @@ export default async function AboutPage({
   ];
 
   const structureRoles = [
-    { title: t("rolePresident"), number: "01", desc: "Society Leadership & Assembly Chair" },
-    { title: t("roleVicePresident"), number: "02", desc: "Executive Support & Deputization" },
-    { title: t("roleSecretary"), number: "03", desc: "Secretariat, Minutes & Registry" },
-    { title: t("roleViceSecretary"), number: "04", desc: "Secretarial Support & Documentation" },
-    { title: t("roleTreasurer"), number: "05", desc: "Accounts, Audits & Contributions" },
-    { title: t("roleCommittee"), number: "06", desc: "Community Consultation & Shura" },
-    { title: t("roleVolunteers"), number: "07", desc: "Funeral Support & Cemetery Upkeep" },
+    {
+      title: t("rolePresident"),
+      number: "01",
+      desc:
+        locale === "ta"
+          ? "சங்கத் தலைமைத்துவம் & பொதுக்கூட்டத் தலைமை"
+          : locale === "si"
+          ? "සමිතියේ නායකත්වය සහ මහා සභා මුලසුන"
+          : "Society Leadership & Assembly Chair",
+    },
+    {
+      title: t("roleVicePresident"),
+      number: "02",
+      desc:
+        locale === "ta"
+          ? "நிர்வாக ஆதரவு & உதவித் தலைமை"
+          : locale === "si"
+          ? "විධායක සහාය සහ අනුප්‍රාප්තිකත්වය"
+          : "Executive Support & Deputization",
+    },
+    {
+      title: t("roleSecretary"),
+      number: "03",
+      desc:
+        locale === "ta"
+          ? "செயலகப் பணிகள், கூட்டக்குறிப்புகள் & பதிவேடுகள்"
+          : locale === "si"
+          ? "ලේකම් කාර්යාලය, වාර්තා සහ ලේඛන"
+          : "Secretariat, Minutes & Registry",
+    },
+    {
+      title: t("roleViceSecretary"),
+      number: "04",
+      desc:
+        locale === "ta"
+          ? "செயலக உதவி & ஆவணப்படுத்தல்"
+          : locale === "si"
+          ? "ලේකම් සහාය සහ ලේඛනගත කිරීම"
+          : "Secretarial Support & Documentation",
+    },
+    {
+      title: t("roleTreasurer"),
+      number: "05",
+      desc:
+        locale === "ta"
+          ? "கணக்குகள், தணிக்கை & சந்தா சேகரிப்பு"
+          : locale === "si"
+          ? "ගිණුම්, විගණන සහ දායකත්ව මුදල්"
+          : "Accounts, Audits & Contributions",
+    },
+    {
+      title: t("roleCommittee"),
+      number: "06",
+      desc:
+        locale === "ta"
+          ? "சமூக ஆலோசனைகள் & ஷூரா சபை"
+          : locale === "si"
+          ? "ප්‍රජා උපදේශනය සහ ෂුරා සභාව"
+          : "Community Consultation & Shura",
+    },
+    {
+      title: t("roleVolunteers"),
+      number: "07",
+      desc:
+        locale === "ta"
+          ? "ஜனாஸா உதவி & மையவாடி பராமரிப்பு"
+          : locale === "si"
+          ? "அවමංගල්‍ය සහාය සහ සුසාන භූමි නඩත්තුව"
+          : "Funeral Support & Cemetery Upkeep",
+    },
   ];
 
   const executiveOfficers = [
@@ -92,7 +155,7 @@ export default async function AboutPage({
       photo: "/images/team/siyam.webp",
     },
     {
-      name: "M.S. Faisarkhan",
+      name: "M.S. Faizarkhan",
       role: t("roleTreasurer"),
       phone: "075 651 0050",
       initials: "MSF",
@@ -100,7 +163,12 @@ export default async function AboutPage({
     },
     {
       name: "A. Abuhuraira",
-      role: "Organizer & Field Operations",
+      role:
+        locale === "ta"
+          ? "ஒருங்கிணைப்பாளர் & களச் செயற்பாடுகள்"
+          : locale === "si"
+          ? "මෙහෙයුම් සම්බන්ධීකාරක"
+          : "Organizer & Field Operations",
       phone: "077 622 7323",
       initials: "AA",
       photo: "/images/team/abuhuraira.webp",
