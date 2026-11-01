@@ -37,7 +37,7 @@ export function getOrganizationJsonLd() {
     },
     image: `${SITE_URL}/api/og`,
     description:
-      "A registered community welfare society in Mullipothanai, Sri Lanka (Reg: DS/TH/SS/VSSO/2023/01), providing 24/7 funeral management, cemetery maintenance, dry ration aid, and community workshops.",
+      "A registered community welfare society in Mullipothana, Sri Lanka (Reg: DS/TH/SS/VSSO/2023/01), providing 24/7 funeral management, cemetery maintenance, dry ration aid, and community workshops.",
     foundingDate: "2023",
     taxID: "DS/TH/SS/VSSO/2023/01",
     email: "mbjwsociety@gmail.com",
@@ -52,7 +52,7 @@ export function getOrganizationJsonLd() {
     address: {
       "@type": "PostalAddress",
       streetAddress: "95th Buhary Jummah Mosque, Kandy Road",
-      addressLocality: "Mullipothanai",
+      addressLocality: "Mullipothana",
       addressRegion: "Eastern Province",
       postalCode: "31232",
       addressCountry: "LK",
@@ -64,7 +64,7 @@ export function getOrganizationJsonLd() {
     },
     areaServed: {
       "@type": "AdministrativeArea",
-      name: "Mullipothanai, Thampalakamam, Eastern Province, Sri Lanka",
+      name: "Mullipothana, Thambalagamuwa, Eastern Province, Sri Lanka",
     },
     sameAs: [],
   };
@@ -126,7 +126,7 @@ export function getServicesJsonLd(locale: string) {
         description:
           "Seasonal clean-ups, road access construction, ground leveling, boundary walling, solar lighting, and water infrastructure.",
         provider,
-        areaServed: "Mullipothanai Cemetery",
+        areaServed: "Mullipothana Cemetery",
         serviceType: "Community Maintenance",
       },
       {
@@ -135,7 +135,7 @@ export function getServicesJsonLd(locale: string) {
         description:
           "Targeted humanitarian food relief packs, emergency medical assistance, and essential welfare support distributed to verified low-income households, widows, and vulnerable community families.",
         provider,
-        areaServed: "Mullipothanai & Surrounding Areas",
+        areaServed: "Mullipothana & Surrounding Areas",
         serviceType: "Humanitarian Aid",
       },
       {
@@ -144,7 +144,7 @@ export function getServicesJsonLd(locale: string) {
         description:
           "Practical janaza procedure workshops, ghusl training for youth volunteers, and welfare seminars.",
         provider,
-        areaServed: "Mullipothanai",
+        areaServed: "Mullipothana",
         serviceType: "Community Education",
       },
       {
@@ -153,7 +153,7 @@ export function getServicesJsonLd(locale: string) {
         description:
           "Organized community volunteer cleanup drives, cemetery landscaping, flood drainage clearing, and environmental preservation activities.",
         provider,
-        areaServed: "Mullipothanai",
+        areaServed: "Mullipothana",
         serviceType: "Environmental & Volunteer Service",
       },
       {
@@ -162,7 +162,7 @@ export function getServicesJsonLd(locale: string) {
         description:
           "Sponsorships, school supplies, nutritional assistance, and welfare support for orphaned children and vulnerable families.",
         provider,
-        areaServed: "Mullipothanai & Trincomalee District",
+        areaServed: "Mullipothana & Trincomalee District",
         serviceType: "Child Welfare & Education",
       },
       {
@@ -188,7 +188,7 @@ export function getContactPageJsonLd(locale: string) {
     name: "Contact Buhary Janaza Welfare Society",
     url: `${SITE_URL}/${locale}/contact`,
     description:
-      "Emergency 24/7 funeral assistance numbers and office inquiries for Buhary Janaza Welfare Society, Mullipothanai, Sri Lanka.",
+      "Emergency 24/7 funeral assistance numbers and office inquiries for Buhary Janaza Welfare Society, Mullipothana, Sri Lanka.",
     mainEntity: {
       "@type": "NGO",
       name: "Buhary Janaza Welfare Society",
@@ -197,7 +197,7 @@ export function getContactPageJsonLd(locale: string) {
       address: {
         "@type": "PostalAddress",
         streetAddress: "95th Buhary Jummah Mosque, Kandy Road",
-        addressLocality: "Mullipothanai",
+        addressLocality: "Mullipothana",
         addressCountry: "LK",
       },
     },
@@ -214,7 +214,7 @@ export function getAboutPageJsonLd(locale: string) {
     name: "About Buhary Janaza Welfare Society",
     url: `${SITE_URL}/${locale}/about`,
     description:
-      "Mission, vision, history, and executive committee structure of the Buhary Janaza Welfare Society in Mullipothanai.",
+      "Mission, vision, history, and executive committee structure of the Buhary Janaza Welfare Society in Mullipothana.",
     mainEntity: {
       "@type": "NGO",
       name: "Buhary Janaza Welfare Society",

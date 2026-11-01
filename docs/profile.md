@@ -267,7 +267,7 @@ We thank every member, donor, volunteer, and leader who has contributed to our j
 | 1      | **President**          | A.M. Sahibullah          | No. 420, Unit 07, Mullipothana    | 072 440 9574 |
 | 2      | **Vice President**     | A.M.A. Gafoor            | No. 101, Eacha Nagar, Mullipothana| 075 343 2627 |
 | 3      | **Secretary**          | A.L.M. Siyam             | No. 85, Eacha Nagar, Mullipothana | 077 278 2829 |
-| 4      | **Vice Secretary**     | M.S. Riyas               | Kandy Road, Mullipothana          | 072 440 9574 |
+| 4      | **Vice Secretary**     | M.S. Riyas               | No. 53/7, Eachcha Nagar, Mullipothanai | 072 440 9574 |
 | 5      | **Treasurer**          | M.S. Faizarkhan          | No. 335, Unit 07, Mullipothana    | 075 651 0050 |
 | 6      | **Coordinator**        | A. Abuhuraira            | No. 415/R1, Unit 07, Mullipothana | 077 622 7323 |
 | 7      | **English Inquiries**  | N.M. Shamed Nashraff     | No. 323, Unit 07, Mullipothana    | 077 227 1248 |

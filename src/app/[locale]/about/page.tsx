@@ -234,7 +234,7 @@ export default async function AboutPage({
                     </div>
                     <span className="text-white/40">•</span>
                     <span className="text-xs text-white/80">
-                      Buhary Jummah Mosque Mahallah, Mullipothanai
+                      Buhary Jummah Mosque Mahallah, Mullipothana
                     </span>
                   </div>
                 </div>
@@ -245,7 +245,7 @@ export default async function AboutPage({
                 <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl border border-[#0b2e1e]/10 shadow-md">
                   <Image
                     src="/images/gallery/shramadana-01.webp"
-                    alt="BJWS Community Members Serving at Mullipothanai"
+                    alt="BJWS Community Members Serving at Mullipothana"
                     fill
                     sizes="(max-width: 1024px) 100vw, 40vw"
                     className="object-cover"
@@ -264,11 +264,11 @@ export default async function AboutPage({
                 {/* Stat Highlights Bar */}
                 <div className="grid grid-cols-3 gap-3 rounded-2xl border border-[#0b2e1e]/10 bg-white p-4 text-center shadow-xs">
                   <div>
-                    <div className="font-display text-2xl font-bold text-[#0b2e1e]">50+</div>
+                    <div className="font-display text-2xl font-bold text-[#0b2e1e]">20+</div>
                     <div className="text-[11px] font-semibold text-[#6b7280] uppercase">Members</div>
                   </div>
                   <div className="border-x border-[#0b2e1e]/10">
-                    <div className="font-display text-2xl font-bold text-[#0b2e1e]">28</div>
+                    <div className="font-display text-2xl font-bold text-[#0b2e1e]">100+</div>
                     <div className="text-[11px] font-semibold text-[#6b7280] uppercase">Janazas</div>
                   </div>
                   <div>
@@ -530,7 +530,7 @@ export default async function AboutPage({
                       DS/TH/SS/VSSO/2023/01
                     </span>
                     <span className="text-white/40">•</span>
-                    <span>Thampalakamam DS Division</span>
+                    <span>Thambalagamuwa DS Division</span>
                     <span className="text-white/40">•</span>
                     <span>Eastern Province, Sri Lanka</span>
                   </div>

@@ -179,7 +179,7 @@ export default async function AdminDashboardPage() {
               <p className="mt-1 text-xs text-[#4b5563] sm:text-sm">
                 Managing community inquiries, memberships, notices, and audited records for{" "}
                 <strong className="text-[#1c2420]">
-                  Buhary Janaza Welfare Society, Mullipothanai
+                  Buhary Janaza Welfare Society, Mullipothana
                 </strong>
                 .
               </p>
@@ -527,14 +527,14 @@ export default async function AdminDashboardPage() {
                   Official Society Registration & Verification
                 </h3>
                 <p className="text-xs text-[#4b5563]">
-                  Registered under Voluntary Social Service Organizations (VSSO) Act No. 31 of 1980 • Divisional Secretariat Thampalakamam • Reg: DS/TH/SS/VSSO/2023/01
+                  Registered under Voluntary Social Service Organizations (VSSO) Act No. 31 of 1980 • Divisional Secretariat Thambalagamuwa • Reg: DS/TH/SS/VSSO/2023/01
                 </p>
               </div>
             </div>
 
             <div className="flex shrink-0 items-center gap-2 text-xs">
               <span className="rounded-md border border-[#c99a45]/30 bg-white px-2.5 py-1 font-mono font-medium text-[#8b651e]">
-                Mullipothanai, LK
+                Mullipothana, LK
               </span>
             </div>
           </div>

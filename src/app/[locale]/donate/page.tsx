@@ -157,7 +157,7 @@ export default async function DonatePage({
 
                   <div className="mt-6 flex flex-wrap items-center gap-3 text-xs text-[#d4af37]">
                     <ShieldCheck className="h-4 w-4" />
-                    <span>Reg No: DS/TH/SS/VSSO/2023/01 • Divisional Secretariat, Thampalakamam</span>
+                    <span>Reg No: DS/TH/SS/VSSO/2023/01 • Divisional Secretariat, Thambalagamuwa</span>
                   </div>
                 </div>
               </div>

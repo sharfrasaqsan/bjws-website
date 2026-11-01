@@ -182,7 +182,7 @@ export default async function ContactPage({
         subtitle={t("subtitle")}
         eyebrow={tCommon("emergencyBadge")}
         imageSrc="/images/gallery/cemetery-road-01.webp"
-        imageAlt="BJWS Office and Contact Location in Mullipothanai"
+        imageAlt="BJWS Office and Contact Location in Mullipothana"
         breadcrumbs={[
           { label: tCommon("home"), href: "/" },
           { label: t("breadcrumbs") },
@@ -312,15 +312,15 @@ export default async function ContactPage({
                     {t("mapPlaceholderHeading")}
                   </h4>
                   <p className="mt-1 text-xs text-[#6b7280]">
-                    95th Mile Post, Kandy Road, Mullipothanai
+                    95th Mile Post, Kandy Road, Mullipothana
                   </p>
                 </div>
                 <div className="flex items-center justify-between border-t border-[#0b2e1e]/10 bg-white p-4 text-xs">
                   <span className="font-medium text-[#4b5563]">
-                    Thampalakamam DS Division, Eastern Province
+                    Thambalagamuwa DS Division, Eastern Province
                   </span>
                   <a
-                    href="https://www.google.com/maps/search/95th+Buhary+Jummah+Mosque+Mullipothanai"
+                    href="https://www.google.com/maps/search/95th+Buhary+Jummah+Mosque+Mullipothana"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1 font-bold text-[#0b2e1e] hover:text-[#b8952b]"
