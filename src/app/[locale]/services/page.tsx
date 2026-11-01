@@ -100,8 +100,8 @@ export default async function ServicesPage({
       desc: t("service3Desc"),
       icon: HeartHandshake,
       image: "/images/gallery/iftar-01.webp",
-      imageAlt: "BJWS Monthly Dry Ration and Food Welfare",
-      imageBadge: "750+ Families Supported",
+      imageAlt: "BJWS Essential Needs and Food Welfare",
+      imageBadge: "Essential Needs Support",
       reverse: false,
       isEmergency: false,
       items: [
@@ -109,6 +109,7 @@ export default async function ServicesPage({
         t("service3Item2"),
         t("service3Item3"),
         t("service3Item4"),
+        t("service3Item5"),
       ],
     },
     {

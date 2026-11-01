@@ -79,8 +79,8 @@ export default async function AchievementsPage({
     },
     {
       title: t("categoryWelfareTitle"),
-      metric: "750+",
-      metricLabel: "Rations Distributed",
+      metric: "Ongoing",
+      metricLabel: "Essential Relief",
       items: [t("categoryWelfareItem1"), t("categoryWelfareItem2")],
       icon: HeartHandshake,
     },

@@ -102,13 +102,13 @@ The Society operates under the following structure:
 
 - **Secretary**
 
+- **Vice Secretary**
+
 - **Treasurer**
 
 - **Executive Committee Members**
 
-- **Funeral Management Team**
-
-- **Cemetery Clean-Up Volunteers**
+- **Volunteers**
 
 #### **Membership Details**
 

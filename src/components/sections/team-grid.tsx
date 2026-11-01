@@ -3,7 +3,7 @@
 import * as React from "react";
 import Image from "next/image";
 import { type TeamMember } from "@/content/team";
-import { Phone, MessageCircle, Mail, MapPin, CheckCircle2, Search } from "lucide-react";
+import { Phone, MessageCircle, Mail, MapPin, Search } from "lucide-react";
 import { IslamicPattern } from "@/components/ui/islamic-pattern";
 import { ScrollRevealGroup } from "@/components/ui/scroll-reveal";
 
@@ -15,7 +15,7 @@ interface TeamGridProps {
     filterAll: string;
     callButton: string;
     whatsappButton: string;
-    responsibilitiesLabel: string;
+    responsibilitiesLabel?: string;
     termLabel: string;
     addressLabel: string;
     noResults: string;
@@ -76,8 +76,6 @@ export function TeamGrid({ members, locale, translations }: TeamGridProps) {
       >
         {filteredMembers.map((member) => {
           const roleLabel = member.role[locale] || member.role.en;
-          const responsibilitiesList =
-            member.responsibilities[locale] || member.responsibilities.en;
           const inactiveLabel =
             translations.inactiveBadge ||
             (locale === "ta"
@@ -153,32 +151,28 @@ export function TeamGrid({ members, locale, translations }: TeamGridProps) {
               </div>
 
               {/* Card Body */}
-              <div className="flex flex-1 flex-col justify-between p-4 sm:p-5 space-y-3.5">
+              <div className="flex flex-1 flex-col justify-between p-4 sm:p-5 gap-3.5">
                 {/* Meta details */}
-                <div className="space-y-2.5">
+                <div className="space-y-2">
                   {/* Address */}
-                  <div className="flex items-start gap-1.5 text-xs text-text-muted">
+                  <div className="flex items-start gap-2 text-xs text-text-muted">
                     <MapPin className="h-3.5 w-3.5 shrink-0 text-[#c99a45] mt-0.5" />
-                    <span className="leading-relaxed line-clamp-1">{member.address}</span>
+                    <span className="leading-relaxed line-clamp-2">{member.address}</span>
                   </div>
 
-                  {/* Responsibilities */}
-                  <div className="rounded-xl border border-border bg-surface-muted/60 p-2.5 sm:p-3 space-y-1.5 min-h-[95px] flex flex-col justify-start">
-                    <div className="text-[10px] font-bold uppercase tracking-wider text-primary">
-                      {translations.responsibilitiesLabel}
+                  {/* Email contact if available */}
+                  {member.email && (
+                    <div className="flex items-center gap-2 text-xs text-text-muted truncate">
+                      <Mail className="h-3.5 w-3.5 shrink-0 text-[#c99a45]" />
+                      <a
+                        href={`mailto:${member.email}`}
+                        className="truncate hover:text-primary transition-colors font-medium text-[11px]"
+                        title={member.email}
+                      >
+                        {member.email}
+                      </a>
                     </div>
-                    <ul className="space-y-1 flex-1">
-                      {responsibilitiesList.slice(0, 3).map((item, i) => (
-                        <li
-                          key={i}
-                          className="flex items-start gap-1.5 text-[11px] text-text leading-snug"
-                        >
-                          <CheckCircle2 className="h-3 w-3 shrink-0 text-[#c99a45] mt-0.5" />
-                          <span className="line-clamp-1">{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                  )}
                 </div>
 
                 {/* Direct Action Buttons */}

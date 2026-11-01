@@ -120,12 +120,12 @@ Participants received official BJWS Volunteer Certificates and were formally int
   },
   {
     id: "art-ration-distribution-2026",
-    slug: "monthly-dry-ration-welfare-drive",
-    title: "Monthly Dry Ration Welfare Drive Reaches 750+ Deserving Families",
+    slug: "essential-food-welfare-drive",
+    title: "Essential Food Welfare Drive Reaches Deserving Families",
     excerpt: "Essential food security packages comprising rice, flour, dhal, and cooking essentials delivered quietly to doorstep of vulnerable households.",
-    content: `Amidst ongoing economic challenges affecting low-income families and daily wage earners, the Buhary Janaza Welfare Society completed another major phase of its ongoing Monthly Food Assistance Initiative.
+    content: `Amidst ongoing economic challenges affecting low-income families and daily wage earners, the Buhary Janaza Welfare Society completed another major phase of its ongoing Food Assistance Initiative.
 
-Supervised by Welfare Officer S.H. Mohamed Rizan, volunteers packaged and distributed nutritious dry food packs directly to the doorsteps of over 750 families, focusing on widows, orphans, elderly persons without support, and households facing acute hardship.
+Supervised by Welfare Officer S.H. Mohamed Rizan, volunteers packaged and distributed nutritious dry food packs directly to the doorsteps of deserving families across the Mahallah, focusing on widows, orphans, elderly persons without support, and households facing acute hardship.
 
 ### Each Ration Parcel Included:
 - 10 kg of Samba & Nadu rice

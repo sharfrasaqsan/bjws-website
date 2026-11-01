@@ -141,7 +141,7 @@ export default async function HomePage({
       desc: tServices("service3Desc"),
       image: "/images/gallery/iftar-01.webp",
       icon: HeartHandshake,
-      highlightBadge: "750+ Families Supported",
+      highlightBadge: "Essential Needs Support",
     },
     {
       id: "education-workshops",
@@ -199,11 +199,11 @@ export default async function HomePage({
       isEmergency: true,
     },
     {
-      role: t("englishLiaisonRole"),
-      name: "M.N.M. Nashraff",
-      phone: "077 227 1248",
-      tel: "+94772271248",
-      initials: "MNMN",
+      role: t("secretaryRole"),
+      name: "A.L.M. Siyam",
+      phone: "077 278 2829",
+      tel: "+94772782829",
+      initials: "ALMS",
     },
   ];
 
@@ -681,10 +681,10 @@ export default async function HomePage({
               </p>
             </div>
 
-            {/* Stat 3: Dry Ration Packs */}
+            {/* Stat 3: Essential Needs Aid */}
             <div className="relative overflow-hidden rounded-xl bg-white/5 border border-white/10 p-6 backdrop-blur-xs transition-all hover:bg-white/8 hover:border-emerald-500/30 group">
-              <div className="font-display text-4xl sm:text-5xl font-bold text-[#d4a359]">
-                <AnimatedCounter value={750} suffix="+" />
+              <div className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-[#d4a359]">
+                {t("statRationsValue")}
               </div>
               <h3 className="mt-2 text-base sm:text-lg font-bold text-white tracking-tight">
                 {t("statRationsLabel")}

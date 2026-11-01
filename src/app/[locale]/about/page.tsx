@@ -70,10 +70,10 @@ export default async function AboutPage({
     { title: t("rolePresident"), number: "01", desc: "Society Leadership & Assembly Chair" },
     { title: t("roleVicePresident"), number: "02", desc: "Executive Support & Deputization" },
     { title: t("roleSecretary"), number: "03", desc: "Secretariat, Minutes & Registry" },
-    { title: t("roleTreasurer"), number: "04", desc: "Accounts, Audits & Contributions" },
-    { title: t("roleCommittee"), number: "05", desc: "Community Consultation & Shura" },
-    { title: t("roleFuneralTeam"), number: "06", desc: "24/7 Ghusl, Kafan & Burials" },
-    { title: t("roleVolunteers"), number: "07", desc: "Cemetery Maintenance & Upkeep" },
+    { title: t("roleViceSecretary"), number: "04", desc: "Secretarial Support & Documentation" },
+    { title: t("roleTreasurer"), number: "05", desc: "Accounts, Audits & Contributions" },
+    { title: t("roleCommittee"), number: "06", desc: "Community Consultation & Shura" },
+    { title: t("roleVolunteers"), number: "07", desc: "Funeral Support & Cemetery Upkeep" },
   ];
 
   const executiveOfficers = [
@@ -82,30 +82,28 @@ export default async function AboutPage({
       role: t("rolePresident"),
       phone: "072 440 9574",
       initials: "AMS",
+      photo: "/images/team/sahibulla.webp",
     },
     {
       name: "A.L.M. Siyam",
       role: t("roleSecretary"),
       phone: "077 278 2829",
       initials: "ALMS",
+      photo: "/images/team/siyam.webp",
     },
     {
       name: "M.S. Faisarkhan",
       role: t("roleTreasurer"),
       phone: "075 651 0050",
       initials: "MSF",
+      photo: "/images/team/faisarkhan.webp",
     },
     {
       name: "A. Abuhuraira",
       role: "Organizer & Field Operations",
       phone: "077 622 7323",
       initials: "AA",
-    },
-    {
-      name: "M.N.M. Nashraff",
-      role: "English Communications Liaison",
-      phone: "077 227 1248",
-      initials: "MNMN",
+      photo: "/images/team/abuhuraira.webp",
     },
   ];
 
@@ -206,8 +204,8 @@ export default async function AboutPage({
                     <div className="text-[11px] font-semibold text-[#6b7280] uppercase">Janazas</div>
                   </div>
                   <div>
-                    <div className="font-display text-2xl font-bold text-[#0b2e1e]">750+</div>
-                    <div className="text-[11px] font-semibold text-[#6b7280] uppercase">Rations</div>
+                    <div className="font-display text-2xl font-bold text-[#0b2e1e]">Ongoing</div>
+                    <div className="text-[11px] font-semibold text-[#6b7280] uppercase">Welfare Aid</div>
                   </div>
                 </div>
               </div>
@@ -392,9 +390,21 @@ export default async function AboutPage({
                     >
                       <div>
                         <div className="flex items-center justify-between">
-                          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#0b2e1e] font-display text-xs font-bold text-[#d4af37]">
-                            {officer.initials}
-                          </span>
+                          {officer.photo ? (
+                            <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-[#c99a45]/40 shadow-xs bg-[#0b2e1e]">
+                              <Image
+                                src={officer.photo}
+                                alt={officer.name}
+                                fill
+                                sizes="48px"
+                                className="object-cover object-top"
+                              />
+                            </div>
+                          ) : (
+                            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#0b2e1e] font-display text-xs font-bold text-[#d4af37]">
+                              {officer.initials}
+                            </span>
+                          )}
                           <span className="rounded-full bg-[#e8f3ee] px-2.5 py-0.5 text-[11px] font-semibold text-[#0b2e1e]">
                             {officer.role}
                           </span>

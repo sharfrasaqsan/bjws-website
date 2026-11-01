@@ -102,21 +102,23 @@ export default async function TeamPage({
               {/* 3 Key Stats Pills */}
               <div className="flex flex-wrap items-center gap-3">
                 <div className="rounded-xl bg-[#fbfaf6] border border-border px-3.5 py-2 text-center">
-                  <div className="font-display text-lg font-bold text-primary">8+</div>
+                  <div className="font-display text-lg font-bold text-primary">
+                    {TEAM_MEMBERS.length}
+                  </div>
                   <div className="text-[10px] font-semibold text-text-muted uppercase tracking-wider">
-                    Officers
+                    {t("statMembers")}
                   </div>
                 </div>
                 <div className="rounded-xl bg-[#fbfaf6] border border-border px-3.5 py-2 text-center">
                   <div className="font-display text-lg font-bold text-primary">24/7</div>
                   <div className="text-[10px] font-semibold text-text-muted uppercase tracking-wider">
-                    On-Call
+                    {t("statOnCall")}
                   </div>
                 </div>
                 <div className="rounded-xl bg-[#fbfaf6] border border-border px-3.5 py-2 text-center">
                   <div className="font-display text-lg font-bold text-primary">100%</div>
                   <div className="text-[10px] font-semibold text-text-muted uppercase tracking-wider">
-                    Honorary
+                    {t("statHonorary")}
                   </div>
                 </div>
               </div>
