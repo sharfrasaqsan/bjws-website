@@ -218,7 +218,7 @@ export default async function HomePage({
         <div className="absolute inset-0 z-0">
           <Image
             src="/images/gallery/shramadana-01.webp"
-            alt="BJWS Community Service at Cemetery Grounds, Mullipothanai"
+            alt="BJWS Community Service at Cemetery Grounds, Mullipothana"
             fill
             priority
             quality={85}

@@ -260,7 +260,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
     whatsapp: "+94767139496",
     address: "No. 307, Unit 07, Mullipothana",
     initials: "SMJ",
-    photo: "/images/team/jaisar.webp",
+    photo: "/images/team/jaisar1.webp",
     term: "2023 - Present",
   },
   {

@@ -50,7 +50,7 @@ export default async function AchievementsPage({
   const achievementCategories = [
     {
       title: t("categoryFuneralTitle"),
-      metric: "28",
+      metric: "100+",
       metricLabel: "Janazas Completed",
       items: [
         t("categoryFuneralItem1"),
@@ -61,7 +61,7 @@ export default async function AchievementsPage({
     },
     {
       title: t("categoryMembershipTitle"),
-      metric: "50+",
+      metric: "20+",
       metricLabel: "Active Members",
       items: [t("categoryMembershipItem1"), t("categoryMembershipItem2")],
       icon: Users,
