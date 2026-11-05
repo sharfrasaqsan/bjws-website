@@ -233,7 +233,7 @@ export function Header({ notices = [] }: HeaderProps) {
               {/* Real BJWS Logo WebP */}
               <div className="relative h-10 w-10 sm:h-12 sm:w-12 shrink-0 overflow-hidden rounded-lg border border-emerald-900/15 bg-white p-1 shadow-2xs transition-transform group-hover:scale-105">
                 <Image
-                  src="/image/bjws logo.webp"
+                  src="/images/bjws logo.webp"
                   alt="Buhary Janaza Welfare Society Logo"
                   width={48}
                   height={48}

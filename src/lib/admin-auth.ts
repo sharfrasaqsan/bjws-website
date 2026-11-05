@@ -66,12 +66,12 @@ export async function loginAdminAction(
 
   let shouldRedirect = false;
 
-  // Direct 1-Click Demo Login bypass
-  if (isDemo) {
+  // Development-only demo login bypass (disabled in production)
+  if (isDemo && process.env.NODE_ENV !== "production") {
     const cookieStore = await cookies();
     cookieStore.set(DEMO_ADMIN_COOKIE, "active", {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: false,
       sameSite: "lax",
       path: "/",
       maxAge: 60 * 60 * 8, // 8 hours

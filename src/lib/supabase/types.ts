@@ -189,6 +189,96 @@ export interface Database {
         };
         Relationships: [];
       };
+      team_members: {
+        Row: {
+          id: string;
+          name: string;
+          role_en: string;
+          role_ta: string;
+          role_si: string;
+          category: string;
+          phone: string;
+          whatsapp: string | null;
+          email: string | null;
+          address: string;
+          initials: string;
+          photo: string | null;
+          term: string;
+          is_inactive: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          role_en: string;
+          role_ta?: string;
+          role_si?: string;
+          category?: string;
+          phone?: string;
+          whatsapp?: string | null;
+          email?: string | null;
+          address?: string;
+          initials?: string;
+          photo?: string | null;
+          term?: string;
+          is_inactive?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          role_en?: string;
+          role_ta?: string;
+          role_si?: string;
+          category?: string;
+          phone?: string;
+          whatsapp?: string | null;
+          email?: string | null;
+          address?: string;
+          initials?: string;
+          photo?: string | null;
+          term?: string;
+          is_inactive?: boolean;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      gallery_images: {
+        Row: {
+          id: string;
+          src: string;
+          caption: string;
+          category: string;
+          date: string;
+          location: string;
+          approved: boolean;
+          consent_notes: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          src: string;
+          caption: string;
+          category?: string;
+          date?: string;
+          location?: string;
+          approved?: boolean;
+          consent_notes?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          src?: string;
+          caption?: string;
+          category?: string;
+          date?: string;
+          location?: string;
+          approved?: boolean;
+          consent_notes?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;

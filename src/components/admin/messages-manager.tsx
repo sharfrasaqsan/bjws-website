@@ -58,7 +58,7 @@ export function MessagesManager({ initialMessages }: MessagesManagerProps) {
       clean = "94" + clean;
     }
     const text = encodeURIComponent(
-      `Assalamu Alaikum / Greetings ${name}, this is from Buhary Janaza Welfare Society (BJWS), Mullipothanai regarding your message.`
+      `Assalamu Alaikum / Greetings ${name}, this is from Buhary Janaza Welfare Society (BJWS), Mullipothana regarding your message.`
     );
     return `https://wa.me/${clean}?text=${text}`;
   };

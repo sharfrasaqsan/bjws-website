@@ -18,6 +18,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { Link } from "@/i18n/routing";
+import { getSiteAssets } from "@/content/site-assets";
 
 export async function generateMetadata({
   params,
@@ -43,6 +44,7 @@ export default async function AchievementsPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const assets = getSiteAssets();
 
   const t = await getTranslations("achievementsPage");
   const tCommon = await getTranslations("common");
@@ -122,7 +124,7 @@ export default async function AchievementsPage({
         title={t("pageTitle")}
         subtitle={t("subtitle")}
         eyebrow={t("eyebrow")}
-        imageSrc="/images/gallery/shramadana-02.webp"
+        imageSrc={assets.headerAchievements || "/images/gallery/shramadana-02.webp"}
         imageAlt="BJWS Verified Community Milestones & Achievements"
         breadcrumbs={[
           { label: tCommon("home"), href: "/" },

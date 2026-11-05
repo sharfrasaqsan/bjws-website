@@ -10,6 +10,7 @@ import {
 import { buildPageMetadata } from "@/lib/seo";
 import { JsonLd, getBreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { ShieldCheck } from "lucide-react";
+import { getSiteAssets } from "@/content/site-assets";
 
 export async function generateMetadata({
   params,
@@ -38,6 +39,7 @@ export default async function GalleryPage({
 
   const t = await getTranslations("galleryPage");
   const tCommon = await getTranslations("common");
+  const assets = getSiteAssets();
 
   // STRICT POLICY: Only load approved images from manifest
   const approvedImages = getApprovedGalleryImages();
@@ -48,11 +50,21 @@ export default async function GalleryPage({
     categoriesMap[cat.key] = t(cat.titleKey);
   }
 
-  // Prepare localized captions and alt texts
+  // Prepare localized captions and alt texts safely
   const captionsMap: Record<string, string> = {};
   for (const img of approvedImages) {
-    captionsMap[img.captionKey] = t(img.captionKey);
-    captionsMap[img.altKey] = t(img.altKey);
+    try {
+      captionsMap[img.captionKey] = t.has(img.captionKey)
+        ? t(img.captionKey)
+        : img.captionKey;
+    } catch {
+      captionsMap[img.captionKey] = img.captionKey;
+    }
+    try {
+      captionsMap[img.altKey] = t.has(img.altKey) ? t(img.altKey) : img.altKey;
+    } catch {
+      captionsMap[img.altKey] = img.altKey;
+    }
   }
 
   const translations = {
@@ -77,7 +89,7 @@ export default async function GalleryPage({
         title={t("pageTitle")}
         subtitle={t("subtitle")}
         eyebrow={t("eyebrow")}
-        imageSrc="/images/gallery/iftar-01.webp"
+        imageSrc={assets.headerGallery || "/images/gallery/iftar-01.webp"}
         imageAlt="BJWS Photo Gallery Documentation"
         breadcrumbs={[
           { label: tCommon("home"), href: "/" },
@@ -85,31 +97,21 @@ export default async function GalleryPage({
         ]}
       />
 
-      <div className="bg-[#fbfaf6] py-16 sm:py-24">
+      <div className="bg-[#fbfaf6] py-12 sm:py-20">
         <Container size="xl">
-          {/* Privacy & Consent Notice Banner */}
-          <div className="mb-12 flex items-start gap-4 rounded-3xl border border-[#0b2e1e]/15 bg-[#f4efe6] p-6 shadow-xs sm:p-8">
-            <div
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#0b2e1e] text-[#d4af37] shadow-xs"
-              aria-hidden="true"
-            >
-              <ShieldCheck className="h-6 w-6" strokeWidth={2} />
-            </div>
-            <div className="space-y-1">
-              <span className="font-sans text-xs font-bold uppercase tracking-wider text-[#b8952b]">
-                Community Protection & Dignity Policy
-              </span>
-              <h2 className="font-display text-lg font-bold text-[#0b2e1e] sm:text-xl">
-                {t("privacyNoticeTitle")}
-              </h2>
-              <p className="text-sm leading-relaxed text-[#4b5563]">
-                {t("privacyNoticeDesc")}
-              </p>
-            </div>
-          </div>
-
           {/* Gallery Grid & Filter Tabs */}
           <GalleryGrid images={approvedImages} translations={translations} />
+
+          {/* Subtle Community Dignity Assurance Note */}
+          <div className="mt-16 border-t border-[#e6e4dc] pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#6b7280]">
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="h-4 w-4 text-[#124d34] shrink-0" />
+              <span>{t("privacyNoticeTitle")} &mdash; {t("privacyNoticeDesc")}</span>
+            </div>
+            <span className="text-[11px] font-mono text-[#9ca3af] shrink-0">
+              Buhary Janaza Welfare Society Visual Documentation
+            </span>
+          </div>
         </Container>
       </div>
     </>

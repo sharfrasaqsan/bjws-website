@@ -7,6 +7,7 @@ import { getArticles, type Article } from "@/content/news";
 import { createPublicClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { buildPageMetadata } from "@/lib/seo";
 import { JsonLd, getBreadcrumbJsonLd } from "@/components/seo/json-ld";
+import { getSiteAssets } from "@/content/site-assets";
 
 export async function generateMetadata({
   params,
@@ -35,6 +36,7 @@ export default async function NewsPage({
 
   const t = await getTranslations("newsPage");
   const tCommon = await getTranslations("common");
+  const assets = getSiteAssets();
 
   let articles: Article[] = getArticles(locale);
 
@@ -98,7 +100,7 @@ export default async function NewsPage({
         title={t("pageTitle")}
         subtitle={t("subtitle")}
         eyebrow={tCommon("societyShort")}
-        imageSrc="/images/gallery/shramadana-02.webp"
+        imageSrc={assets.headerNews || "/images/gallery/shramadana-02.webp"}
         imageAlt="BJWS News & Community Bulletin"
         breadcrumbs={[
           { label: tCommon("home"), href: "/" },

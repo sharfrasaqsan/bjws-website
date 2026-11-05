@@ -64,7 +64,7 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
         {
           id: "seed-en-1",
           title: "Annual Cemetery Shramadhana & Grounds Maintenance Drive",
-          body: "The Buhary Janaza Welfare Society warmly invites all community members and youth volunteers to take part in the upcoming cemetery clean-up drive.\n\nDate: Coming Sunday at 7:00 AM\nVenue: Mahallah Cemetery Grounds, Mullipothanai\nTools and refreshments will be provided. Hotline: 077 622 7323",
+          body: "The Buhary Janaza Welfare Society warmly invites all community members and youth volunteers to take part in the upcoming cemetery clean-up drive.\n\nDate: Coming Sunday at 7:00 AM\nVenue: Mahallah Cemetery Grounds, Mullipothana\nTools and refreshments will be provided. Hotline: 077 622 7323",
           locale: "en",
           published_at: "2026-03-01T08:00:00Z",
         },

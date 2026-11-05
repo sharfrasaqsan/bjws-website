@@ -13,7 +13,7 @@ export default function RootNotFound() {
             404 - Page Not Found
           </h1>
           <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-gray-600">
-            Buhary Janaza Welfare Society (BJWS) • Mullipothanai, Sri Lanka
+            Buhary Janaza Welfare Society (BJWS) • Mullipothana, Sri Lanka
           </p>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">

@@ -86,7 +86,7 @@ export const GALLERY_CATEGORIES: GalleryCategoryMeta[] = [
 ];
 
 // Universal compact blur placeholder for fast LQIP
-const DEFAULT_BLUR =
+export const DEFAULT_BLUR =
   "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAAAwAQCdASoQAAoAAkA4JaQAA3AE/u8AAA==";
 
 export const GALLERY_MANIFEST: GalleryImage[] = [
@@ -98,7 +98,7 @@ export const GALLERY_MANIFEST: GalleryImage[] = [
     captionKey: "photoShramadana1Caption",
     category: "cemetery-shramadana",
     date: "2024",
-    location: "Mahallah Cemetery, Mullipothanai",
+    location: "Mahallah Cemetery, Mullipothana",
     width: 1200,
     height: 800,
     blurDataURL: DEFAULT_BLUR,
@@ -112,7 +112,7 @@ export const GALLERY_MANIFEST: GalleryImage[] = [
     captionKey: "photoShramadana2Caption",
     category: "cemetery-shramadana",
     date: "2024",
-    location: "Mahallah Cemetery, Mullipothanai",
+    location: "Mahallah Cemetery, Mullipothana",
     width: 1200,
     height: 800,
     blurDataURL: DEFAULT_BLUR,
@@ -142,7 +142,7 @@ export const GALLERY_MANIFEST: GalleryImage[] = [
     captionKey: "photoGhusl2Caption",
     category: "ghusl-kafan",
     date: "2024",
-    location: "Jamiya Mosque, Mullipothanai",
+    location: "Jamiya Mosque, Mullipothana",
     width: 1200,
     height: 800,
     blurDataURL: DEFAULT_BLUR,
@@ -158,7 +158,7 @@ export const GALLERY_MANIFEST: GalleryImage[] = [
     captionKey: "photoIftar1Caption",
     category: "iftar-functions",
     date: "2024",
-    location: "Muhaideen Mosque, Mullipothanai",
+    location: "Muhaideen Mosque, Mullipothana",
     width: 1200,
     height: 800,
     blurDataURL: DEFAULT_BLUR,
@@ -172,7 +172,7 @@ export const GALLERY_MANIFEST: GalleryImage[] = [
     captionKey: "photoIftar2Caption",
     category: "iftar-functions",
     date: "2024",
-    location: "Jamiya Mosque, Mullipothanai",
+    location: "Jamiya Mosque, Mullipothana",
     width: 1200,
     height: 800,
     blurDataURL: DEFAULT_BLUR,
@@ -204,7 +204,7 @@ export const GALLERY_MANIFEST: GalleryImage[] = [
     captionKey: "photoLivelihood1Caption",
     category: "livelihood-project",
     date: "2024",
-    location: "Mullipothanai Mahallah",
+    location: "Mullipothana Mahallah",
     width: 1200,
     height: 800,
     blurDataURL: DEFAULT_BLUR,
@@ -227,29 +227,28 @@ export const GALLERY_MANIFEST: GalleryImage[] = [
     approved: true,
     consentNotes: "Access road civil works documentation.",
   },
-
-  // 7. Example Unapproved Image (MUST NEVER BE RENDERED)
-  {
-    id: "unapproved-sample",
-    src: "/images/gallery/unapproved-sample.webp",
-    altKey: "photoUnapprovedAlt",
-    captionKey: "photoUnapprovedCaption",
-    category: "cemetery-shramadana",
-    date: "2024",
-    location: "Pending Consent",
-    width: 1200,
-    height: 800,
-    blurDataURL: DEFAULT_BLUR,
-    approved: false, // RULE TEST: strict filtering ensures this is omitted
-    consentNotes: "Awaiting explicit written consent from family members.",
-  },
 ];
+
+import { formatGoogleDriveImageUrl } from "@/lib/utils";
+
+declare global {
+  var __galleryStore: GalleryImage[] | undefined;
+}
+
+// In-memory store for server actions in development / demo mode
+let liveGalleryStore: GalleryImage[] = globalThis.__galleryStore || [...GALLERY_MANIFEST];
+globalThis.__galleryStore = liveGalleryStore;
 
 /**
  * Returns strictly approved gallery images in compliance with the Privacy & Consent Policy.
  */
 export function getApprovedGalleryImages(): GalleryImage[] {
-  return GALLERY_MANIFEST.filter((item) => item.approved === true);
+  return liveGalleryStore
+    .filter((item) => item.approved === true)
+    .map((item) => ({
+      ...item,
+      src: formatGoogleDriveImageUrl(item.src),
+    }));
 }
 
 /**
@@ -258,7 +257,66 @@ export function getApprovedGalleryImages(): GalleryImage[] {
 export function getApprovedGalleryByCategory(
   category: GalleryCategory
 ): GalleryImage[] {
-  return GALLERY_MANIFEST.filter(
-    (item) => item.approved === true && item.category === category
-  );
+  return liveGalleryStore
+    .filter((item) => item.approved === true && item.category === category)
+    .map((item) => ({
+      ...item,
+      src: formatGoogleDriveImageUrl(item.src),
+    }));
+}
+
+/**
+ * Returns all gallery images for executive administration, including unapproved/pending.
+ */
+export function getAllGalleryImagesAdmin(): GalleryImage[] {
+  return liveGalleryStore.map((item) => ({
+    ...item,
+    src: formatGoogleDriveImageUrl(item.src),
+  }));
+}
+
+export function addGalleryImageStore(image: GalleryImage): void {
+  liveGalleryStore = [
+    {
+      ...image,
+      src: formatGoogleDriveImageUrl(image.src),
+    },
+    ...liveGalleryStore,
+  ];
+  globalThis.__galleryStore = liveGalleryStore;
+}
+
+export function updateGalleryImageStore(
+  id: string,
+  updates: Partial<GalleryImage>
+): boolean {
+  const index = liveGalleryStore.findIndex((img) => img.id === id);
+  if (index === -1) return false;
+
+  const nextUpdates = { ...updates };
+  if (nextUpdates.src) {
+    nextUpdates.src = formatGoogleDriveImageUrl(nextUpdates.src);
+  }
+
+  liveGalleryStore[index] = {
+    ...liveGalleryStore[index],
+    ...nextUpdates,
+  };
+  globalThis.__galleryStore = liveGalleryStore;
+  return true;
+}
+
+export function deleteGalleryImageStore(id: string): boolean {
+  const initialLen = liveGalleryStore.length;
+  liveGalleryStore = liveGalleryStore.filter((img) => img.id !== id);
+  globalThis.__galleryStore = liveGalleryStore;
+  return liveGalleryStore.length < initialLen;
+}
+
+export function toggleGalleryApprovalStore(id: string): boolean {
+  const image = liveGalleryStore.find((img) => img.id === id);
+  if (!image) return false;
+  image.approved = !image.approved;
+  globalThis.__galleryStore = liveGalleryStore;
+  return true;
 }

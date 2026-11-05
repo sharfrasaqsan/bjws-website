@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL, LOCALES, DEFAULT_LOCALE } from "@/lib/seo";
+import { SEED_ARTICLES } from "@/content/news";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const routes = [
@@ -56,6 +57,35 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
   }
 
-  // Admin routes are strictly excluded
+  // Include dynamic news articles for maximum search discoverability
+  const addedSlugs = new Set<string>();
+  for (const article of SEED_ARTICLES) {
+    if (!article.is_published || addedSlugs.has(article.slug)) continue;
+    addedSlugs.add(article.slug);
+
+    const articleRoute = `/news/${article.slug}`;
+
+    for (const locale of LOCALES) {
+      const languagesMap: Record<string, string> = {
+        "x-default": `${SITE_URL}/${DEFAULT_LOCALE}${articleRoute}`,
+      };
+
+      for (const loc of LOCALES) {
+        languagesMap[loc] = `${SITE_URL}/${loc}${articleRoute}`;
+      }
+
+      sitemapEntries.push({
+        url: `${SITE_URL}/${locale}${articleRoute}`,
+        lastModified: article.published_at || currentDate,
+        changeFrequency: "monthly",
+        priority: 0.75,
+        alternates: {
+          languages: languagesMap,
+        },
+      });
+    }
+  }
+
+  // Admin routes and verification endpoints are strictly excluded from sitemap
   return sitemapEntries;
 }

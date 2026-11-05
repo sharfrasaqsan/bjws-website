@@ -158,7 +158,7 @@ export function MembershipForm({ translations }: MembershipFormProps) {
       >
         <Input
           name="addressArea"
-          placeholder="e.g. Eacha Nagar / Kandy Road, Mullipothanai"
+          placeholder="e.g. Eacha Nagar / Kandy Road, Mullipothana"
           required
           disabled={isPending}
         />

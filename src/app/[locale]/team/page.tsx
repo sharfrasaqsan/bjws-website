@@ -3,10 +3,11 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Container } from "@/components/ui/container";
 import { PageHeader } from "@/components/layout/page-header";
 import { TeamGrid } from "@/components/sections/team-grid";
-import { TEAM_MEMBERS } from "@/content/team";
+import { getTeamMembers } from "@/content/team";
 import { buildPageMetadata } from "@/lib/seo";
 import { JsonLd, getBreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { ShieldCheck } from "lucide-react";
+import { getSiteAssets } from "@/content/site-assets";
 
 export async function generateMetadata({
   params,
@@ -35,6 +36,8 @@ export default async function TeamPage({
 
   const t = await getTranslations("teamPage");
   const tCommon = await getTranslations("common");
+  const assets = getSiteAssets();
+  const teamMembers = getTeamMembers();
 
   const validLocale = (locale === "ta" || locale === "si" ? locale : "en") as
     | "en"
@@ -69,7 +72,7 @@ export default async function TeamPage({
         title={t("pageTitle")}
         subtitle={t("subtitle")}
         eyebrow={tCommon("regNo")}
-        imageSrc="/images/gallery/shramadana-01.webp"
+        imageSrc={assets.headerTeam || "/images/gallery/shramadana-01.webp"}
         imageAlt="BJWS Society Executive Team and Volunteer Committee"
         breadcrumbs={[
           { label: tCommon("home"), href: "/" },
@@ -103,7 +106,7 @@ export default async function TeamPage({
               <div className="flex flex-wrap items-center gap-3">
                 <div className="rounded-xl bg-[#fbfaf6] border border-border px-3.5 py-2 text-center">
                   <div className="font-display text-lg font-bold text-primary">
-                    {TEAM_MEMBERS.length}
+                    {teamMembers.length}
                   </div>
                   <div className="text-[10px] font-semibold text-text-muted uppercase tracking-wider">
                     {t("statMembers")}
@@ -127,7 +130,7 @@ export default async function TeamPage({
 
           {/* Team Grid with Interactive Filtering & Search */}
           <TeamGrid
-            members={TEAM_MEMBERS}
+            members={teamMembers}
             locale={validLocale}
             translations={translations}
           />

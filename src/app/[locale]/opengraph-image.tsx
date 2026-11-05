@@ -103,7 +103,7 @@ export default async function OpengraphImage({
                 fontWeight: 500,
               }}
             >
-              Mullipothanai, Sri Lanka
+              Mullipothana, Sri Lanka
             </span>
           </div>
         </div>
@@ -186,7 +186,7 @@ export default async function OpengraphImage({
             color: "#94a3b8",
           }}
         >
-          95th Buhary Jummah Mosque, Mullipothanai
+          95th Buhary Jummah Mosque, Mullipothana
         </div>
       </div>
     </div>,

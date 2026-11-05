@@ -1,16 +1,14 @@
 import Link from "next/link";
 import { getAdminSession } from "@/lib/admin-auth";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
-import {
-  NoticesManager,
-  type NoticeRecord,
-} from "@/components/admin/notices-manager";
+import { getAllNotices, type NoticeRecord } from "@/content/notices";
+import { NoticesManager } from "@/components/admin/notices-manager";
 import { Megaphone, ArrowLeft } from "lucide-react";
 
 export default async function AdminNoticesPage() {
   await getAdminSession();
 
-  let notices: NoticeRecord[] = [];
+  let notices: NoticeRecord[] = getAllNotices();
 
   if (isSupabaseConfigured()) {
     try {
@@ -22,39 +20,12 @@ export default async function AdminNoticesPage() {
         )
         .order("published_at", { ascending: false });
 
-      if (!error && data) {
+      if (!error && data && data.length > 0) {
         notices = data;
       }
     } catch (err) {
       console.warn("Failed to fetch notices:", err);
     }
-  } else {
-    notices = [
-      {
-        id: "notice-1",
-        title: "Annual Shramadhana Program at Mahallah Cemetery Grounds",
-        body: "We invite all youth, volunteers, and community members to participate in the upcoming seasonal clean-up and maintenance of the Mahallah cemetery grounds. Refreshments and tools will be provided by the society.",
-        locale: "en",
-        published_at: "2026-03-01T08:00:00Z",
-        is_published: true,
-      },
-      {
-        id: "notice-2",
-        title: "மஹல்லா மையவாடி சிரமதானப் பணி அழைப்பு",
-        body: "எமது மஹல்லா மையவாடியை துப்புரவு செய்யும் வருடாந்த சிரமதானப் பணியில் அனைத்து இளைஞர்களையும் பொதுமக்களையும் பங்குபற்றுமாறு அன்புடன் அழைக்கின்றோம். உபகரணங்கள் மற்றும் சிற்றுண்டிகள் சங்கத்தினால் வழங்கப்படும்.",
-        locale: "ta",
-        published_at: "2026-03-01T08:00:00Z",
-        is_published: true,
-      },
-      {
-        id: "notice-3",
-        title: "සුසාන භූමි වාර්ෂික ශ්‍රමදාන වැඩසටහන",
-        body: "මහල්ල සුසාන භූමිය පිරිසිදු කිරීමේ වාර්ෂික ශ්‍රමදාන කටයුතු සඳහා සහභාගී වන ලෙස ප්‍රජාවට ආරාධනා කරමු. සියලු උපකරණ සහ ප්‍රබෝධක සමිතිය විසින් සපයනු ලැබේ.",
-        locale: "si",
-        published_at: "2026-03-01T08:00:00Z",
-        is_published: true,
-      },
-    ];
   }
 
   return (

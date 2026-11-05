@@ -3,6 +3,7 @@ import {
   createPublicClient,
   isSupabaseConfigured,
 } from "@/lib/supabase/server";
+import { getAllNotices } from "@/content/notices";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -49,9 +50,22 @@ export async function NoticesSection({
     }
   }
 
-  // Fallback verified announcement from Profile Book
+  // Fallback to live store / Profile Book seed data
   if (notices.length === 0) {
-    const fallbackNotices: Record<string, NoticeItem[]> = {
+    const liveNotices = getAllNotices();
+    const filtered = liveNotices
+      .filter((n) => n.is_published && n.locale === locale)
+      .map((n) => ({
+        id: n.id,
+        title: n.title,
+        body: n.body,
+        published_at: n.published_at,
+      }));
+
+    if (filtered.length > 0) {
+      notices = filtered;
+    } else {
+      const fallbackNotices: Record<string, NoticeItem[]> = {
       en: [
         {
           id: "seed-1",
@@ -80,6 +94,7 @@ export async function NoticesSection({
 
     notices = fallbackNotices[locale] || fallbackNotices.en;
   }
+}
 
   return (
     <div className="space-y-6">

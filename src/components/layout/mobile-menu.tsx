@@ -124,7 +124,7 @@ export function MobileMenu({ isOpen, onClose, navItems }: MobileMenuProps) {
             <div className="flex items-center gap-3">
               <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-md border border-emerald-900/10">
                 <Image
-                  src="/image/bjws logo.webp"
+                  src="/images/bjws logo.webp"
                   alt="BJWS Emblem"
                   width={40}
                   height={40}

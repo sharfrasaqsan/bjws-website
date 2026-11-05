@@ -25,6 +25,8 @@ import {
   Heart,
   LifeBuoy,
 } from "lucide-react";
+import { formatGoogleDriveImageUrl } from "@/lib/utils";
+import { getSiteAssets } from "@/content/site-assets";
 
 export async function generateMetadata({
   params,
@@ -53,6 +55,7 @@ export default async function ServicesPage({
 
   const t = await getTranslations("servicesPage");
   const tCommon = await getTranslations("common");
+  const assets = getSiteAssets();
 
   const services = [
     {
@@ -61,7 +64,7 @@ export default async function ServicesPage({
       title: t("service1Title"),
       desc: t("service1Desc"),
       icon: Clock,
-      image: "/images/gallery/ghusl-02.webp",
+      image: assets.serviceFuneralAssistance || "/images/gallery/ghusl-02.webp",
       imageAlt: "BJWS Ritual Ghusl and Kafan Services",
       imageBadge: "24/7 Response Available",
       reverse: false,
@@ -80,7 +83,7 @@ export default async function ServicesPage({
       title: t("service2Title"),
       desc: t("service2Desc"),
       icon: Sparkles,
-      image: "/images/gallery/shramadana-02.webp",
+      image: assets.serviceCemeteryMaintenance || "/images/gallery/shramadana-02.webp",
       imageAlt: "Mahallah Cemetery Shramadhana Clean-Up",
       imageBadge: "1.5 Acres Under Care",
       reverse: true,
@@ -99,7 +102,7 @@ export default async function ServicesPage({
       title: t("service3Title"),
       desc: t("service3Desc"),
       icon: HeartHandshake,
-      image: "/images/gallery/iftar-01.webp",
+      image: assets.serviceReliefWelfare || "/images/gallery/iftar-01.webp",
       imageAlt: "BJWS Essential Needs and Food Welfare",
       imageBadge: "Essential Needs Support",
       reverse: false,
@@ -118,7 +121,7 @@ export default async function ServicesPage({
       title: t("service4Title"),
       desc: t("service4Desc"),
       icon: BookOpen,
-      image: "/images/gallery/ghusl-01.webp",
+      image: assets.serviceSunnahEducation || "/images/gallery/ghusl-01.webp",
       imageAlt: "Youth and Volunteer Funeral Training Seminar",
       imageBadge: "Sunnah Education",
       reverse: true,
@@ -136,7 +139,7 @@ export default async function ServicesPage({
       title: t("service5Title"),
       desc: t("service5Desc"),
       icon: Users,
-      image: "/images/gallery/shramadana-01.webp",
+      image: assets.serviceShramadanaCampaigns || "/images/gallery/shramadana-01.webp",
       imageAlt: "BJWS Community Shramadana and Environmental Cleanliness Campaign",
       imageBadge: "Community Shramadana",
       reverse: false,
@@ -154,7 +157,7 @@ export default async function ServicesPage({
       title: t("service6Title"),
       desc: t("service6Desc"),
       icon: Heart,
-      image: "/images/gallery/livelihood-01.webp",
+      image: assets.serviceOrphanCare || "/images/gallery/livelihood-01.webp",
       imageAlt: "BJWS Orphan Support and Vulnerable Household Care",
       imageBadge: "Kafalah Care",
       reverse: true,
@@ -172,7 +175,7 @@ export default async function ServicesPage({
       title: t("service7Title"),
       desc: t("service7Desc"),
       icon: LifeBuoy,
-      image: "/images/gallery/water-concrete-01.webp",
+      image: assets.serviceDisasterRelief || "/images/gallery/water-concrete-01.webp",
       imageAlt: "BJWS Emergency Flood and Disaster Relief Response",
       imageBadge: "Crisis Response",
       reverse: false,
@@ -204,7 +207,7 @@ export default async function ServicesPage({
         title={t("pageTitle")}
         subtitle={t("subtitle")}
         eyebrow={t("eyebrow")}
-        imageSrc="/images/gallery/ghusl-02.webp"
+        imageSrc={assets.headerServices || "/images/gallery/ghusl-02.webp"}
         imageAlt="BJWS Community Funeral Services & Welfare Programs"
         breadcrumbs={[
           { label: tCommon("home"), href: "/" },
@@ -237,7 +240,7 @@ export default async function ServicesPage({
                     <div className="lg:col-span-5">
                       <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-[#0b2e1e]/10 bg-[#0b2e1e]/5 shadow-sm">
                         <Image
-                          src={svc.image}
+                          src={formatGoogleDriveImageUrl(svc.image)}
                           alt={svc.imageAlt}
                           fill
                           sizes="(max-width: 1024px) 100vw, 40vw"

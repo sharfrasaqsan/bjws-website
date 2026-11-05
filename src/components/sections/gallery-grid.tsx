@@ -8,15 +8,9 @@ import {
   type GalleryCategory,
   GALLERY_CATEGORIES,
 } from "@/content/gallery";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { ScrollRevealGroup } from "@/components/ui/scroll-reveal";
-import { cn } from "@/lib/utils";
+import { cn, formatGoogleDriveImageUrl } from "@/lib/utils";
+import { Tag, Eye } from "lucide-react";
 
 // Dynamically load Lightbox so initial page load JS is minimal (Lighthouse 95+ target)
 const Lightbox = dynamic(
@@ -51,58 +45,67 @@ export function GalleryGrid({ images, translations }: GalleryGridProps) {
   const getCategoryTitle = (cat: string) => translations.categories[cat] || cat;
 
   return (
-    <div>
-      {/* Category Filter Tabs */}
-      <div className="border-border mb-8 flex flex-wrap items-center gap-2 border-b pb-4 sm:mb-10">
-        <button
-          type="button"
-          onClick={() => setSelectedCategory("all")}
-          aria-pressed={selectedCategory === "all"}
-          className={cn(
-            "rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors sm:text-sm",
-            "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none",
-            selectedCategory === "all"
-              ? "bg-primary text-primary-foreground font-semibold shadow-2xs"
-              : "bg-surface text-text-muted hover:text-text hover:bg-muted border-border border"
-          )}
-        >
-          {translations.allCategory} ({images.length})
-        </button>
+    <div className="space-y-8">
+      {/* Category Filter Tabs & Photo Counter */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-[#e6e4dc] pb-5">
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setSelectedCategory("all")}
+            aria-pressed={selectedCategory === "all"}
+            className={cn(
+              "rounded-full px-4 py-2 text-xs font-semibold transition-all cursor-pointer shadow-2xs",
+              "focus-visible:ring-2 focus-visible:ring-[#124d34] focus-visible:outline-none",
+              selectedCategory === "all"
+                ? "bg-[#124d34] text-white shadow-xs"
+                : "bg-white text-[#4b5563] hover:text-[#0b2e1e] hover:bg-[#f3f1ea] border border-[#e6e4dc]"
+            )}
+          >
+            {translations.allCategory}
+          </button>
 
-        {GALLERY_CATEGORIES.map((cat) => {
-          const count = images.filter((img) => img.category === cat.key).length;
-          const isSelected = selectedCategory === cat.key;
+          {GALLERY_CATEGORIES.map((cat) => {
+            const isSelected = selectedCategory === cat.key;
 
-          return (
-            <button
-              key={cat.key}
-              type="button"
-              onClick={() => setSelectedCategory(cat.key)}
-              aria-pressed={isSelected}
-              className={cn(
-                "rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors sm:text-sm",
-                "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none",
-                isSelected
-                  ? "bg-primary text-primary-foreground font-semibold shadow-2xs"
-                  : "bg-surface text-text-muted hover:text-text hover:bg-muted border-border border"
-              )}
-            >
-              {getCategoryTitle(cat.key)} ({count})
-            </button>
-          );
-        })}
+            return (
+              <button
+                key={cat.key}
+                type="button"
+                onClick={() => setSelectedCategory(cat.key)}
+                aria-pressed={isSelected}
+                className={cn(
+                  "rounded-full px-4 py-2 text-xs font-semibold transition-all cursor-pointer shadow-2xs",
+                  "focus-visible:ring-2 focus-visible:ring-[#124d34] focus-visible:outline-none",
+                  isSelected
+                    ? "bg-[#124d34] text-white shadow-xs"
+                    : "bg-white text-[#4b5563] hover:text-[#0b2e1e] hover:bg-[#f3f1ea] border border-[#e6e4dc]"
+                )}
+              >
+                {getCategoryTitle(cat.key)}
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="text-xs font-medium text-[#6b7280] shrink-0">
+          Showing <strong className="text-[#0b2e1e] font-semibold">{filteredImages.length}</strong> {filteredImages.length === 1 ? "photo" : "photos"}
+        </div>
       </div>
 
       {/* Image Grid with Staggered Scroll Reveal */}
-      <ScrollRevealGroup staggerMs={50} className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <ScrollRevealGroup
+        staggerMs={40}
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7"
+      >
         {filteredImages.map((image, index) => {
+          const caption = getCaption(image.captionKey);
+          const categoryTitle = getCategoryTitle(image.category);
+          const formattedSrc = formatGoogleDriveImageUrl(image.src);
+
           return (
-            <Card
+            <div
               key={image.id}
-              className={cn(
-                "group cursor-pointer overflow-hidden transition-all duration-200",
-                "hover:border-primary/40 hover:-translate-y-0.5 hover:shadow-md"
-              )}
+              className="group relative cursor-pointer overflow-hidden rounded-2xl bg-surface border border-[#e6e4dc] shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#124d34]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#124d34]"
               onClick={() => setActiveImageIndex(index)}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
@@ -112,12 +115,12 @@ export function GalleryGrid({ images, translations }: GalleryGridProps) {
               }}
               tabIndex={0}
               role="button"
-              aria-label={`${getCaption(image.captionKey)} - ${translations.viewInLightbox}`}
+              aria-label={`${caption} - ${translations.viewInLightbox}`}
             >
-              {/* Responsive Image Container */}
-              <div className="bg-surface-muted relative aspect-4/3 overflow-hidden">
+              {/* Responsive Image Container (4:3 Aspect Ratio) */}
+              <div className="relative aspect-4/3 w-full overflow-hidden bg-muted">
                 <Image
-                  src={image.src}
+                  src={formattedSrc}
                   alt={getCaption(image.altKey)}
                   width={image.width}
                   height={image.height}
@@ -125,54 +128,36 @@ export function GalleryGrid({ images, translations }: GalleryGridProps) {
                   placeholder="blur"
                   blurDataURL={image.blurDataURL}
                   loading={index < 3 ? "eager" : "lazy"}
-                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-103 motion-reduce:transition-none"
+                  unoptimized={formattedSrc.includes("googleusercontent.com")}
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
 
-                {/* Badge Overlay */}
-                <div className="absolute top-3 left-3">
-                  <Badge
-                    variant="primary"
-                    size="sm"
-                    className="shadow-xs backdrop-blur-xs"
-                  >
-                    {getCategoryTitle(image.category)}
-                  </Badge>
-                </div>
+                {/* Subtle vignette gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent opacity-75 group-hover:opacity-90 transition-opacity duration-300 pointer-events-none" />
 
-                {/* Expand Overlay Icon */}
-                <div className="bg-primary/20 absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100">
-                  <span className="bg-surface text-primary rounded-full p-2.5 shadow-md">
-                    <svg
-                      className="h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"
-                      />
-                    </svg>
+                {/* Pinned Category Tag */}
+                <div className="absolute top-3 left-3 pointer-events-none">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-[#0b2e1e]/85 backdrop-blur-xs text-[#d4af37] px-2.5 py-1 text-[11px] font-semibold border border-[#c99a45]/30 shadow-xs">
+                    <Tag className="h-3 w-3" />
+                    <span>{categoryTitle}</span>
                   </span>
                 </div>
-              </div>
 
-              {/* Card Meta Content */}
-              <CardHeader className="p-4 sm:p-5">
-                <CardTitle
-                  as="h3"
-                  className="group-hover:text-primary line-clamp-1 text-base transition-colors"
-                >
-                  {getCaption(image.captionKey)}
-                </CardTitle>
-                <CardDescription className="flex items-center justify-between pt-1 text-xs">
-                  <span>{image.location}</span>
-                  <span className="font-mono">{image.date}</span>
-                </CardDescription>
-              </CardHeader>
-            </Card>
+                {/* Quick Enlarge Hover Indicator */}
+                <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-xs shadow-md">
+                    <Eye className="h-4 w-4" />
+                  </span>
+                </div>
+
+                {/* Clean In-Photo Bottom Caption */}
+                <div className="absolute bottom-0 inset-x-0 p-4 text-white pointer-events-none">
+                  <h3 className="font-serif text-sm sm:text-base font-semibold leading-snug line-clamp-2 drop-shadow-sm group-hover:text-[#fbfaf6] transition-colors">
+                    {caption}
+                  </h3>
+                </div>
+              </div>
+            </div>
           );
         })}
       </ScrollRevealGroup>

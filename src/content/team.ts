@@ -20,6 +20,11 @@ export interface TeamMember {
   photo?: string;
   term: string;
   isInactive?: boolean;
+  memberId?: string; // Format: BJWS000
+  nic?: string; // National Identity Card number
+  verificationToken?: string; // Secure token for QR verification
+  verificationStatus?: "verified" | "suspended" | "pending";
+  issueDate?: string;
 }
 
 export const TEAM_MEMBERS: TeamMember[] = [
@@ -105,7 +110,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
     },
     phone: "072 440 9574",
     whatsapp: "+94724409574",
-    address: "No. 53/7, Eachcha Nagar, Mullipothanai",
+    address: "No. 53/7, Eachcha Nagar, Mullipothana",
     initials: "MSR",
     photo: "/images/team/riyas.webp",
     term: "2023 - Present",
@@ -464,3 +469,426 @@ export const TEAM_MEMBERS: TeamMember[] = [
     isInactive: true,
   },
 ];
+
+// Global store persistence for Next.js hot-reload in development
+declare global {
+  var __liveTeamStore: TeamMember[] | undefined;
+}
+
+export interface OfficialMemberRegistryItem {
+  key: string;
+  name: string;
+  nameKeywords: string[];
+  memberId: string;
+  token: string;
+  nic: string;
+}
+
+export const KNOWN_OFFICIAL_MEMBERS: OfficialMemberRegistryItem[] = [
+  {
+    key: "abuhuraira",
+    name: "A. Abuhuraira",
+    nameKeywords: ["abuhuraira", "abuhurairah", "abu huraira"],
+    memberId: "BJWS001",
+    token: "vtok_abuhuraira_bjws001",
+    nic: "197821405921",
+  },
+  {
+    key: "riyas",
+    name: "M.S. Riyas",
+    nameKeywords: ["riyas", "m.s. riyas"],
+    memberId: "BJWS002",
+    token: "vtok_riyas_bjws002",
+    nic: "198319204812",
+  },
+  {
+    key: "yaseer",
+    name: "T.F.M. Yaseer",
+    nameKeywords: ["yaseer", "yasir", "t.f.m. yaseer"],
+    memberId: "BJWS003",
+    token: "vtok_yaseer_bjws003",
+    nic: "198730104928",
+  },
+  {
+    key: "sahibullah",
+    name: "A.M. Sahibullah",
+    nameKeywords: ["sahibullah", "sahibulla", "a.m. sahibullah"],
+    memberId: "BJWS004",
+    token: "vtok_sahibullah_bjws004",
+    nic: "197514302918",
+  },
+  {
+    key: "siyam",
+    name: "A.L.M. Siyam",
+    nameKeywords: ["siyam", "shiyam", "a.l.m. siyam", "a.l.m.siyam"],
+    memberId: "BJWS005",
+    token: "vtok_siyam_bjws005",
+    nic: "198622104981",
+  },
+  {
+    key: "jaisar",
+    name: "S.M. Jaisar",
+    nameKeywords: ["jaisar", "jaizar", "s.m. jaisar"],
+    memberId: "BJWS006",
+    token: "vtok_jaisar_bjws006",
+    nic: "198418204910",
+  },
+  {
+    key: "niyas",
+    name: "A.G.M. Niyas",
+    nameKeywords: ["niyas", "niyaz", "a.g.m. niyas"],
+    memberId: "BJWS007",
+    token: "vtok_niyas_bjws007",
+    nic: "198011402941",
+  },
+  {
+    key: "nashraff",
+    name: "N.M. Shamed Nashraff",
+    nameKeywords: ["nashraff", "nashraf", "shamed nashraff"],
+    memberId: "BJWS008",
+    token: "vtok_nashraff_bjws008",
+    nic: "197728401928",
+  },
+  {
+    key: "mansoorali",
+    name: "M. Mansoor Ali",
+    nameKeywords: ["mansoor", "mansoor ali", "m. mansoor ali"],
+    memberId: "BJWS009",
+    token: "vtok_mansoorali_bjws009",
+    nic: "197920104911",
+  },
+  {
+    key: "rikas",
+    name: "M.I. Rikas Ahamed",
+    nameKeywords: ["rikas", "rikas ahamed", "m.i. rikas ahamed"],
+    memberId: "BJWS010",
+    token: "vtok_rikas_bjws010",
+    nic: "198821904120",
+  },
+  {
+    key: "nawsath",
+    name: "A.M. Nawsath",
+    nameKeywords: ["nawsath", "nawshad", "a.m. nawsath"],
+    memberId: "BJWS011",
+    token: "vtok_nawsath_bjws011",
+    nic: "198619402914",
+  },
+  {
+    key: "ramees",
+    name: "A. Ramees",
+    nameKeywords: ["ramees", "ramis", "a. ramees"],
+    memberId: "BJWS012",
+    token: "vtok_ramees_bjws012",
+    nic: "198920104952",
+  },
+  {
+    key: "gafoor",
+    name: "A.M.A. Gafoor",
+    nameKeywords: ["gafoor", "gafur", "ama. gafoor", "a.m.a. gafoor"],
+    memberId: "BJWS013",
+    token: "vtok_gafoor_bjws013",
+    nic: "197210402915",
+  },
+  {
+    key: "faizarkhan",
+    name: "M.S. Faizarkhan",
+    nameKeywords: ["faizar", "faizarkhan", "faisarkhan", "ms. faizarkhan"],
+    memberId: "BJWS014",
+    token: "vtok_faizarkhan_bjws014",
+    nic: "199518204918",
+  },
+  {
+    key: "irfan",
+    name: "M.M.M. Irfan",
+    nameKeywords: ["irfan", "m.m.m. irfan"],
+    memberId: "BJWS015",
+    token: "vtok_irfan_bjws015",
+    nic: "198519203819",
+  },
+  {
+    key: "saheeth",
+    name: "P.T.M. Saheeth",
+    nameKeywords: ["saheeth", "saheed", "ptm. saheeth", "p.t.m. saheeth"],
+    memberId: "BJWS016",
+    token: "vtok_saheeth_bjws016",
+    nic: "198120401928",
+  },
+  {
+    key: "hanees",
+    name: "M.H. Hanees",
+    nameKeywords: ["hanees", "hanis", "m.h. hanees", "m h hanees"],
+    memberId: "BJWS017",
+    token: "vtok_hanees_bjws017",
+    nic: "198319204918",
+  },
+  {
+    key: "jawffar",
+    name: "A.H. Jawffar",
+    nameKeywords: ["jawffar", "jauffar", "jaffar", "a.h. jawffar", "a . h. jawffar"],
+    memberId: "BJWS018",
+    token: "vtok_jawffar_bjws018",
+    nic: "196614203912",
+  },
+  {
+    key: "naleem",
+    name: "A. Naleem",
+    nameKeywords: ["naleem", "nalim", "a. naleem"],
+    memberId: "BJWS019",
+    token: "vtok_naleem_bjws019",
+    nic: "197619204811",
+  },
+  {
+    key: "aqsan",
+    name: "A.M. Sharfras Aqsan",
+    nameKeywords: ["aqsan", "sharfras", "sharfras aqsan", "a.m. sharfras aqsan"],
+    memberId: "BJWS020",
+    token: "vtok_aqsan_bjws020",
+    nic: "199720401928",
+  },
+];
+
+export function findKnownMember(query: {
+  id?: string;
+  name?: string;
+  memberId?: string;
+}): OfficialMemberRegistryItem | undefined {
+  const normId = query.id?.trim().toLowerCase() || "";
+  const normMemberId = query.memberId?.trim().toUpperCase() || "";
+  const normName = query.name?.trim().toLowerCase().replace(/[^a-z0-9]/g, "") || "";
+
+  return KNOWN_OFFICIAL_MEMBERS.find((km) => {
+    // 1. Direct match on official ID (e.g. "BJWS004")
+    if (normMemberId && km.memberId.toUpperCase() === normMemberId) return true;
+    if (normId && km.memberId.toLowerCase() === normId) return true;
+
+    // 2. Direct match on key slug (e.g. "sahibullah")
+    if (normId && km.key.toLowerCase() === normId) return true;
+
+    // 3. Name keyword matching (tolerant of spacing, dots, punctuation)
+    if (normName) {
+      return km.nameKeywords.some((kw) => {
+        const cleanKw = kw.toLowerCase().replace(/[^a-z0-9]/g, "");
+        return normName.includes(cleanKw) || cleanKw.includes(normName);
+      });
+    }
+
+    return false;
+  });
+}
+
+export const ASSIGNED_MEMBER_IDS: Record<string, string> = Object.fromEntries(
+  KNOWN_OFFICIAL_MEMBERS.map((m) => [m.key, m.memberId])
+);
+
+export const ASSIGNED_VERIFICATION_TOKENS: Record<string, string> = Object.fromEntries(
+  KNOWN_OFFICIAL_MEMBERS.map((m) => [m.key, m.token])
+);
+
+export const ASSIGNED_NIC_NUMBERS: Record<string, string> = Object.fromEntries(
+  KNOWN_OFFICIAL_MEMBERS.map((m) => [m.key, m.nic])
+);
+
+export function initializeTeamMemberDefaults(member: TeamMember, index: number): TeamMember {
+  const known = findKnownMember({
+    id: member.id,
+    name: member.name,
+    memberId: member.memberId,
+  });
+
+  const memberId =
+    known?.memberId ||
+    member.memberId ||
+    `BJWS${(index + 1).toString().padStart(3, "0")}`;
+
+  const verificationToken =
+    known?.token ||
+    member.verificationToken ||
+    `vtok_${member.id}_${memberId.toLowerCase()}`;
+
+  const nic =
+    known?.nic ||
+    member.nic ||
+    `19${(70 + (index % 25)).toString()}${((index + 11) * 1234567).toString().slice(0, 8)}`;
+
+  const verificationStatus =
+    member.verificationStatus || (member.isInactive ? "suspended" : "verified");
+
+  const issueDate = member.issueDate || "2024-01-01";
+
+  return {
+    ...member,
+    memberId,
+    nic,
+    verificationToken,
+    verificationStatus,
+    issueDate,
+  };
+}
+
+// In-memory store for server actions in development / demo mode
+let liveTeamStore: TeamMember[] = TEAM_MEMBERS.map((m, idx) => initializeTeamMemberDefaults(m, idx));
+globalThis.__liveTeamStore = liveTeamStore;
+
+export function getTeamMembers(includeInactive: boolean = true): TeamMember[] {
+  const sanitized = liveTeamStore.map((m, idx) => initializeTeamMemberDefaults(m, idx));
+  if (includeInactive) {
+    return [...sanitized];
+  }
+  return sanitized.filter((m) => !m.isInactive);
+}
+
+export function getAllTeamMembersAdmin(): TeamMember[] {
+  return liveTeamStore.map((m, idx) => initializeTeamMemberDefaults(m, idx));
+}
+
+export function getNextMemberId(): string {
+  const existingNumbers = liveTeamStore
+    .map((m) => {
+      const match = m.memberId?.match(/^BJWS(\d+)$/i);
+      return match ? parseInt(match[1], 10) : 0;
+    })
+    .filter((n) => !isNaN(n));
+  const max = existingNumbers.length > 0 ? Math.max(...existingNumbers) : 0;
+  return `BJWS${(max + 1).toString().padStart(3, "0")}`;
+}
+
+export function getMemberByVerification(
+  id: string,
+  token: string
+): TeamMember | null {
+  if (!id || !token) return null;
+  const targetId = id.trim().toLowerCase();
+  const targetToken = token.trim();
+
+  // 1. Direct match in liveTeamStore
+  const direct = liveTeamStore.find(
+    (m) =>
+      (m.id.toLowerCase() === targetId ||
+        (m.memberId && m.memberId.toLowerCase() === targetId)) &&
+      m.verificationToken === targetToken
+  );
+  if (direct) return direct;
+
+  // 2. Match against official known registry
+  const known = KNOWN_OFFICIAL_MEMBERS.find(
+    (km) =>
+      (km.memberId.toLowerCase() === targetId ||
+        km.key.toLowerCase() === targetId) &&
+      km.token === targetToken
+  );
+  if (known) {
+    const fromStore = liveTeamStore.find(
+      (m) =>
+        m.id.toLowerCase() === known.key ||
+        (m.memberId && m.memberId.toUpperCase() === known.memberId)
+    );
+    if (fromStore) {
+      return {
+        ...fromStore,
+        memberId: known.memberId,
+        verificationToken: known.token,
+        nic: known.nic,
+        verificationStatus: fromStore.isInactive ? "suspended" : "verified",
+      };
+    }
+  }
+
+  return null;
+}
+
+export function regenerateMemberVerificationTokenStore(id: string): string | null {
+  const member = liveTeamStore.find((m) => m.id === id || m.memberId === id);
+  if (!member) return null;
+  const newToken =
+    "vtok_" +
+    Math.random().toString(36).substring(2, 9) +
+    Math.random().toString(36).substring(2, 9);
+  member.verificationToken = newToken;
+  globalThis.__liveTeamStore = liveTeamStore;
+  return newToken;
+}
+
+export function addTeamMemberStore(member: TeamMember): void {
+  const memberWithDefaults: TeamMember = {
+    ...member,
+    memberId: member.memberId || getNextMemberId(),
+    nic: member.nic || "Pending NIC submission",
+    verificationToken:
+      member.verificationToken ||
+      "vtok_" +
+      Math.random().toString(36).substring(2, 9) +
+      Math.random().toString(36).substring(2, 9),
+    verificationStatus:
+      member.verificationStatus || (member.isInactive ? "suspended" : "verified"),
+    issueDate: member.issueDate || new Date().toISOString().split("T")[0],
+  };
+
+  const firstInactiveIndex = liveTeamStore.findIndex((m) => m.isInactive);
+  if (firstInactiveIndex !== -1 && !memberWithDefaults.isInactive) {
+    liveTeamStore.splice(firstInactiveIndex, 0, memberWithDefaults);
+  } else {
+    liveTeamStore.push(memberWithDefaults);
+  }
+  globalThis.__liveTeamStore = liveTeamStore;
+}
+
+export function updateTeamMemberStore(
+  id: string,
+  updates: Partial<TeamMember>
+): boolean {
+  const index = liveTeamStore.findIndex((m) => m.id === id || m.memberId === id);
+  if (index === -1) return false;
+
+  liveTeamStore[index] = {
+    ...liveTeamStore[index],
+    ...updates,
+    role: {
+      ...liveTeamStore[index].role,
+      ...(updates.role || {}),
+    },
+    categoryLabel: {
+      ...liveTeamStore[index].categoryLabel,
+      ...(updates.categoryLabel || {}),
+    },
+  };
+  globalThis.__liveTeamStore = liveTeamStore;
+  return true;
+}
+
+export function deleteTeamMemberStore(id: string): boolean {
+  const initialLen = liveTeamStore.length;
+  liveTeamStore = liveTeamStore.filter((m) => m.id !== id);
+  globalThis.__liveTeamStore = liveTeamStore;
+  return liveTeamStore.length < initialLen;
+}
+
+export function toggleTeamMemberActiveStore(id: string): boolean {
+  const member = liveTeamStore.find((m) => m.id === id);
+  if (!member) return false;
+  member.isInactive = !member.isInactive;
+  globalThis.__liveTeamStore = liveTeamStore;
+  return true;
+}
+
+export function reorderTeamMembersStore(orderedIds: string[]): void {
+  const idMap = new Map(liveTeamStore.map((m) => [m.id, m]));
+  const reordered: TeamMember[] = [];
+
+  for (const id of orderedIds) {
+    const member = idMap.get(id);
+    if (member) {
+      reordered.push(member);
+      idMap.delete(id);
+    }
+  }
+
+  // Preserve any remaining members not in the ordered list
+  for (const remaining of idMap.values()) {
+    reordered.push(remaining);
+  }
+
+  liveTeamStore = reordered;
+  globalThis.__liveTeamStore = liveTeamStore;
+}
+
+

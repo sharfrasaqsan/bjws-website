@@ -38,6 +38,8 @@ import {
   createPublicClient,
   isSupabaseConfigured,
 } from "@/lib/supabase/server";
+import { formatGoogleDriveImageUrl } from "@/lib/utils";
+import { getSiteAssets } from "@/content/site-assets";
 
 export async function generateMetadata({
   params,
@@ -67,6 +69,7 @@ export default async function HomePage({
   const t = await getTranslations("home");
   const tCommon = await getTranslations("common");
   const tServices = await getTranslations("servicesPage");
+  const assets = getSiteAssets();
 
   // Fetch top 3 latest published news articles
   let latestArticles: Article[] = [];
@@ -121,7 +124,7 @@ export default async function HomePage({
       title: tServices("service1Title"),
       badge: tServices("service1Badge"),
       desc: tServices("service1Desc"),
-      image: "/images/gallery/ghusl-02.webp",
+      image: assets.serviceFuneralAssistance || "/images/gallery/ghusl-02.webp",
       icon: Clock,
       highlightBadge: "24/7 Immediate Response",
     },
@@ -130,7 +133,7 @@ export default async function HomePage({
       title: tServices("service2Title"),
       badge: tServices("service2Badge"),
       desc: tServices("service2Desc"),
-      image: "/images/gallery/shramadana-02.webp",
+      image: assets.serviceCemeteryMaintenance || "/images/gallery/shramadana-02.webp",
       icon: Sparkles,
       highlightBadge: "1.5 Acres Maintained",
     },
@@ -139,7 +142,7 @@ export default async function HomePage({
       title: tServices("service3Title"),
       badge: tServices("service3Badge"),
       desc: tServices("service3Desc"),
-      image: "/images/gallery/iftar-01.webp",
+      image: assets.serviceReliefWelfare || "/images/gallery/iftar-01.webp",
       icon: HeartHandshake,
       highlightBadge: "Essential Needs Support",
     },
@@ -148,7 +151,7 @@ export default async function HomePage({
       title: tServices("service4Title"),
       badge: tServices("service4Badge"),
       desc: tServices("service4Desc"),
-      image: "/images/gallery/ghusl-01.webp",
+      image: assets.serviceSunnahEducation || "/images/gallery/ghusl-01.webp",
       icon: BookOpen,
       highlightBadge: "Youth Sunnah Seminars",
     },
@@ -157,7 +160,7 @@ export default async function HomePage({
       title: tServices("service5Title"),
       badge: tServices("service5Badge"),
       desc: tServices("service5Desc"),
-      image: "/images/gallery/shramadana-01.webp",
+      image: assets.serviceShramadanaCampaigns || "/images/gallery/shramadana-01.webp",
       icon: Users,
       highlightBadge: "Community Volunteering",
     },
@@ -166,7 +169,7 @@ export default async function HomePage({
       title: tServices("service6Title"),
       badge: tServices("service6Badge"),
       desc: tServices("service6Desc"),
-      image: "/images/gallery/livelihood-01.webp",
+      image: assets.serviceOrphanCare || "/images/gallery/livelihood-01.webp",
       icon: Heart,
       highlightBadge: "Kafalah Sponsorship",
     },
@@ -175,7 +178,7 @@ export default async function HomePage({
       title: tServices("service7Title"),
       badge: tServices("service7Badge"),
       desc: tServices("service7Desc"),
-      image: "/images/gallery/water-concrete-01.webp",
+      image: assets.serviceDisasterRelief || "/images/gallery/water-concrete-01.webp",
       icon: LifeBuoy,
       highlightBadge: "Emergency Crisis Aid",
     },
@@ -217,7 +220,7 @@ export default async function HomePage({
         {/* Real photo background with next/image */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/images/gallery/shramadana-01.webp"
+            src={assets.heroBg}
             alt="BJWS Community Service at Cemetery Grounds, Mullipothana"
             fill
             priority
@@ -422,7 +425,7 @@ export default async function HomePage({
             >
               <div className="relative aspect-[4/3] sm:aspect-[14/11] rounded-2xl overflow-hidden shadow-xl border-4 border-white bg-surface">
                 <Image
-                  src="/images/gallery/ghusl-01.webp"
+                  src={assets.aboutGhusl}
                   alt="BJWS Ritual Washing and Shrouding Training Workshop"
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
@@ -432,7 +435,7 @@ export default async function HomePage({
 
               <div className="absolute -bottom-2 right-2 sm:-bottom-8 sm:-right-6 w-1/2 aspect-[4/3] rounded-xl overflow-hidden shadow-2xl border-4 border-white bg-surface">
                 <Image
-                  src="/images/gallery/water-concrete-01.webp"
+                  src={assets.aboutWater}
                   alt="BJWS Cemetery Water Supply Infrastructure"
                   fill
                   sizes="(max-width: 1024px) 60vw, 25vw"
@@ -582,7 +585,7 @@ export default async function HomePage({
                 {/* Photo with Aspect Ratio for Zero CLS */}
                 <div className="relative aspect-[16/10] overflow-hidden bg-muted">
                   <Image
-                    src={service.image}
+                    src={formatGoogleDriveImageUrl(service.image)}
                     alt={service.title}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -656,53 +659,65 @@ export default async function HomePage({
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8"
           >
             {/* Stat 1: Funerals Arranged */}
-            <div className="relative overflow-hidden rounded-xl bg-white/5 border border-white/10 p-6 backdrop-blur-xs transition-all hover:bg-white/8 hover:border-emerald-500/30 group">
-              <div className="font-display text-4xl sm:text-5xl font-bold text-[#d4a359]">
-                <AnimatedCounter value={28} />
+            <div className="relative overflow-hidden rounded-2xl bg-white/[0.04] border border-white/10 p-5 sm:p-6 backdrop-blur-xs transition-all duration-300 hover:bg-white/[0.07] hover:border-[#d4a359]/40 group flex flex-col justify-between">
+              <div>
+                <div className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-[#d4a359]">
+                  <AnimatedCounter value={100} suffix="+" />
+                </div>
+                <h3 className="mt-2 text-sm sm:text-base font-semibold text-white tracking-tight">
+                  {t("statFuneralsLabel")}
+                </h3>
               </div>
-              <h3 className="mt-2 text-base sm:text-lg font-bold text-white tracking-tight">
-                {t("statFuneralsLabel")}
-              </h3>
-              <p className="mt-1 text-xs sm:text-sm text-emerald-200/75 leading-relaxed">
+              <p className="mt-2 text-xs text-emerald-200/70 leading-relaxed">
                 {t("statFuneralsDesc")}
               </p>
             </div>
 
             {/* Stat 2: Active Members */}
-            <div className="relative overflow-hidden rounded-xl bg-white/5 border border-white/10 p-6 backdrop-blur-xs transition-all hover:bg-white/8 hover:border-emerald-500/30 group">
-              <div className="font-display text-4xl sm:text-5xl font-bold text-[#d4a359]">
-                <AnimatedCounter value={50} suffix="+" />
+            <div className="relative overflow-hidden rounded-2xl bg-white/[0.04] border border-white/10 p-5 sm:p-6 backdrop-blur-xs transition-all duration-300 hover:bg-white/[0.07] hover:border-[#d4a359]/40 group flex flex-col justify-between">
+              <div>
+                <div className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-[#d4a359]">
+                  <AnimatedCounter value={20} suffix="+" />
+                </div>
+                <h3 className="mt-2 text-sm sm:text-base font-semibold text-white tracking-tight">
+                  {t("statMembersLabel")}
+                </h3>
               </div>
-              <h3 className="mt-2 text-base sm:text-lg font-bold text-white tracking-tight">
-                {t("statMembersLabel")}
-              </h3>
-              <p className="mt-1 text-xs sm:text-sm text-emerald-200/75 leading-relaxed">
+              <p className="mt-2 text-xs text-emerald-200/70 leading-relaxed">
                 {t("statMembersDesc")}
               </p>
             </div>
 
             {/* Stat 3: Essential Needs Aid */}
-            <div className="relative overflow-hidden rounded-xl bg-white/5 border border-white/10 p-6 backdrop-blur-xs transition-all hover:bg-white/8 hover:border-emerald-500/30 group">
-              <div className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-[#d4a359]">
-                {t("statRationsValue")}
+            <div className="relative overflow-hidden rounded-2xl bg-white/[0.04] border border-white/10 p-5 sm:p-6 backdrop-blur-xs transition-all duration-300 hover:bg-white/[0.07] hover:border-[#d4a359]/40 group flex flex-col justify-between">
+              <div>
+                <div className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-[#d4a359] truncate">
+                  {t("statRationsValue")}
+                </div>
+                <h3 className="mt-2 text-sm sm:text-base font-semibold text-white tracking-tight">
+                  {t("statRationsLabel")}
+                </h3>
               </div>
-              <h3 className="mt-2 text-base sm:text-lg font-bold text-white tracking-tight">
-                {t("statRationsLabel")}
-              </h3>
-              <p className="mt-1 text-xs sm:text-sm text-emerald-200/75 leading-relaxed">
+              <p className="mt-2 text-xs text-emerald-200/70 leading-relaxed">
                 {t("statRationsDesc")}
               </p>
             </div>
 
             {/* Stat 4: Cemetery Renovated */}
-            <div className="relative overflow-hidden rounded-xl bg-white/5 border border-white/10 p-6 backdrop-blur-xs transition-all hover:bg-white/8 hover:border-emerald-500/30 group">
-              <div className="font-display text-4xl sm:text-5xl font-bold text-[#d4a359]">
-                <AnimatedCounter value={1.5} decimals={1} suffix=" Acres" />
+            <div className="relative overflow-hidden rounded-2xl bg-white/[0.04] border border-white/10 p-5 sm:p-6 backdrop-blur-xs transition-all duration-300 hover:bg-white/[0.07] hover:border-[#d4a359]/40 group flex flex-col justify-between">
+              <div>
+                <div className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-[#d4a359]">
+                  <AnimatedCounter
+                    value={1.5}
+                    decimals={1}
+                    suffix={locale === "ta" ? " ஏக்கர்" : locale === "si" ? " අක්කර" : " Acres"}
+                  />
+                </div>
+                <h3 className="mt-2 text-sm sm:text-base font-semibold text-white tracking-tight">
+                  {t("statCemeteryLabel")}
+                </h3>
               </div>
-              <h3 className="mt-2 text-base sm:text-lg font-bold text-white tracking-tight">
-                {t("statCemeteryLabel")}
-              </h3>
-              <p className="mt-1 text-xs sm:text-sm text-emerald-200/75 leading-relaxed">
+              <p className="mt-2 text-xs text-emerald-200/70 leading-relaxed">
                 {t("statCemeteryDesc")}
               </p>
             </div>
@@ -756,7 +771,7 @@ export default async function HomePage({
                 >
                   <div className="relative aspect-[16/10] overflow-hidden bg-muted">
                     <Image
-                      src={article.image_url}
+                      src={formatGoogleDriveImageUrl(article.image_url)}
                       alt={article.title}
                       fill
                       sizes="(max-width: 768px) 100vw, 33vw"
@@ -807,7 +822,7 @@ export default async function HomePage({
       <section className="relative overflow-hidden bg-[#072115] py-20 sm:py-28 text-white">
         <div className="absolute inset-0 z-0">
           <Image
-            src="/images/gallery/shramadana-01.webp"
+            src={assets.cemeteryVolunteers}
             alt="BJWS Community Volunteers"
             fill
             quality={85}
@@ -985,23 +1000,23 @@ export default async function HomePage({
           >
             {[
               {
-                src: "/images/gallery/cemetery-road-01.webp",
+                src: assets.galleryPreview1,
                 caption: "Cemetery Access Road",
               },
               {
-                src: "/images/gallery/ghusl-01.webp",
+                src: assets.galleryPreview2,
                 caption: "Ghusl Training Session",
               },
               {
-                src: "/images/gallery/water-concrete-01.webp",
+                src: assets.galleryPreview3,
                 caption: "Water Facilities",
               },
               {
-                src: "/images/gallery/iftar-01.webp",
+                src: assets.galleryPreview4,
                 caption: "Ration Pack Storage",
               },
               {
-                src: "/images/gallery/shramadana-02.webp",
+                src: assets.galleryPreview5,
                 caption: "Mahallah Shramadhana",
               },
             ].map((photo, i) => (
@@ -1015,7 +1030,7 @@ export default async function HomePage({
                 }`}
               >
                 <Image
-                  src={photo.src}
+                  src={formatGoogleDriveImageUrl(photo.src)}
                   alt={photo.caption}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 20vw"

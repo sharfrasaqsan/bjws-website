@@ -26,54 +26,6 @@ export default async function AdminMessagesPage() {
     } catch (err) {
       console.warn("Failed to fetch contact messages:", err);
     }
-  } else {
-    // Demo records
-    messages = [
-      {
-        id: "msg-1",
-        name: "M. Mohamed Nizam",
-        phone: "0771234567",
-        email: "nizam@example.com",
-        message:
-          "Assalamu Alaikum. I would like to inquire about registering my elderly father under the funeral welfare program. Please let me know the procedure and required documents.",
-        locale: "en",
-        status: "new",
-        created_at: "2026-03-01T10:30:00Z",
-      },
-      {
-        id: "msg-2",
-        name: "A. Farook",
-        phone: "0759876543",
-        email: null,
-        message:
-          "மஹல்லா மையவாடிக்கு நீர் குழாய் இணைப்பு அமைக்கும் திட்டத்திற்கு நன்கொடை வழங்க விரும்புகின்றேன். வங்கி கணக்கு விபரங்களை எனக்கு அனுப்பி வைக்க முடியுமா?",
-        locale: "ta",
-        status: "new",
-        created_at: "2026-02-28T14:15:00Z",
-      },
-      {
-        id: "msg-3",
-        name: "S. K. Rizwan",
-        phone: "0712345678",
-        email: "rizwan@example.com",
-        message:
-          "Thank you for arranging the Janaza service last week for our family member. We truly appreciate the dedication of your volunteers during the hour of bereavement.",
-        locale: "en",
-        status: "read",
-        created_at: "2026-02-25T11:00:00Z",
-      },
-      {
-        id: "msg-4",
-        name: "K. Priyantha",
-        phone: "0701112233",
-        email: null,
-        message:
-          "සුසාන භූමියට පිවිසෙන මාර්ගය සම්බන්ධයෙන් විමසීමක් කිරීමට අවශ්‍යයි. කරුණාකර දුරකථන අංකයක් ලබා දෙන්න.",
-        locale: "si",
-        status: "replied",
-        created_at: "2026-02-20T09:30:00Z",
-      },
-    ];
   }
 
   return (

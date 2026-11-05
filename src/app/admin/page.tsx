@@ -2,10 +2,12 @@ import Link from "next/link";
 import { getAdminSession } from "@/lib/admin-auth";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { formatAdminDate } from "@/lib/utils";
+import { getAllTeamMembersAdmin } from "@/content/team";
+import { getAllGalleryImagesAdmin } from "@/content/gallery";
+import { getAllArticlesAdmin } from "@/content/news";
 import {
   MessageSquare,
   Users,
-  Megaphone,
   FileText,
   ArrowRight,
   Plus,
@@ -15,6 +17,9 @@ import {
   Clock,
   Building,
   CheckCircle2,
+  UserCheck,
+  Image as ImageIcon,
+  Newspaper,
 } from "lucide-react";
 
 export default async function AdminDashboardPage() {
@@ -24,6 +29,25 @@ export default async function AdminDashboardPage() {
   let membershipStats = { total: 0, pending: 0 };
   let noticeStats = { total: 0, published: 0 };
   let reportStats = { total: 0, published: 0 };
+
+  // Team, Gallery, and News stats
+  const teamMembers = getAllTeamMembersAdmin();
+  const teamStats = {
+    total: teamMembers.length,
+    active: teamMembers.filter((m) => !m.isInactive).length,
+  };
+
+  const galleryImages = getAllGalleryImagesAdmin();
+  const galleryStats = {
+    total: galleryImages.length,
+    approved: galleryImages.filter((g) => g.approved).length,
+  };
+
+  const articlesList = getAllArticlesAdmin();
+  const newsStats = {
+    total: articlesList.length,
+    published: articlesList.filter((a) => a.is_published).length,
+  };
 
   let recentMessages: Array<{
     id: string;
@@ -99,63 +123,6 @@ export default async function AdminDashboardPage() {
     } catch (err) {
       console.warn("Failed to load dashboard metrics from Supabase:", err);
     }
-  } else {
-    // Verified demo preview metrics
-    messageStats = { total: 3, new: 2 };
-    membershipStats = { total: 5, pending: 3 };
-    noticeStats = { total: 3, published: 3 };
-    reportStats = { total: 2, published: 2 };
-
-    recentMessages = [
-      {
-        id: "demo-msg-1",
-        name: "M. Mohamed Nizam",
-        phone: "0771234567",
-        status: "new",
-        created_at: "2026-03-01T10:30:00Z",
-      },
-      {
-        id: "demo-msg-2",
-        name: "A. Farook",
-        phone: "0759876543",
-        status: "new",
-        created_at: "2026-02-28T14:15:00Z",
-      },
-      {
-        id: "demo-msg-3",
-        name: "S. K. Rizwan",
-        phone: "0712345678",
-        status: "read",
-        created_at: "2026-02-25T11:00:00Z",
-      },
-    ];
-
-    recentMemberships = [
-      {
-        id: "demo-mem-1",
-        full_name: "K. Rauff Mohamed",
-        phone: "0765551234",
-        plan: "monthly",
-        status: "pending",
-        created_at: "2026-03-01T09:00:00Z",
-      },
-      {
-        id: "demo-mem-2",
-        full_name: "S. Haleem",
-        phone: "0718889999",
-        plan: "annual",
-        status: "pending",
-        created_at: "2026-02-27T16:45:00Z",
-      },
-      {
-        id: "demo-mem-3",
-        full_name: "M. T. Nawas",
-        phone: "0773334444",
-        plan: "monthly",
-        status: "approved",
-        created_at: "2026-02-20T11:20:00Z",
-      },
-    ];
   }
 
   return (
@@ -187,6 +154,27 @@ export default async function AdminDashboardPage() {
 
             {/* Quick Action Toolbar */}
             <div className="flex flex-wrap items-center gap-2.5">
+              <Link
+                href="/admin/team"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-[#e6e4dc] bg-white px-3 py-2 text-xs font-semibold text-[#1c2420] shadow-xs transition-colors hover:border-[#124d34] hover:bg-[#fbfaf6]"
+              >
+                <Plus className="h-3.5 w-3.5 text-[#124d34]" />
+                <span>Add Member</span>
+              </Link>
+              <Link
+                href="/admin/gallery"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-[#e6e4dc] bg-white px-3 py-2 text-xs font-semibold text-[#1c2420] shadow-xs transition-colors hover:border-[#124d34] hover:bg-[#fbfaf6]"
+              >
+                <Plus className="h-3.5 w-3.5 text-[#124d34]" />
+                <span>Add Photo</span>
+              </Link>
+              <Link
+                href="/admin/news"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-[#e6e4dc] bg-white px-3 py-2 text-xs font-semibold text-[#1c2420] shadow-xs transition-colors hover:border-[#124d34] hover:bg-[#fbfaf6]"
+              >
+                <Plus className="h-3.5 w-3.5 text-[#124d34]" />
+                <span>New Article</span>
+              </Link>
               <Link
                 href="/admin/notices"
                 className="inline-flex items-center gap-1.5 rounded-lg border border-[#e6e4dc] bg-white px-3 py-2 text-xs font-semibold text-[#1c2420] shadow-xs transition-colors hover:border-[#124d34] hover:bg-[#fbfaf6]"
@@ -228,8 +216,8 @@ export default async function AdminDashboardPage() {
           </div>
         </div>
 
-        {/* 4 Metric Cards Grid */}
-        <div className="mb-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {/* 6 Executive Metric Cards Grid */}
+        <div className="mb-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {/* Card 1: Inquiries */}
           <div className="group rounded-2xl border border-[#e6e4dc] bg-white p-5 shadow-xs transition-all hover:border-[#124d34]/40 hover:shadow-sm">
             <div className="flex items-center justify-between">
@@ -302,60 +290,131 @@ export default async function AdminDashboardPage() {
             </div>
           </div>
 
-          {/* Card 3: Notices */}
+          {/* Card 3: Team Members Directory */}
           <div className="group rounded-2xl border border-[#e6e4dc] bg-white p-5 shadow-xs transition-all hover:border-[#124d34]/40 hover:shadow-sm">
             <div className="flex items-center justify-between">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e8f3ee] text-[#124d34] transition-colors group-hover:bg-[#124d34] group-hover:text-white">
-                <Megaphone className="h-5 w-5" />
+                <UserCheck className="h-5 w-5" />
               </div>
-              <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-800">
-                {noticeStats.published} Live
+              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-bold text-emerald-800">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
+                {teamStats.active} Active Officers
               </span>
             </div>
             <div className="mt-4">
               <div className="font-serif text-3xl font-extrabold text-[#0b2e1e]">
-                {noticeStats.total}
+                {teamStats.total}
               </div>
               <p className="mt-0.5 text-xs font-medium text-[#6b7280]">
-                Community Bulletins & Notices
+                Officers & Volunteers Enrolled
               </p>
             </div>
             <div className="mt-4 border-t border-[#f3f1ea] pt-3">
               <Link
-                href="/admin/notices"
+                href="/admin/team"
                 className="flex items-center justify-between text-xs font-semibold text-[#124d34] transition-colors hover:text-[#0b2e1e]"
               >
-                <span>Manage Community Notices</span>
+                <span>Manage Team Directory</span>
                 <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
               </Link>
             </div>
           </div>
 
-          {/* Card 4: Audited Reports */}
+          {/* Card 4: Photo Gallery & Media */}
+          <div className="group rounded-2xl border border-[#e6e4dc] bg-white p-5 shadow-xs transition-all hover:border-[#124d34]/40 hover:shadow-sm">
+            <div className="flex items-center justify-between">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f5eedf] text-[#8b651e] transition-colors group-hover:bg-[#c99a45] group-hover:text-white">
+                <ImageIcon className="h-5 w-5" />
+              </div>
+              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 text-xs font-bold text-emerald-800">
+                {galleryStats.approved} Live Photos
+              </span>
+            </div>
+            <div className="mt-4">
+              <div className="font-serif text-3xl font-extrabold text-[#0b2e1e]">
+                {galleryStats.total}
+              </div>
+              <p className="mt-0.5 text-xs font-medium text-[#6b7280]">
+                Photo Gallery Cataloged Assets
+              </p>
+            </div>
+            <div className="mt-4 border-t border-[#f3f1ea] pt-3">
+              <Link
+                href="/admin/gallery"
+                className="flex items-center justify-between text-xs font-semibold text-[#124d34] transition-colors hover:text-[#0b2e1e]"
+              >
+                <span>Curate Photo Gallery</span>
+                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Card 5: News & Publications */}
+          <div className="group rounded-2xl border border-[#e6e4dc] bg-white p-5 shadow-xs transition-all hover:border-[#124d34]/40 hover:shadow-sm">
+            <div className="flex items-center justify-between">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e8f3ee] text-[#124d34] transition-colors group-hover:bg-[#124d34] group-hover:text-white">
+                <Newspaper className="h-5 w-5" />
+              </div>
+              <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-800">
+                {newsStats.published} Live Articles
+              </span>
+            </div>
+            <div className="mt-4">
+              <div className="font-serif text-3xl font-extrabold text-[#0b2e1e]">
+                {newsStats.total}
+              </div>
+              <p className="mt-0.5 text-xs font-medium text-[#6b7280]">
+                Editorial News & Updates
+              </p>
+            </div>
+            <div className="mt-4 border-t border-[#f3f1ea] pt-3">
+              <Link
+                href="/admin/news"
+                className="flex items-center justify-between text-xs font-semibold text-[#124d34] transition-colors hover:text-[#0b2e1e]"
+              >
+                <span>Manage News & Blog</span>
+                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Card 6: Audited Reports & Notices */}
           <div className="group rounded-2xl border border-[#e6e4dc] bg-white p-5 shadow-xs transition-all hover:border-[#124d34]/40 hover:shadow-sm">
             <div className="flex items-center justify-between">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f5eedf] text-[#8b651e] transition-colors group-hover:bg-[#c99a45] group-hover:text-white">
                 <FileText className="h-5 w-5" />
               </div>
-              <span className="rounded-full border border-[#c99a45]/30 bg-[#f5eedf]/80 px-2.5 py-0.5 text-xs font-semibold text-[#8b651e]">
-                {reportStats.published} Published
-              </span>
+              <div className="flex items-center gap-1.5">
+                <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-800">
+                  {noticeStats.published} Notices
+                </span>
+                <span className="rounded-full border border-[#c99a45]/30 bg-[#f5eedf]/80 px-2 py-0.5 text-[11px] font-semibold text-[#8b651e]">
+                  {reportStats.published} Reports
+                </span>
+              </div>
             </div>
             <div className="mt-4">
               <div className="font-serif text-3xl font-extrabold text-[#0b2e1e]">
-                {reportStats.total}
+                {reportStats.total + noticeStats.total}
               </div>
               <p className="mt-0.5 text-xs font-medium text-[#6b7280]">
-                Audited PDF Reports & Storage
+                Bulletins & Audited Reports
               </p>
             </div>
-            <div className="mt-4 border-t border-[#f3f1ea] pt-3">
+            <div className="mt-4 border-t border-[#f3f1ea] pt-3 flex items-center justify-between gap-3 text-xs font-semibold text-[#124d34]">
+              <Link
+                href="/admin/notices"
+                className="hover:text-[#0b2e1e] flex items-center gap-1"
+              >
+                <span>Notices</span>
+                <ArrowRight className="h-3 w-3" />
+              </Link>
               <Link
                 href="/admin/reports"
-                className="flex items-center justify-between text-xs font-semibold text-[#124d34] transition-colors hover:text-[#0b2e1e]"
+                className="hover:text-[#0b2e1e] flex items-center gap-1"
               >
-                <span>Manage Financial Reports</span>
-                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                <span>Reports</span>
+                <ArrowRight className="h-3 w-3" />
               </Link>
             </div>
           </div>

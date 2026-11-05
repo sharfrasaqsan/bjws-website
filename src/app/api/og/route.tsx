@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
 
     const subtitleMap: Record<string, string> = {
       ta: "முள்ளிப்பொத்தானை புகாரி ஜும்ஆ பள்ளிவாசல் மஹல்லா",
-      en: "Buhary Jummah Mosque Area, Mullipothanai, Sri Lanka",
+      en: "Buhary Jummah Mosque Area, Mullipothana, Sri Lanka",
       si: "බුහාරි ජුම්මා පල්ලිය ප්‍රදේශය, මුල්ලිපොතාන",
     };
 
@@ -196,7 +196,7 @@ export async function GET(request: NextRequest) {
               fontWeight: 500,
             }}
           >
-            <span>Mullipothanai, Eastern Province, Sri Lanka</span>
+            <span>Mullipothana, Eastern Province, Sri Lanka</span>
           </div>
         </div>
       </div>,

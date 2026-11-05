@@ -7,6 +7,7 @@ import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { buildPageMetadata } from "@/lib/seo";
 import { JsonLd, getBreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { Check, ShieldCheck, HeartHandshake, Sparkles, Users } from "lucide-react";
+import { getSiteAssets } from "@/content/site-assets";
 
 export async function generateMetadata({
   params,
@@ -35,6 +36,7 @@ export default async function MembershipPage({
 
   const t = await getTranslations("membershipPage");
   const tCommon = await getTranslations("common");
+  const assets = getSiteAssets();
 
   const formTranslations = {
     fullNameLabel: t("fullNameLabel"),
@@ -90,7 +92,7 @@ export default async function MembershipPage({
         title={t("pageTitle")}
         subtitle={t("subtitle")}
         eyebrow={tCommon("regNo")}
-        imageSrc="/images/gallery/shramadana-01.webp"
+        imageSrc={assets.headerMembership || "/images/gallery/shramadana-01.webp"}
         imageAlt="BJWS Membership Registration and Community Solidarity"
         breadcrumbs={[
           { label: tCommon("home"), href: "/" },

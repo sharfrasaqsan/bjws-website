@@ -27,7 +27,7 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   title: "Executive Admin Portal | Buhary Janaza Welfare Society",
   description:
-    "Official administrative management console for Buhary Janaza Welfare Society, Mullipothanai (Reg: DS/TH/SS/VSSO/2023/01).",
+    "Official administrative management console for Buhary Janaza Welfare Society, Mullipothana (Reg: DS/TH/SS/VSSO/2023/01).",
   robots: {
     index: false,
     follow: false,
@@ -48,29 +48,25 @@ export default async function AdminLayout({
   const session = await getAdminSession();
 
   let counts = { messagesNew: 0, membershipsPending: 0 };
-  if (session) {
-    if (session.id === "demo-admin-id" || !isSupabaseConfigured()) {
-      counts = { messagesNew: 2, membershipsPending: 3 };
-    } else {
-      try {
-        const supabase = await createClient();
-        const [{ count: msgCount }, { count: memCount }] = await Promise.all([
-          supabase
-            .from("contact_messages")
-            .select("*", { count: "exact", head: true })
-            .eq("status", "new"),
-          supabase
-            .from("membership_requests")
-            .select("*", { count: "exact", head: true })
-            .eq("status", "pending"),
-        ]);
-        counts = {
-          messagesNew: msgCount || 0,
-          membershipsPending: memCount || 0,
-        };
-      } catch (err) {
-        console.warn("Failed to query admin navbar counts:", err);
-      }
+  if (session && isSupabaseConfigured()) {
+    try {
+      const supabase = await createClient();
+      const [{ count: msgCount }, { count: memCount }] = await Promise.all([
+        supabase
+          .from("contact_messages")
+          .select("*", { count: "exact", head: true })
+          .eq("status", "new"),
+        supabase
+          .from("membership_requests")
+          .select("*", { count: "exact", head: true })
+          .eq("status", "pending"),
+      ]);
+      counts = {
+        messagesNew: msgCount || 0,
+        membershipsPending: memCount || 0,
+      };
+    } catch (err) {
+      console.warn("Failed to query admin navbar counts:", err);
     }
   }
 
@@ -117,7 +113,7 @@ export default async function AdminLayout({
                       </span>
                     </div>
                     <span className="text-[11px] text-[#a7c5b6]">
-                      Mullipothanai, Sri Lanka
+                      Mullipothana, Sri Lanka
                     </span>
                   </div>
                 </Link>
@@ -187,7 +183,7 @@ export default async function AdminLayout({
                 <span>Registration: DS/TH/SS/VSSO/2023/01</span>
               </div>
               <p className="text-[11px] text-[#6b7280]">
-                Mullipothanai, Eastern Province, Sri Lanka • Official Management System
+                Mullipothana, Eastern Province, Sri Lanka • Official Management System
               </p>
             </div>
           </footer>

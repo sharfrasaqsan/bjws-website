@@ -19,6 +19,7 @@ import {
   Users,
   FileCheck,
 } from "lucide-react";
+import { getSiteAssets } from "@/content/site-assets";
 
 export async function generateMetadata({
   params,
@@ -47,6 +48,7 @@ export default async function DonatePage({
 
   const t = await getTranslations("donatePage");
   const tCommon = await getTranslations("common");
+  const assets = getSiteAssets();
 
   const causes = [
     {
@@ -84,7 +86,7 @@ export default async function DonatePage({
         title={t("pageTitle")}
         subtitle={t("subtitle")}
         eyebrow={t("eyebrow")}
-        imageSrc="/images/gallery/iftar-01.webp"
+        imageSrc={assets.headerDonate || "/images/gallery/iftar-01.webp"}
         imageAlt="BJWS Charitable Welfare and Funeral Support"
         breadcrumbs={[
           { label: tCommon("home"), href: "/" },

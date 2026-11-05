@@ -166,7 +166,7 @@ We conduct **Islamic funeral education workshops** for youth and volunteers, cov
 
 ##### **Funeral Management**
 
-- **28 funeral arrangements** completed with full community support
+- **100+ funeral arrangements** completed with full community support
 
 - Coordinated with **local Imams and health authorities** for timely burials
 
@@ -260,14 +260,14 @@ We thank every member, donor, volunteer, and leader who has contributed to our j
 
 ##### **Contact Information**
 
-#### **<u>Mullipothanai Buhary Janaza Welfare Society Committee Members Details.</u>**
+#### **<u>Mullipothana Buhary Janaza Welfare Society Committee Members Details.</u>**
 
 | **No** | **Position**           | **Name**                 | **Address**                       | **Phone No** |
 | ------ | ---------------------- | ------------------------ | --------------------------------- | ------------ |
 | 1      | **President**          | A.M. Sahibullah          | No. 420, Unit 07, Mullipothana    | 072 440 9574 |
 | 2      | **Vice President**     | A.M.A. Gafoor            | No. 101, Eacha Nagar, Mullipothana| 075 343 2627 |
 | 3      | **Secretary**          | A.L.M. Siyam             | No. 85, Eacha Nagar, Mullipothana | 077 278 2829 |
-| 4      | **Vice Secretary**     | M.S. Riyas               | No. 53/7, Eachcha Nagar, Mullipothanai | 072 440 9574 |
+| 4      | **Vice Secretary**     | M.S. Riyas               | No. 53/7, Eachcha Nagar, Mullipothana | 072 440 9574 |
 | 5      | **Treasurer**          | M.S. Faizarkhan          | No. 335, Unit 07, Mullipothana    | 075 651 0050 |
 | 6      | **Coordinator**        | A. Abuhuraira            | No. 415/R1, Unit 07, Mullipothana | 077 622 7323 |
 | 7      | **English Inquiries**  | N.M. Shamed Nashraff     | No. 323, Unit 07, Mullipothana    | 077 227 1248 |
@@ -286,7 +286,7 @@ i QoS FOOomMEDWAS seenda sSGa<br>ews |LIOMMS) agement HevsLyps Fmd<br>a<br>gum: 
 
 President : A.M. Sahibullah 072 440 9574 Secretary: A.L.M. Siyam 077 278 2829 Treasurer: M.S. Faizarkhan 075 651 0050
 
-Beg Email: mi ; " : _ Buhary Janaza Welfare Society t] Bubary Jum-Ah Mosque, 95% Mile Post, Mullipothanai.
+Beg Email: mi ; " : _ Buhary Janaza Welfare Society t] Bubary Jum-Ah Mosque, 95% Mile Post, Mullipothana.
 
 |||<br>e<br>|eterintonten|<br><br>||i<br>|a<br>|||
 |---|---|---|---|---|---|---|
@@ -425,7 +425,7 @@ Cemetery Road Project Work<br><!-- End of picture text -->
 
 **We invite all members of the Muslim community to support and benefit from the Buhary Funeral Society. Whether through membership, volunteering, or donations, your contribution strengthens our mission.**
 
-- **Office Address: 95**<sup>**th**</sup> **Buhary Jummah Mosque, Kandy Road, Mullipothanai.**
+- **Office Address: 95**<sup>**th**</sup> **Buhary Jummah Mosque, Kandy Road, Mullipothana.**
 
 - **Contact Number: 075 3738349 – 077 6227323 – 077 2782829**
 

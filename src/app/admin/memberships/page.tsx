@@ -28,61 +28,6 @@ export default async function AdminMembershipsPage() {
     } catch (err) {
       console.warn("Failed to fetch membership requests:", err);
     }
-  } else {
-    requests = [
-      {
-        id: "mem-1",
-        full_name: "K. Rauff Mohamed",
-        phone: "0765551234",
-        email: "rauff@example.com",
-        address_area: "95th Mile Post, Kandy Road, Mullipothanai",
-        family_size: 5,
-        preferred_contact: "phone",
-        plan: "monthly",
-        consent: true,
-        status: "pending",
-        created_at: "2026-03-01T09:00:00Z",
-      },
-      {
-        id: "mem-2",
-        full_name: "S. Haleem",
-        phone: "0718889999",
-        email: null,
-        address_area: "Station Road, Mullipothanai",
-        family_size: 4,
-        preferred_contact: "whatsapp",
-        plan: "annual",
-        consent: true,
-        status: "pending",
-        created_at: "2026-02-27T16:45:00Z",
-      },
-      {
-        id: "mem-3",
-        full_name: "M. T. Nawas",
-        phone: "0773334444",
-        email: "nawas@example.com",
-        address_area: "Buhary Mosque Mahallah, Mullipothanai",
-        family_size: 6,
-        preferred_contact: "phone",
-        plan: "monthly",
-        consent: true,
-        status: "approved",
-        created_at: "2026-02-20T11:20:00Z",
-      },
-      {
-        id: "mem-4",
-        full_name: "A. L. M. Jiffry",
-        phone: "0751122334",
-        email: "jiffry@example.com",
-        address_area: "Main Street, Mullipothanai",
-        family_size: 3,
-        preferred_contact: "whatsapp",
-        plan: "annual",
-        consent: true,
-        status: "approved",
-        created_at: "2026-02-15T14:10:00Z",
-      },
-    ];
   }
 
   return (

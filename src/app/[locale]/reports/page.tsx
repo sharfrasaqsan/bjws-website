@@ -11,6 +11,7 @@ import { NoticesSection } from "@/components/sections/notices-section";
 import { buildPageMetadata } from "@/lib/seo";
 import { JsonLd, getBreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { FileText, Download, ShieldCheck, FileCheck, PhoneCall } from "lucide-react";
+import { getSiteAssets } from "@/content/site-assets";
 
 // Incremental Static Regeneration (ISR) every hour
 export const revalidate = 3600;
@@ -50,6 +51,7 @@ export default async function ReportsPage({
 
   const t = await getTranslations("reportsPage");
   const tCommon = await getTranslations("common");
+  const assets = getSiteAssets();
 
   let reports: ReportItem[] = [];
 
@@ -113,7 +115,7 @@ export default async function ReportsPage({
         title={t("pageTitle")}
         subtitle={t("subtitle")}
         eyebrow={t("eyebrow")}
-        imageSrc="/images/gallery/shramadana-02.webp"
+        imageSrc={assets.headerReports || "/images/gallery/shramadana-02.webp"}
         imageAlt="BJWS Transparency & Governance Reports"
         breadcrumbs={[
           { label: tCommon("home"), href: "/" },

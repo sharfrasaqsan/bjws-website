@@ -13,18 +13,19 @@ import {
 import { createPublicClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { buildPageMetadata, SITE_URL } from "@/lib/seo";
 import { JsonLd, getBreadcrumbJsonLd } from "@/components/seo/json-ld";
-import { formatAdminDate } from "@/lib/utils";
+import { formatAdminDate, formatGoogleDriveImageUrl } from "@/lib/utils";
 import { IslamicPattern } from "@/components/ui/islamic-pattern";
 import {
   Calendar,
   Clock,
   ArrowLeft,
   ArrowRight,
-  Share2,
   Tag,
-  CheckCircle2,
-  MessageCircle,
 } from "lucide-react";
+import { ArticleHeroImage } from "@/components/ui/article-hero-image";
+import { RichArticleContent } from "@/components/ui/rich-article-content";
+import { ArticleGallery } from "@/components/ui/article-gallery";
+import { ShareButtons } from "@/components/ui/share-buttons";
 
 interface ArticleDetailPageProps {
   params: Promise<{
@@ -173,7 +174,7 @@ export default async function ArticleDetailPage({
       name: "Buhary Janaza Welfare Society",
       logo: {
         "@type": "ImageObject",
-        url: `${SITE_URL}/image/bjws logo.webp`,
+        url: `${SITE_URL}/images/bjws logo.webp`,
       },
     },
     mainEntityOfPage: {
@@ -261,100 +262,39 @@ export default async function ArticleDetailPage({
       {/* Main Article Content & Media */}
       <div className="bg-[#fbfaf6] py-12 sm:py-16">
         <Container size="md">
-          {/* Featured Image */}
-          <div className="relative aspect-[16/10] sm:aspect-[16/9] w-full overflow-hidden rounded-3xl border border-[#e6e4dc] bg-muted shadow-lg mb-10">
-            <Image
-              src={article.image_url}
-              alt={article.title}
-              fill
-              priority
-              sizes="(max-width: 1024px) 100vw, 800px"
-              className="object-cover object-center"
-            />
-          </div>
+          {/* Main Hero Image */}
+          <ArticleHeroImage
+            src={article.image_url}
+            alt={article.title}
+            categoryLabel={catLabel}
+            caption={`Photo documentation for ${article.title}`}
+            priority={true}
+          />
 
-          {/* Article Body */}
+          {/* Article Body Container */}
           <div className="rounded-3xl border border-[#e6e4dc] bg-surface p-6 sm:p-10 lg:p-12 shadow-xs space-y-6">
             {/* Lead Excerpt */}
-            <p className="text-base sm:text-lg font-medium text-primary leading-relaxed border-l-4 border-[#c99a45] pl-4 italic bg-[#fbfaf6] p-3 rounded-r-xl">
+            <p className="text-base sm:text-lg font-medium text-[#0b2e1e] leading-relaxed border-l-4 border-[#c99a45] pl-4 italic bg-[#fbfaf6] p-4 rounded-r-2xl shadow-2xs">
               &ldquo;{article.excerpt}&rdquo;
             </p>
 
-            {/* Formatted Content Paragraphs */}
-            <div className="space-y-4 text-sm sm:text-base text-text leading-relaxed font-sans">
-              {article.content.split("\n\n").map((block, idx) => {
-                const trimmed = block.trim();
-                if (!trimmed) return null;
+            {/* Rich Article Content with Full Formatting Support */}
+            <RichArticleContent content={article.content} />
 
-                // Markdown-like subheadings (###)
-                if (trimmed.startsWith("### ")) {
-                  return (
-                    <h2
-                      key={idx}
-                      className="font-display text-xl sm:text-2xl font-bold text-[#0b2e1e] pt-4 tracking-tight"
-                    >
-                      {trimmed.replace("### ", "")}
-                    </h2>
-                  );
-                }
+            {/* Article Internal Media Gallery */}
+            {article.gallery && article.gallery.length > 0 && (
+              <ArticleGallery
+                images={article.gallery}
+                title="Related Photos & Field Documentation"
+              />
+            )}
 
-                // Markdown-like bullet lists (1. or -)
-                if (trimmed.includes("\n1. ") || trimmed.startsWith("1. ") || trimmed.startsWith("- ")) {
-                  const lines = trimmed.split("\n");
-                  return (
-                    <ul key={idx} className="space-y-2 py-2">
-                      {lines.map((l, lIdx) => (
-                        <li key={lIdx} className="flex items-start gap-2.5 text-xs sm:text-sm text-text leading-relaxed">
-                          <CheckCircle2 className="h-4 w-4 shrink-0 text-[#c99a45] mt-0.5" />
-                          <span>{l.replace(/^[0-9]+\.\s+|^-\s+/, "")}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  );
-                }
-
-                return (
-                  <p key={idx} className="text-text/90">
-                    {trimmed}
-                  </p>
-                );
-              })}
-            </div>
-
-            {/* Social Share Strip */}
-            <div className="border-t border-border pt-6 mt-8 flex flex-wrap items-center justify-between gap-4">
-              <div className="flex items-center gap-2 text-xs font-semibold text-text-muted">
-                <Share2 className="h-4 w-4 text-[#c99a45]" />
-                <span>{t("shareArticle")}</span>
-              </div>
-
-              <div className="flex items-center gap-2">
-                {/* WhatsApp Share */}
-                <a
-                  href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
-                    `${article.title} - Read more on BJWS: ${currentUrl}`
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-600/30 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-1.5 text-xs font-semibold text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100 transition-colors"
-                >
-                  <MessageCircle className="h-3.5 w-3.5 text-emerald-600" />
-                  <span>WhatsApp</span>
-                </a>
-
-                {/* Facebook Share */}
-                <a
-                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-                    currentUrl
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface hover:bg-muted px-3 py-1.5 text-xs font-semibold text-text transition-colors"
-                >
-                  <span>Facebook</span>
-                </a>
-              </div>
-            </div>
+            {/* Interactive Working Share Buttons Strip */}
+            <ShareButtons
+              title={article.title}
+              excerpt={article.excerpt}
+              label={t("shareArticle")}
+            />
           </div>
 
           {/* Related Articles Strip */}
@@ -382,7 +322,7 @@ export default async function ArticleDetailPage({
                   >
                     <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-muted mb-3">
                       <Image
-                        src={rel.image_url}
+                        src={formatGoogleDriveImageUrl(rel.image_url)}
                         alt={rel.title}
                         fill
                         sizes="(max-width: 640px) 100vw, 33vw"

@@ -1,3 +1,9 @@
+export interface ArticleImage {
+  url: string;
+  alt: string;
+  caption?: string;
+}
+
 export interface Article {
   id: string;
   slug: string;
@@ -12,10 +18,32 @@ export interface Article {
   };
   author: string;
   image_url: string;
+  gallery?: ArticleImage[];
   locale: "en" | "ta" | "si";
   published_at: string;
   is_published: boolean;
   read_time_minutes: number;
+}
+
+export interface UnifiedArticle {
+  baseId: string;
+  baseSlug: string;
+  category: Article["category"];
+  categoryLabel: {
+    en: string;
+    ta: string;
+    si: string;
+  };
+  author: string;
+  image_url: string;
+  gallery?: ArticleImage[];
+  published_at: string;
+  is_published: boolean;
+  translations: {
+    en?: Article;
+    ta?: Article;
+    si?: Article;
+  };
 }
 
 export const SEED_ARTICLES: Article[] = [
@@ -24,7 +52,7 @@ export const SEED_ARTICLES: Article[] = [
     slug: "annual-cemetery-shramadhana-2026",
     title: "Annual Mahallah Cemetery Shramadhana & Grounds Restoration Completed",
     excerpt: "Over 80 community volunteers and youth joined hands to clear, beautify, and reinforce pathways across the 1.5-acre cemetery grounds.",
-    content: `The Buhary Janaza Welfare Society (BJWS) successfully concluded its flagship Annual Cemetery Shramadhana and Maintenance Drive this past weekend at the Buhary Jummah Mosque Mahallah Cemetery in Mullipothanai.
+    content: `The Buhary Janaza Welfare Society (BJWS) successfully concluded its flagship Annual Cemetery Shramadhana and Maintenance Drive this past weekend at the Buhary Jummah Mosque Mahallah Cemetery in Mullipothana.
 
 Under the active guidance of Society President A.M. Sahibullah and Cemetery Warden A.G.M. Niyas, more than 80 volunteers—comprising community elders, youth, and local residents—participated in this noble collective effort for the pleasure of Allah (SWT).
 
@@ -45,6 +73,23 @@ The Society extends its heartfelt prayers and Jazakallah Khair to every voluntee
     },
     author: "BJWS Media Secretariat",
     image_url: "/images/gallery/shramadana-01.webp",
+    gallery: [
+      {
+        url: "/images/gallery/shramadana-02.webp",
+        alt: "Volunteers and youth clearing overgrowth and leveling walking paths",
+        caption: "Youth and elders collaborating across the 1.5-acre cemetery ground.",
+      },
+      {
+        url: "/images/gallery/water-concrete-01.webp",
+        alt: "Cemetery solar water pump and ablution facility inspection",
+        caption: "Ablution taps and dedicated water infrastructure checked during the campaign.",
+      },
+      {
+        url: "/images/gallery/cemetery-road-01.webp",
+        alt: "Access pathway leading from Kandy Road to cemetery entrance",
+        caption: "Restored all-weather access road for funeral vehicle logistics.",
+      },
+    ],
     locale: "en",
     published_at: "2026-03-02T08:00:00Z",
     is_published: true,
@@ -55,7 +100,7 @@ The Society extends its heartfelt prayers and Jazakallah Khair to every voluntee
     slug: "membership-enrollment-update-2026",
     title: "BJWS Annual Membership & Mutual Safety Net Scheme Open for 2026",
     excerpt: "Revised affordable welfare contributions: Monthly plan is now LKR 50, and annual one-time settlement is LKR 500.",
-    content: `The Executive Committee of Buhary Janaza Welfare Society announces that membership enrollment and renewal for the 2026/2027 term is now officially open for all resident Muslim households of the Buhary Mahallah in Mullipothanai.
+    content: `The Executive Committee of Buhary Janaza Welfare Society announces that membership enrollment and renewal for the 2026/2027 term is now officially open for all resident Muslim households of the Buhary Mahallah in Mullipothana.
 
 To ensure maximum inclusivity and alleviate economic burdens on families, the society assembly has established an affordable dual contribution schedule:
 
@@ -71,7 +116,7 @@ Every registered member household receives full, round-the-clock funeral assista
 - Cemetery grave digging, burial permits, and logistical transport coordination.
 - Comprehensive exemption from funeral fees for financially struggling households.
 
-"Our goal is that no family in Mullipothanai should ever face the pain of losing a loved one with financial anxiety," said Treasurer M.S. Faizarkhan. "The modest subscription of LKR 50 per month forms a collective safety net that shields every neighbor."
+"Our goal is that no family in Mullipothana should ever face the pain of losing a loved one with financial anxiety," said Treasurer M.S. Faizarkhan. "The modest subscription of LKR 50 per month forms a collective safety net that shields every neighbor."
 
 Enrollment can be completed online via our website or in-person at the Society Administrative Desk at the 95th Mile Post Buhary Jummah Mosque.`,
     category: "announcements",
@@ -94,7 +139,7 @@ Enrollment can be completed online via our website or in-person at the Society A
     excerpt: "Practical demonstration conducted for 45 youth volunteers under senior Islamic scholars to ensure adherence to authentic Prophetic traditions.",
     content: `In accordance with our objective to empower the younger generation with essential religious competencies, the Buhary Janaza Welfare Society recently hosted a comprehensive Janaza Preparation Seminar and Hands-on Workshop at the Jamiya Mosque Hall.
 
-Facilitated by Vice Secretary M.S. Riyas alongside respected local Imams, the intensive training brought together 45 young volunteers from across Mullipothanai and surrounding Mahallahs.
+Facilitated by Vice Secretary M.S. Riyas alongside respected local Imams, the intensive training brought together 45 young volunteers from across Mullipothana and surrounding Mahallahs.
 
 ### Core Modules Covered During the Seminar:
 1. **The Islamic Perspective on Death & Dignity:** Understanding the rights of the deceased and the supreme etiquette required when handling a Janaza.
@@ -279,8 +324,13 @@ Plans are underway to expand the upcoming round into special Ramadan Blessing Ha
   },
 ];
 
+declare global {
+  var __articlesStore: Article[] | undefined;
+}
+
 // In-memory persistent storage for server actions in development / demo mode
-let liveArticlesStore = [...SEED_ARTICLES];
+let liveArticlesStore: Article[] = globalThis.__articlesStore || [...SEED_ARTICLES];
+globalThis.__articlesStore = liveArticlesStore;
 
 export function getArticles(locale: string = "en", includeDrafts: boolean = false): Article[] {
   let list = liveArticlesStore;
@@ -309,22 +359,93 @@ export function getAllArticlesAdmin(): Article[] {
   );
 }
 
+export function extractBaseSlug(slug: string): string {
+  return slug.replace(/-(ta|si|en)$/, "");
+}
+
+export function extractBaseId(id: string): string {
+  return id.replace(/-(ta|si|en)$/, "");
+}
+
+export function getUnifiedArticlesAdmin(articlesList?: Article[]): UnifiedArticle[] {
+  const source = articlesList || liveArticlesStore;
+  const map = new Map<string, UnifiedArticle>();
+
+  for (const art of source) {
+    const baseSlug = extractBaseSlug(art.slug);
+    const baseId = extractBaseId(art.id);
+    const key = baseSlug || baseId;
+
+    if (!map.has(key)) {
+      map.set(key, {
+        baseId,
+        baseSlug,
+        category: art.category,
+        categoryLabel: art.categoryLabel,
+        author: art.author,
+        image_url: art.image_url,
+        gallery: art.gallery,
+        published_at: art.published_at,
+        is_published: art.is_published,
+        translations: {},
+      });
+    }
+
+    const entry = map.get(key)!;
+    entry.translations[art.locale] = art;
+    if (art.gallery && !entry.gallery) {
+      entry.gallery = art.gallery;
+    }
+    if (art.is_published) {
+      entry.is_published = true;
+    }
+  }
+
+  return Array.from(map.values()).sort(
+    (a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
+  );
+}
+
 export function getArticleBySlug(slug: string, locale: string = "en"): Article | undefined {
   const cleanSlug = decodeURIComponent(slug).toLowerCase();
+  const base = extractBaseSlug(cleanSlug);
   
-  // Try exact match with locale
+  // 1. Direct match with locale
   let match = liveArticlesStore.find(
     (a) => a.slug.toLowerCase() === cleanSlug && a.locale === locale
   );
   if (match) return match;
 
-  // Try slug match with any locale
+  // 2. Base slug match with specified locale
+  match = liveArticlesStore.find(
+    (a) => extractBaseSlug(a.slug.toLowerCase()) === base && a.locale === locale
+  );
+  if (match) return match;
+
+  // 3. Exact slug match with any locale
   match = liveArticlesStore.find((a) => a.slug.toLowerCase() === cleanSlug);
-  return match;
+  if (match) return match;
+
+  // 4. Base slug with English fallback
+  match = liveArticlesStore.find(
+    (a) => extractBaseSlug(a.slug.toLowerCase()) === base && a.locale === "en"
+  );
+  if (match) return match;
+
+  // 5. Any matching base slug
+  return liveArticlesStore.find(
+    (a) => extractBaseSlug(a.slug.toLowerCase()) === base
+  );
 }
 
 export function addArticleStore(article: Article): void {
   liveArticlesStore = [article, ...liveArticlesStore];
+  globalThis.__articlesStore = liveArticlesStore;
+}
+
+export function addUnifiedArticleStore(articles: Article[]): void {
+  liveArticlesStore = [...articles, ...liveArticlesStore];
+  globalThis.__articlesStore = liveArticlesStore;
 }
 
 export function updateArticleStore(id: string, updates: Partial<Article>): boolean {
@@ -335,12 +456,68 @@ export function updateArticleStore(id: string, updates: Partial<Article>): boole
     ...liveArticlesStore[index],
     ...updates,
   };
+  globalThis.__articlesStore = liveArticlesStore;
   return true;
+}
+
+export function updateUnifiedArticleStore(
+  baseSlug: string,
+  commonUpdates: Partial<Article>,
+  translationUpdates?: Partial<Record<"en" | "ta" | "si", { title: string; excerpt: string; content: string }>>
+): boolean {
+  const normalizedBase = extractBaseSlug(baseSlug);
+  let updatedAny = false;
+
+  liveArticlesStore = liveArticlesStore.map((art) => {
+    if (extractBaseSlug(art.slug) === normalizedBase) {
+      updatedAny = true;
+      const langUpdate = translationUpdates ? translationUpdates[art.locale] : undefined;
+      return {
+        ...art,
+        ...commonUpdates,
+        ...(langUpdate
+          ? {
+              title: langUpdate.title,
+              excerpt: langUpdate.excerpt,
+              content: langUpdate.content,
+              read_time_minutes: Math.max(1, Math.ceil((langUpdate.content.split(/\s+/).length || 200) / 180)),
+            }
+          : {}),
+      };
+    }
+    return art;
+  });
+
+  globalThis.__articlesStore = liveArticlesStore;
+  return updatedAny;
 }
 
 export function deleteArticleStore(id: string): boolean {
   const initialLen = liveArticlesStore.length;
   liveArticlesStore = liveArticlesStore.filter((a) => a.id !== id);
+  globalThis.__articlesStore = liveArticlesStore;
   return liveArticlesStore.length < initialLen;
+}
+
+export function deleteUnifiedArticleStore(baseSlug: string): boolean {
+  const normalizedBase = extractBaseSlug(baseSlug);
+  const initialLen = liveArticlesStore.length;
+  liveArticlesStore = liveArticlesStore.filter((a) => extractBaseSlug(a.slug) !== normalizedBase);
+  globalThis.__articlesStore = liveArticlesStore;
+  return liveArticlesStore.length < initialLen;
+}
+
+export function toggleUnifiedArticlePublishStore(baseSlug: string, newState: boolean): boolean {
+  const normalizedBase = extractBaseSlug(baseSlug);
+  let updated = false;
+  liveArticlesStore = liveArticlesStore.map((art) => {
+    if (extractBaseSlug(art.slug) === normalizedBase) {
+      updated = true;
+      return { ...art, is_published: newState };
+    }
+    return art;
+  });
+  globalThis.__articlesStore = liveArticlesStore;
+  return updated;
 }
 

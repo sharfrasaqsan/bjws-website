@@ -41,7 +41,7 @@ export default function AdminLoginPage() {
             Executive Officer Sign In
           </h1>
           <p className="mt-1 text-xs text-[#4b5563] sm:text-sm">
-            Buhary Janaza Welfare Society, Mullipothanai
+            Buhary Janaza Welfare Society, Mullipothana
           </p>
         </div>
 
@@ -123,29 +123,16 @@ export default function AdminLoginPage() {
             </Button>
           </form>
 
-          {/* Quick Demo Sign In Option */}
-          <div className="mt-4 pt-3 border-t border-[#f3f1ea]">
-            <form action={formAction}>
-              <input type="hidden" name="demo_login" value="true" />
-              <button
-                type="submit"
-                className="w-full cursor-pointer rounded-lg border border-[#c99a45]/40 bg-[#fbfaf6] py-2 text-xs font-semibold text-[#0b2e1e] shadow-2xs hover:bg-[#f5eedf] transition-colors"
-              >
-                ⚡ 1-Click Executive Officer Access (Instant Sign In)
-              </button>
-            </form>
-          </div>
-
           {/* Footer Security Badges */}
           <div className="mt-6 border-t border-[#f3f1ea] pt-5 text-center text-xs text-[#6b7280]">
             <p className="flex items-center justify-center gap-1.5 text-[11px]">
               <ShieldCheck className="h-3.5 w-3.5 text-[#124d34]" />
               <span>
-                Protected by <strong className="text-[#1c2420]">Supabase Auth</strong> &amp; RBAC
+                Protected by <strong className="text-[#1c2420]">Supabase Auth</strong> &amp; 256-Bit SSL
               </span>
             </p>
-            <p className="mt-1 font-mono text-[10px] text-[#9ca3af]">
-              Development demo: sign in with password of 6+ characters.
+            <p className="mt-1 text-[11px] text-[#9ca3af]">
+              Official Secretariat Portal. Unauthorized access attempts are monitored and logged.
             </p>
           </div>
         </div>

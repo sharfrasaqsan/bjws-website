@@ -9,10 +9,10 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-Strict-blue?logo=typescript)](https://www.typescriptlang.org/)
 [![License](https://img.shields.io/badge/License-Proprietary-red)](LICENSE)
 
-Official website for the **Buhary Janaza Welfare Society (BJWS)**, a registered community voluntary welfare organization serving the Muslim community of the Buhary Jummah Mosque area in Mullipothanai, Eastern Province, Sri Lanka.
+Official website for the **Buhary Janaza Welfare Society (BJWS)**, a registered community voluntary welfare organization serving the Muslim community of the Buhary Jummah Mosque area in Mullipothana, Eastern Province, Sri Lanka.
 
 - **Government Registration No:** `DS/TH/SS/VSSO/2023/01` (Founded 2023)
-- **Official Address:** 95th Buhary Jummah Mosque, Kandy Road, Mullipothanai, Sri Lanka
+- **Official Address:** 95th Buhary Jummah Mosque, Kandy Road, Mullipothana, Sri Lanka
 - **Official Email:** `mbjwsociety@gmail.com`
 - **Core Activities:** 24/7 Janaza (funeral) assistance, Ghusl & Kafan facilities, cemetery ground maintenance & road renovation, monthly dry ration distributions, and youth training workshops.
 

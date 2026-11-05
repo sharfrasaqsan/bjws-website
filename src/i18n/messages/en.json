@@ -357,9 +357,7 @@
     "photoLivelihood1Caption": "Social assistance and community livelihood initiative",
     "photoLivelihood1Alt": "Livelihood aid delivery to community beneficiaries",
     "photoCemeteryRoad1Caption": "Cemetery access road clearing and improvement work",
-    "photoCemeteryRoad1Alt": "Road grading and access pathway enhancement for cemetery",
-    "photoUnapprovedCaption": "Pending consent documentation",
-    "photoUnapprovedAlt": "Unapproved photo awaiting verification"
+    "photoCemeteryRoad1Alt": "Road grading and access pathway enhancement for cemetery"
   },
   "membershipPage": {
     "pageTitle": "Society Membership & Registration",

@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { buildPageMetadata } from "@/lib/seo";
 import { JsonLd, getBreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { ShieldCheck, Lock, Eye, Mail } from "lucide-react";
+import { getSiteAssets } from "@/content/site-assets";
 
 export async function generateMetadata({
   params,
@@ -33,6 +34,7 @@ export default async function PrivacyPage({
 
   const t = await getTranslations("privacyPage");
   const tCommon = await getTranslations("common");
+  const assets = getSiteAssets();
 
   const sections = [
     {
@@ -76,7 +78,7 @@ export default async function PrivacyPage({
         title={t("pageTitle")}
         subtitle={t("subtitle")}
         eyebrow={tCommon("regNo")}
-        imageSrc="/images/gallery/shramadana-01.webp"
+        imageSrc={assets.headerPrivacy || "/images/gallery/shramadana-01.webp"}
         imageAlt="BJWS Privacy & Data Protection"
         breadcrumbs={[
           { label: tCommon("home"), href: "/" },

@@ -4,7 +4,7 @@ import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { type Article } from "@/content/news";
-import { formatAdminDate } from "@/lib/utils";
+import { formatAdminDate, formatGoogleDriveImageUrl } from "@/lib/utils";
 import { Search, Calendar, Clock, ArrowRight, Tag, BookOpen } from "lucide-react";
 import { ScrollReveal, ScrollRevealGroup } from "@/components/ui/scroll-reveal";
 
@@ -123,7 +123,7 @@ export function NewsGrid({ articles, locale, translations }: NewsGridProps) {
               {/* Visual Media */}
               <div className="lg:col-span-7 relative aspect-[16/10] sm:aspect-[16/9] w-full overflow-hidden bg-muted">
                 <Image
-                  src={featuredArticle.image_url}
+                  src={formatGoogleDriveImageUrl(featuredArticle.image_url)}
                   alt={featuredArticle.title}
                   fill
                   priority
@@ -197,7 +197,7 @@ export function NewsGrid({ articles, locale, translations }: NewsGridProps) {
                 {/* Photo Header */}
                 <div className="relative aspect-[16/10] overflow-hidden bg-muted">
                   <Image
-                    src={article.image_url}
+                    src={formatGoogleDriveImageUrl(article.image_url)}
                     alt={article.title}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

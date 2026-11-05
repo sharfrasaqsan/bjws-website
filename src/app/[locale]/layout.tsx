@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
 import {
@@ -56,6 +56,16 @@ const notoSansSinhala = Noto_Sans_Sinhala({
   adjustFontFallback: true,
 });
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#124d34" },
+    { media: "(prefers-color-scheme: dark)", color: "#072115" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
@@ -69,13 +79,13 @@ export async function generateMetadata({
 
   const titles: Record<Locale, string> = {
     ta: "புகாரி ஜனாஸா நலன்புரி சங்கம் (BJWS) | முள்ளிப்பொத்தானை",
-    en: "Buhary Janaza Welfare Society (BJWS) | Mullipothanai",
+    en: "Buhary Janaza Welfare Society (BJWS) | Mullipothana",
     si: "බුහාරි ජනාසා සුභසාධක සමිතිය (BJWS) | මුල්ලිපොத்தான",
   };
 
   const descriptions: Record<Locale, string> = {
     ta: "முள்ளிப்பொத்தானை புகாரி ஜும்ஆ பள்ளிவாசல் பகுதி முஸ்லிம் சமூகத்திற்கான உத்தியோகபூர்வ ஜனாஸா மற்றும் நலன்புரி சேவைகள் அமைப்பு (பதிவு இல: DS/TH/SS/VSSO/2023/01).",
-    en: "Official website of Buhary Janaza Welfare Society, Mullipothanai, Sri Lanka (Reg No: DS/TH/SS/VSSO/2023/01). Community funeral and welfare services.",
+    en: "Official website of Buhary Janaza Welfare Society, Mullipothana, Sri Lanka (Reg No: DS/TH/SS/VSSO/2023/01). Community funeral and welfare services.",
     si: "මුල්ලිපොத்தான බුහාරි ජුම්මා මස්ජිද ප්‍රදේශයේ මුස්ලිම් ප්‍රජාව වෙනුවෙන් ක්‍රියාත්මක නිල ජනාසා සහ සුභසාධක සමිතිය (ලියාපදිංචි අංකය: DS/TH/SS/VSSO/2023/01).",
   };
 
@@ -186,7 +196,7 @@ export default async function LocaleLayout({
       <head>
         <ThemeScript />
       </head>
-      <body className="bg-background text-text selection:bg-primary/15 selection:text-primary flex min-h-full flex-col">
+      <body className="bg-background text-text selection:bg-primary/15 selection:text-primary flex min-h-full flex-col overflow-x-hidden">
         <NextIntlClientProvider messages={messages}>
           {/* Skip-to-content accessibility link */}
           <a

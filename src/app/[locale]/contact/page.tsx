@@ -19,6 +19,7 @@ import {
   MessageSquare,
   ShieldCheck,
 } from "lucide-react";
+import { getSiteAssets } from "@/content/site-assets";
 
 export async function generateMetadata({
   params,
@@ -47,6 +48,7 @@ export default async function ContactPage({
 
   const t = await getTranslations("contactPage");
   const tCommon = await getTranslations("common");
+  const assets = getSiteAssets();
 
   const contacts = [
     {
@@ -181,7 +183,7 @@ export default async function ContactPage({
         title={t("pageTitle")}
         subtitle={t("subtitle")}
         eyebrow={tCommon("emergencyBadge")}
-        imageSrc="/images/gallery/cemetery-road-01.webp"
+        imageSrc={assets.headerContact || "/images/gallery/cemetery-road-01.webp"}
         imageAlt="BJWS Office and Contact Location in Mullipothana"
         breadcrumbs={[
           { label: tCommon("home"), href: "/" },

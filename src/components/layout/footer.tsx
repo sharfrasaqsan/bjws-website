@@ -11,6 +11,8 @@ import {
   ShieldCheck,
   ChevronRight,
   Heart,
+  Globe,
+  Code2,
 } from "lucide-react";
 
 export function Footer() {
@@ -54,7 +56,7 @@ export function Footer() {
             <Link href="/" className="inline-flex items-center gap-3 group">
               <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg border border-emerald-800/40 bg-white p-1 shadow-2xs">
                 <Image
-                  src="/image/bjws logo.webp"
+                  src="/images/bjws logo.webp"
                   alt="BJWS Emblem"
                   width={48}
                   height={48}
@@ -207,7 +209,7 @@ export function Footer() {
           <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5 sm:gap-4">
             <span className="font-mono text-[#d4a359]">{t("common.regNo")}</span>
             <span className="hidden sm:inline">•</span>
-            <span>Mullipothanai, Sri Lanka</span>
+            <span>Mullipothana, Sri Lanka</span>
             <span className="hidden sm:inline">•</span>
             <Link
               href="/privacy"
@@ -215,6 +217,53 @@ export function Footer() {
             >
               {t("nav.privacy") || "Privacy Policy"}
             </Link>
+          </div>
+        </div>
+
+        {/* Developer Credit & Direct Contact */}
+        <div className="mt-5 pt-4 border-t border-emerald-950/80 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-emerald-200/70 text-center md:text-left">
+          <div className="flex flex-wrap items-center justify-center md:justify-start gap-1.5">
+            <Code2 className="h-3.5 w-3.5 text-[#d4a359]" />
+            <span className="text-emerald-200/60 text-[11px]">Designed & Developed by:</span>
+            <a
+              href="https://linkedin.com/in/sharfiras"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-bold text-[#f5d78e] hover:text-white hover:underline transition-colors ml-0.5"
+            >
+              A.M. Sharfras Aqsan
+            </a>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center md:justify-end gap-y-2 gap-x-3 sm:gap-x-4 font-mono text-[11px]">
+            <a
+              href="tel:+94751230001"
+              className="inline-flex items-center gap-1.5 text-emerald-200/80 hover:text-white transition-colors"
+              title="Call Developer"
+            >
+              <Phone className="h-3 w-3 text-[#d4a359]" />
+              <span>+94 75 123 0001</span>
+            </a>
+            <span className="hidden sm:inline text-emerald-800">•</span>
+            <a
+              href="mailto:sharfrasaqsan@gmail.com"
+              className="inline-flex items-center gap-1.5 text-emerald-200/80 hover:text-white transition-colors"
+              title="Email Developer"
+            >
+              <Mail className="h-3 w-3 text-[#d4a359]" />
+              <span>sharfrasaqsan@gmail.com</span>
+            </a>
+            <span className="hidden sm:inline text-emerald-800">•</span>
+            <a
+              href="https://sharfrasaqsan.vercel.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-[#f5d78e] hover:text-white hover:underline transition-colors"
+              title="Developer Portfolio"
+            >
+              <Globe className="h-3 w-3 text-[#d4a359]" />
+              <span>sharfrasaqsan.vercel.app</span>
+            </a>
           </div>
         </div>
       </Container>

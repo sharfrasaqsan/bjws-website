@@ -21,6 +21,9 @@ import {
   ArrowRight,
   Award,
 } from "lucide-react";
+import { formatGoogleDriveImageUrl } from "@/lib/utils";
+import { getSiteAssets } from "@/content/site-assets";
+import { getTeamMembers } from "@/content/team";
 
 export async function generateMetadata({
   params,
@@ -139,29 +142,47 @@ export default async function AboutPage({
     },
   ];
 
+  const assets = getSiteAssets();
+  const allTeam = getTeamMembers();
+
+  const getOfficer = (
+    id: string,
+    fallback: { name: string; role: string; phone: string; initials: string; photo?: string }
+  ) => {
+    const member = allTeam.find((m) => m.id === id);
+    if (!member) return fallback;
+    return {
+      name: member.name,
+      role: member.role[locale as "en" | "ta" | "si"] || member.role.en,
+      phone: member.phone,
+      initials: member.initials,
+      photo: member.photo ? formatGoogleDriveImageUrl(member.photo) : fallback.photo,
+    };
+  };
+
   const executiveOfficers = [
-    {
+    getOfficer("sahibullah", {
       name: "A.M. Sahibullah",
       role: t("rolePresident"),
       phone: "072 440 9574",
       initials: "AMS",
       photo: "/images/team/sahibulla.webp",
-    },
-    {
+    }),
+    getOfficer("siyam", {
       name: "A.L.M. Siyam",
       role: t("roleSecretary"),
       phone: "077 278 2829",
       initials: "ALMS",
       photo: "/images/team/siyam.webp",
-    },
-    {
+    }),
+    getOfficer("faizarkhan", {
       name: "M.S. Faizarkhan",
       role: t("roleTreasurer"),
       phone: "075 651 0050",
       initials: "MSF",
       photo: "/images/team/faisarkhan.webp",
-    },
-    {
+    }),
+    getOfficer("abuhuraira", {
       name: "A. Abuhuraira",
       role:
         locale === "ta"
@@ -172,7 +193,7 @@ export default async function AboutPage({
       phone: "077 622 7323",
       initials: "AA",
       photo: "/images/team/abuhuraira.webp",
-    },
+    }),
   ];
 
   return (
@@ -193,7 +214,7 @@ export default async function AboutPage({
         title={t("pageTitle")}
         subtitle={t("forewordText")}
         eyebrow={tCommon("regNo")}
-        imageSrc="/images/gallery/ghusl-01.webp"
+        imageSrc={assets.headerAbout || "/images/gallery/ghusl-01.webp"}
         imageAlt="BJWS About Community and Constitution"
         breadcrumbs={[
           { label: tCommon("home"), href: "/" },
@@ -244,7 +265,7 @@ export default async function AboutPage({
               <div className="space-y-6 lg:col-span-5">
                 <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl border border-[#0b2e1e]/10 shadow-md">
                   <Image
-                    src="/images/gallery/shramadana-01.webp"
+                    src={assets.aboutCommunity}
                     alt="BJWS Community Members Serving at Mullipothana"
                     fill
                     sizes="(max-width: 1024px) 100vw, 40vw"
@@ -386,7 +407,7 @@ export default async function AboutPage({
                 <div className="lg:col-span-5">
                   <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-[#0b2e1e]/15 shadow-sm">
                     <Image
-                      src="/images/gallery/water-concrete-01.webp"
+                      src={assets.aboutHistoryWater}
                       alt="First BJWS Community Water and Infrastructure Work"
                       fill
                       sizes="(max-width: 1024px) 100vw, 40vw"
@@ -461,7 +482,7 @@ export default async function AboutPage({
                           {officer.photo ? (
                             <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-[#c99a45]/40 shadow-xs bg-[#0b2e1e]">
                               <Image
-                                src={officer.photo}
+                                src={formatGoogleDriveImageUrl(officer.photo)}
                                 alt={officer.name}
                                 fill
                                 sizes="48px"

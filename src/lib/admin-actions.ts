@@ -7,8 +7,43 @@ import {
   addArticleStore,
   updateArticleStore,
   deleteArticleStore,
+  addUnifiedArticleStore,
+  updateUnifiedArticleStore,
+  deleteUnifiedArticleStore,
+  toggleUnifiedArticlePublishStore,
+  extractBaseSlug,
+  getArticles,
   type Article,
+  type ArticleImage,
 } from "@/content/news";
+import {
+  addTeamMemberStore,
+  updateTeamMemberStore,
+  deleteTeamMemberStore,
+  toggleTeamMemberActiveStore,
+  reorderTeamMembersStore,
+  regenerateMemberVerificationTokenStore,
+  type TeamMember,
+} from "@/content/team";
+import {
+  addGalleryImageStore,
+  updateGalleryImageStore,
+  deleteGalleryImageStore,
+  toggleGalleryApprovalStore,
+  type GalleryImage,
+  type GalleryCategory,
+  DEFAULT_BLUR,
+} from "@/content/gallery";
+import {
+  addUnifiedNoticeStore,
+  updateUnifiedNoticeStore,
+  deleteUnifiedNoticeStore,
+  toggleUnifiedNoticePublishStore,
+  groupNotices,
+  getAllNotices,
+  type NoticeRecord,
+} from "@/content/notices";
+import { formatGoogleDriveImageUrl } from "@/lib/utils";
 
 // ====================================================================
 // Contact Messages Actions
@@ -101,36 +136,83 @@ export async function deleteMembershipAction(id: string) {
 }
 
 // ====================================================================
-// Community Notices Actions
+// Community Notices Actions (Unified Multilingual)
 // ====================================================================
 
-export async function createNoticeAction(
+export async function createMultilingualNoticeAction(
   _prevState: { error?: string; success?: boolean } | null,
   formData: FormData
 ) {
   const session = await getAdminSession();
   if (!session) return { error: "Unauthorized" };
 
-  const title = (formData.get("title") as string)?.trim();
-  const body = (formData.get("body") as string)?.trim();
-  const locale = (formData.get("locale") as string) || "ta";
+  const title_ta = (formData.get("title_ta") as string)?.trim();
+  const body_ta = (formData.get("body_ta") as string)?.trim();
+  const title_en = (formData.get("title_en") as string)?.trim();
+  const body_en = (formData.get("body_en") as string)?.trim();
+  const title_si = (formData.get("title_si") as string)?.trim();
+  const body_si = (formData.get("body_si") as string)?.trim();
   const is_published = formData.get("is_published") === "on";
 
-  if (!title || !body) {
-    return { error: "Both title and body are required." };
+  if (
+    (!title_ta || !body_ta) &&
+    (!title_en || !body_en) &&
+    (!title_si || !body_si)
+  ) {
+    return {
+      error:
+        "Please provide announcement details (title and description) for at least one language.",
+    };
   }
 
-  if (isSupabaseConfigured()) {
-    const supabase = await createClient();
-    const { error } = await supabase.from("notices").insert({
-      title,
-      body,
-      locale,
-      is_published,
-      published_at: new Date().toISOString(),
-    });
+  const published_at = new Date().toISOString();
 
-    if (error) return { error: error.message };
+  const entries: NoticeRecord[] = [];
+
+  if (title_ta && body_ta) {
+    entries.push({
+      id: crypto.randomUUID(),
+      title: title_ta,
+      body: body_ta,
+      locale: "ta",
+      is_published,
+      published_at,
+    });
+  }
+  if (title_en && body_en) {
+    entries.push({
+      id: crypto.randomUUID(),
+      title: title_en,
+      body: body_en,
+      locale: "en",
+      is_published,
+      published_at,
+    });
+  }
+  if (title_si && body_si) {
+    entries.push({
+      id: crypto.randomUUID(),
+      title: title_si,
+      body: body_si,
+      locale: "si",
+      is_published,
+      published_at,
+    });
+  }
+
+  // Always update in-memory live store for instant reactivity and development persistence
+  addUnifiedNoticeStore(entries);
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createClient();
+      const { error } = await supabase.from("notices").insert(entries);
+      if (error) {
+        console.warn("Supabase insert multilingual notices warning:", error.message);
+      }
+    } catch (err) {
+      console.warn("Supabase insert multilingual notices warning:", err);
+    }
   }
 
   revalidatePath("/admin/notices");
@@ -138,6 +220,158 @@ export async function createNoticeAction(
   revalidatePath("/[locale]", "layout");
   revalidatePath("/[locale]/reports", "page");
   return { success: true };
+}
+
+export async function updateMultilingualNoticeAction(
+  baseId: string,
+  _prevState: { error?: string; success?: boolean } | null,
+  formData: FormData
+) {
+  const session = await getAdminSession();
+  if (!session) return { error: "Unauthorized" };
+
+  const title_ta = (formData.get("title_ta") as string)?.trim();
+  const body_ta = (formData.get("body_ta") as string)?.trim();
+  const title_en = (formData.get("title_en") as string)?.trim();
+  const body_en = (formData.get("body_en") as string)?.trim();
+  const title_si = (formData.get("title_si") as string)?.trim();
+  const body_si = (formData.get("body_si") as string)?.trim();
+  const is_published = formData.get("is_published") === "on";
+
+  if (
+    (!title_ta || !body_ta) &&
+    (!title_en || !body_en) &&
+    (!title_si || !body_si)
+  ) {
+    return {
+      error:
+        "Please provide announcement details for at least one language.",
+    };
+  }
+
+  updateUnifiedNoticeStore(
+    baseId,
+    {
+      ta: title_ta && body_ta ? { title: title_ta, body: body_ta } : undefined,
+      en: title_en && body_en ? { title: title_en, body: body_en } : undefined,
+      si: title_si && body_si ? { title: title_si, body: body_si } : undefined,
+    },
+    is_published
+  );
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createClient();
+      const allGroups = groupNotices(getAllNotices());
+      const targetGroup = allGroups.find((g) => g.baseId === baseId);
+
+      if (targetGroup) {
+        for (const loc of ["ta", "en", "si"] as const) {
+          const t = targetGroup.translations[loc];
+          const newTitle = loc === "ta" ? title_ta : loc === "en" ? title_en : title_si;
+          const newBody = loc === "ta" ? body_ta : loc === "en" ? body_en : body_si;
+
+          if (newTitle && newBody) {
+            if (t?.id) {
+              await supabase
+                .from("notices")
+                .update({ title: newTitle, body: newBody, is_published })
+                .eq("id", t.id);
+            } else {
+              await supabase.from("notices").insert({
+                id: crypto.randomUUID(),
+                title: newTitle,
+                body: newBody,
+                locale: loc,
+                is_published,
+                published_at: targetGroup.published_at || new Date().toISOString(),
+              });
+            }
+          }
+        }
+      }
+    } catch (err) {
+      console.warn("Supabase update multilingual notice warning:", err);
+    }
+  }
+
+  revalidatePath("/admin/notices");
+  revalidatePath("/admin");
+  revalidatePath("/[locale]", "layout");
+  revalidatePath("/[locale]/reports", "page");
+  return { success: true };
+}
+
+export async function toggleNoticeGroupPublishAction(
+  baseId: string,
+  currentState: boolean
+) {
+  const session = await getAdminSession();
+  if (!session) throw new Error("Unauthorized");
+
+  const newState = !currentState;
+  toggleUnifiedNoticePublishStore(baseId, currentState);
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createClient();
+      const allGroups = groupNotices(getAllNotices());
+      const target = allGroups.find((g) => g.baseId === baseId);
+      if (target) {
+        const ids = Object.values(target.translations).map((t) => t?.id).filter(Boolean);
+        if (ids.length > 0) {
+          await supabase
+            .from("notices")
+            .update({ is_published: newState })
+            .in("id", ids);
+        }
+      }
+    } catch (err) {
+      console.warn("Supabase toggle notice publish warning:", err);
+    }
+  }
+
+  revalidatePath("/admin/notices");
+  revalidatePath("/admin");
+  revalidatePath("/[locale]", "layout");
+  revalidatePath("/[locale]/reports", "page");
+  return { success: true };
+}
+
+export async function deleteNoticeGroupAction(baseId: string) {
+  const session = await getAdminSession();
+  if (!session) throw new Error("Unauthorized");
+
+  const allGroups = groupNotices(getAllNotices());
+  const target = allGroups.find((g) => g.baseId === baseId);
+
+  deleteUnifiedNoticeStore(baseId);
+
+  if (isSupabaseConfigured() && target) {
+    try {
+      const supabase = await createClient();
+      const ids = Object.values(target.translations).map((t) => t?.id).filter(Boolean);
+      if (ids.length > 0) {
+        await supabase.from("notices").delete().in("id", ids);
+      }
+    } catch (err) {
+      console.warn("Supabase delete notice warning:", err);
+    }
+  }
+
+  revalidatePath("/admin/notices");
+  revalidatePath("/admin");
+  revalidatePath("/[locale]", "layout");
+  revalidatePath("/[locale]/reports", "page");
+  return { success: true };
+}
+
+// Single-record fallbacks for compatibility
+export async function createNoticeAction(
+  _prevState: { error?: string; success?: boolean } | null,
+  formData: FormData
+) {
+  return createMultilingualNoticeAction(_prevState, formData);
 }
 
 export async function updateNoticeAction(
@@ -145,80 +379,18 @@ export async function updateNoticeAction(
   _prevState: { error?: string; success?: boolean } | null,
   formData: FormData
 ) {
-  const session = await getAdminSession();
-  if (!session) return { error: "Unauthorized" };
-
-  const title = (formData.get("title") as string)?.trim();
-  const body = (formData.get("body") as string)?.trim();
-  const locale = (formData.get("locale") as string) || "ta";
-  const is_published = formData.get("is_published") === "on";
-
-  if (!title || !body) {
-    return { error: "Both title and body are required." };
-  }
-
-  if (isSupabaseConfigured()) {
-    const supabase = await createClient();
-    const { error } = await supabase
-      .from("notices")
-      .update({
-        title,
-        body,
-        locale,
-        is_published,
-      })
-      .eq("id", id);
-
-    if (error) return { error: error.message };
-  }
-
-  revalidatePath("/admin/notices");
-  revalidatePath("/admin");
-  revalidatePath("/[locale]", "layout");
-  revalidatePath("/[locale]/reports", "page");
-  return { success: true };
+  return updateMultilingualNoticeAction(id, _prevState, formData);
 }
 
 export async function toggleNoticePublishAction(
   id: string,
   currentState: boolean
 ) {
-  const session = await getAdminSession();
-  if (!session) throw new Error("Unauthorized");
-
-  if (isSupabaseConfigured()) {
-    const supabase = await createClient();
-    const { error } = await supabase
-      .from("notices")
-      .update({ is_published: !currentState })
-      .eq("id", id);
-
-    if (error) throw new Error(error.message);
-  }
-
-  revalidatePath("/admin/notices");
-  revalidatePath("/admin");
-  revalidatePath("/[locale]", "layout");
-  revalidatePath("/[locale]/reports", "page");
-  return { success: true };
+  return toggleNoticeGroupPublishAction(id, currentState);
 }
 
 export async function deleteNoticeAction(id: string) {
-  const session = await getAdminSession();
-  if (!session) throw new Error("Unauthorized");
-
-  if (isSupabaseConfigured()) {
-    const supabase = await createClient();
-    const { error } = await supabase.from("notices").delete().eq("id", id);
-
-    if (error) throw new Error(error.message);
-  }
-
-  revalidatePath("/admin/notices");
-  revalidatePath("/admin");
-  revalidatePath("/[locale]", "layout");
-  revalidatePath("/[locale]/reports", "page");
-  return { success: true };
+  return deleteNoticeGroupAction(id);
 }
 
 // ====================================================================
@@ -342,8 +514,496 @@ export async function deleteReportAction(id: string, filePath?: string) {
 }
 
 // ====================================================================
-// News & Blog Articles Actions
+// News & Blog Articles Actions (Unified Multilingual)
 // ====================================================================
+
+export async function createMultilingualArticleAction(
+  _prevState: { error?: string; success?: boolean } | null,
+  formData: FormData
+) {
+  const session = await getAdminSession();
+  if (!session) return { error: "Unauthorized" };
+
+  const slugInput = (formData.get("slug") as string)?.trim();
+  const category =
+    (formData.get("category") as Article["category"]) || "general";
+  const author =
+    (formData.get("author") as string)?.trim() || "BJWS Editorial Board";
+  const image_url =
+    formatGoogleDriveImageUrl((formData.get("image_url") as string)?.trim()) ||
+    "/images/gallery/shramadana-01.webp";
+  const is_published = formData.get("is_published") === "on";
+
+  const title_en = (formData.get("title_en") as string)?.trim();
+  const excerpt_en = (formData.get("excerpt_en") as string)?.trim();
+  const content_en = (formData.get("content_en") as string)?.trim();
+
+  const title_ta = (formData.get("title_ta") as string)?.trim();
+  const excerpt_ta = (formData.get("excerpt_ta") as string)?.trim();
+  const content_ta = (formData.get("content_ta") as string)?.trim();
+
+  const title_si = (formData.get("title_si") as string)?.trim();
+  const excerpt_si = (formData.get("excerpt_si") as string)?.trim();
+  const content_si = (formData.get("content_si") as string)?.trim();
+
+  let gallery: ArticleImage[] = [];
+  const galleryRaw = formData.get("gallery") as string;
+  if (galleryRaw) {
+    try {
+      const parsed = JSON.parse(galleryRaw);
+      if (Array.isArray(parsed)) {
+        gallery = parsed
+          .filter(
+            (item: unknown): item is { url?: unknown; alt?: unknown; caption?: unknown } =>
+              Boolean(item && typeof item === "object")
+          )
+          .filter((item) => typeof item.url === "string" && item.url.trim().length > 0)
+          .map((item) => ({
+            url: formatGoogleDriveImageUrl(String(item.url).trim()),
+            alt: typeof item.alt === "string" ? item.alt.trim() : "",
+            caption: typeof item.caption === "string" ? item.caption.trim() : undefined,
+          }));
+      }
+    } catch {
+      // ignore JSON parse error
+    }
+  }
+
+  if (
+    (!title_en || !content_en) &&
+    (!title_ta || !content_ta) &&
+    (!title_si || !content_si)
+  ) {
+    return {
+      error:
+        "Please provide article title and content for at least one language.",
+    };
+  }
+
+  const rawSlug = slugInput || title_en || title_ta || "article-" + Date.now();
+  const baseSlug =
+    extractBaseSlug(
+      rawSlug
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, "")
+        .replace(/\s+/g, "-")
+        .replace(/--+/g, "-")
+        .trim()
+    ) || `article-${Date.now()}`;
+
+  const baseTimestamp = Date.now();
+  const published_at = new Date().toISOString();
+
+  const categoryLabels: Record<
+    Article["category"],
+    { en: string; ta: string; si: string }
+  > = {
+    cemetery: {
+      en: "Cemetery Care",
+      ta: "மையவாடி பராமரிப்பு",
+      si: "සුසාන භූමි නඩත්තුව",
+    },
+    welfare: {
+      en: "Welfare Relief",
+      ta: "உலர் உணவு நிவாரணம்",
+      si: "සුභසාධන සහන",
+    },
+    sunnah: {
+      en: "Sunnah Education",
+      ta: "சுன்னாஹ் வழிகாட்டல்",
+      si: "ඉස්ලාමීය අධ්‍යාපනය",
+    },
+    announcements: {
+      en: "Announcements",
+      ta: "அறிவித்தல்கள்",
+      si: "නිවේදන",
+    },
+    general: {
+      en: "General News",
+      ta: "பொதுச் செய்திகள்",
+      si: "පොදු පුවත්",
+    },
+  };
+
+  const newArticles: Article[] = [];
+
+  if (title_en && content_en) {
+    newArticles.push({
+      id: `art-${baseTimestamp}-en`,
+      slug: baseSlug,
+      title: title_en,
+      excerpt: excerpt_en || content_en.slice(0, 160) + "...",
+      content: content_en,
+      category,
+      categoryLabel: categoryLabels[category] || categoryLabels.general,
+      author,
+      image_url,
+      gallery: gallery.length > 0 ? gallery : undefined,
+      locale: "en",
+      published_at,
+      is_published,
+      read_time_minutes: Math.max(
+        1,
+        Math.ceil((content_en.split(/\s+/).length || 200) / 180)
+      ),
+    });
+  }
+
+  if (title_ta && content_ta) {
+    newArticles.push({
+      id: `art-${baseTimestamp}-ta`,
+      slug: `${baseSlug}-ta`,
+      title: title_ta,
+      excerpt: excerpt_ta || content_ta.slice(0, 160) + "...",
+      content: content_ta,
+      category,
+      categoryLabel: categoryLabels[category] || categoryLabels.general,
+      author,
+      image_url,
+      gallery: gallery.length > 0 ? gallery : undefined,
+      locale: "ta",
+      published_at,
+      is_published,
+      read_time_minutes: Math.max(
+        1,
+        Math.ceil((content_ta.split(/\s+/).length || 200) / 180)
+      ),
+    });
+  }
+
+  if (title_si && content_si) {
+    newArticles.push({
+      id: `art-${baseTimestamp}-si`,
+      slug: `${baseSlug}-si`,
+      title: title_si,
+      excerpt: excerpt_si || content_si.slice(0, 160) + "...",
+      content: content_si,
+      category,
+      categoryLabel: categoryLabels[category] || categoryLabels.general,
+      author,
+      image_url,
+      gallery: gallery.length > 0 ? gallery : undefined,
+      locale: "si",
+      published_at,
+      is_published,
+      read_time_minutes: Math.max(
+        1,
+        Math.ceil((content_si.split(/\s+/).length || 200) / 180)
+      ),
+    });
+  }
+
+  addUnifiedArticleStore(newArticles);
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createClient();
+      await supabase.from("articles").insert(
+        newArticles.map((a) => ({
+          id: a.id,
+          slug: a.slug,
+          title: a.title,
+          excerpt: a.excerpt,
+          content: a.content,
+          category: a.category,
+          author: a.author,
+          image_url: a.image_url,
+          locale: a.locale,
+          is_published: a.is_published,
+          published_at: a.published_at,
+        }))
+      );
+    } catch (err) {
+      console.warn("Supabase insert multilingual article warning:", err);
+    }
+  }
+
+  revalidatePath("/admin/news");
+  revalidatePath("/[locale]/news", "page");
+  return { success: true };
+}
+
+export async function updateMultilingualArticleAction(
+  baseSlug: string,
+  _prevState: { error?: string; success?: boolean } | null,
+  formData: FormData
+) {
+  const session = await getAdminSession();
+  if (!session) return { error: "Unauthorized" };
+
+  const category =
+    (formData.get("category") as Article["category"]) || "general";
+  const author =
+    (formData.get("author") as string)?.trim() || "BJWS Editorial Board";
+  const image_url =
+    formatGoogleDriveImageUrl((formData.get("image_url") as string)?.trim()) ||
+    "/images/gallery/shramadana-01.webp";
+  const is_published = formData.get("is_published") === "on";
+
+  const title_en = (formData.get("title_en") as string)?.trim();
+  const excerpt_en = (formData.get("excerpt_en") as string)?.trim();
+  const content_en = (formData.get("content_en") as string)?.trim();
+
+  const title_ta = (formData.get("title_ta") as string)?.trim();
+  const excerpt_ta = (formData.get("excerpt_ta") as string)?.trim();
+  const content_ta = (formData.get("content_ta") as string)?.trim();
+
+  const title_si = (formData.get("title_si") as string)?.trim();
+  const excerpt_si = (formData.get("excerpt_si") as string)?.trim();
+  const content_si = (formData.get("content_si") as string)?.trim();
+
+  let gallery: ArticleImage[] = [];
+  const galleryRaw = formData.get("gallery") as string;
+  if (galleryRaw) {
+    try {
+      const parsed = JSON.parse(galleryRaw);
+      if (Array.isArray(parsed)) {
+        gallery = parsed
+          .filter(
+            (item: unknown): item is { url?: unknown; alt?: unknown; caption?: unknown } =>
+              Boolean(item && typeof item === "object")
+          )
+          .filter((item) => typeof item.url === "string" && item.url.trim().length > 0)
+          .map((item) => ({
+            url: formatGoogleDriveImageUrl(String(item.url).trim()),
+            alt: typeof item.alt === "string" ? item.alt.trim() : "",
+            caption: typeof item.caption === "string" ? item.caption.trim() : undefined,
+          }));
+      }
+    } catch {
+      // ignore JSON parse error
+    }
+  }
+
+  if (
+    (!title_en || !content_en) &&
+    (!title_ta || !content_ta) &&
+    (!title_si || !content_si)
+  ) {
+    return {
+      error:
+        "Please provide article title and content for at least one language.",
+    };
+  }
+
+  const normalizedBase = extractBaseSlug(baseSlug);
+
+  const categoryLabels: Record<
+    Article["category"],
+    { en: string; ta: string; si: string }
+  > = {
+    cemetery: {
+      en: "Cemetery Care",
+      ta: "மையவாடி பராமரிப்பு",
+      si: "සුසාන භූමි නඩත්තුව",
+    },
+    welfare: {
+      en: "Welfare Relief",
+      ta: "உலர் உணவு நிவாரணம்",
+      si: "සුභසාධන සහන",
+    },
+    sunnah: {
+      en: "Sunnah Education",
+      ta: "சுன்னாஹ் வழிகாட்டல்",
+      si: "ඉස්ලාමීය අධ්‍යාපනය",
+    },
+    announcements: {
+      en: "Announcements",
+      ta: "அறிவித்தல்கள்",
+      si: "නිවේදන",
+    },
+    general: {
+      en: "General News",
+      ta: "பொதுச் செய்திகள்",
+      si: "පොදු පුවත්",
+    },
+  };
+
+  const commonUpdates: Partial<Article> = {
+    category,
+    categoryLabel: categoryLabels[category] || categoryLabels.general,
+    author,
+    image_url,
+    gallery,
+    is_published,
+  };
+
+  const translationUpdates: Partial<
+    Record<
+      "en" | "ta" | "si",
+      { title: string; excerpt: string; content: string }
+    >
+  > = {};
+  if (title_en && content_en) {
+    translationUpdates.en = {
+      title: title_en,
+      excerpt: excerpt_en || content_en.slice(0, 160) + "...",
+      content: content_en,
+    };
+  }
+  if (title_ta && content_ta) {
+    translationUpdates.ta = {
+      title: title_ta,
+      excerpt: excerpt_ta || content_ta.slice(0, 160) + "...",
+      content: content_ta,
+    };
+  }
+  if (title_si && content_si) {
+    translationUpdates.si = {
+      title: title_si,
+      excerpt: excerpt_si || content_si.slice(0, 160) + "...",
+      content: content_si,
+    };
+  }
+
+  updateUnifiedArticleStore(normalizedBase, commonUpdates, translationUpdates);
+
+  const existingArticles = getArticles("en", true);
+  const langSpecs = [
+    {
+      loc: "en" as const,
+      title: title_en,
+      excerpt: excerpt_en,
+      content: content_en,
+      slugSuffix: "",
+    },
+    {
+      loc: "ta" as const,
+      title: title_ta,
+      excerpt: excerpt_ta,
+      content: content_ta,
+      slugSuffix: "-ta",
+    },
+    {
+      loc: "si" as const,
+      title: title_si,
+      excerpt: excerpt_si,
+      content: content_si,
+      slugSuffix: "-si",
+    },
+  ];
+
+  for (const spec of langSpecs) {
+    if (spec.title && spec.content) {
+      const alreadyHasLang = existingArticles.some(
+        (a) =>
+          extractBaseSlug(a.slug) === normalizedBase && a.locale === spec.loc
+      );
+      if (!alreadyHasLang) {
+        addUnifiedArticleStore([
+          {
+            id: `art-${Date.now()}-${spec.loc}`,
+            slug: `${normalizedBase}${spec.slugSuffix}`,
+            title: spec.title,
+            excerpt: spec.excerpt || spec.content.slice(0, 160) + "...",
+            content: spec.content,
+            category,
+            categoryLabel: categoryLabels[category] || categoryLabels.general,
+            author,
+            image_url,
+            locale: spec.loc,
+            published_at: new Date().toISOString(),
+            is_published,
+            read_time_minutes: Math.max(
+              1,
+              Math.ceil((spec.content.split(/\s+/).length || 200) / 180)
+            ),
+          },
+        ]);
+      }
+    }
+  }
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createClient();
+      for (const spec of langSpecs) {
+        if (spec.title && spec.content) {
+          const s = `${normalizedBase}${spec.slugSuffix}`;
+          await supabase.from("articles").upsert({
+            slug: s,
+            title: spec.title,
+            excerpt: spec.excerpt || spec.content.slice(0, 160) + "...",
+            content: spec.content,
+            category,
+            author,
+            image_url,
+            locale: spec.loc,
+            is_published,
+          });
+        }
+      }
+    } catch (err) {
+      console.warn("Supabase update multilingual article warning:", err);
+    }
+  }
+
+  revalidatePath("/admin/news");
+  revalidatePath("/[locale]/news", "page");
+  return { success: true };
+}
+
+export async function toggleUnifiedArticlePublishAction(
+  baseSlug: string,
+  currentState: boolean
+) {
+  const session = await getAdminSession();
+  if (!session) throw new Error("Unauthorized");
+
+  const newState = !currentState;
+  const normalizedBase = extractBaseSlug(baseSlug);
+  toggleUnifiedArticlePublishStore(normalizedBase, newState);
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createClient();
+      await supabase
+        .from("articles")
+        .update({ is_published: newState })
+        .in("slug", [
+          normalizedBase,
+          `${normalizedBase}-ta`,
+          `${normalizedBase}-si`,
+          `${normalizedBase}-en`,
+        ]);
+    } catch (err) {
+      console.warn("Supabase toggle publish warning:", err);
+    }
+  }
+
+  revalidatePath("/admin/news");
+  revalidatePath("/[locale]/news", "page");
+  return { success: true };
+}
+
+export async function deleteUnifiedArticleAction(baseSlug: string) {
+  const session = await getAdminSession();
+  if (!session) throw new Error("Unauthorized");
+
+  const normalizedBase = extractBaseSlug(baseSlug);
+  deleteUnifiedArticleStore(normalizedBase);
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createClient();
+      await supabase
+        .from("articles")
+        .delete()
+        .in("slug", [
+          normalizedBase,
+          `${normalizedBase}-ta`,
+          `${normalizedBase}-si`,
+          `${normalizedBase}-en`,
+        ]);
+    } catch (err) {
+      console.warn("Supabase delete article warning:", err);
+    }
+  }
+
+  revalidatePath("/admin/news");
+  revalidatePath("/[locale]/news", "page");
+  return { success: true };
+}
 
 export async function createArticleAction(
   _prevState: { error?: string; success?: boolean } | null,
@@ -356,10 +1016,14 @@ export async function createArticleAction(
   const slugInput = (formData.get("slug") as string)?.trim();
   const excerpt = (formData.get("excerpt") as string)?.trim();
   const content = (formData.get("content") as string)?.trim();
-  const category = (formData.get("category") as Article["category"]) || "general";
-  const author = (formData.get("author") as string)?.trim() || "BJWS Editorial Board";
+  const category =
+    (formData.get("category") as Article["category"]) || "general";
+  const author =
+    (formData.get("author") as string)?.trim() || "BJWS Editorial Board";
   const locale = (formData.get("locale") as "en" | "ta" | "si") || "en";
-  const image_url = (formData.get("image_url") as string)?.trim() || "/images/gallery/shramadana-01.webp";
+  const image_url =
+    formatGoogleDriveImageUrl((formData.get("image_url") as string)?.trim()) ||
+    "/images/gallery/shramadana-01.webp";
   const is_published = formData.get("is_published") === "on";
 
   if (!title || !content) {
@@ -378,12 +1042,35 @@ export async function createArticleAction(
   const wordCount = content.split(/\s+/).length;
   const read_time_minutes = Math.max(1, Math.ceil(wordCount / 180));
 
-  const categoryLabels: Record<Article["category"], { en: string; ta: string; si: string }> = {
-    cemetery: { en: "Cemetery Care", ta: "மையவாடி பராமரிப்பு", si: "සුසාන භූමි නඩත්තුව" },
-    welfare: { en: "Welfare Relief", ta: "உலர் உணவு நிவாரணம்", si: "සුභසාධන සහන" },
-    sunnah: { en: "Sunnah Education", ta: "சுன்னாஹ் வழிகாட்டல்", si: "ඉස්ලාමීය අධ්‍යාපනය" },
-    announcements: { en: "Announcements", ta: "அறிவித்தல்கள்", si: "නිවේදන" },
-    general: { en: "General News", ta: "பொதுச் செய்திகள்", si: "පොදු පුවත්" },
+  const categoryLabels: Record<
+    Article["category"],
+    { en: string; ta: string; si: string }
+  > = {
+    cemetery: {
+      en: "Cemetery Care",
+      ta: "மையவாடி பராமரிப்பு",
+      si: "සුසාන භූමි නඩත්තුව",
+    },
+    welfare: {
+      en: "Welfare Relief",
+      ta: "உலர் உணவு நிவாரணம்",
+      si: "සුභසාධන සහන",
+    },
+    sunnah: {
+      en: "Sunnah Education",
+      ta: "சுன்னாஹ் வழிகாட்டல்",
+      si: "ඉස්ලාමීය අධ්‍යාපනය",
+    },
+    announcements: {
+      en: "Announcements",
+      ta: "அறிவித்தல்கள்",
+      si: "නිවේදන",
+    },
+    general: {
+      en: "General News",
+      ta: "பொதுச் செய்திகள்",
+      si: "පොදු පුවත්",
+    },
   };
 
   const newArticle: Article = {
@@ -443,8 +1130,10 @@ export async function updateArticleAction(
   const slug = (formData.get("slug") as string)?.trim();
   const excerpt = (formData.get("excerpt") as string)?.trim();
   const content = (formData.get("content") as string)?.trim();
-  const category = (formData.get("category") as Article["category"]) || "general";
-  const author = (formData.get("author") as string)?.trim() || "BJWS Editorial Board";
+  const category =
+    (formData.get("category") as Article["category"]) || "general";
+  const author =
+    (formData.get("author") as string)?.trim() || "BJWS Editorial Board";
   const locale = (formData.get("locale") as "en" | "ta" | "si") || "en";
   const image_url = (formData.get("image_url") as string)?.trim();
   const is_published = formData.get("is_published") === "on";
@@ -453,12 +1142,35 @@ export async function updateArticleAction(
     return { error: "ID, title, and content are required." };
   }
 
-  const categoryLabels: Record<Article["category"], { en: string; ta: string; si: string }> = {
-    cemetery: { en: "Cemetery Care", ta: "மையவாடி பராமரிப்பு", si: "සුසාන භූමි නඩත්තුව" },
-    welfare: { en: "Welfare Relief", ta: "உலர் உணவு நிவாரணம்", si: "සුභසාධන සහන" },
-    sunnah: { en: "Sunnah Education", ta: "சுன்னாஹ் வழிகாட்டல்", si: "ඉස්ලාමීය අධ්‍යාපනය" },
-    announcements: { en: "Announcements", ta: "அறிவித்தல்கள்", si: "නිවේදන" },
-    general: { en: "General News", ta: "பொதுச் செய்திகள்", si: "පොදු පුවත්" },
+  const categoryLabels: Record<
+    Article["category"],
+    { en: string; ta: string; si: string }
+  > = {
+    cemetery: {
+      en: "Cemetery Care",
+      ta: "மையவாடி பராமரிப்பு",
+      si: "සුසාන භූමි නඩත්තුව",
+    },
+    welfare: {
+      en: "Welfare Relief",
+      ta: "உலர் உணவு நிவாரணம்",
+      si: "සුභසාධන සහන",
+    },
+    sunnah: {
+      en: "Sunnah Education",
+      ta: "சுன்னாஹ் வழிகாட்டல்",
+      si: "ඉස්ලාමීය අධ්‍යාපනය",
+    },
+    announcements: {
+      en: "Announcements",
+      ta: "அறிவித்தல்கள்",
+      si: "නිවේදන",
+    },
+    general: {
+      en: "General News",
+      ta: "பொதுச் செய்திகள்",
+      si: "පොදු පුවත්",
+    },
   };
 
   const updates: Partial<Article> = {
@@ -548,5 +1260,514 @@ export async function deleteArticleAction(id: string) {
 
   revalidatePath("/admin/news");
   revalidatePath("/[locale]/news", "page");
+  return { success: true };
+}
+
+// ====================================================================
+// Team Members Management Actions
+// ====================================================================
+
+const TEAM_CATEGORY_LABELS: Record<
+  TeamMember["category"],
+  { en: string; ta: string; si: string }
+> = {
+  executive: {
+    en: "Executive Council",
+    ta: "நிர்வாகக் குழு",
+    si: "විධායක සභාව",
+  },
+  operations: {
+    en: "Operations & Committee",
+    ta: "செயற்குழு",
+    si: "මෙහෙයුම් කමිටුව",
+  },
+  funeral: {
+    en: "Funeral Services",
+    ta: "ஜனாஸா சேவைகள்",
+    si: "අවමංගල්‍ය සේවා",
+  },
+  welfare: {
+    en: "Community Welfare",
+    ta: "பொது நலன்புரி",
+    si: "ප්‍රජා සුභසාධන",
+  },
+  cemetery: {
+    en: "Cemetery Care",
+    ta: "மையவாடி பராமரிப்பு",
+    si: "සුසාන භූමි නඩත්තුව",
+  },
+};
+
+export async function createTeamMemberAction(
+  _prevState: { error?: string; success?: boolean } | null,
+  formData: FormData
+) {
+  const session = await getAdminSession();
+  if (!session) return { error: "Unauthorized" };
+
+  const name = (formData.get("name") as string)?.trim();
+  const roleEn = (formData.get("roleEn") as string)?.trim();
+  const roleTa = (formData.get("roleTa") as string)?.trim() || roleEn;
+  const roleSi = (formData.get("roleSi") as string)?.trim() || roleEn;
+  const category =
+    (formData.get("category") as TeamMember["category"]) || "operations";
+  const phone = (formData.get("phone") as string)?.trim() || "";
+  const whatsapp = (formData.get("whatsapp") as string)?.trim();
+  const email = (formData.get("email") as string)?.trim();
+  const address = (formData.get("address") as string)?.trim() || "Mullipothana";
+  const initialsInput = (formData.get("initials") as string)?.trim();
+  const photo = formatGoogleDriveImageUrl(
+    (formData.get("photo") as string)?.trim()
+  );
+  const term = (formData.get("term") as string)?.trim() || "2023 - Present";
+  const isInactive = formData.get("isInactive") === "on";
+  const memberId = (formData.get("memberId") as string)?.trim();
+  const nic = (formData.get("nic") as string)?.trim();
+  const issueDate = (formData.get("issueDate") as string)?.trim() || "2024-01-01";
+  const verificationStatus =
+    (formData.get("verificationStatus") as TeamMember["verificationStatus"]) ||
+    (isInactive ? "suspended" : "verified");
+
+  if (!name || !roleEn) {
+    return { error: "Officer Name and English Role designation are required." };
+  }
+
+  // Generate clean initials if not specified
+  const initials =
+    initialsInput ||
+    name
+      .split(/[\s.]+/)
+      .filter(Boolean)
+      .map((w) => w[0].toUpperCase())
+      .slice(0, 4)
+      .join("");
+
+  const id =
+    (name
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "") || "member") +
+    "-" +
+    Date.now().toString().slice(-4);
+
+  const newMember: TeamMember = {
+    id,
+    name,
+    role: {
+      en: roleEn,
+      ta: roleTa,
+      si: roleSi,
+    },
+    category,
+    categoryLabel:
+      TEAM_CATEGORY_LABELS[category] || TEAM_CATEGORY_LABELS.operations,
+    phone,
+    ...(whatsapp ? { whatsapp } : {}),
+    ...(email ? { email } : {}),
+    address,
+    initials,
+    ...(photo ? { photo } : {}),
+    term,
+    ...(isInactive ? { isInactive: true } : {}),
+    ...(memberId ? { memberId } : {}),
+    ...(nic ? { nic } : {}),
+    issueDate,
+    verificationStatus,
+  };
+
+  addTeamMemberStore(newMember);
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createClient();
+      await supabase.from("team_members").insert({
+        id,
+        name,
+        role_en: roleEn,
+        role_ta: roleTa,
+        role_si: roleSi,
+        category,
+        phone,
+        whatsapp,
+        email,
+        address,
+        initials,
+        photo,
+        term,
+        is_inactive: isInactive,
+      });
+    } catch (err) {
+      console.warn("Supabase insert team member warning:", err);
+    }
+  }
+
+  revalidatePath("/admin/team");
+  revalidatePath("/admin");
+  revalidatePath("/[locale]/team", "page");
+  revalidatePath("/[locale]/about", "page");
+  return { success: true };
+}
+
+export async function updateTeamMemberAction(
+  _prevState: { error?: string; success?: boolean } | null,
+  formData: FormData
+) {
+  const session = await getAdminSession();
+  if (!session) return { error: "Unauthorized" };
+
+  const id = formData.get("id") as string;
+  const name = (formData.get("name") as string)?.trim();
+  const roleEn = (formData.get("roleEn") as string)?.trim();
+  const roleTa = (formData.get("roleTa") as string)?.trim() || roleEn;
+  const roleSi = (formData.get("roleSi") as string)?.trim() || roleEn;
+  const category =
+    (formData.get("category") as TeamMember["category"]) || "operations";
+  const phone = (formData.get("phone") as string)?.trim() || "";
+  const whatsapp = (formData.get("whatsapp") as string)?.trim();
+  const email = (formData.get("email") as string)?.trim();
+  const address = (formData.get("address") as string)?.trim() || "Mullipothana";
+  const initials = (formData.get("initials") as string)?.trim() || "BJWS";
+  const photo = formatGoogleDriveImageUrl(
+    (formData.get("photo") as string)?.trim()
+  );
+  const term = (formData.get("term") as string)?.trim() || "2023 - Present";
+  const isInactive = formData.get("isInactive") === "on";
+  const memberId = (formData.get("memberId") as string)?.trim();
+  const nic = (formData.get("nic") as string)?.trim();
+  const issueDate = (formData.get("issueDate") as string)?.trim();
+  const verificationStatus =
+    (formData.get("verificationStatus") as TeamMember["verificationStatus"]) ||
+    (isInactive ? "suspended" : "verified");
+
+  if (!id || !name || !roleEn) {
+    return { error: "ID, Name, and Role designation are required." };
+  }
+
+  const updates: Partial<TeamMember> = {
+    name,
+    role: {
+      en: roleEn,
+      ta: roleTa,
+      si: roleSi,
+    },
+    category,
+    categoryLabel:
+      TEAM_CATEGORY_LABELS[category] || TEAM_CATEGORY_LABELS.operations,
+    phone,
+    whatsapp: whatsapp || undefined,
+    email: email || undefined,
+    address,
+    initials,
+    photo: photo || undefined,
+    term,
+    isInactive,
+    memberId: memberId || undefined,
+    nic: nic || undefined,
+    issueDate: issueDate || undefined,
+    verificationStatus,
+  };
+
+  updateTeamMemberStore(id, updates);
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createClient();
+      await supabase
+        .from("team_members")
+        .update({
+          name,
+          role_en: roleEn,
+          role_ta: roleTa,
+          role_si: roleSi,
+          category,
+          phone,
+          whatsapp,
+          email,
+          address,
+          initials,
+          photo,
+          term,
+          is_inactive: isInactive,
+        })
+        .eq("id", id);
+    } catch (err) {
+      console.warn("Supabase update team member warning:", err);
+    }
+  }
+
+  revalidatePath("/admin/team");
+  revalidatePath("/admin");
+  revalidatePath("/[locale]/team", "page");
+  revalidatePath("/[locale]/about", "page");
+  return { success: true };
+}
+
+export async function toggleTeamMemberActiveAction(id: string) {
+  const session = await getAdminSession();
+  if (!session) throw new Error("Unauthorized");
+
+  toggleTeamMemberActiveStore(id);
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createClient();
+      const { data } = await supabase
+        .from("team_members")
+        .select("is_inactive")
+        .eq("id", id)
+        .single();
+      if (data) {
+        await supabase
+          .from("team_members")
+          .update({ is_inactive: !data.is_inactive })
+          .eq("id", id);
+      }
+    } catch (err) {
+      console.warn("Supabase toggle team member status warning:", err);
+    }
+  }
+
+  revalidatePath("/admin/team");
+  revalidatePath("/admin");
+  revalidatePath("/[locale]/team", "page");
+  revalidatePath("/[locale]/about", "page");
+  return { success: true };
+}
+
+export async function deleteTeamMemberAction(id: string) {
+  const session = await getAdminSession();
+  if (!session) throw new Error("Unauthorized");
+
+  deleteTeamMemberStore(id);
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createClient();
+      await supabase.from("team_members").delete().eq("id", id);
+    } catch (err) {
+      console.warn("Supabase delete team member warning:", err);
+    }
+  }
+
+  revalidatePath("/admin/team");
+  revalidatePath("/admin");
+  revalidatePath("/[locale]/team", "page");
+  revalidatePath("/[locale]/about", "page");
+  return { success: true };
+}
+
+export async function reorderTeamMembersAction(orderedIds: string[]) {
+  const session = await getAdminSession();
+  if (!session) throw new Error("Unauthorized");
+
+  reorderTeamMembersStore(orderedIds);
+
+  revalidatePath("/admin/team");
+  revalidatePath("/admin");
+  revalidatePath("/[locale]/team", "page");
+  revalidatePath("/[locale]/about", "page");
+  return { success: true };
+}
+
+export async function regenerateMemberVerificationTokenAction(id: string) {
+  const session = await getAdminSession();
+  if (!session) return { error: "Unauthorized" };
+
+  const token = regenerateMemberVerificationTokenStore(id);
+  if (!token) return { error: "Team member not found" };
+
+  revalidatePath("/admin/team");
+  revalidatePath("/[locale]/verify/credential", "page");
+  return { success: true, token };
+}
+
+// ====================================================================
+// Gallery Photos Management Actions
+// ====================================================================
+
+export async function createGalleryImageAction(
+  _prevState: { error?: string; success?: boolean } | null,
+  formData: FormData
+) {
+  const session = await getAdminSession();
+  if (!session) return { error: "Unauthorized" };
+
+  const src = formatGoogleDriveImageUrl(
+    (formData.get("src") as string)?.trim()
+  );
+  const caption = (formData.get("caption") as string)?.trim();
+  const category =
+    (formData.get("category") as GalleryCategory) || "cemetery-shramadana";
+  const date =
+    (formData.get("date") as string)?.trim() ||
+    new Date().getFullYear().toString();
+  const location =
+    (formData.get("location") as string)?.trim() || "Mullipothana";
+  const approved = formData.get("approved") === "on";
+  const consentNotes = (formData.get("consentNotes") as string)?.trim();
+
+  if (!src || !caption) {
+    return { error: "Image URL and Caption are required." };
+  }
+
+  const id = "gal-" + Date.now().toString();
+
+  const newImage: GalleryImage = {
+    id,
+    src,
+    altKey: caption,
+    captionKey: caption,
+    category,
+    date,
+    location,
+    width: 1200,
+    height: 800,
+    blurDataURL: DEFAULT_BLUR,
+    approved,
+    ...(consentNotes ? { consentNotes } : {}),
+  };
+
+  addGalleryImageStore(newImage);
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createClient();
+      await supabase.from("gallery_images").insert({
+        id,
+        src,
+        caption,
+        category,
+        date,
+        location,
+        approved,
+        consent_notes: consentNotes,
+      });
+    } catch (err) {
+      console.warn("Supabase insert gallery image warning:", err);
+    }
+  }
+
+  revalidatePath("/admin/gallery");
+  revalidatePath("/admin");
+  revalidatePath("/[locale]/gallery", "page");
+  revalidatePath("/[locale]", "page");
+  return { success: true };
+}
+
+export async function updateGalleryImageAction(
+  _prevState: { error?: string; success?: boolean } | null,
+  formData: FormData
+) {
+  const session = await getAdminSession();
+  if (!session) return { error: "Unauthorized" };
+
+  const id = formData.get("id") as string;
+  const src = formatGoogleDriveImageUrl(
+    (formData.get("src") as string)?.trim()
+  );
+  const caption = (formData.get("caption") as string)?.trim();
+  const category =
+    (formData.get("category") as GalleryCategory) || "cemetery-shramadana";
+  const date =
+    (formData.get("date") as string)?.trim() ||
+    new Date().getFullYear().toString();
+  const location =
+    (formData.get("location") as string)?.trim() || "Mullipothana";
+  const approved = formData.get("approved") === "on";
+  const consentNotes = (formData.get("consentNotes") as string)?.trim();
+
+  if (!id || !src || !caption) {
+    return { error: "ID, Image URL, and Caption are required." };
+  }
+
+  const updates: Partial<GalleryImage> = {
+    src,
+    captionKey: caption,
+    altKey: caption,
+    category,
+    date,
+    location,
+    approved,
+    consentNotes: consentNotes || undefined,
+  };
+
+  updateGalleryImageStore(id, updates);
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createClient();
+      await supabase
+        .from("gallery_images")
+        .update({
+          src,
+          caption,
+          category,
+          date,
+          location,
+          approved,
+          consent_notes: consentNotes,
+        })
+        .eq("id", id);
+    } catch (err) {
+      console.warn("Supabase update gallery image warning:", err);
+    }
+  }
+
+  revalidatePath("/admin/gallery");
+  revalidatePath("/admin");
+  revalidatePath("/[locale]/gallery", "page");
+  revalidatePath("/[locale]", "page");
+  return { success: true };
+}
+
+export async function toggleGalleryApprovalAction(
+  id: string,
+  currentApproved: boolean
+) {
+  const session = await getAdminSession();
+  if (!session) throw new Error("Unauthorized");
+
+  const newApproved = !currentApproved;
+  toggleGalleryApprovalStore(id);
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createClient();
+      await supabase
+        .from("gallery_images")
+        .update({ approved: newApproved })
+        .eq("id", id);
+    } catch (err) {
+      console.warn("Supabase toggle gallery approval warning:", err);
+    }
+  }
+
+  revalidatePath("/admin/gallery");
+  revalidatePath("/admin");
+  revalidatePath("/[locale]/gallery", "page");
+  revalidatePath("/[locale]", "page");
+  return { success: true };
+}
+
+export async function deleteGalleryImageAction(id: string) {
+  const session = await getAdminSession();
+  if (!session) throw new Error("Unauthorized");
+
+  deleteGalleryImageStore(id);
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createClient();
+      await supabase.from("gallery_images").delete().eq("id", id);
+    } catch (err) {
+      console.warn("Supabase delete gallery image warning:", err);
+    }
+  }
+
+  revalidatePath("/admin/gallery");
+  revalidatePath("/admin");
+  revalidatePath("/[locale]/gallery", "page");
+  revalidatePath("/[locale]", "page");
   return { success: true };
 }

@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Buhary Janaza Welfare Society",
     short_name: "BJWS",
     description:
-      "Buhary Janaza (Funeral) Welfare Society, Mullipothanai, Sri Lanka.",
+      "Buhary Janaza (Funeral) Welfare Society, Mullipothana, Sri Lanka.",
     start_url: "/",
     display: "standalone",
     background_color: "#f8faf8",
