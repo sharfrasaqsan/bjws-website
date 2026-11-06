@@ -28,6 +28,7 @@ import {
   Bell,
   Sparkles,
   Layers,
+  MessageCircle,
 } from "lucide-react";
 
 export type { NoticeRecord, UnifiedNoticeRecord };
@@ -244,10 +245,14 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
     initialFormState
   );
 
-  const handleTogglePublish = (baseId: string, currentState: boolean) => {
+  const handleTogglePublish = (
+    baseId: string,
+    currentState: boolean,
+    translationIds?: string[]
+  ) => {
     startTransition(async () => {
       try {
-        await toggleNoticeGroupPublishAction(baseId, currentState);
+        await toggleNoticeGroupPublishAction(baseId, currentState, translationIds);
         setUnifiedNotices((prev) =>
           prev.map((n) =>
             n.baseId === baseId
@@ -271,7 +276,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
     });
   };
 
-  const handleDelete = (baseId: string) => {
+  const handleDelete = (baseId: string, translationIds?: string[]) => {
     if (
       !confirm(
         "Are you sure you want to permanently delete this announcement across all languages?"
@@ -280,7 +285,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
       return;
     startTransition(async () => {
       try {
-        await deleteNoticeGroupAction(baseId);
+        await deleteNoticeGroupAction(baseId, translationIds);
         setUnifiedNotices((prev) => prev.filter((n) => n.baseId !== baseId));
         router.refresh();
       } catch (err) {
@@ -1042,6 +1047,30 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
 
                   {/* Actions: Edit, Publish Toggle, Delete */}
                   <div className="flex shrink-0 items-center gap-2 sm:self-center">
+                    {/* WHATSAPP BROADCAST BUTTON */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const activeNotice =
+                          item.translations[currentPreviewLang] ||
+                          item.translations.ta ||
+                          item.translations.en;
+                        if (!activeNotice) return;
+                        const msg = `📢 *BUHARY JANAZA WELFARE SOCIETY (BJWS)*\nReg No: DS/TH/SS/VSSO/2023/01 • Mullipothana\n\n*${activeNotice.title}*\n\n${activeNotice.body}\n\n🗓 Date: ${formatAdminDate(
+                          item.published_at
+                        )}\n📞 Immediate 24/7 Hotline: 077 622 7323\n🌐 Official Website: https://bjws.org`;
+                        window.open(
+                          `https://wa.me/?text=${encodeURIComponent(msg)}`,
+                          "_blank"
+                        );
+                      }}
+                      className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-emerald-300 bg-emerald-50 px-2.5 py-1.5 text-xs font-bold text-emerald-800 shadow-2xs hover:bg-emerald-100 transition-colors"
+                      title="Broadcast this notice to WhatsApp community groups"
+                    >
+                      <MessageCircle className="h-3.5 w-3.5 text-[#25d366]" />
+                      <span>WhatsApp</span>
+                    </button>
+
                     {/* EDIT BUTTON */}
                     <button
                       disabled={isPending}
@@ -1057,7 +1086,13 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
                     <button
                       disabled={isPending}
                       onClick={() =>
-                        handleTogglePublish(item.baseId, item.is_published)
+                        handleTogglePublish(
+                          item.baseId,
+                          item.is_published,
+                          Object.values(item.translations)
+                            .map((t) => t?.id)
+                            .filter(Boolean) as string[]
+                        )
                       }
                       className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[#e6e4dc] bg-white px-3 py-1.5 text-xs font-semibold text-[#1c2420] shadow-2xs hover:bg-[#fbfaf6] disabled:opacity-50"
                     >
@@ -1077,7 +1112,14 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
                     {/* DELETE BUTTON */}
                     <button
                       disabled={isPending}
-                      onClick={() => handleDelete(item.baseId)}
+                      onClick={() =>
+                        handleDelete(
+                          item.baseId,
+                          Object.values(item.translations)
+                            .map((t) => t?.id)
+                            .filter(Boolean) as string[]
+                        )
+                      }
                       className="inline-flex cursor-pointer items-center gap-1 rounded-lg border border-red-200 bg-white px-2 py-1.5 text-xs font-medium text-red-600 shadow-2xs hover:bg-red-50 disabled:opacity-50"
                       title="Delete notice in all languages"
                     >

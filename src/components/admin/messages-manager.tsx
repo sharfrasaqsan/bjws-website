@@ -17,6 +17,7 @@ import {
   Trash2,
   Search,
   MessageCircle,
+  Download,
 } from "lucide-react";
 
 export interface ContactMessage {
@@ -81,6 +82,46 @@ export function MessagesManager({ initialMessages }: MessagesManagerProps) {
       return true;
     });
   }, [messages, filter, searchQuery]);
+
+  const handleExportCsv = () => {
+    if (filtered.length === 0) return;
+    const headers = [
+      "ID",
+      "Name",
+      "Phone",
+      "Email",
+      "Language",
+      "Status",
+      "Date",
+      "Message",
+    ];
+
+    const rows = filtered.map((m) => [
+      `"${m.id}"`,
+      `"${m.name.replace(/"/g, '""')}"`,
+      `"${m.phone}"`,
+      `"${m.email || ""}"`,
+      `"${m.locale}"`,
+      `"${m.status}"`,
+      `"${m.created_at}"`,
+      `"${m.message.replace(/"/g, '""').replace(/\n/g, " ")}"`,
+    ]);
+
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute(
+      "download",
+      `bjws-contact-messages-${new Date().toISOString().slice(0, 10)}.csv`
+    );
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   const handleStatusChange = (
     id: string,
@@ -162,24 +203,38 @@ export function MessagesManager({ initialMessages }: MessagesManagerProps) {
           })}
         </div>
 
-        {/* Instant Search Bar */}
-        <div className="relative min-w-[240px] sm:w-72">
-          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[#9ca3af]" />
-          <input
-            type="text"
-            placeholder="Search by name, phone, text..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full rounded-lg border border-[#e6e4dc] bg-[#fbfaf6] py-1.5 pr-3 pl-9 text-xs text-[#1c2420] placeholder-[#9ca3af] transition-colors focus:border-[#124d34] focus:bg-white focus:outline-none"
-          />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery("")}
-              className="absolute top-1/2 right-2.5 -translate-y-1/2 text-xs font-bold text-[#9ca3af] hover:text-[#1c2420]"
-            >
-              ×
-            </button>
-          )}
+        <div className="flex items-center gap-2">
+          {/* Instant Search Bar */}
+          <div className="relative min-w-[200px] sm:w-64">
+            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[#9ca3af]" />
+            <input
+              type="text"
+              placeholder="Search by name, phone, text..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full rounded-lg border border-[#e6e4dc] bg-[#fbfaf6] py-1.5 pr-3 pl-9 text-xs text-[#1c2420] placeholder-[#9ca3af] transition-colors focus:border-[#124d34] focus:bg-white focus:outline-none"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute top-1/2 right-2.5 -translate-y-1/2 text-xs font-bold text-[#9ca3af] hover:text-[#1c2420]"
+              >
+                ×
+              </button>
+            )}
+          </div>
+
+          {/* Export to CSV Button */}
+          <button
+            type="button"
+            onClick={handleExportCsv}
+            disabled={filtered.length === 0}
+            className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[#c99a45]/40 bg-[#fbfaf6] hover:bg-[#f5eedf] text-[#0b2e1e] px-3 py-1.5 text-xs font-bold shadow-2xs transition-colors disabled:opacity-40"
+            title="Download CSV spreadsheet of contact inquiries"
+          >
+            <Download className="h-3.5 w-3.5 text-[#c99a45]" />
+            <span className="hidden sm:inline">Export CSV</span>
+          </button>
         </div>
       </div>
 

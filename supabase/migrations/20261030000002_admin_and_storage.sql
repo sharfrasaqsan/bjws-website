@@ -18,6 +18,7 @@ ON CONFLICT (id) DO UPDATE SET
 
 -- 2. Storage RLS Policies for reports bucket
 -- Public read access for published PDF reports
+DROP POLICY IF EXISTS "Public can view reports storage" ON storage.objects;
 CREATE POLICY "Public can view reports storage"
     ON storage.objects
     FOR SELECT
@@ -25,6 +26,7 @@ CREATE POLICY "Public can view reports storage"
     USING (bucket_id = 'reports');
 
 -- Authenticated admins can upload reports
+DROP POLICY IF EXISTS "Admins can upload reports to storage" ON storage.objects;
 CREATE POLICY "Admins can upload reports to storage"
     ON storage.objects
     FOR INSERT
@@ -32,6 +34,7 @@ CREATE POLICY "Admins can upload reports to storage"
     WITH CHECK (bucket_id = 'reports');
 
 -- Authenticated admins can update reports in storage
+DROP POLICY IF EXISTS "Admins can update reports in storage" ON storage.objects;
 CREATE POLICY "Admins can update reports in storage"
     ON storage.objects
     FOR UPDATE
@@ -40,6 +43,7 @@ CREATE POLICY "Admins can update reports in storage"
     WITH CHECK (bucket_id = 'reports');
 
 -- Authenticated admins can delete reports from storage
+DROP POLICY IF EXISTS "Admins can delete reports from storage" ON storage.objects;
 CREATE POLICY "Admins can delete reports from storage"
     ON storage.objects
     FOR DELETE

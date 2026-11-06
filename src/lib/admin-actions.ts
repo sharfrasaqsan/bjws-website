@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { getAdminSession } from "@/lib/admin-auth";
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import {
   addArticleStore,
   updateArticleStore,
@@ -57,7 +57,7 @@ export async function updateMessageStatusAction(
   if (!session) throw new Error("Unauthorized");
 
   if (isSupabaseConfigured()) {
-    const supabase = await createClient();
+    const supabase = await createAdminClient();
     const { error } = await supabase
       .from("contact_messages")
       .update({ status })
@@ -76,7 +76,7 @@ export async function deleteMessageAction(id: string) {
   if (!session) throw new Error("Unauthorized");
 
   if (isSupabaseConfigured()) {
-    const supabase = await createClient();
+    const supabase = await createAdminClient();
     const { error } = await supabase
       .from("contact_messages")
       .delete()
@@ -102,7 +102,7 @@ export async function updateMembershipStatusAction(
   if (!session) throw new Error("Unauthorized");
 
   if (isSupabaseConfigured()) {
-    const supabase = await createClient();
+    const supabase = await createAdminClient();
     const { error } = await supabase
       .from("membership_requests")
       .update({ status })
@@ -121,7 +121,7 @@ export async function deleteMembershipAction(id: string) {
   if (!session) throw new Error("Unauthorized");
 
   if (isSupabaseConfigured()) {
-    const supabase = await createClient();
+    const supabase = await createAdminClient();
     const { error } = await supabase
       .from("membership_requests")
       .delete()
@@ -205,7 +205,7 @@ export async function createMultilingualNoticeAction(
 
   if (isSupabaseConfigured()) {
     try {
-      const supabase = await createClient();
+      const supabase = await createAdminClient();
       const { error } = await supabase.from("notices").insert(entries);
       if (error) {
         console.warn("Supabase insert multilingual notices warning:", error.message);
@@ -261,7 +261,7 @@ export async function updateMultilingualNoticeAction(
 
   if (isSupabaseConfigured()) {
     try {
-      const supabase = await createClient();
+      const supabase = await createAdminClient();
       const allGroups = groupNotices(getAllNotices());
       const targetGroup = allGroups.find((g) => g.baseId === baseId);
 
@@ -304,7 +304,8 @@ export async function updateMultilingualNoticeAction(
 
 export async function toggleNoticeGroupPublishAction(
   baseId: string,
-  currentState: boolean
+  currentState: boolean,
+  translationIds?: string[]
 ) {
   const session = await getAdminSession();
   if (!session) throw new Error("Unauthorized");
@@ -314,17 +315,42 @@ export async function toggleNoticeGroupPublishAction(
 
   if (isSupabaseConfigured()) {
     try {
-      const supabase = await createClient();
+      const supabase = await createAdminClient();
+      const idsToUpdate = new Set<string>();
+
+      if (translationIds && translationIds.length > 0) {
+        translationIds.forEach((id) => id && idsToUpdate.add(id));
+      }
+
+      // Add baseId and localized variants
+      idsToUpdate.add(baseId);
+      idsToUpdate.add(`${baseId}-ta`);
+      idsToUpdate.add(`${baseId}-en`);
+      idsToUpdate.add(`${baseId}-si`);
+
+      if (baseId === "notice-shramadhana-seed") {
+        idsToUpdate.add("notice-seed-ta");
+        idsToUpdate.add("notice-seed-en");
+        idsToUpdate.add("notice-seed-si");
+        idsToUpdate.add("notice-1");
+        idsToUpdate.add("notice-2");
+        idsToUpdate.add("notice-3");
+      }
+
       const allGroups = groupNotices(getAllNotices());
       const target = allGroups.find((g) => g.baseId === baseId);
       if (target) {
-        const ids = Object.values(target.translations).map((t) => t?.id).filter(Boolean);
-        if (ids.length > 0) {
-          await supabase
-            .from("notices")
-            .update({ is_published: newState })
-            .in("id", ids);
-        }
+        Object.values(target.translations).forEach((t) => {
+          if (t?.id) idsToUpdate.add(t.id);
+        });
+      }
+
+      const idList = Array.from(idsToUpdate);
+      if (idList.length > 0) {
+        await supabase
+          .from("notices")
+          .update({ is_published: newState })
+          .in("id", idList);
       }
     } catch (err) {
       console.warn("Supabase toggle notice publish warning:", err);
@@ -338,21 +364,49 @@ export async function toggleNoticeGroupPublishAction(
   return { success: true };
 }
 
-export async function deleteNoticeGroupAction(baseId: string) {
+export async function deleteNoticeGroupAction(
+  baseId: string,
+  translationIds?: string[]
+) {
   const session = await getAdminSession();
   if (!session) throw new Error("Unauthorized");
 
-  const allGroups = groupNotices(getAllNotices());
-  const target = allGroups.find((g) => g.baseId === baseId);
-
   deleteUnifiedNoticeStore(baseId);
 
-  if (isSupabaseConfigured() && target) {
+  if (isSupabaseConfigured()) {
     try {
-      const supabase = await createClient();
-      const ids = Object.values(target.translations).map((t) => t?.id).filter(Boolean);
-      if (ids.length > 0) {
-        await supabase.from("notices").delete().in("id", ids);
+      const supabase = await createAdminClient();
+      const idsToDelete = new Set<string>();
+
+      if (translationIds && translationIds.length > 0) {
+        translationIds.forEach((id) => id && idsToDelete.add(id));
+      }
+
+      idsToDelete.add(baseId);
+      idsToDelete.add(`${baseId}-ta`);
+      idsToDelete.add(`${baseId}-en`);
+      idsToDelete.add(`${baseId}-si`);
+
+      if (baseId === "notice-shramadhana-seed") {
+        idsToDelete.add("notice-seed-ta");
+        idsToDelete.add("notice-seed-en");
+        idsToDelete.add("notice-seed-si");
+        idsToDelete.add("notice-1");
+        idsToDelete.add("notice-2");
+        idsToDelete.add("notice-3");
+      }
+
+      const allGroups = groupNotices(getAllNotices());
+      const target = allGroups.find((g) => g.baseId === baseId);
+      if (target) {
+        Object.values(target.translations).forEach((t) => {
+          if (t?.id) idsToDelete.add(t.id);
+        });
+      }
+
+      const idList = Array.from(idsToDelete);
+      if (idList.length > 0) {
+        await supabase.from("notices").delete().in("id", idList);
       }
     } catch (err) {
       console.warn("Supabase delete notice warning:", err);
@@ -422,7 +476,7 @@ export async function uploadReportAction(
   let filePath = `/documents/reports/${file.name}`;
 
   if (isSupabaseConfigured()) {
-    const supabase = await createClient();
+    const supabase = await createAdminClient();
 
     // 1. Upload to Supabase Storage bucket 'reports'
     const storagePath = `${year}/${Date.now()}-${file.name.replace(/\s+/g, "_")}`;
@@ -474,7 +528,7 @@ export async function toggleReportPublishAction(
   if (!session) throw new Error("Unauthorized");
 
   if (isSupabaseConfigured()) {
-    const supabase = await createClient();
+    const supabase = await createAdminClient();
     const { error } = await supabase
       .from("reports")
       .update({ is_published: !currentState })
@@ -493,7 +547,7 @@ export async function deleteReportAction(id: string, filePath?: string) {
   if (!session) throw new Error("Unauthorized");
 
   if (isSupabaseConfigured()) {
-    const supabase = await createClient();
+    const supabase = await createAdminClient();
 
     // Delete record from DB
     const { error } = await supabase.from("reports").delete().eq("id", id);
@@ -697,7 +751,7 @@ export async function createMultilingualArticleAction(
 
   if (isSupabaseConfigured()) {
     try {
-      const supabase = await createClient();
+      const supabase = await createAdminClient();
       await supabase.from("articles").insert(
         newArticles.map((a) => ({
           id: a.id,
@@ -916,7 +970,7 @@ export async function updateMultilingualArticleAction(
 
   if (isSupabaseConfigured()) {
     try {
-      const supabase = await createClient();
+      const supabase = await createAdminClient();
       for (const spec of langSpecs) {
         if (spec.title && spec.content) {
           const s = `${normalizedBase}${spec.slugSuffix}`;
@@ -956,7 +1010,7 @@ export async function toggleUnifiedArticlePublishAction(
 
   if (isSupabaseConfigured()) {
     try {
-      const supabase = await createClient();
+      const supabase = await createAdminClient();
       await supabase
         .from("articles")
         .update({ is_published: newState })
@@ -985,7 +1039,7 @@ export async function deleteUnifiedArticleAction(baseSlug: string) {
 
   if (isSupabaseConfigured()) {
     try {
-      const supabase = await createClient();
+      const supabase = await createAdminClient();
       await supabase
         .from("articles")
         .delete()
@@ -1093,7 +1147,7 @@ export async function createArticleAction(
 
   if (isSupabaseConfigured()) {
     try {
-      const supabase = await createClient();
+      const supabase = await createAdminClient();
       await supabase.from("articles").insert({
         id,
         slug,
@@ -1190,7 +1244,7 @@ export async function updateArticleAction(
 
   if (isSupabaseConfigured()) {
     try {
-      const supabase = await createClient();
+      const supabase = await createAdminClient();
       await supabase
         .from("articles")
         .update({
@@ -1228,7 +1282,7 @@ export async function toggleArticlePublishAction(
 
   if (isSupabaseConfigured()) {
     try {
-      const supabase = await createClient();
+      const supabase = await createAdminClient();
       await supabase
         .from("articles")
         .update({ is_published: newState })
@@ -1251,7 +1305,7 @@ export async function deleteArticleAction(id: string) {
 
   if (isSupabaseConfigured()) {
     try {
-      const supabase = await createClient();
+      const supabase = await createAdminClient();
       await supabase.from("articles").delete().eq("id", id);
     } catch (err) {
       console.warn("Supabase delete article warning:", err);
@@ -1380,7 +1434,7 @@ export async function createTeamMemberAction(
 
   if (isSupabaseConfigured()) {
     try {
-      const supabase = await createClient();
+      const supabase = await createAdminClient();
       await supabase.from("team_members").insert({
         id,
         name,
@@ -1472,7 +1526,7 @@ export async function updateTeamMemberAction(
 
   if (isSupabaseConfigured()) {
     try {
-      const supabase = await createClient();
+      const supabase = await createAdminClient();
       await supabase
         .from("team_members")
         .update({
@@ -1511,7 +1565,7 @@ export async function toggleTeamMemberActiveAction(id: string) {
 
   if (isSupabaseConfigured()) {
     try {
-      const supabase = await createClient();
+      const supabase = await createAdminClient();
       const { data } = await supabase
         .from("team_members")
         .select("is_inactive")
@@ -1543,7 +1597,7 @@ export async function deleteTeamMemberAction(id: string) {
 
   if (isSupabaseConfigured()) {
     try {
-      const supabase = await createClient();
+      const supabase = await createAdminClient();
       await supabase.from("team_members").delete().eq("id", id);
     } catch (err) {
       console.warn("Supabase delete team member warning:", err);
@@ -1632,7 +1686,7 @@ export async function createGalleryImageAction(
 
   if (isSupabaseConfigured()) {
     try {
-      const supabase = await createClient();
+      const supabase = await createAdminClient();
       await supabase.from("gallery_images").insert({
         id,
         src,
@@ -1696,7 +1750,7 @@ export async function updateGalleryImageAction(
 
   if (isSupabaseConfigured()) {
     try {
-      const supabase = await createClient();
+      const supabase = await createAdminClient();
       await supabase
         .from("gallery_images")
         .update({
@@ -1733,7 +1787,7 @@ export async function toggleGalleryApprovalAction(
 
   if (isSupabaseConfigured()) {
     try {
-      const supabase = await createClient();
+      const supabase = await createAdminClient();
       await supabase
         .from("gallery_images")
         .update({ approved: newApproved })
@@ -1758,7 +1812,7 @@ export async function deleteGalleryImageAction(id: string) {
 
   if (isSupabaseConfigured()) {
     try {
-      const supabase = await createClient();
+      const supabase = await createAdminClient();
       await supabase.from("gallery_images").delete().eq("id", id);
     } catch (err) {
       console.warn("Supabase delete gallery image warning:", err);

@@ -6,7 +6,11 @@ import { GalleryGrid } from "@/components/sections/gallery-grid";
 import {
   getApprovedGalleryImages,
   GALLERY_CATEGORIES,
+  type GalleryImage,
+  type GalleryCategory,
+  DEFAULT_BLUR,
 } from "@/content/gallery";
+import { createPublicClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { buildPageMetadata } from "@/lib/seo";
 import { JsonLd, getBreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { ShieldCheck } from "lucide-react";
@@ -41,8 +45,38 @@ export default async function GalleryPage({
   const tCommon = await getTranslations("common");
   const assets = getSiteAssets();
 
-  // STRICT POLICY: Only load approved images from manifest
-  const approvedImages = getApprovedGalleryImages();
+  // Load approved images from manifest or Supabase
+  let approvedImages: GalleryImage[] = getApprovedGalleryImages();
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = createPublicClient();
+      const { data, error } = await supabase
+        .from("gallery_images")
+        .select("*")
+        .eq("approved", true)
+        .order("created_at", { ascending: false });
+
+      if (!error && data && data.length > 0) {
+        approvedImages = data.map((d) => ({
+          id: d.id,
+          src: d.src,
+          captionKey: d.caption,
+          altKey: d.caption,
+          category: (d.category as GalleryCategory) || "cemetery-shramadana",
+          date: d.date,
+          location: d.location,
+          width: 1200,
+          height: 800,
+          blurDataURL: DEFAULT_BLUR,
+          approved: d.approved,
+          consentNotes: d.consent_notes || undefined,
+        }));
+      }
+    } catch (err) {
+      console.warn("Supabase fetch gallery images warning:", err);
+    }
+  }
 
   // Prepare localized categories mapping
   const categoriesMap: Record<string, string> = {};

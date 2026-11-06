@@ -48,12 +48,10 @@ export async function NoticesSection({
     } catch (err) {
       console.warn("Could not fetch notices from Supabase:", err);
     }
-  }
-
-  // Fallback to live store / Profile Book seed data
-  if (notices.length === 0) {
+  } else {
+    // Only check in-memory store in local dev when Supabase is unconfigured
     const liveNotices = getAllNotices();
-    const filtered = liveNotices
+    notices = liveNotices
       .filter((n) => n.is_published && n.locale === locale)
       .map((n) => ({
         id: n.id,
@@ -61,40 +59,12 @@ export async function NoticesSection({
         body: n.body,
         published_at: n.published_at,
       }));
-
-    if (filtered.length > 0) {
-      notices = filtered;
-    } else {
-      const fallbackNotices: Record<string, NoticeItem[]> = {
-      en: [
-        {
-          id: "seed-1",
-          title: "Seasonal Cemetery Shramadhana Program",
-          body: "The society invites community elders and youth volunteers to join the upcoming cemetery grounds maintenance and clean-up drive at the Mahallah cemetery.",
-          published_at: "2026-03-01",
-        },
-      ],
-      ta: [
-        {
-          id: "seed-1",
-          title: "மஹல்லா மையவாடி சிரமதானப் பணி அழைப்பு",
-          body: "எமது மஹல்லா மையவாடியை துப்புரவு செய்யும் சிரமதானப் பணியில் அனைத்து இளைஞர்களையும் பொதுமக்களையும் பங்குபற்றுமாறு அன்புடன் அழைக்கின்றோம்.",
-          published_at: "2026-03-01",
-        },
-      ],
-      si: [
-        {
-          id: "seed-1",
-          title: "සුසාන භූමි වාර්ෂික ශ්‍රමදාන වැඩසටහන",
-          body: "මහල්ල සුසාන භූමිය පිරිසිදු කිරීමේ වාර්ෂික ශ්‍රමදාන කටයුතු සඳහා සහභාගී වන ලෙස ප්‍රජාවට ආරාධනා කරමු.",
-          published_at: "2026-03-01",
-        },
-      ],
-    };
-
-    notices = fallbackNotices[locale] || fallbackNotices.en;
   }
-}
+
+  // When all community notices are unpublished or deleted, cleanly hide the section
+  if (notices.length === 0) {
+    return null;
+  }
 
   return (
     <div className="space-y-6">

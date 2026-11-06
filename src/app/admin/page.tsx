@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getAdminSession } from "@/lib/admin-auth";
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { formatAdminDate } from "@/lib/utils";
 import { getAllTeamMembersAdmin } from "@/content/team";
 import { getAllGalleryImagesAdmin } from "@/content/gallery";
@@ -70,7 +70,7 @@ export default async function AdminDashboardPage() {
 
   if (isConfigured) {
     try {
-      const supabase = await createClient();
+      const supabase = await createAdminClient();
 
       // Fetch all dashboard metrics in parallel to eliminate sequential latency
       const [

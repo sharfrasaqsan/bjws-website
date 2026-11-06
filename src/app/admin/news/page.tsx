@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { getAdminSession } from "@/lib/admin-auth";
 import { getAllArticlesAdmin, type Article } from "@/content/news";
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { NewsManager } from "@/components/admin/news-manager";
 import { Newspaper, ArrowLeft } from "lucide-react";
 
@@ -19,7 +19,7 @@ export default async function AdminNewsPage() {
 
   if (isSupabaseConfigured()) {
     try {
-      const supabase = await createClient();
+      const supabase = await createAdminClient();
       const { data, error } = await supabase
         .from("articles")
         .select("*")

@@ -7,7 +7,7 @@ import {
   type GalleryCategory,
   DEFAULT_BLUR,
 } from "@/content/gallery";
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { GalleryManager } from "@/components/admin/gallery-manager";
 import { Image as ImageIcon, ArrowLeft } from "lucide-react";
 
@@ -24,7 +24,7 @@ export default async function AdminGalleryPage() {
 
   if (isSupabaseConfigured()) {
     try {
-      const supabase = await createClient();
+      const supabase = await createAdminClient();
       const { data, error } = await supabase
         .from("gallery_images")
         .select("*")

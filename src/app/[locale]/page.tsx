@@ -961,11 +961,11 @@ export default async function HomePage({
             </a>
             <span>•</span>
             <a
-              href="mailto:mbjwsociety@gmail.com"
+              href="mailto:bjwsociety@gmail.com"
               className="hover:text-white transition-colors flex items-center gap-1.5"
             >
               <Mail className="h-3.5 w-3.5 text-emerald-300" />
-              <span>mbjwsociety@gmail.com</span>
+              <span>bjwsociety@gmail.com</span>
             </a>
           </div>
         </div>

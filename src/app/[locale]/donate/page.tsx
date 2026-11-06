@@ -20,6 +20,7 @@ import {
   FileCheck,
 } from "lucide-react";
 import { getSiteAssets } from "@/content/site-assets";
+import { BankAccountCopy } from "@/components/ui/bank-account-copy";
 
 export async function generateMetadata({
   params,
@@ -157,6 +158,15 @@ export default async function DonatePage({
                     </div>
                   </div>
 
+                  {/* 1-Click Bank Account Copy */}
+                  <BankAccountCopy
+                    accountName={t("accountName")}
+                    accountNumber={t("accountNumber")}
+                    bankName={t("bankName")}
+                    branch={t("branch")}
+                    copyLabel="Copy Account Number"
+                  />
+
                   <div className="mt-6 flex flex-wrap items-center gap-3 text-xs text-[#d4af37]">
                     <ShieldCheck className="h-4 w-4" />
                     <span>Reg No: DS/TH/SS/VSSO/2023/01 • Divisional Secretariat, Thambalagamuwa</span>
@@ -187,7 +197,9 @@ export default async function DonatePage({
 
                 <div className="mt-6 flex flex-wrap items-center gap-4">
                   <a
-                    href="https://wa.me/94756510050"
+                    href={`https://wa.me/94756510050?text=${encodeURIComponent(
+                      "Assalamu Alaikum Brother Faizarkhan (BJWS Treasurer).\n\nI have transferred a charitable donation to the Buhary Janaza Welfare Society Bank of Ceylon Account.\n\n• Donor Name: \n• Amount (LKR): \n• Purpose (Janaza Welfare / Cemetery / General Aid): \n• Bank Reference / Date: \n\nPlease find my payment slip / transfer screenshot attached."
+                    )}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 rounded-xl bg-[#0b2e1e] px-6 py-3 text-sm font-semibold text-white shadow-xs transition-colors hover:bg-[#12422c]"

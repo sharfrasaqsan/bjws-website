@@ -282,11 +282,11 @@ export function MobileMenu({ isOpen, onClose, navItems }: MobileMenuProps) {
               <span>077 622 7323 ({t("common.emergencyBadge")})</span>
             </a>
             <a
-              href="mailto:mbjwsociety@gmail.com"
+              href="mailto:bjwsociety@gmail.com"
               className="flex items-center gap-2 hover:underline"
             >
               <Mail className="h-3.5 w-3.5 text-text-muted" />
-              <span>mbjwsociety@gmail.com</span>
+              <span>bjwsociety@gmail.com</span>
             </a>
           </div>
 

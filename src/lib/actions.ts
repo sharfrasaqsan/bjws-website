@@ -2,7 +2,8 @@
 
 import { z } from "zod";
 import { headers } from "next/headers";
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import { revalidatePath } from "next/cache";
+import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { checkRateLimit } from "@/lib/rate-limit";
 
 // ====================================================================
@@ -94,7 +95,7 @@ export async function submitContactAction(
 
     // 5. Insert into Supabase if configured
     if (isSupabaseConfigured()) {
-      const supabase = await createClient();
+      const supabase = await createAdminClient();
       const { error } = await supabase.from("contact_messages").insert({
         name: validated.data.name,
         phone: validated.data.phone,
@@ -111,6 +112,9 @@ export async function submitContactAction(
         );
         return { success: false, messageKey: "errorDatabaseFailed" };
       }
+
+      revalidatePath("/admin/messages");
+      revalidatePath("/admin");
     } else {
       console.log(
         "[Demo / Dev Mode] Contact message received (Supabase not configured):",
@@ -212,7 +216,7 @@ export async function submitMembershipAction(
     }
 
     if (isSupabaseConfigured()) {
-      const supabase = await createClient();
+      const supabase = await createAdminClient();
       const { error } = await supabase.from("membership_requests").insert({
         full_name: validated.data.fullName,
         phone: validated.data.phone,
@@ -232,6 +236,9 @@ export async function submitMembershipAction(
         );
         return { success: false, messageKey: "errorDatabaseFailed" };
       }
+
+      revalidatePath("/admin/memberships");
+      revalidatePath("/admin");
     } else {
       console.log(
         "[Demo / Dev Mode] Membership request received (Supabase not configured):",

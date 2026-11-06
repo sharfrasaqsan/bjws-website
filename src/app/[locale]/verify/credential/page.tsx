@@ -317,7 +317,7 @@ export default async function CredentialVerificationPage({
                   </a>
 
                   <a
-                    href="mailto:info@bjws.org"
+                    href="mailto:bjwsociety@gmail.com"
                     className="inline-flex items-center gap-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white px-4 py-2 text-xs font-semibold transition-colors"
                   >
                     <Mail className="h-3.5 w-3.5 text-white/70" />

@@ -9,7 +9,7 @@ import {
   ASSIGNED_VERIFICATION_TOKENS,
   ASSIGNED_NIC_NUMBERS,
 } from "@/content/team";
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { TeamManager } from "@/components/admin/team-manager";
 import { UserCheck, ArrowLeft } from "lucide-react";
 
@@ -26,7 +26,7 @@ export default async function AdminTeamPage() {
 
   if (isSupabaseConfigured()) {
     try {
-      const supabase = await createClient();
+      const supabase = await createAdminClient();
       const { data, error } = await supabase
         .from("team_members")
         .select("*")

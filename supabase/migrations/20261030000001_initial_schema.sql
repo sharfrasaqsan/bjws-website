@@ -72,12 +72,14 @@ ALTER TABLE public.reports ENABLE ROW LEVEL SECURITY;
 -- RLS: contact_messages
 -- Rule: The public can INSERT only. No public SELECT. Authenticated admins have full access.
 -- --------------------------------------------------------------------
+DROP POLICY IF EXISTS "Public can submit contact messages" ON public.contact_messages;
 CREATE POLICY "Public can submit contact messages"
     ON public.contact_messages
     FOR INSERT
     TO anon, authenticated
     WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Authenticated admins can view and manage contact messages" ON public.contact_messages;
 CREATE POLICY "Authenticated admins can view and manage contact messages"
     ON public.contact_messages
     FOR ALL
@@ -89,12 +91,14 @@ CREATE POLICY "Authenticated admins can view and manage contact messages"
 -- RLS: membership_requests
 -- Rule: The public can INSERT with consent only. No public SELECT. Authenticated admins have full access.
 -- --------------------------------------------------------------------
+DROP POLICY IF EXISTS "Public can submit membership requests with consent" ON public.membership_requests;
 CREATE POLICY "Public can submit membership requests with consent"
     ON public.membership_requests
     FOR INSERT
     TO anon, authenticated
     WITH CHECK (consent = true);
 
+DROP POLICY IF EXISTS "Authenticated admins can view and manage membership requests" ON public.membership_requests;
 CREATE POLICY "Authenticated admins can view and manage membership requests"
     ON public.membership_requests
     FOR ALL
@@ -106,12 +110,14 @@ CREATE POLICY "Authenticated admins can view and manage membership requests"
 -- RLS: notices
 -- Rule: The public can SELECT only published notices. Admins have full access.
 -- --------------------------------------------------------------------
+DROP POLICY IF EXISTS "Public can view published notices" ON public.notices;
 CREATE POLICY "Public can view published notices"
     ON public.notices
     FOR SELECT
     TO anon, authenticated
     USING (is_published = true);
 
+DROP POLICY IF EXISTS "Authenticated admins can manage notices" ON public.notices;
 CREATE POLICY "Authenticated admins can manage notices"
     ON public.notices
     FOR ALL
@@ -123,12 +129,14 @@ CREATE POLICY "Authenticated admins can manage notices"
 -- RLS: reports
 -- Rule: The public can SELECT only published reports. Admins have full access.
 -- --------------------------------------------------------------------
+DROP POLICY IF EXISTS "Public can view published reports" ON public.reports;
 CREATE POLICY "Public can view published reports"
     ON public.reports
     FOR SELECT
     TO anon, authenticated
     USING (is_published = true);
 
+DROP POLICY IF EXISTS "Authenticated admins can manage reports" ON public.reports;
 CREATE POLICY "Authenticated admins can manage reports"
     ON public.reports
     FOR ALL

@@ -40,7 +40,7 @@ export function getOrganizationJsonLd() {
       "A registered community welfare society in Mullipothana, Sri Lanka (Reg: DS/TH/SS/VSSO/2023/01), providing 24/7 funeral management, cemetery maintenance, dry ration aid, and community workshops.",
     foundingDate: "2023",
     taxID: "DS/TH/SS/VSSO/2023/01",
-    email: "mbjwsociety@gmail.com",
+    email: "bjwsociety@gmail.com",
     telephone: [
       "+94776227323", // 24/7 Immediate Hotline (Organizer A. Abuhuraira)
       "+94724409574", // President (A.M. Sahibullah)
@@ -193,7 +193,7 @@ export function getContactPageJsonLd(locale: string) {
       "@type": "NGO",
       name: "Buhary Janaza Welfare Society",
       telephone: "+94776227323",
-      email: "mbjwsociety@gmail.com",
+      email: "bjwsociety@gmail.com",
       address: {
         "@type": "PostalAddress",
         streetAddress: "95th Buhary Jummah Mosque, Kandy Road",

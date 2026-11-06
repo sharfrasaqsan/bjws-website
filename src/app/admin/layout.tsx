@@ -3,7 +3,7 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { Inter, Playfair_Display } from "next/font/google";
 import { getAdminSession, logoutAdminAction } from "@/lib/admin-auth";
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { AdminNav } from "@/components/admin/admin-nav";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { ThemeScript } from "@/components/theme-script";
@@ -50,7 +50,7 @@ export default async function AdminLayout({
   let counts = { messagesNew: 0, membershipsPending: 0 };
   if (session && isSupabaseConfigured()) {
     try {
-      const supabase = await createClient();
+      const supabase = await createAdminClient();
       const [{ count: msgCount }, { count: memCount }] = await Promise.all([
         supabase
           .from("contact_messages")

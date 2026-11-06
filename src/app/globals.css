@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;600&family=Noto+Sans+Tamil:wght@400;600&display=swap");
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -44,6 +45,10 @@
 
     /* Focus Rings */
     --ring: #124d34;
+
+    /* Tamil & Sinhala Web & Native System Typography */
+    --font-noto-tamil: "Noto Sans Tamil", "Latha", "Vijaya", "Nirmala UI", sans-serif;
+    --font-noto-sinhala: "Noto Sans Sinhala", "Iskoola Pota", "Nirmala UI", sans-serif;
   }
 
   .dark {

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getAdminSession } from "@/lib/admin-auth";
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import {
   MembershipsManager,
   type MembershipRequest,
@@ -14,7 +14,7 @@ export default async function AdminMembershipsPage() {
 
   if (isSupabaseConfigured()) {
     try {
-      const supabase = await createClient();
+      const supabase = await createAdminClient();
       const { data, error } = await supabase
         .from("membership_requests")
         .select(

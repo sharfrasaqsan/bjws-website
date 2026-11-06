@@ -3,7 +3,15 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Container } from "@/components/ui/container";
 import { PageHeader } from "@/components/layout/page-header";
 import { TeamGrid } from "@/components/sections/team-grid";
-import { getTeamMembers } from "@/content/team";
+import {
+  getTeamMembers,
+  type TeamMember,
+  findKnownMember,
+  ASSIGNED_MEMBER_IDS,
+  ASSIGNED_VERIFICATION_TOKENS,
+  ASSIGNED_NIC_NUMBERS,
+} from "@/content/team";
+import { createPublicClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { buildPageMetadata } from "@/lib/seo";
 import { JsonLd, getBreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { ShieldCheck } from "lucide-react";
@@ -37,7 +45,74 @@ export default async function TeamPage({
   const t = await getTranslations("teamPage");
   const tCommon = await getTranslations("common");
   const assets = getSiteAssets();
-  const teamMembers = getTeamMembers();
+  let teamMembers: TeamMember[] = getTeamMembers();
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = createPublicClient();
+      const { data, error } = await supabase
+        .from("team_members")
+        .select("*")
+        .eq("is_inactive", false)
+        .order("created_at", { ascending: false });
+
+      if (!error && data && data.length > 0) {
+        teamMembers = data.map((d, idx) => {
+          const raw = d as Record<string, unknown>;
+          const known = findKnownMember({
+            id: d.id,
+            name: d.name,
+            memberId: raw.member_id as string,
+          });
+
+          return {
+            id: d.id,
+            name: d.name,
+            role: {
+              en: d.role_en,
+              ta: d.role_ta || d.role_en,
+              si: d.role_si || d.role_en,
+            },
+            category: (d.category as TeamMember["category"]) || "operations",
+            categoryLabel: {
+              en: d.category || "Committee",
+              ta: "செயற்குழு",
+              si: "කමිටුව",
+            },
+            phone: d.phone,
+            whatsapp: d.whatsapp || undefined,
+            email: d.email || undefined,
+            address: d.address,
+            initials: d.initials,
+            photo: d.photo || undefined,
+            term: d.term,
+            isInactive: d.is_inactive,
+            memberId:
+              (raw.member_id as string) ||
+              known?.memberId ||
+              ASSIGNED_MEMBER_IDS[d.id] ||
+              `BJWS${(idx + 1).toString().padStart(3, "0")}`,
+            nic:
+              (raw.nic as string) ||
+              known?.nic ||
+              ASSIGNED_NIC_NUMBERS[d.id] ||
+              "198000000000",
+            verificationToken:
+              (raw.verification_token as string) ||
+              known?.token ||
+              ASSIGNED_VERIFICATION_TOKENS[d.id] ||
+              `vtok_${d.id}`,
+            verificationStatus:
+              (raw.verification_status as TeamMember["verificationStatus"]) ||
+              "verified",
+            issueDate: (raw.issue_date as string) || "2024-01-01",
+          };
+        });
+      }
+    } catch (err) {
+      console.warn("Supabase fetch team members warning:", err);
+    }
+  }
 
   const validLocale = (locale === "ta" || locale === "si" ? locale : "en") as
     | "en"

@@ -23,7 +23,8 @@ import {
 } from "lucide-react";
 import { formatGoogleDriveImageUrl } from "@/lib/utils";
 import { getSiteAssets } from "@/content/site-assets";
-import { getTeamMembers } from "@/content/team";
+import { getTeamMembers, type TeamMember } from "@/content/team";
+import { createPublicClient, isSupabaseConfigured } from "@/lib/supabase/server";
 
 export async function generateMetadata({
   params,
@@ -143,7 +144,46 @@ export default async function AboutPage({
   ];
 
   const assets = getSiteAssets();
-  const allTeam = getTeamMembers();
+  let allTeam: TeamMember[] = getTeamMembers();
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = createPublicClient();
+      const { data, error } = await supabase
+        .from("team_members")
+        .select("*")
+        .eq("is_inactive", false)
+        .order("created_at", { ascending: false });
+
+      if (!error && data && data.length > 0) {
+        allTeam = data.map((d) => ({
+          id: d.id,
+          name: d.name,
+          role: {
+            en: d.role_en,
+            ta: d.role_ta || d.role_en,
+            si: d.role_si || d.role_en,
+          },
+          category: (d.category as TeamMember["category"]) || "operations",
+          categoryLabel: {
+            en: d.category || "Committee",
+            ta: "செயற்குழு",
+            si: "කමිටුව",
+          },
+          phone: d.phone,
+          whatsapp: d.whatsapp || undefined,
+          email: d.email || undefined,
+          address: d.address,
+          initials: d.initials,
+          photo: d.photo || undefined,
+          term: d.term,
+          isInactive: d.is_inactive,
+        }));
+      }
+    } catch {
+      // fallback
+    }
+  }
 
   const getOfficer = (
     id: string,

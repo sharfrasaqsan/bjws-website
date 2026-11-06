@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getAdminSession } from "@/lib/admin-auth";
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { getAllNotices, type NoticeRecord } from "@/content/notices";
 import { NoticesManager } from "@/components/admin/notices-manager";
 import { Megaphone, ArrowLeft } from "lucide-react";
@@ -12,7 +12,7 @@ export default async function AdminNoticesPage() {
 
   if (isSupabaseConfigured()) {
     try {
-      const supabase = await createClient();
+      const supabase = await createAdminClient();
       const { data, error } = await supabase
         .from("notices")
         .select(
@@ -20,7 +20,7 @@ export default async function AdminNoticesPage() {
         )
         .order("published_at", { ascending: false });
 
-      if (!error && data && data.length > 0) {
+      if (!error && data) {
         notices = data;
       }
     } catch (err) {

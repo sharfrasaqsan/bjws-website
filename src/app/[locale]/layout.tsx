@@ -4,8 +4,6 @@ import { cookies } from "next/headers";
 import {
   Inter,
   Playfair_Display,
-  Noto_Sans_Tamil,
-  Noto_Sans_Sinhala,
 } from "next/font/google";
 import {
   getMessages,
@@ -22,6 +20,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeScript } from "@/components/theme-script";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
+import { EmergencyHotlinePill } from "@/components/ui/emergency-hotline-pill";
 import "../globals.css";
 
 const inter = Inter({
@@ -36,22 +35,6 @@ const playfair = Playfair_Display({
   variable: "--font-playfair",
   subsets: ["latin"],
   weight: ["600", "700"],
-  display: "swap",
-  adjustFontFallback: true,
-});
-
-const notoSansTamil = Noto_Sans_Tamil({
-  variable: "--font-noto-tamil",
-  subsets: ["tamil"],
-  weight: ["400", "600"],
-  display: "swap",
-  adjustFontFallback: true,
-});
-
-const notoSansSinhala = Noto_Sans_Sinhala({
-  variable: "--font-noto-sinhala",
-  subsets: ["sinhala"],
-  weight: ["400", "600"],
   display: "swap",
   adjustFontFallback: true,
 });
@@ -191,7 +174,7 @@ export default async function LocaleLayout({
       lang={locale}
       dir="ltr"
       suppressHydrationWarning
-      className={`${isDark ? "dark" : ""} ${inter.variable} ${playfair.variable} ${notoSansTamil.variable} ${notoSansSinhala.variable} ${scriptClass} h-full antialiased`}
+      className={`${isDark ? "dark" : ""} ${inter.variable} ${playfair.variable} ${scriptClass} h-full antialiased`}
     >
       <head>
         <ThemeScript />
@@ -216,6 +199,7 @@ export default async function LocaleLayout({
             {children}
           </main>
           <Footer />
+          <EmergencyHotlinePill />
           <Analytics />
           <SpeedInsights />
         </NextIntlClientProvider>

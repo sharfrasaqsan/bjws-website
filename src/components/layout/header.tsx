@@ -169,11 +169,11 @@ export function Header({ notices = [] }: HeaderProps) {
 
               {/* Email */}
               <a
-                href="mailto:mbjwsociety@gmail.com"
+                href="mailto:bjwsociety@gmail.com"
                 className="hidden md:inline-flex items-center gap-1.5 text-emerald-100 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-300 rounded"
               >
                 <Mail className="h-3.5 w-3.5 text-emerald-300/80 shrink-0" aria-hidden="true" />
-                <span>mbjwsociety@gmail.com</span>
+                <span>bjwsociety@gmail.com</span>
               </a>
 
               {/* Divider */}

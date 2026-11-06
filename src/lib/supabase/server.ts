@@ -38,6 +38,30 @@ export async function createClient() {
 }
 
 /**
+ * Privileged client for verified admin operations and server actions.
+ * Uses SUPABASE_SERVICE_ROLE_KEY to bypass RLS when executing on the server.
+ */
+export async function createAdminClient() {
+  const supabaseUrl =
+    process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+  const serviceRoleKey =
+    process.env.SUPABASE_SERVICE_ROLE_KEY ||
+    process.env.SUPABASE_SECRET_KEY;
+
+  if (serviceRoleKey && supabaseUrl) {
+    return createSupabaseClient<Database>(supabaseUrl, serviceRoleKey, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+      },
+    });
+  }
+
+  // Fallback to standard session client if service role key is not configured
+  return createClient();
+}
+
+/**
  * Read-only Supabase client for public Server Components (SSG / ISR).
  * Does not read or write cookies, preserving static pre-rendering.
  */
