@@ -401,20 +401,20 @@ export default async function AboutPage({
               </p>
             </ScrollReveal>
 
-            <ScrollRevealGroup staggerMs={60} className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
+            <ScrollRevealGroup staggerMs={60} className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5 items-stretch">
               {coreValues.map((val) => (
                 <div
                   key={val.number}
-                  className="group relative flex flex-col justify-between rounded-2xl border border-[#0b2e1e]/10 bg-white p-6 shadow-xs transition-all duration-300 hover:-translate-y-1.5 hover:border-[#0b2e1e]/30 hover:shadow-md"
+                  className="group relative flex h-full flex-col justify-between rounded-2xl border border-[#0b2e1e]/10 bg-white p-6 shadow-xs transition-all duration-300 hover:-translate-y-1.5 hover:border-[#0b2e1e]/30 hover:shadow-md"
                 >
-                  <div>
+                  <div className="flex flex-col flex-1">
                     <span className="font-display text-3xl font-bold text-[#d4af37] opacity-80 group-hover:opacity-100">
                       {val.number}
                     </span>
-                    <h3 className="mt-3 font-display text-lg font-bold text-[#0b2e1e]">
+                    <h3 className="mt-3 font-display text-lg font-bold text-[#0b2e1e] min-h-[1.75rem]">
                       {val.title}
                     </h3>
-                    <p className="mt-2 text-xs leading-relaxed text-[#6b7280]">
+                    <p className="mt-2 text-xs leading-relaxed text-[#6b7280] flex-1">
                       {val.desc}
                     </p>
                   </div>

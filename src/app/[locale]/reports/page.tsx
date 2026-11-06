@@ -13,8 +13,9 @@ import { JsonLd, getBreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { FileText, Download, ShieldCheck, FileCheck, PhoneCall } from "lucide-react";
 import { getSiteAssets } from "@/content/site-assets";
 
-// Incremental Static Regeneration (ISR) every hour
-export const revalidate = 3600;
+// Live Dynamic Data - Direct sync with Supabase
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function generateMetadata({
   params,
@@ -72,25 +73,7 @@ export default async function ReportsPage({
     }
   }
 
-  // Verified reports from Profile Book Section 11 (Financial Overview & Transparency)
-  if (reports.length === 0) {
-    reports = [
-      {
-        id: "rep-2024",
-        title: "Annual Activities & Financial Summary Report 2024",
-        year: 2024,
-        file_path: "/documents/reports/bjws-annual-report-2024.pdf",
-        file_size: "1.8 MB",
-      },
-      {
-        id: "rep-2023",
-        title: "Foundational Activities & Welfare Overview 2023",
-        year: 2023,
-        file_path: "/documents/reports/bjws-annual-report-2023.pdf",
-        file_size: "1.4 MB",
-      },
-    ];
-  }
+  // Reports are strictly driven by Supabase. If empty, an empty state is shown.
 
   const noticeTranslations = {
     sectionTitle: t("noticesTitle"),
@@ -161,55 +144,69 @@ export default async function ReportsPage({
               </h2>
             </ScrollReveal>
 
-            <ScrollRevealGroup staggerMs={80} className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              {reports.map((report) => (
-                <div
-                  key={report.id}
-                  className="flex flex-col justify-between rounded-3xl border border-[#0b2e1e]/10 bg-white p-6 sm:p-8 shadow-xs transition-all hover:border-[#0b2e1e]/25 hover:shadow-md"
-                >
-                  <div>
-                    <div className="mb-4 flex items-center justify-between gap-3">
-                      <span className="rounded-full bg-[#0b2e1e] px-3 py-1 font-display text-xs font-bold text-[#d4af37]">
-                        {report.year} Annual Report
-                      </span>
-                      {report.file_size && (
-                        <span className="font-mono text-xs font-semibold text-[#6b7280]">
-                          PDF • {report.file_size}
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#f4efe6] text-[#0b2e1e]">
-                        <FileText className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <h3 className="font-display text-lg font-bold text-[#0b2e1e]">
-                          {report.title}
-                        </h3>
-                        <p className="mt-1 text-xs text-[#6b7280]">
-                          Audited by community-nominated treasurer & approved by the executive committee.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-6 flex items-center justify-between border-t border-[#0b2e1e]/10 pt-4">
-                    <span className="flex items-center gap-1.5 text-xs font-medium text-[#6b7280]">
-                      <FileCheck className="h-3.5 w-3.5 text-[#0b2e1e]" />
-                      Verified Official Copy
-                    </span>
-                    <a
-                      href={report.file_path}
-                      download
-                      className="inline-flex items-center gap-1.5 rounded-xl bg-[#0b2e1e] px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-[#12422c]"
-                    >
-                      <Download className="h-3.5 w-3.5 text-[#d4af37]" />
-                      <span>{t("downloadButton")}</span>
-                    </a>
-                  </div>
+            {reports.length === 0 ? (
+              <div className="rounded-3xl border border-[#0b2e1e]/10 bg-white p-8 text-center sm:p-12 shadow-xs">
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[#f4efe6] text-[#0b2e1e]">
+                  <FileText className="h-6 w-6 text-[#b8952b]" />
                 </div>
-              ))}
-            </ScrollRevealGroup>
+                <h3 className="mt-4 font-display text-lg font-bold text-[#0b2e1e]">
+                  No Official Reports Published Yet
+                </h3>
+                <p className="mt-2 text-sm text-[#6b7280] max-w-md mx-auto">
+                  Audited annual reports and administrative statements will be published here upon executive approval.
+                </p>
+              </div>
+            ) : (
+              <ScrollRevealGroup staggerMs={80} className="grid grid-cols-1 gap-6 md:grid-cols-2 items-stretch">
+                {reports.map((report) => (
+                  <div
+                    key={report.id}
+                    className="flex h-full flex-col justify-between rounded-3xl border border-[#0b2e1e]/10 bg-white p-6 sm:p-8 shadow-xs transition-all hover:border-[#0b2e1e]/25 hover:shadow-md"
+                  >
+                    <div>
+                      <div className="mb-4 flex items-center justify-between gap-3">
+                        <span className="rounded-full bg-[#0b2e1e] px-3 py-1 font-display text-xs font-bold text-[#d4af37]">
+                          {report.year} Annual Report
+                        </span>
+                        {report.file_size && (
+                          <span className="font-mono text-xs font-semibold text-[#6b7280]">
+                            PDF • {report.file_size}
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#f4efe6] text-[#0b2e1e]">
+                          <FileText className="h-5 w-5" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-display text-lg font-bold text-[#0b2e1e] min-h-[3rem] line-clamp-2">
+                            {report.title}
+                          </h3>
+                          <p className="mt-1 text-xs text-[#6b7280]">
+                            Audited by community-nominated treasurer & approved by the executive committee.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-6 flex items-center justify-between border-t border-[#0b2e1e]/10 pt-4">
+                      <span className="flex items-center gap-1.5 text-xs font-medium text-[#6b7280]">
+                        <FileCheck className="h-3.5 w-3.5 text-[#0b2e1e]" />
+                        Verified Official Copy
+                      </span>
+                      <a
+                        href={report.file_path}
+                        download
+                        className="inline-flex items-center gap-1.5 rounded-xl bg-[#0b2e1e] px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-[#12422c]"
+                      >
+                        <Download className="h-3.5 w-3.5 text-[#d4af37]" />
+                        <span>{t("downloadButton")}</span>
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </ScrollRevealGroup>
+            )}
           </div>
 
           {/* Immediate Janaza Reporting / 24/7 Organizer Contact Banner */}

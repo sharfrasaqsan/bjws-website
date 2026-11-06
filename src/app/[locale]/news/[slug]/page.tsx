@@ -1,4 +1,8 @@
 import type { Metadata } from "next";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { setRequestLocale, getTranslations } from "next-intl/server";

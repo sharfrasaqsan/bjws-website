@@ -110,6 +110,17 @@ export async function generateMetadata({
             : "en_LK",
       type: "website",
     },
+    icons: {
+      icon: [
+        { url: "/brand/logo.svg", type: "image/svg+xml" },
+        { url: "/favicon.ico", sizes: "any" },
+      ],
+      shortcut: "/brand/logo.svg",
+      apple: [
+        { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+        { url: "/brand/logo.svg", type: "image/svg+xml" },
+      ],
+    },
     twitter: {
       card: "summary_large_image",
       title: titles[currentLocale],
@@ -177,9 +188,12 @@ export default async function LocaleLayout({
       className={`${isDark ? "dark" : ""} ${inter.variable} ${playfair.variable} ${scriptClass} h-full antialiased`}
     >
       <head>
+        <link rel="icon" href="/brand/logo.svg" type="image/svg+xml" />
+        <link rel="alternate icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <ThemeScript />
       </head>
-      <body className="bg-background text-text selection:bg-primary/15 selection:text-primary flex min-h-full flex-col overflow-x-hidden">
+      <body className="bg-background text-text selection:bg-primary/15 selection:text-primary flex min-h-full flex-col overflow-x-clip">
         <NextIntlClientProvider messages={messages}>
           {/* Skip-to-content accessibility link */}
           <a

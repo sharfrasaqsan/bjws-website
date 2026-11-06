@@ -95,7 +95,7 @@ export function MemberQrModal({
 
   // Unified Font Family for the entire ID Card (Front and Back)
   const ID_FONT =
-    "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
+    "system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
 
   // Render Front & Back Cards onto Canvas
   const renderCards = useCallback(async () => {
@@ -167,8 +167,8 @@ export function MemberQrModal({
           let drawY = circleTop;
           if (drawH > targetSize) {
             const overflow = drawH - targetSize;
-            // Shift down by tiny fraction (3% to 6%) so hair/forehead is never cut off with gentle breathing space
-            drawY = circleTop - Math.min(overflow * 0.05, 12);
+            // Shift down slightly into the circle so hair/forehead is never cut off with gentle breathing space
+            drawY = circleTop + Math.min(overflow * 0.08, 16);
           } else {
             drawY = photoCenterY - drawH / 2;
           }
@@ -243,10 +243,11 @@ export function MemberQrModal({
         606
       );
 
-      // Attribute Rows (ID No, NIC, Address, Phone) - Unified Font & Full Address
-      const startX = 110;
-      const valX = 235;
-      const addrMaxWidth = 345; // 580 - 235
+      // Attribute Rows (ID No, NIC, Address, Phone) - Unified Font, Size & Color
+      const startX = 105;
+      const valX = 225;
+      const addrMaxWidth = 365; // Ample width to prevent unnecessary line breaks
+      const addrLineHeight = 25;
 
       // Calculate word-wrapped full address lines so nothing is cut off
       const rawAddress = (member.address || "Mullipothana, Sri Lanka").trim();
@@ -254,7 +255,7 @@ export function MemberQrModal({
       const addrLines: string[] = [];
       let currentAddrLine = "";
 
-      fCtx.font = `600 19px ${ID_FONT}`;
+      fCtx.font = `bold 21px ${ID_FONT}`;
       for (let i = 0; i < addrWords.length; i++) {
         const word = addrWords[i];
         const testLine = currentAddrLine ? `${currentAddrLine} ${word}` : word;
@@ -274,50 +275,36 @@ export function MemberQrModal({
         label: string;
         val?: string;
         lines?: string[];
-        isId?: boolean;
-        isNic?: boolean;
-        isPhone?: boolean;
         isAddr?: boolean;
       }> = [
-        { label: "ID No", val: member.memberId || "BJWS000", isId: true },
-        ...(member.nic ? [{ label: "NIC", val: member.nic, isNic: true }] : []),
+        { label: "ID No", val: member.memberId || "BJWS000" },
+        ...(member.nic ? [{ label: "NIC", val: member.nic }] : []),
         { label: "Address", lines: addrLines, isAddr: true },
-        { label: "Phone", val: member.phone || "+94 77 622 7323", isPhone: true },
+        { label: "Phone", val: member.phone || "+94 77 622 7323" },
       ];
 
-      let startY = member.nic ? 678 : 688;
-      const rowGap = member.nic ? 44 : 48;
+      let startY = member.nic ? 672 : 685;
+      const rowGap = member.nic ? 42 : 48;
 
       for (const row of rows) {
-        // Label
+        // Label - 100% unified font, size, weight & deep brand forest green
         fCtx.textAlign = "left";
-        fCtx.font = `bold 22px ${ID_FONT}`;
+        fCtx.font = `bold 21px ${ID_FONT}`;
         fCtx.fillStyle = "#0b2e1e";
         fCtx.fillText(row.label, startX, startY);
 
-        // Value
+        // Value - 100% unified font, size, weight & deep brand forest green
         if (row.isAddr && row.lines) {
-          fCtx.font = `600 19px ${ID_FONT}`;
-          fCtx.fillStyle = "#2d3748";
+          fCtx.font = `bold 21px ${ID_FONT}`;
+          fCtx.fillStyle = "#0b2e1e";
           row.lines.forEach((line, idx) => {
-            fCtx.fillText(line, valX, startY + idx * 25);
+            fCtx.fillText(line, valX, startY + idx * addrLineHeight);
           });
-          startY += (row.lines.length - 1) * 25 + rowGap;
-        } else {
-          if (row.isId) {
-            fCtx.font = `bold 24px ${ID_FONT}`;
-            fCtx.fillStyle = "#124d34";
-          } else if (row.isNic) {
-            fCtx.font = `bold 21px ${ID_FONT}`;
-            fCtx.fillStyle = "#2d3748";
-          } else if (row.isPhone) {
-            fCtx.font = `bold 22px ${ID_FONT}`;
-            fCtx.fillStyle = "#0b2e1e";
-          }
-
-          if (row.val) {
-            fCtx.fillText(row.val, valX, startY);
-          }
+          startY += (row.lines.length - 1) * addrLineHeight + rowGap;
+        } else if (row.val) {
+          fCtx.font = `bold 21px ${ID_FONT}`;
+          fCtx.fillStyle = "#0b2e1e";
+          fCtx.fillText(row.val, valX, startY);
           startY += rowGap;
         }
       }

@@ -1,4 +1,8 @@
 import type { Metadata } from "next";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 import Image from "next/image";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
@@ -113,7 +117,7 @@ export default async function HomePage({
     }
   }
 
-  if (latestArticles.length === 0) {
+  if (latestArticles.length === 0 && !isSupabaseConfigured()) {
     latestArticles = getArticles(locale).slice(0, 3);
   }
 
@@ -124,7 +128,7 @@ export default async function HomePage({
       title: tServices("service1Title"),
       badge: tServices("service1Badge"),
       desc: tServices("service1Desc"),
-      image: assets.serviceFuneralAssistance || "/images/gallery/ghusl-02.webp",
+      image: assets.serviceFuneralAssistance || "/images/gallery/Funeral-Services.jpeg",
       icon: Clock,
       highlightBadge: "24/7 Immediate Response",
     },
@@ -575,12 +579,12 @@ export default async function HomePage({
           {/* 7 Core Services Responsive Grid */}
           <ScrollRevealGroup
             staggerMs={70}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch"
           >
             {coreServices.map((service, idx) => (
               <div
                 key={service.id || idx}
-                className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-[#e6e4dc] bg-surface shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg"
+                className="group flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-[#e6e4dc] bg-surface shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg"
               >
                 {/* Photo with Aspect Ratio for Zero CLS */}
                 <div className="relative aspect-[16/10] overflow-hidden bg-muted">
@@ -602,11 +606,11 @@ export default async function HomePage({
 
                 {/* Card Content */}
                 <div className="p-5 sm:p-6 flex flex-col justify-between flex-1">
-                  <div>
-                    <h3 className="font-display text-base sm:text-lg font-bold text-[#0b2e1e] group-hover:text-primary transition-colors leading-snug">
+                  <div className="flex flex-col flex-1">
+                    <h3 className="font-display text-base sm:text-lg font-bold text-[#0b2e1e] group-hover:text-primary transition-colors leading-snug min-h-[3.25rem] line-clamp-2">
                       {service.title}
                     </h3>
-                    <p className="mt-2 text-xs sm:text-sm text-text-muted leading-relaxed line-clamp-3">
+                    <p className="mt-2 text-xs sm:text-sm text-text-muted leading-relaxed line-clamp-3 flex-1">
                       {service.desc}
                     </p>
                   </div>
@@ -750,71 +754,77 @@ export default async function HomePage({
             </Link>
           </div>
 
-          <ScrollRevealGroup
-            staggerMs={80}
-            className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8"
-          >
-            {latestArticles.map((article) => {
-              const formattedDate = new Date(article.published_at).toLocaleDateString(
-                locale === "ta" ? "ta-LK" : locale === "si" ? "si-LK" : "en-US",
-                {
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric",
-                }
-              );
+          {latestArticles.length === 0 ? (
+            <div className="rounded-2xl border border-[#e6e4dc] bg-white p-8 text-center text-xs text-[#6b7280]">
+              No news announcements published yet. Recent activities will appear here.
+            </div>
+          ) : (
+            <ScrollRevealGroup
+              staggerMs={80}
+              className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch"
+            >
+              {latestArticles.map((article) => {
+                const formattedDate = new Date(article.published_at).toLocaleDateString(
+                  locale === "ta" ? "ta-LK" : locale === "si" ? "si-LK" : "en-US",
+                  {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  }
+                );
 
-              return (
-                <article
-                  key={article.id}
-                  className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-[#e6e4dc] bg-surface shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg"
-                >
-                  <div className="relative aspect-[16/10] overflow-hidden bg-muted">
-                    <Image
-                      src={formatGoogleDriveImageUrl(article.image_url)}
-                      alt={article.title}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                      className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" />
-                    <span className="absolute top-3 left-3 rounded-md bg-[#c99a45] text-[#072015] text-[10px] font-bold px-2.5 py-1 uppercase tracking-wider">
-                      {article.categoryLabel[locale as "en" | "ta" | "si"] ||
-                        article.category}
-                    </span>
-                    <span className="absolute bottom-3 left-3 inline-flex items-center gap-1.5 text-white text-[11px] font-medium bg-black/40 px-2.5 py-1 rounded backdrop-blur-xs">
-                      <Calendar className="h-3 w-3 text-[#d4a359]" />
-                      <span>{formattedDate}</span>
-                    </span>
-                  </div>
-
-                  <div className="p-5 sm:p-6 flex flex-col justify-between flex-1">
-                    <div>
-                      <h3 className="font-display text-lg font-bold text-[#0b2e1e] group-hover:text-primary transition-colors leading-snug line-clamp-2">
-                        {article.title}
-                      </h3>
-                      <p className="mt-2 text-xs sm:text-sm text-text-muted leading-relaxed line-clamp-3">
-                        {article.excerpt}
-                      </p>
-                    </div>
-
-                    <div className="mt-5 flex items-center justify-between border-t border-[#e6e4dc] pt-4">
-                      <span className="text-[11px] font-medium text-[#6b7280]">
-                        {article.read_time_minutes} min read
+                return (
+                  <article
+                    key={article.id}
+                    className="group flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-[#e6e4dc] bg-surface shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg"
+                  >
+                    <div className="relative aspect-[16/10] overflow-hidden bg-muted shrink-0">
+                      <Image
+                        src={formatGoogleDriveImageUrl(article.image_url)}
+                        alt={article.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" />
+                      <span className="absolute top-3 left-3 rounded-md bg-[#c99a45] text-[#072015] text-[10px] font-bold px-2.5 py-1 uppercase tracking-wider">
+                        {article.categoryLabel[locale as "en" | "ta" | "si"] ||
+                          article.category}
                       </span>
-                      <Link
-                        href={`/news/${article.slug}`}
-                        className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-primary hover:text-primary-hover group/link"
-                      >
-                        <span>{t("readArticle")}</span>
-                        <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/link:translate-x-1" />
-                      </Link>
+                      <span className="absolute bottom-3 left-3 inline-flex items-center gap-1.5 text-white text-[11px] font-medium bg-black/40 px-2.5 py-1 rounded backdrop-blur-xs">
+                        <Calendar className="h-3 w-3 text-[#d4a359]" />
+                        <span>{formattedDate}</span>
+                      </span>
                     </div>
-                  </div>
-                </article>
-              );
-            })}
-          </ScrollRevealGroup>
+
+                    <div className="p-5 sm:p-6 flex flex-col justify-between flex-1">
+                      <div className="flex flex-col flex-1">
+                        <h3 className="font-display text-lg font-bold text-[#0b2e1e] group-hover:text-primary transition-colors leading-snug line-clamp-2 min-h-[3.25rem]">
+                          {article.title}
+                        </h3>
+                        <p className="mt-2 text-xs sm:text-sm text-text-muted leading-relaxed line-clamp-3 flex-1">
+                          {article.excerpt}
+                        </p>
+                      </div>
+
+                      <div className="mt-5 flex items-center justify-between border-t border-[#e6e4dc] pt-4">
+                        <span className="text-[11px] font-medium text-[#6b7280]">
+                          {article.read_time_minutes} min read
+                        </span>
+                        <Link
+                          href={`/news/${article.slug}`}
+                          className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-primary hover:text-primary-hover group/link"
+                        >
+                          <span>{t("readArticle")}</span>
+                          <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/link:translate-x-1" />
+                        </Link>
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </ScrollRevealGroup>
+          )}
         </div>
       </section>
 

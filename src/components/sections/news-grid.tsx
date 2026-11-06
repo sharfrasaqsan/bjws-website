@@ -183,7 +183,7 @@ export function NewsGrid({ articles, locale, translations }: NewsGridProps) {
 
       {/* Grid of Remaining Articles */}
       {remainingArticles.length > 0 ? (
-        <ScrollRevealGroup staggerMs={60} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        <ScrollRevealGroup staggerMs={60} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch">
           {remainingArticles.map((article) => {
             const catLabel =
               article.categoryLabel[locale as "en" | "ta" | "si"] ||
@@ -192,10 +192,10 @@ export function NewsGrid({ articles, locale, translations }: NewsGridProps) {
             return (
               <article
                 key={article.id}
-                className="group flex flex-col justify-between overflow-hidden rounded-3xl border border-[#e6e4dc] bg-surface shadow-xs transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/40 hover:shadow-lg"
+                className="group flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-[#e6e4dc] bg-surface shadow-xs transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/40 hover:shadow-lg"
               >
                 {/* Photo Header */}
-                <div className="relative aspect-[16/10] overflow-hidden bg-muted">
+                <div className="relative aspect-[16/10] overflow-hidden bg-muted shrink-0">
                   <Image
                     src={formatGoogleDriveImageUrl(article.image_url)}
                     alt={article.title}
@@ -211,7 +211,7 @@ export function NewsGrid({ articles, locale, translations }: NewsGridProps) {
 
                 {/* Body Content */}
                 <div className="p-5 sm:p-6 flex flex-1 flex-col justify-between space-y-4">
-                  <div className="space-y-2.5">
+                  <div className="flex flex-col flex-1 space-y-2.5">
                     <div className="flex items-center gap-2.5 text-[11px] text-text-muted">
                       <span className="flex items-center gap-1">
                         <Calendar className="h-3 w-3 text-[#c99a45]" />
@@ -225,17 +225,17 @@ export function NewsGrid({ articles, locale, translations }: NewsGridProps) {
                     </div>
 
                     <Link href={`/${locale}/news/${article.slug}`}>
-                      <h3 className="font-display text-base sm:text-lg font-bold text-text group-hover:text-primary transition-colors leading-snug line-clamp-2">
+                      <h3 className="font-display text-base sm:text-lg font-bold text-text group-hover:text-primary transition-colors leading-snug line-clamp-2 min-h-[3rem]">
                         {article.title}
                       </h3>
                     </Link>
 
-                    <p className="text-xs sm:text-sm text-text-muted leading-relaxed line-clamp-3">
+                    <p className="text-xs sm:text-sm text-text-muted leading-relaxed line-clamp-3 flex-1">
                       {article.excerpt}
                     </p>
                   </div>
 
-                  <div className="pt-2 border-t border-border">
+                  <div className="pt-3 border-t border-border mt-auto">
                     <Link
                       href={`/${locale}/news/${article.slug}`}
                       className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-primary hover:text-primary-hover group/link transition-colors"

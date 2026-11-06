@@ -1,4 +1,8 @@
 import type { Metadata } from "next";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Container } from "@/components/ui/container";
 import { PageHeader } from "@/components/layout/page-header";
@@ -38,7 +42,7 @@ export default async function NewsPage({
   const tCommon = await getTranslations("common");
   const assets = getSiteAssets();
 
-  let articles: Article[] = getArticles(locale);
+  let articles: Article[] = [];
 
   if (isSupabaseConfigured()) {
     try {
@@ -50,7 +54,7 @@ export default async function NewsPage({
         .eq("locale", locale)
         .order("published_at", { ascending: false });
 
-      if (!error && data && data.length > 0) {
+      if (!error && data) {
         articles = data.map((d) => ({
           id: d.id,
           slug: d.slug,
@@ -73,7 +77,10 @@ export default async function NewsPage({
       }
     } catch (err) {
       console.warn("Supabase articles query error, using local fallback:", err);
+      articles = getArticles(locale);
     }
+  } else {
+    articles = getArticles(locale);
   }
 
   const translations = {

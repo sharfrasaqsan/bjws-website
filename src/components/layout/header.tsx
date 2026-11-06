@@ -38,6 +38,17 @@ export function Header({ notices = [] }: HeaderProps) {
   const [openDropdown, setOpenDropdown] = React.useState<string | null>(null);
   const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
   const navRef = React.useRef<HTMLElement>(null);
+  const [isScrolled, setIsScrolled] = React.useState(false);
+
+  // Dynamic scroll elevation listener
+  React.useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Reset dropdown when pathname changes
   const [prevPathname, setPrevPathname] = React.useState(pathname);
@@ -222,7 +233,14 @@ export function Header({ notices = [] }: HeaderProps) {
       </div>
 
       {/* 2. STICKY HEADER (Logo, Nav, Solid "Donate" Button) */}
-      <header className="sticky top-0 z-40 w-full border-b border-[#e6e4dc] bg-surface/98 backdrop-blur-md transition-colors shadow-2xs">
+      <header
+        className={cn(
+          "sticky top-0 z-40 w-full border-b transition-all duration-300",
+          isScrolled
+            ? "border-[#e6e4dc]/80 bg-surface/95 dark:bg-[#0c2117]/95 shadow-md backdrop-blur-md"
+            : "border-[#e6e4dc] bg-surface/98 backdrop-blur-md shadow-2xs"
+        )}
+      >
         <Container size="xl">
           <div className="flex min-h-[4.25rem] sm:h-20 items-center justify-between gap-2 sm:gap-4 py-2 sm:py-0">
             {/* Brand Logo & Title */}

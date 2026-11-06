@@ -38,6 +38,17 @@ export const metadata: Metadata = {
       noimageindex: true,
     },
   },
+  icons: {
+    icon: [
+      { url: "/brand/logo.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    shortcut: "/brand/logo.svg",
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+      { url: "/brand/logo.svg", type: "image/svg+xml" },
+    ],
+  },
 };
 
 export default async function AdminLayout({
@@ -81,6 +92,9 @@ export default async function AdminLayout({
       className={`${isDark ? "dark" : ""} ${inter.variable} ${playfair.variable} h-full antialiased`}
     >
       <head>
+        <link rel="icon" href="/brand/logo.svg" type="image/svg+xml" />
+        <link rel="alternate icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <ThemeScript />
       </head>
       <body

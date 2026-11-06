@@ -122,6 +122,7 @@ export function ScrollRevealGroup({
           <ScrollReveal
             variant={variant}
             delay={Math.min((index + 1) * staggerMs, 400)}
+            className="h-full flex flex-col"
           >
             {child}
           </ScrollReveal>

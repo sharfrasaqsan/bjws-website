@@ -134,5 +134,16 @@ export function buildPageMetadata({
       description,
       images: [ogImageUrl],
     },
+    icons: {
+      icon: [
+        { url: "/brand/logo.svg", type: "image/svg+xml" },
+        { url: "/favicon.ico", sizes: "any" },
+      ],
+      shortcut: "/brand/logo.svg",
+      apple: [
+        { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+        { url: "/brand/logo.svg", type: "image/svg+xml" },
+      ],
+    },
   };
 }

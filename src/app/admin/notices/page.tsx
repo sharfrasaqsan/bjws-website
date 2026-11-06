@@ -1,14 +1,18 @@
 import Link from "next/link";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 import { getAdminSession } from "@/lib/admin-auth";
 import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/server";
-import { getAllNotices, type NoticeRecord } from "@/content/notices";
+import { type NoticeRecord } from "@/content/notices";
 import { NoticesManager } from "@/components/admin/notices-manager";
 import { Megaphone, ArrowLeft } from "lucide-react";
 
 export default async function AdminNoticesPage() {
   await getAdminSession();
 
-  let notices: NoticeRecord[] = getAllNotices();
+  let notices: NoticeRecord[] = [];
 
   if (isSupabaseConfigured()) {
     try {

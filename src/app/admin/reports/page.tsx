@@ -1,4 +1,8 @@
 import Link from "next/link";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 import { getAdminSession } from "@/lib/admin-auth";
 import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import {
@@ -29,24 +33,7 @@ export default async function AdminReportsPage() {
       console.warn("Failed to fetch reports:", err);
     }
   } else {
-    reports = [
-      {
-        id: "rep-2024",
-        title: "Annual Activities & Financial Summary Report 2024",
-        year: 2024,
-        file_path: "/documents/reports/bjws-annual-report-2024.pdf",
-        file_size: "1.8 MB",
-        is_published: true,
-      },
-      {
-        id: "rep-2023",
-        title: "Foundational Activities & Welfare Overview 2023",
-        year: 2023,
-        file_path: "/documents/reports/bjws-annual-report-2023.pdf",
-        file_size: "1.4 MB",
-        is_published: true,
-      },
-    ];
+    reports = [];
   }
 
   return (
