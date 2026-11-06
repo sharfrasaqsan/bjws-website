@@ -47,7 +47,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
     email: "sahibullahmohamed0@gmail.com",
     address: "No. 420, Unit 07, Mullipothana",
     initials: "AMS",
-    photo: "/images/team/sahibulla.webp",
+    photo: "/images/team/sahibulla_new.webp",
     term: "2023 - Present",
   },
   {
@@ -156,7 +156,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
     email: "Sawth059@gmail.com",
     address: "No. 415/R1, Unit 07, Mullipothana",
     initials: "AA",
-    photo: "/images/team/abuhuraira.webp",
+    photo: "/images/team/abuhuraira_new.webp",
     term: "2023 - Present",
   },
   {
@@ -200,7 +200,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
     email: "niays.agm@gmail.com",
     address: "No. 356, Unit 07, Mullipothana",
     initials: "AGMN",
-    photo: "/images/team/niyas.webp",
+    photo: "/images/team/niyas_new.webp",
     term: "2023 - Present",
   },
   {
@@ -265,7 +265,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
     whatsapp: "+94767139496",
     address: "No. 307, Unit 07, Mullipothana",
     initials: "SMJ",
-    photo: "/images/team/jaisar1.webp",
+    photo: "/images/team/jaisar.webp",
     term: "2023 - Present",
   },
   {
@@ -287,7 +287,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
     email: "irfani00851836@gmail.com",
     address: "No. 133D, Echcha Nagar, Mullipothana",
     initials: "MMMI",
-    photo: "/images/team/irfan.webp",
+    photo: "/images/team/irfan_new.webp",
     term: "2023 - Present",
   },
   {
