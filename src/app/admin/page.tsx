@@ -12,18 +12,17 @@ import {
   ArrowRight,
   Plus,
   ExternalLink,
-  ShieldCheck,
   Phone,
   Clock,
-  Building,
-  CheckCircle2,
   UserCheck,
   Image as ImageIcon,
   Newspaper,
+  CheckCircle2,
+  Inbox,
 } from "lucide-react";
 
 export default async function AdminDashboardPage() {
-  const session = await getAdminSession();
+  await getAdminSession();
 
   let messageStats = { total: 0, new: 0 };
   let membershipStats = { total: 0, pending: 0 };
@@ -72,7 +71,7 @@ export default async function AdminDashboardPage() {
     try {
       const supabase = await createAdminClient();
 
-      // Fetch all dashboard metrics in parallel to eliminate sequential latency
+      // Parallel metric fetching to minimize latency
       const [
         { data: messages },
         { data: memberships },
@@ -126,352 +125,314 @@ export default async function AdminDashboardPage() {
   }
 
   return (
-    <div className="py-8 sm:py-10">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Institutional Welcome Banner */}
-        <div className="mb-8 rounded-2xl border border-[#e6e4dc] bg-white p-6 shadow-xs sm:p-8">
-          <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-            <div>
-              <div className="mb-2.5 inline-flex items-center gap-2 rounded-full border border-[#124d34]/20 bg-[#f5eedf]/60 px-3 py-1 text-xs font-semibold text-[#124d34]">
-                <ShieldCheck className="h-3.5 w-3.5 text-[#c99a45]" />
-                <span>Executive Council Operational Portal</span>
-                <span className="text-[#a7c5b6]">•</span>
-                <span className="font-mono text-[11px] text-[#8b651e]">
-                  DS/TH/SS/VSSO/2023/01
-                </span>
-              </div>
-              <h1 className="font-serif text-2xl font-bold tracking-tight text-[#0b2e1e] sm:text-3xl">
-                Society Administrative Overview
-              </h1>
-              <p className="mt-1 text-xs text-[#4b5563] sm:text-sm">
-                Managing community inquiries, memberships, notices, and audited records for{" "}
-                <strong className="text-[#1c2420]">
-                  Buhary Janaza Welfare Society, Mullipothana
-                </strong>
-                .
-              </p>
-            </div>
-
-            {/* Quick Action Toolbar */}
-            <div className="flex flex-wrap items-center gap-2.5">
-              <Link
-                href="/admin/team"
-                className="inline-flex items-center gap-1.5 rounded-lg border border-[#e6e4dc] bg-white px-3 py-2 text-xs font-semibold text-[#1c2420] shadow-xs transition-colors hover:border-[#124d34] hover:bg-[#fbfaf6]"
-              >
-                <Plus className="h-3.5 w-3.5 text-[#124d34]" />
-                <span>Add Member</span>
-              </Link>
-              <Link
-                href="/admin/gallery"
-                className="inline-flex items-center gap-1.5 rounded-lg border border-[#e6e4dc] bg-white px-3 py-2 text-xs font-semibold text-[#1c2420] shadow-xs transition-colors hover:border-[#124d34] hover:bg-[#fbfaf6]"
-              >
-                <Plus className="h-3.5 w-3.5 text-[#124d34]" />
-                <span>Add Photo</span>
-              </Link>
-              <Link
-                href="/admin/news"
-                className="inline-flex items-center gap-1.5 rounded-lg border border-[#e6e4dc] bg-white px-3 py-2 text-xs font-semibold text-[#1c2420] shadow-xs transition-colors hover:border-[#124d34] hover:bg-[#fbfaf6]"
-              >
-                <Plus className="h-3.5 w-3.5 text-[#124d34]" />
-                <span>New Article</span>
-              </Link>
-              <Link
-                href="/admin/notices"
-                className="inline-flex items-center gap-1.5 rounded-lg border border-[#e6e4dc] bg-white px-3 py-2 text-xs font-semibold text-[#1c2420] shadow-xs transition-colors hover:border-[#124d34] hover:bg-[#fbfaf6]"
-              >
-                <Plus className="h-3.5 w-3.5 text-[#124d34]" />
-                <span>Post Notice</span>
-              </Link>
-              <Link
-                href="/admin/reports"
-                className="inline-flex items-center gap-1.5 rounded-lg bg-[#124d34] px-3.5 py-2 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-[#0b2e1e]"
-              >
-                <Plus className="h-3.5 w-3.5 text-[#c99a45]" />
-                <span>Upload Report</span>
-              </Link>
-              <Link
-                href="/"
-                target="_blank"
-                className="inline-flex items-center gap-1.5 rounded-lg border border-[#e6e4dc] bg-[#fbfaf6] px-3 py-2 text-xs font-medium text-[#4b5563] transition-colors hover:bg-white hover:text-[#0b2e1e]"
-              >
-                <span>Live Site</span>
-                <ExternalLink className="h-3.5 w-3.5" />
-              </Link>
-            </div>
-          </div>
-
-          <div className="mt-6 flex flex-wrap items-center gap-y-2 gap-x-6 border-t border-[#f3f1ea] pt-4 text-xs text-[#6b7280]">
-            <div className="flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" />
-              <span>Signed in as:</span>
-              <strong className="font-mono text-[#0b2e1e]">{session?.email}</strong>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Building className="h-3.5 w-3.5 text-[#9ca3af]" />
-              <span>Database Status:</span>
-              <span className="font-medium text-[#1c2420]">
-                {isConfigured ? "Connected (Supabase Cloud)" : "Demo Simulation"}
+    <div className="py-6 sm:py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
+        {/* Executive Header Bar */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-[#e6e4dc] dark:border-[#1a432f] pb-6">
+          <div>
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#124d34] dark:text-[#a7c5b6]">
+              <span>Executive Overview</span>
+              <span className="text-[#c99a45]">•</span>
+              <span className="font-normal normal-case text-[#6b7280] dark:text-[#9ca3af]">
+                Buhary Janaza Welfare Society
               </span>
             </div>
+            <h1 className="mt-1 font-serif text-2xl font-bold tracking-tight text-[#0b2e1e] dark:text-white sm:text-3xl">
+              Administrative Console
+            </h1>
+          </div>
+
+          {/* Quick Actions & DB Status */}
+          <div className="flex flex-wrap items-center gap-2.5">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-800 dark:text-emerald-300">
+              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>{isConfigured ? "Supabase Live" : "Demo Mode"}</span>
+            </div>
+
+            <Link
+              href="/admin/notices"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[#e6e4dc] dark:border-[#1a432f] bg-white dark:bg-[#0c2419] px-3.5 py-2 text-xs font-semibold text-[#1c2420] dark:text-[#e2f0e8] shadow-2xs transition-all hover:border-[#124d34] hover:bg-[#fbfaf6] dark:hover:bg-[#123624]"
+            >
+              <Plus className="h-3.5 w-3.5 text-[#124d34] dark:text-[#c99a45]" />
+              <span>Post Notice</span>
+            </Link>
+
+            <Link
+              href="/admin/news"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[#e6e4dc] dark:border-[#1a432f] bg-white dark:bg-[#0c2419] px-3.5 py-2 text-xs font-semibold text-[#1c2420] dark:text-[#e2f0e8] shadow-2xs transition-all hover:border-[#124d34] hover:bg-[#fbfaf6] dark:hover:bg-[#123624]"
+            >
+              <Plus className="h-3.5 w-3.5 text-[#124d34] dark:text-[#c99a45]" />
+              <span>New Article</span>
+            </Link>
+
+            <Link
+              href="/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-[#124d34] px-3.5 py-2 text-xs font-semibold text-white shadow-2xs transition-all hover:bg-[#0b2e1e]"
+            >
+              <span>Public Site</span>
+              <ExternalLink className="h-3.5 w-3.5 text-[#c99a45]" />
+            </Link>
           </div>
         </div>
 
-        {/* 6 Executive Metric Cards Grid */}
-        <div className="mb-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {/* Card 1: Inquiries */}
-          <div className="group rounded-2xl border border-[#e6e4dc] bg-white p-5 shadow-xs transition-all hover:border-[#124d34]/40 hover:shadow-sm">
-            <div className="flex items-center justify-between">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e8f3ee] text-[#124d34] transition-colors group-hover:bg-[#124d34] group-hover:text-white">
-                <MessageSquare className="h-5 w-5" />
+        {/* Primary Operational Action Cards (Messages & Memberships) */}
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+          {/* Card 1: Contact Inquiries */}
+          <Link
+            href="/admin/messages"
+            className="group relative overflow-hidden rounded-2xl border border-[#e6e4dc] dark:border-[#1a432f] bg-white dark:bg-[#0c2419] p-6 shadow-xs transition-all hover:border-[#124d34] dark:hover:border-[#c99a45] hover:shadow-md"
+          >
+            <div className="flex items-start justify-between">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#e8f3ee] dark:bg-[#14553a]/50 text-[#124d34] dark:text-[#a7c5b6] transition-colors group-hover:bg-[#124d34] group-hover:text-white">
+                <MessageSquare className="h-6 w-6" />
               </div>
               {messageStats.new > 0 ? (
-                <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-bold text-red-700">
-                  <span className="h-1.5 w-1.5 rounded-full bg-red-600 animate-pulse" />
-                  {messageStats.new} New
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-100 dark:bg-rose-950/60 border border-rose-300 dark:border-rose-800 px-3 py-1 text-xs font-bold text-rose-800 dark:text-rose-300">
+                  <span className="h-2 w-2 rounded-full bg-rose-600 animate-ping" />
+                  {messageStats.new} Action Needed
                 </span>
               ) : (
-                <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600">
+                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 px-3 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-300">
+                  <CheckCircle2 className="h-3.5 w-3.5" />
                   All Handled
                 </span>
               )}
             </div>
-            <div className="mt-4">
-              <div className="font-serif text-3xl font-extrabold text-[#0b2e1e]">
+
+            <div className="mt-5">
+              <div className="font-serif text-3xl sm:text-4xl font-extrabold text-[#0b2e1e] dark:text-white">
                 {messageStats.total}
               </div>
-              <p className="mt-0.5 text-xs font-medium text-[#6b7280]">
-                Contact Inquiries Received
+              <h3 className="mt-1 font-semibold text-sm text-[#1c2420] dark:text-[#e2f0e8]">
+                Contact Inquiries
+              </h3>
+              <p className="mt-0.5 text-xs text-[#6b7280] dark:text-[#9ca3af]">
+                Public messages and inquiries submitted via web forms
               </p>
             </div>
-            <div className="mt-4 border-t border-[#f3f1ea] pt-3">
-              <Link
-                href="/admin/messages"
-                className="flex items-center justify-between text-xs font-semibold text-[#124d34] transition-colors hover:text-[#0b2e1e]"
-              >
-                <span>View Messages Inbox</span>
-                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-              </Link>
-            </div>
-          </div>
 
-          {/* Card 2: Memberships */}
-          <div className="group rounded-2xl border border-[#e6e4dc] bg-white p-5 shadow-xs transition-all hover:border-[#124d34]/40 hover:shadow-sm">
-            <div className="flex items-center justify-between">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f5eedf] text-[#8b651e] transition-colors group-hover:bg-[#c99a45] group-hover:text-white">
-                <Users className="h-5 w-5" />
+            <div className="mt-5 flex items-center justify-between border-t border-[#f3f1ea] dark:border-[#1a432f] pt-4 text-xs font-semibold text-[#124d34] dark:text-[#c99a45]">
+              <span>Open Inquiries Inbox</span>
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </div>
+          </Link>
+
+          {/* Card 2: Membership Applications */}
+          <Link
+            href="/admin/memberships"
+            className="group relative overflow-hidden rounded-2xl border border-[#e6e4dc] dark:border-[#1a432f] bg-white dark:bg-[#0c2419] p-6 shadow-xs transition-all hover:border-[#124d34] dark:hover:border-[#c99a45] hover:shadow-md"
+          >
+            <div className="flex items-start justify-between">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#f5eedf] dark:bg-[#2a2416] text-[#8b651e] dark:text-[#f5d78e] transition-colors group-hover:bg-[#c99a45] group-hover:text-white">
+                <Users className="h-6 w-6" />
               </div>
               {membershipStats.pending > 0 ? (
-                <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-800">
-                  <span className="h-1.5 w-1.5 rounded-full bg-amber-600" />
-                  {membershipStats.pending} Pending
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-800 px-3 py-1 text-xs font-bold text-amber-900 dark:text-amber-300">
+                  <span className="h-2 w-2 rounded-full bg-amber-600 animate-pulse" />
+                  {membershipStats.pending} Awaiting Review
                 </span>
               ) : (
-                <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700">
-                  Up to date
+                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 px-3 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-300">
+                  <CheckCircle2 className="h-3.5 w-3.5" />
+                  Up to Date
                 </span>
               )}
             </div>
-            <div className="mt-4">
-              <div className="font-serif text-3xl font-extrabold text-[#0b2e1e]">
+
+            <div className="mt-5">
+              <div className="font-serif text-3xl sm:text-4xl font-extrabold text-[#0b2e1e] dark:text-white">
                 {membershipStats.total}
               </div>
-              <p className="mt-0.5 text-xs font-medium text-[#6b7280]">
-                Total Membership Applications
+              <h3 className="mt-1 font-semibold text-sm text-[#1c2420] dark:text-[#e2f0e8]">
+                Membership Applications
+              </h3>
+              <p className="mt-0.5 text-xs text-[#6b7280] dark:text-[#9ca3af]">
+                Community welfare and funeral coverage registrations
               </p>
             </div>
-            <div className="mt-4 border-t border-[#f3f1ea] pt-3">
-              <Link
-                href="/admin/memberships"
-                className="flex items-center justify-between text-xs font-semibold text-[#124d34] transition-colors hover:text-[#0b2e1e]"
-              >
-                <span>Review Applications</span>
-                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-              </Link>
-            </div>
-          </div>
 
-          {/* Card 3: Team Members Directory */}
-          <div className="group rounded-2xl border border-[#e6e4dc] bg-white p-5 shadow-xs transition-all hover:border-[#124d34]/40 hover:shadow-sm">
-            <div className="flex items-center justify-between">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e8f3ee] text-[#124d34] transition-colors group-hover:bg-[#124d34] group-hover:text-white">
-                <UserCheck className="h-5 w-5" />
-              </div>
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-bold text-emerald-800">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
-                {teamStats.active} Active Officers
-              </span>
+            <div className="mt-5 flex items-center justify-between border-t border-[#f3f1ea] dark:border-[#1a432f] pt-4 text-xs font-semibold text-[#124d34] dark:text-[#c99a45]">
+              <span>Review Applications</span>
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </div>
-            <div className="mt-4">
-              <div className="font-serif text-3xl font-extrabold text-[#0b2e1e]">
-                {teamStats.total}
-              </div>
-              <p className="mt-0.5 text-xs font-medium text-[#6b7280]">
-                Officers & Volunteers Enrolled
-              </p>
-            </div>
-            <div className="mt-4 border-t border-[#f3f1ea] pt-3">
-              <Link
-                href="/admin/team"
-                className="flex items-center justify-between text-xs font-semibold text-[#124d34] transition-colors hover:text-[#0b2e1e]"
-              >
-                <span>Manage Team Directory</span>
-                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-              </Link>
-            </div>
-          </div>
+          </Link>
+        </div>
 
-          {/* Card 4: Photo Gallery & Media */}
-          <div className="group rounded-2xl border border-[#e6e4dc] bg-white p-5 shadow-xs transition-all hover:border-[#124d34]/40 hover:shadow-sm">
-            <div className="flex items-center justify-between">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f5eedf] text-[#8b651e] transition-colors group-hover:bg-[#c99a45] group-hover:text-white">
-                <ImageIcon className="h-5 w-5" />
-              </div>
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 text-xs font-bold text-emerald-800">
-                {galleryStats.approved} Live Photos
-              </span>
-            </div>
-            <div className="mt-4">
-              <div className="font-serif text-3xl font-extrabold text-[#0b2e1e]">
-                {galleryStats.total}
-              </div>
-              <p className="mt-0.5 text-xs font-medium text-[#6b7280]">
-                Photo Gallery Cataloged Assets
-              </p>
-            </div>
-            <div className="mt-4 border-t border-[#f3f1ea] pt-3">
-              <Link
-                href="/admin/gallery"
-                className="flex items-center justify-between text-xs font-semibold text-[#124d34] transition-colors hover:text-[#0b2e1e]"
-              >
-                <span>Curate Photo Gallery</span>
-                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-              </Link>
-            </div>
-          </div>
-
-          {/* Card 5: News & Publications */}
-          <div className="group rounded-2xl border border-[#e6e4dc] bg-white p-5 shadow-xs transition-all hover:border-[#124d34]/40 hover:shadow-sm">
-            <div className="flex items-center justify-between">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e8f3ee] text-[#124d34] transition-colors group-hover:bg-[#124d34] group-hover:text-white">
-                <Newspaper className="h-5 w-5" />
-              </div>
-              <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-800">
-                {newsStats.published} Live Articles
-              </span>
-            </div>
-            <div className="mt-4">
-              <div className="font-serif text-3xl font-extrabold text-[#0b2e1e]">
-                {newsStats.total}
-              </div>
-              <p className="mt-0.5 text-xs font-medium text-[#6b7280]">
-                Editorial News & Updates
-              </p>
-            </div>
-            <div className="mt-4 border-t border-[#f3f1ea] pt-3">
-              <Link
-                href="/admin/news"
-                className="flex items-center justify-between text-xs font-semibold text-[#124d34] transition-colors hover:text-[#0b2e1e]"
-              >
-                <span>Manage News & Blog</span>
-                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-              </Link>
-            </div>
-          </div>
-
-          {/* Card 6: Audited Reports & Notices */}
-          <div className="group rounded-2xl border border-[#e6e4dc] bg-white p-5 shadow-xs transition-all hover:border-[#124d34]/40 hover:shadow-sm">
-            <div className="flex items-center justify-between">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f5eedf] text-[#8b651e] transition-colors group-hover:bg-[#c99a45] group-hover:text-white">
-                <FileText className="h-5 w-5" />
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-800">
-                  {noticeStats.published} Notices
-                </span>
-                <span className="rounded-full border border-[#c99a45]/30 bg-[#f5eedf]/80 px-2 py-0.5 text-[11px] font-semibold text-[#8b651e]">
-                  {reportStats.published} Reports
+        {/* Content & Governance Directory (4 Cards Grid) */}
+        <div>
+          <h2 className="mb-3.5 text-xs font-bold uppercase tracking-wider text-[#6b7280] dark:text-[#9ca3af]">
+            Content & Governance Directory
+          </h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {/* Team Directory */}
+            <Link
+              href="/admin/team"
+              className="group rounded-2xl border border-[#e6e4dc] dark:border-[#1a432f] bg-white dark:bg-[#0c2419] p-5 shadow-2xs transition-all hover:border-[#124d34] dark:hover:border-[#c99a45] hover:shadow-xs"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#e8f3ee] dark:bg-[#14553a]/40 text-[#124d34] dark:text-[#a7c5b6]">
+                  <UserCheck className="h-4.5 w-4.5" />
+                </div>
+                <span className="rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 px-2 py-0.5 text-[11px] font-bold text-emerald-800 dark:text-emerald-300">
+                  {teamStats.active} Active
                 </span>
               </div>
-            </div>
-            <div className="mt-4">
-              <div className="font-serif text-3xl font-extrabold text-[#0b2e1e]">
-                {reportStats.total + noticeStats.total}
+              <div className="mt-3">
+                <div className="font-serif text-2xl font-bold text-[#0b2e1e] dark:text-white">
+                  {teamStats.total}
+                </div>
+                <div className="text-xs font-medium text-[#6b7280] dark:text-[#9ca3af]">
+                  Officers & Council
+                </div>
               </div>
-              <p className="mt-0.5 text-xs font-medium text-[#6b7280]">
-                Bulletins & Audited Reports
-              </p>
-            </div>
-            <div className="mt-4 border-t border-[#f3f1ea] pt-3 flex items-center justify-between gap-3 text-xs font-semibold text-[#124d34]">
-              <Link
-                href="/admin/notices"
-                className="hover:text-[#0b2e1e] flex items-center gap-1"
-              >
-                <span>Notices</span>
-                <ArrowRight className="h-3 w-3" />
-              </Link>
-              <Link
-                href="/admin/reports"
-                className="hover:text-[#0b2e1e] flex items-center gap-1"
-              >
-                <span>Reports</span>
-                <ArrowRight className="h-3 w-3" />
-              </Link>
+              <div className="mt-3 flex items-center justify-between border-t border-[#f3f1ea] dark:border-[#1a432f] pt-2.5 text-[11px] font-semibold text-[#124d34] dark:text-[#c99a45]">
+                <span>Manage Team</span>
+                <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+              </div>
+            </Link>
+
+            {/* News & Updates */}
+            <Link
+              href="/admin/news"
+              className="group rounded-2xl border border-[#e6e4dc] dark:border-[#1a432f] bg-white dark:bg-[#0c2419] p-5 shadow-2xs transition-all hover:border-[#124d34] dark:hover:border-[#c99a45] hover:shadow-xs"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#e8f3ee] dark:bg-[#14553a]/40 text-[#124d34] dark:text-[#a7c5b6]">
+                  <Newspaper className="h-4.5 w-4.5" />
+                </div>
+                <span className="rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 px-2 py-0.5 text-[11px] font-bold text-emerald-800 dark:text-emerald-300">
+                  {newsStats.published} Live
+                </span>
+              </div>
+              <div className="mt-3">
+                <div className="font-serif text-2xl font-bold text-[#0b2e1e] dark:text-white">
+                  {newsStats.total}
+                </div>
+                <div className="text-xs font-medium text-[#6b7280] dark:text-[#9ca3af]">
+                  Articles & Blogs
+                </div>
+              </div>
+              <div className="mt-3 flex items-center justify-between border-t border-[#f3f1ea] dark:border-[#1a432f] pt-2.5 text-[11px] font-semibold text-[#124d34] dark:text-[#c99a45]">
+                <span>Manage News</span>
+                <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+              </div>
+            </Link>
+
+            {/* Media Gallery */}
+            <Link
+              href="/admin/gallery"
+              className="group rounded-2xl border border-[#e6e4dc] dark:border-[#1a432f] bg-white dark:bg-[#0c2419] p-5 shadow-2xs transition-all hover:border-[#124d34] dark:hover:border-[#c99a45] hover:shadow-xs"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#f5eedf] dark:bg-[#2a2416] text-[#8b651e] dark:text-[#f5d78e]">
+                  <ImageIcon className="h-4.5 w-4.5" />
+                </div>
+                <span className="rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 px-2 py-0.5 text-[11px] font-bold text-emerald-800 dark:text-emerald-300">
+                  {galleryStats.approved} Live
+                </span>
+              </div>
+              <div className="mt-3">
+                <div className="font-serif text-2xl font-bold text-[#0b2e1e] dark:text-white">
+                  {galleryStats.total}
+                </div>
+                <div className="text-xs font-medium text-[#6b7280] dark:text-[#9ca3af]">
+                  Photo Gallery Assets
+                </div>
+              </div>
+              <div className="mt-3 flex items-center justify-between border-t border-[#f3f1ea] dark:border-[#1a432f] pt-2.5 text-[11px] font-semibold text-[#124d34] dark:text-[#c99a45]">
+                <span>Manage Gallery</span>
+                <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+              </div>
+            </Link>
+
+            {/* Notices & Reports */}
+            <div className="group rounded-2xl border border-[#e6e4dc] dark:border-[#1a432f] bg-white dark:bg-[#0c2419] p-5 shadow-2xs transition-all hover:border-[#124d34] dark:hover:border-[#c99a45] hover:shadow-xs">
+              <div className="flex items-center justify-between">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#f5eedf] dark:bg-[#2a2416] text-[#8b651e] dark:text-[#f5d78e]">
+                  <FileText className="h-4.5 w-4.5" />
+                </div>
+                <span className="rounded-full bg-[#f5eedf] dark:bg-[#2a2416] border border-[#c99a45]/30 px-2 py-0.5 text-[11px] font-bold text-[#8b651e] dark:text-[#f5d78e]">
+                  {noticeStats.published + reportStats.published} Active
+                </span>
+              </div>
+              <div className="mt-3">
+                <div className="font-serif text-2xl font-bold text-[#0b2e1e] dark:text-white">
+                  {noticeStats.total + reportStats.total}
+                </div>
+                <div className="text-xs font-medium text-[#6b7280] dark:text-[#9ca3af]">
+                  Notices & Reports
+                </div>
+              </div>
+              <div className="mt-3 flex items-center justify-between border-t border-[#f3f1ea] dark:border-[#1a432f] pt-2.5 text-[11px] font-semibold text-[#124d34] dark:text-[#c99a45]">
+                <Link href="/admin/notices" className="hover:underline">
+                  Notices ({noticeStats.total})
+                </Link>
+                <span>•</span>
+                <Link href="/admin/reports" className="hover:underline">
+                  Reports ({reportStats.total})
+                </Link>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Split Section: Recent Activity Tables */}
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-          {/* Column 1: Recent Inquiries */}
-          <div className="overflow-hidden rounded-2xl border border-[#e6e4dc] bg-white shadow-xs">
-            <div className="flex items-center justify-between border-b border-[#e6e4dc] bg-[#fbfaf6] px-6 py-4">
-              <div>
-                <h2 className="font-serif text-base font-bold text-[#0b2e1e]">
-                  Recent Community Inquiries
-                </h2>
-                <p className="text-xs text-[#6b7280]">
-                  Public contact messages awaiting secretarial response
-                </p>
+        {/* Recent Inquiries & Memberships Activity */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          {/* Recent Inquiries */}
+          <div className="overflow-hidden rounded-2xl border border-[#e6e4dc] dark:border-[#1a432f] bg-white dark:bg-[#0c2419] shadow-xs">
+            <div className="flex items-center justify-between border-b border-[#e6e4dc] dark:border-[#1a432f] bg-[#fbfaf6] dark:bg-[#081e14] px-5 py-3.5">
+              <div className="flex items-center gap-2">
+                <MessageSquare className="h-4 w-4 text-[#124d34] dark:text-[#c99a45]" />
+                <h3 className="font-serif text-sm font-bold text-[#0b2e1e] dark:text-white">
+                  Recent Inquiries
+                </h3>
               </div>
               <Link
                 href="/admin/messages"
-                className="inline-flex items-center gap-1 text-xs font-semibold text-[#124d34] hover:text-[#0b2e1e] hover:underline"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-[#124d34] dark:text-[#c99a45] hover:underline"
               >
                 <span>All Messages</span>
                 <ArrowRight className="h-3 w-3" />
               </Link>
             </div>
 
-            <div className="divide-y divide-[#f3f1ea] px-6">
+            <div className="divide-y divide-[#f3f1ea] dark:divide-[#1a432f]/60 px-5">
               {recentMessages.length === 0 ? (
-                <div className="py-10 text-center text-xs text-[#6b7280]">
-                  No messages received yet.
+                <div className="py-10 text-center">
+                  <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 dark:bg-white/5 text-gray-400">
+                    <Inbox className="h-5 w-5" />
+                  </div>
+                  <p className="mt-2 text-xs text-[#6b7280] dark:text-[#9ca3af]">
+                    No messages received yet.
+                  </p>
                 </div>
               ) : (
                 recentMessages.map((msg) => (
                   <div
                     key={msg.id}
-                    className="flex items-center justify-between gap-4 py-3.5 transition-colors hover:bg-[#fbfaf6]"
+                    className="flex items-center justify-between gap-3 py-3 transition-colors hover:bg-[#fbfaf6] dark:hover:bg-[#123624]/40"
                   >
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="truncate font-semibold text-sm text-[#1c2420]">
+                        <span className="truncate font-semibold text-xs sm:text-sm text-[#1c2420] dark:text-[#e2f0e8]">
                           {msg.name}
                         </span>
                         <span
-                          className={`rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
+                          className={`rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider ${
                             msg.status === "new"
-                              ? "bg-red-100 text-red-800"
-                              : "bg-gray-100 text-gray-700"
+                              ? "bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 border border-rose-200 dark:border-rose-900"
+                              : "bg-gray-100 dark:bg-white/5 text-gray-700 dark:text-gray-300"
                           }`}
                         >
                           {msg.status}
                         </span>
                       </div>
-                      <div className="mt-0.5 flex items-center gap-3 text-xs text-[#6b7280]">
+                      <div className="mt-1 flex items-center gap-2.5 text-[11px] text-[#6b7280] dark:text-[#9ca3af]">
                         <a
                           href={`tel:${msg.phone}`}
-                          className="flex items-center gap-1 text-[#124d34] hover:underline"
+                          className="flex items-center gap-1 text-[#124d34] dark:text-[#a7c5b6] hover:underline font-mono"
                         >
                           <Phone className="h-3 w-3" />
                           <span>{msg.phone}</span>
@@ -486,7 +447,7 @@ export default async function AdminDashboardPage() {
 
                     <Link
                       href="/admin/messages"
-                      className="rounded-lg border border-[#e6e4dc] bg-white px-2.5 py-1 text-xs font-medium text-[#124d34] shadow-2xs hover:bg-[#f5eedf]"
+                      className="rounded-lg border border-[#e6e4dc] dark:border-[#1a432f] bg-white dark:bg-[#143d28] px-2.5 py-1 text-xs font-semibold text-[#124d34] dark:text-[#e2f0e8] shadow-2xs hover:bg-[#f5eedf] dark:hover:bg-[#1a4f34]"
                     >
                       View
                     </Link>
@@ -496,59 +457,62 @@ export default async function AdminDashboardPage() {
             </div>
           </div>
 
-          {/* Column 2: Recent Memberships */}
-          <div className="overflow-hidden rounded-2xl border border-[#e6e4dc] bg-white shadow-xs">
-            <div className="flex items-center justify-between border-b border-[#e6e4dc] bg-[#fbfaf6] px-6 py-4">
-              <div>
-                <h2 className="font-serif text-base font-bold text-[#0b2e1e]">
-                  Recent Membership Requests
-                </h2>
-                <p className="text-xs text-[#6b7280]">
-                  Mahallah residents registered for funeral welfare coverage
-                </p>
+          {/* Recent Memberships */}
+          <div className="overflow-hidden rounded-2xl border border-[#e6e4dc] dark:border-[#1a432f] bg-white dark:bg-[#0c2419] shadow-xs">
+            <div className="flex items-center justify-between border-b border-[#e6e4dc] dark:border-[#1a432f] bg-[#fbfaf6] dark:bg-[#081e14] px-5 py-3.5">
+              <div className="flex items-center gap-2">
+                <Users className="h-4 w-4 text-[#8b651e] dark:text-[#f5d78e]" />
+                <h3 className="font-serif text-sm font-bold text-[#0b2e1e] dark:text-white">
+                  Recent Memberships
+                </h3>
               </div>
               <Link
                 href="/admin/memberships"
-                className="inline-flex items-center gap-1 text-xs font-semibold text-[#124d34] hover:text-[#0b2e1e] hover:underline"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-[#124d34] dark:text-[#c99a45] hover:underline"
               >
                 <span>All Members</span>
                 <ArrowRight className="h-3 w-3" />
               </Link>
             </div>
 
-            <div className="divide-y divide-[#f3f1ea] px-6">
+            <div className="divide-y divide-[#f3f1ea] dark:divide-[#1a432f]/60 px-5">
               {recentMemberships.length === 0 ? (
-                <div className="py-10 text-center text-xs text-[#6b7280]">
-                  No membership applications submitted yet.
+                <div className="py-10 text-center">
+                  <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 dark:bg-white/5 text-gray-400">
+                    <Inbox className="h-5 w-5" />
+                  </div>
+                  <p className="mt-2 text-xs text-[#6b7280] dark:text-[#9ca3af]">
+                    No membership applications submitted yet.
+                  </p>
                 </div>
               ) : (
                 recentMemberships.map((mem) => (
                   <div
                     key={mem.id}
-                    className="flex items-center justify-between gap-4 py-3.5 transition-colors hover:bg-[#fbfaf6]"
+                    className="flex items-center justify-between gap-3 py-3 transition-colors hover:bg-[#fbfaf6] dark:hover:bg-[#123624]/40"
                   >
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="truncate font-semibold text-sm text-[#1c2420]">
+                        <span className="truncate font-semibold text-xs sm:text-sm text-[#1c2420] dark:text-[#e2f0e8]">
                           {mem.full_name}
                         </span>
                         <span
-                          className={`rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
+                          className={`rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider ${
                             mem.status === "pending"
-                              ? "bg-amber-100 text-amber-800"
-                              : "bg-emerald-100 text-emerald-800"
+                              ? "bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-900"
+                              : "bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900"
                           }`}
                         >
                           {mem.status}
                         </span>
-                        <span className="rounded bg-[#f5eedf] px-1.5 py-0.5 text-[10px] font-medium text-[#8b651e] capitalize">
+                        <span className="rounded bg-[#f5eedf] dark:bg-[#2a2416] px-1.5 py-0.5 text-[9px] font-semibold text-[#8b651e] dark:text-[#f5d78e] capitalize">
                           {mem.plan}
                         </span>
                       </div>
-                      <div className="mt-0.5 flex items-center gap-3 text-xs text-[#6b7280]">
+                      <div className="mt-1 flex items-center gap-2.5 text-[11px] text-[#6b7280] dark:text-[#9ca3af]">
                         <a
                           href={`tel:${mem.phone}`}
-                          className="flex items-center gap-1 text-[#124d34] hover:underline"
+                          className="flex items-center gap-1 text-[#124d34] dark:text-[#a7c5b6] hover:underline font-mono"
                         >
                           <Phone className="h-3 w-3" />
                           <span>{mem.phone}</span>
@@ -563,38 +527,13 @@ export default async function AdminDashboardPage() {
 
                     <Link
                       href="/admin/memberships"
-                      className="rounded-lg border border-[#e6e4dc] bg-white px-2.5 py-1 text-xs font-medium text-[#124d34] shadow-2xs hover:bg-[#f5eedf]"
+                      className="rounded-lg border border-[#e6e4dc] dark:border-[#1a432f] bg-white dark:bg-[#143d28] px-2.5 py-1 text-xs font-semibold text-[#124d34] dark:text-[#e2f0e8] shadow-2xs hover:bg-[#f5eedf] dark:hover:bg-[#1a4f34]"
                     >
                       Review
                     </Link>
                   </div>
                 ))
               )}
-            </div>
-          </div>
-        </div>
-
-        {/* Institutional Society Reference Footer Strip */}
-        <div className="mt-8 rounded-2xl border border-[#e6e4dc] bg-[#fbfaf6] p-5">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-start gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#124d34] text-white">
-                <CheckCircle2 className="h-5 w-5 text-[#c99a45]" />
-              </div>
-              <div>
-                <h3 className="font-serif text-sm font-bold text-[#0b2e1e]">
-                  Official Society Registration & Verification
-                </h3>
-                <p className="text-xs text-[#4b5563]">
-                  Registered under Voluntary Social Service Organizations (VSSO) Act No. 31 of 1980 • Divisional Secretariat Thambalagamuwa • Reg: DS/TH/SS/VSSO/2023/01
-                </p>
-              </div>
-            </div>
-
-            <div className="flex shrink-0 items-center gap-2 text-xs">
-              <span className="rounded-md border border-[#c99a45]/30 bg-white px-2.5 py-1 font-mono font-medium text-[#8b651e]">
-                Mullipothana, LK
-              </span>
             </div>
           </div>
         </div>
