@@ -6,6 +6,13 @@ export interface SiteAssetConfig {
 
   // Homepage
   heroBg: string;
+  heroSlide1: string;
+  heroSlide2: string;
+  heroSlide3: string;
+  heroSlide4: string;
+  heroSlide5: string;
+  heroSlide6: string;
+  heroSlide7: string;
   aboutGhusl: string;
   aboutWater: string;
   cemeteryVolunteers: string;
@@ -46,7 +53,14 @@ export interface SiteAssetConfig {
 
 export const DEFAULT_SITE_ASSETS: SiteAssetConfig = {
   logo: "/images/bjws logo.webp",
-  heroBg: "/images/gallery/home-about.webp",
+  heroBg: "/images/hero/hero-banner-1.webp",
+  heroSlide1: "/images/hero/hero-banner-1.webp",
+  heroSlide2: "/images/hero/hero-banner-2.webp",
+  heroSlide3: "/images/hero/hero-banner-3.webp",
+  heroSlide4: "/images/hero/hero-banner-4.webp",
+  heroSlide5: "/images/hero/hero-banner-5.webp",
+  heroSlide6: "/images/hero/hero-banner-6.webp",
+  heroSlide7: "/images/hero/hero-banner-7.webp",
   aboutGhusl: "/images/gallery/home-about.webp",
   aboutWater: "/images/gallery/home-about-banner.webp",
   cemeteryVolunteers: "/images/gallery/home-service-community-shramadana-campaigns.webp",

@@ -9,6 +9,7 @@ import { Link } from "@/i18n/routing";
 import { IslamicPattern } from "@/components/ui/islamic-pattern";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
 import { ScrollReveal, ScrollRevealGroup } from "@/components/ui/scroll-reveal";
+import { HeroSlideshow } from "@/components/home/hero-slideshow";
 import {
   PhoneCall,
   Phone,
@@ -214,100 +215,128 @@ export default async function HomePage({
     },
   ];
 
+  const heroSlides = [
+    {
+      src: assets.heroSlide1 || "/images/hero/hero-banner-1.webp",
+      alt: "Buhary Janaza Welfare Society Official Community Services & Funeral Care, Mullipothana",
+      label: "Official Society",
+    },
+    {
+      src: assets.heroSlide2 || "/images/hero/hero-banner-2.webp",
+      alt: "24/7 Dignified Islamic Janaza, Washing, Shrouding & Funeral Assistance Services",
+      label: "24/7 Janaza Care",
+    },
+    {
+      src: assets.heroSlide3 || "/images/hero/hero-banner-3.webp",
+      alt: "Mahallah Cemetery Grounds Preservation, Landscaping and Cleanliness Upkeep",
+      label: "Cemetery Upkeep",
+    },
+    {
+      src: assets.heroSlide4 || "/images/hero/hero-banner-4.webp",
+      alt: "Community Shramadana Cleanliness and Youth Volunteering Campaigns",
+      label: "Community Shramadana",
+    },
+    {
+      src: assets.heroSlide5 || "/images/hero/hero-banner-5.webp",
+      alt: "Essential Needs Food Packs & Ongoing Welfare Relief for Vulnerable Families",
+      label: "Welfare & Relief",
+    },
+    {
+      src: assets.heroSlide6 || "/images/hero/hero-banner-6.webp",
+      alt: "Youth Sunnah Ghusl, Kafan & Funeral Awareness Educational Workshops",
+      label: "Sunnah Workshops",
+    },
+    {
+      src: assets.heroSlide7 || "/images/hero/hero-banner-7.webp",
+      alt: "Kafalah Orphan Care and Vulnerable Household Sustenance Sponsorship",
+      label: "Kafalah Sponsorship",
+    },
+  ];
+
   return (
     <>
       <JsonLd data={getOrganizationJsonLd()} />
       <JsonLd data={getServicesJsonLd(locale)} />
 
-      {/* 1. Full-Bleed Photo Hero with Dark Green Overlay */}
+      {/* 1. Full-Bleed Photo Hero with Modern Cinematic Slideshow Background */}
       <section className="relative overflow-hidden bg-[#072115] text-white">
-        {/* Real photo background with next/image */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src={assets.heroBg}
-            alt="BJWS Community Service at Cemetery Grounds, Mullipothana"
-            fill
-            priority
-            quality={85}
-            sizes="100vw"
-            className="object-cover object-center"
-          />
-          {/* Deep evergreen gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#062115]/95 via-[#0b2e1e]/90 to-[#072518]/92" />
-          <div className="absolute inset-0 bg-radial-at-c from-transparent via-transparent to-black/30 pointer-events-none" />
-        </div>
+        {/* Modern Cinematic Hero Background Slideshow (7 Slides, 5s hold, smooth crossfade & Ken Burns) */}
+        <HeroSlideshow slides={heroSlides} intervalMs={5000} />
 
         {/* Authentic Islamic geometric pattern */}
         <IslamicPattern
-          opacity={0.06}
+          opacity={0.035}
           className="text-[#d4a359] z-10 pointer-events-none"
         />
 
-        {/* Hero Content */}
+        {/* Hero Content with Smooth Entrance Reveal */}
         <div className="relative z-20 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-20 sm:pt-28 lg:pt-36 pb-32 sm:pb-40 lg:pb-44">
-          <div className="max-w-3xl">
+          <ScrollReveal variant="fade-up" className="max-w-3xl">
             {/* Eyebrow badge */}
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-950/80 px-4 py-1.5 text-xs font-semibold text-[#d4a359] shadow-sm backdrop-blur-xs">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#d4a359]" />
-              <span>{t("heroEyebrow")}</span>
+            <div className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-emerald-400/30 bg-emerald-950/80 px-4 py-1.5 text-xs font-semibold text-[#d4af37] shadow-lg backdrop-blur-md">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#d4af37] opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#d4af37]" />
+              </span>
+              <span className="tracking-wide">{t("heroEyebrow")}</span>
             </div>
 
             {/* Display Headline */}
-            <h1 className="font-display text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.14]">
+            <h1 className="font-display text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.14] drop-shadow-[0_2px_14px_rgba(0,0,0,0.65)]">
               {t("heroTitle")}
             </h1>
 
-            {/* Mission / Supporting line */}
-            <p className="mt-5 text-lg sm:text-xl text-emerald-100/90 font-medium leading-relaxed">
-              {t("heroMission")}
-            </p>
-
-            <p className="mt-3 text-sm sm:text-base text-emerald-200/75 leading-relaxed">
-              {t("aboutSectionLead")}
-            </p>
+            {/* Mission / Supporting line with Gold Accent Border */}
+            <div className="mt-6 border-l-2 border-[#d4af37]/70 pl-4 py-0.5">
+              <p className="text-lg sm:text-xl text-emerald-50 font-medium leading-relaxed drop-shadow-[0_1px_8px_rgba(0,0,0,0.6)]">
+                {t("heroMission")}
+              </p>
+              <p className="mt-2 text-sm sm:text-base text-emerald-100/85 leading-relaxed drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)]">
+                {t("aboutSectionLead")}
+              </p>
+            </div>
 
             {/* Two CTAs */}
             <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
               <Link href="/membership" className="w-full sm:w-auto">
                 <button
                   type="button"
-                  className="w-full sm:w-auto cursor-pointer inline-flex items-center justify-center gap-2.5 rounded-md bg-[#c99a45] px-7 py-3.5 text-sm sm:text-base font-bold text-[#072015] shadow-lg transition-all duration-200 hover:bg-[#b88937] hover:shadow-xl hover:-translate-y-0.5"
+                  className="relative overflow-hidden group/btn w-full sm:w-auto cursor-pointer inline-flex items-center justify-center gap-2.5 rounded-md bg-gradient-to-r from-[#d4af37] via-[#c99a45] to-[#b88937] hover:from-[#e5c158] hover:to-[#c99a45] px-7 py-3.5 text-sm sm:text-base font-bold text-[#072015] shadow-lg shadow-black/30 transition-all duration-300 hover:shadow-xl hover:shadow-[#d4af37]/25 hover:-translate-y-0.5"
                 >
+                  <span className="absolute inset-0 w-1/2 h-full bg-white/20 skew-x-12 -translate-x-full group-hover/btn:translate-x-[300%] transition-transform duration-1000 ease-out pointer-events-none" />
                   <Users className="h-4 w-4" />
                   <span>{t("joinUsButton")}</span>
-                  <ArrowRight className="h-4 w-4" />
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
                 </button>
               </Link>
 
               <Link href="/donate" className="w-full sm:w-auto">
                 <button
                   type="button"
-                  className="w-full sm:w-auto cursor-pointer inline-flex items-center justify-center gap-2.5 rounded-md border-2 border-white/80 bg-white/10 px-7 py-3.5 text-sm sm:text-base font-semibold text-white shadow-sm backdrop-blur-xs transition-all duration-200 hover:border-white hover:bg-white/20 hover:-translate-y-0.5"
+                  className="w-full sm:w-auto cursor-pointer inline-flex items-center justify-center gap-2.5 rounded-md border-2 border-white/80 bg-white/10 hover:bg-white/20 hover:border-white px-7 py-3.5 text-sm sm:text-base font-semibold text-white shadow-sm backdrop-blur-md transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
                 >
-                  <Heart className="h-4 w-4 fill-white/20" />
+                  <Heart className="h-4 w-4 fill-white/20 text-[#d4af37]" />
                   <span>{t("supportUsButton")}</span>
                 </button>
               </Link>
             </div>
 
-            {/* Trust line */}
-            <div className="mt-8 sm:mt-12 flex flex-wrap items-center gap-x-4 sm:gap-x-6 gap-y-2 border-t border-emerald-800/40 pt-5 sm:pt-6 text-xs font-medium text-emerald-200/70">
-              <span className="inline-flex items-center gap-1.5">
-                <ShieldCheck className="h-3.5 w-3.5 text-[#c99a45]" />
+            {/* Modern Glassmorphism Trust Badges */}
+            <div className="mt-8 sm:mt-12 flex flex-wrap items-center gap-2.5 sm:gap-3 border-t border-white/15 pt-5 sm:pt-6">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-black/40 backdrop-blur-md px-3.5 py-1.5 text-xs font-semibold text-white/95 border border-white/15 shadow-sm">
+                <ShieldCheck className="h-3.5 w-3.5 text-[#d4af37]" />
                 {tCommon("regNo")}
               </span>
-              <span className="hidden sm:inline text-emerald-700/60">•</span>
-              <span className="inline-flex items-center gap-1.5">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-black/40 backdrop-blur-md px-3.5 py-1.5 text-xs font-semibold text-white/95 border border-white/15 shadow-sm">
                 <MapPin className="h-3.5 w-3.5 text-emerald-300" />
                 {tCommon("location")}
               </span>
-              <span className="hidden sm:inline text-emerald-700/60">•</span>
-              <span className="inline-flex items-center gap-1.5">
-                <Clock className="h-3.5 w-3.5 text-emerald-300" />
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-black/40 backdrop-blur-md px-3.5 py-1.5 text-xs font-semibold text-white/95 border border-white/15 shadow-sm">
+                <Clock className="h-3.5 w-3.5 text-[#d4af37]" />
                 {tCommon("foundedYear")}
               </span>
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
@@ -858,7 +887,7 @@ export default async function HomePage({
         </div>
 
         <IslamicPattern
-          opacity={0.06}
+          opacity={0.035}
           className="text-[#d4a359] z-10 pointer-events-none"
         />
 

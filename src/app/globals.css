@@ -312,3 +312,13 @@
     transition: none !important;
   }
 }
+
+/* Hero Slideshow Progress Bar Animation */
+@keyframes heroSlideProgress {
+  0% {
+    transform: scaleX(0);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
