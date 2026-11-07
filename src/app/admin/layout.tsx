@@ -136,7 +136,7 @@ export default async function AdminLayout({
 
                   {/* Live Public Site Button */}
                   <Link
-                    href="/"
+                    href="/en"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 rounded-lg border border-[#1a432f] bg-[#0b2e1e]/60 px-2.5 py-1.5 text-xs font-medium text-[#d1fae5] transition-colors hover:border-[#c99a45]/40 hover:bg-[#124d34] hover:text-white"

@@ -118,13 +118,16 @@ export function ScrollRevealGroup({
     <Component className={cn(className)} {...props}>
       {React.Children.map(children, (child, index) => {
         if (!React.isValidElement(child)) return child;
+        const childElement = child as React.ReactElement<{ className?: string }>;
         return (
           <ScrollReveal
             variant={variant}
             delay={Math.min((index + 1) * staggerMs, 400)}
-            className="h-full flex flex-col"
+            className="h-full w-full flex flex-col flex-1"
           >
-            {child}
+            {React.cloneElement(childElement, {
+              className: cn(childElement.props.className, "h-full w-full flex-1"),
+            })}
           </ScrollReveal>
         );
       })}

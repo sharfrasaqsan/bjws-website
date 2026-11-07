@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 
 export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || "https://bjws.org";
+  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || "https://buharyjanazawelfaresociety.org";
 
-export const LOCALES = ["ta", "en", "si"] as const;
+export const LOCALES = ["en", "ta", "si"] as const;
 export type Locale = (typeof LOCALES)[number];
 
-export const DEFAULT_LOCALE: Locale = "ta";
+export const DEFAULT_LOCALE: Locale = "en";
 
 // BCP 47 locale mappings for Open Graph and metadata
 export const OG_LOCALES: Record<Locale, string> = {
@@ -58,7 +58,7 @@ export function buildPageMetadata({
     "si-LK": `${SITE_URL}/si${cleanPath}`,
   };
 
-  const currentOgLocale = OG_LOCALES[locale as Locale] || "ta_LK";
+  const currentOgLocale = OG_LOCALES[locale as Locale] || "en_LK";
   const alternateOgLocales = Object.values(OG_LOCALES).filter(
     (l) => l !== currentOgLocale
   );
@@ -137,13 +137,10 @@ export function buildPageMetadata({
     icons: {
       icon: [
         { url: "/brand/logo.svg", type: "image/svg+xml" },
-        { url: "/favicon.ico", sizes: "any" },
+        { url: "/favicon.svg", type: "image/svg+xml" },
       ],
       shortcut: "/brand/logo.svg",
-      apple: [
-        { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
-        { url: "/brand/logo.svg", type: "image/svg+xml" },
-      ],
+      apple: "/brand/logo.svg",
     },
   };
 }

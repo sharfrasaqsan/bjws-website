@@ -12,8 +12,8 @@ interface LanguageSwitcherProps {
 }
 
 const languages: { code: Locale; label: string; nativeName: string }[] = [
-  { code: "ta", label: "Tamil", nativeName: "தமிழ்" },
   { code: "en", label: "English", nativeName: "English" },
+  { code: "ta", label: "Tamil", nativeName: "தமிழ்" },
   { code: "si", label: "Sinhala", nativeName: "සිංහල" },
 ];
 

@@ -154,30 +154,32 @@ export function TeamGrid({ members, locale, translations }: TeamGridProps) {
               {/* Card Body */}
               <div className="flex flex-1 flex-col justify-between p-4 sm:p-5 gap-3.5">
                 {/* Meta details */}
-                <div className="space-y-2">
+                <div className="space-y-2 flex-1">
                   {/* Address */}
                   <div className="flex items-start gap-2 text-xs text-text-muted">
                     <MapPin className="h-3.5 w-3.5 shrink-0 text-[#c99a45] mt-0.5" />
-                    <span className="leading-relaxed line-clamp-2">{member.address}</span>
+                    <span className="leading-relaxed line-clamp-2 min-h-[2.5rem]">{member.address}</span>
                   </div>
 
                   {/* Email contact if available */}
-                  {member.email && (
-                    <div className="flex items-center gap-2 text-xs text-text-muted truncate">
-                      <Mail className="h-3.5 w-3.5 shrink-0 text-[#c99a45]" />
-                      <a
-                        href={`mailto:${member.email}`}
-                        className="truncate hover:text-primary transition-colors font-medium text-[11px]"
-                        title={member.email}
-                      >
-                        {member.email}
-                      </a>
-                    </div>
-                  )}
+                  <div className="flex items-center gap-2 text-xs text-text-muted min-h-[1.25rem]">
+                    {member.email ? (
+                      <>
+                        <Mail className="h-3.5 w-3.5 shrink-0 text-[#c99a45]" />
+                        <a
+                          href={`mailto:${member.email}`}
+                          className="truncate hover:text-primary transition-colors font-medium text-[11px]"
+                          title={member.email}
+                        >
+                          {member.email}
+                        </a>
+                      </>
+                    ) : null}
+                  </div>
                 </div>
 
                 {/* Direct Action Buttons */}
-                <div className="border-t border-border pt-3">
+                <div className="border-t border-border pt-3 mt-auto">
                   <div className="flex flex-wrap items-center gap-2">
                     {/* Call Direct or Inactive Notice */}
                     {member.isInactive ? (

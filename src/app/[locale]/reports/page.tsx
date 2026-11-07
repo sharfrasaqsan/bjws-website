@@ -161,9 +161,9 @@ export default async function ReportsPage({
                 {reports.map((report) => (
                   <div
                     key={report.id}
-                    className="flex h-full flex-col justify-between rounded-3xl border border-[#0b2e1e]/10 bg-white p-6 sm:p-8 shadow-xs transition-all hover:border-[#0b2e1e]/25 hover:shadow-md"
+                    className="flex h-full flex-1 flex-col justify-between rounded-3xl border border-[#0b2e1e]/10 bg-white p-6 sm:p-8 shadow-xs transition-all hover:border-[#0b2e1e]/25 hover:shadow-md"
                   >
-                    <div>
+                    <div className="flex flex-col flex-1">
                       <div className="mb-4 flex items-center justify-between gap-3">
                         <span className="rounded-full bg-[#0b2e1e] px-3 py-1 font-display text-xs font-bold text-[#d4af37]">
                           {report.year} Annual Report
@@ -174,7 +174,7 @@ export default async function ReportsPage({
                           </span>
                         )}
                       </div>
-                      <div className="flex items-start gap-3">
+                      <div className="flex items-start gap-3 flex-1">
                         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#f4efe6] text-[#0b2e1e]">
                           <FileText className="h-5 w-5" />
                         </div>
@@ -189,7 +189,7 @@ export default async function ReportsPage({
                       </div>
                     </div>
 
-                    <div className="mt-6 flex items-center justify-between border-t border-[#0b2e1e]/10 pt-4">
+                    <div className="mt-auto flex items-center justify-between border-t border-[#0b2e1e]/10 pt-5">
                       <span className="flex items-center gap-1.5 text-xs font-medium text-[#6b7280]">
                         <FileCheck className="h-3.5 w-3.5 text-[#0b2e1e]" />
                         Verified Official Copy

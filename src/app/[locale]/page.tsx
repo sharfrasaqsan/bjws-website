@@ -316,16 +316,16 @@ export default async function HomePage({
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <ScrollRevealGroup
             staggerMs={90}
-            className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6"
+            className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 items-stretch"
           >
             {/* Item 1: Report a Janaza (24/7 Immediate Contact 077 622 7323) */}
-            <div className="relative overflow-hidden rounded-xl bg-[#0c3121] p-6 lg:p-7 text-white shadow-xl border border-emerald-700/50 transition-all duration-200 hover:border-[#c99a45]/60 hover:-translate-y-1 group">
+            <div className="relative overflow-hidden rounded-xl bg-[#0c3121] p-6 lg:p-7 text-white shadow-xl border border-emerald-700/50 transition-all duration-200 hover:border-[#c99a45]/60 hover:-translate-y-1 group flex flex-col justify-between h-full flex-1">
               <IslamicPattern
                 opacity={0.05}
                 className="text-[#c99a45] pointer-events-none"
               />
-              <div className="relative z-10 flex flex-col h-full justify-between">
-                <div>
+              <div className="relative z-10 flex flex-col h-full justify-between flex-1">
+                <div className="flex flex-col flex-1">
                   <div className="flex items-center justify-between gap-2 mb-4">
                     <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#c99a45] text-[#072015] shadow-sm">
                       <PhoneCall className="h-6 w-6" />
@@ -336,7 +336,7 @@ export default async function HomePage({
                     </span>
                   </div>
 
-                  <h2 className="font-display text-xl font-bold tracking-tight text-white">
+                  <h2 className="font-display text-xl font-bold tracking-tight text-white min-h-[3.25rem] leading-snug line-clamp-2">
                     {t("infoBarItem1Title")}
                   </h2>
                   <p className="mt-2 text-xs sm:text-sm text-emerald-100/85 leading-relaxed">
@@ -346,7 +346,7 @@ export default async function HomePage({
 
                 <a
                   href="tel:+94776227323"
-                  className="mt-6 inline-flex items-center justify-between rounded-md bg-[#c99a45] hover:bg-[#b88937] text-[#072015] font-bold px-4 py-2.5 text-xs sm:text-sm shadow-sm transition-all duration-150"
+                  className="mt-auto pt-6 inline-flex items-center justify-between rounded-md bg-[#c99a45] hover:bg-[#b88937] text-[#072015] font-bold px-4 py-2.5 text-xs sm:text-sm shadow-sm transition-all duration-150"
                 >
                   <span className="inline-flex items-center gap-1.5">
                     <Phone className="h-4 w-4" />
@@ -358,8 +358,8 @@ export default async function HomePage({
             </div>
 
             {/* Item 2: Become a Member (LKR 50/mo or LKR 500/yr) */}
-            <div className="rounded-xl bg-surface p-6 lg:p-7 text-foreground shadow-xl border border-[#e6e4dc] transition-all duration-200 hover:border-[#124d34]/40 hover:-translate-y-1 group flex flex-col justify-between">
-              <div>
+            <div className="rounded-xl bg-surface p-6 lg:p-7 text-foreground shadow-xl border border-[#e6e4dc] transition-all duration-200 hover:border-[#124d34]/40 hover:-translate-y-1 group flex flex-col justify-between h-full flex-1">
+              <div className="flex flex-col flex-1">
                 <div className="flex items-center justify-between gap-2 mb-4">
                   <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#124d34] text-white shadow-2xs">
                     <Users className="h-6 w-6" />
@@ -369,7 +369,7 @@ export default async function HomePage({
                   </span>
                 </div>
 
-                <h2 className="font-display text-xl font-bold tracking-tight text-[#0b2e1e]">
+                <h2 className="font-display text-xl font-bold tracking-tight text-[#0b2e1e] min-h-[3.25rem] leading-snug line-clamp-2">
                   {t("infoBarItem2Title")}
                 </h2>
                 <p className="mt-2 text-xs sm:text-sm text-text-muted leading-relaxed">
@@ -379,7 +379,7 @@ export default async function HomePage({
 
               <Link
                 href="/membership"
-                className="mt-6 inline-flex items-center justify-between rounded-md bg-[#124d34] hover:bg-[#0b2e1e] text-white font-semibold px-4 py-2.5 text-xs sm:text-sm shadow-2xs transition-all duration-150"
+                className="mt-auto pt-6 inline-flex items-center justify-between rounded-md bg-[#124d34] hover:bg-[#0b2e1e] text-white font-semibold px-4 py-2.5 text-xs sm:text-sm shadow-2xs transition-all duration-150"
               >
                 <span>{t("infoBarItem2Cta")}</span>
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -387,8 +387,8 @@ export default async function HomePage({
             </div>
 
             {/* Item 3: Relief & Humanitarian Aid */}
-            <div className="rounded-xl bg-surface p-6 lg:p-7 text-foreground shadow-xl border border-[#e6e4dc] transition-all duration-200 hover:border-[#124d34]/40 hover:-translate-y-1 group flex flex-col justify-between">
-              <div>
+            <div className="rounded-xl bg-surface p-6 lg:p-7 text-foreground shadow-xl border border-[#e6e4dc] transition-all duration-200 hover:border-[#124d34]/40 hover:-translate-y-1 group flex flex-col justify-between h-full flex-1">
+              <div className="flex flex-col flex-1">
                 <div className="flex items-center justify-between gap-2 mb-4">
                   <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#fef3c7] text-[#92400e] border border-amber-300 shadow-2xs">
                     <HeartHandshake className="h-6 w-6" />
@@ -398,7 +398,7 @@ export default async function HomePage({
                   </span>
                 </div>
 
-                <h2 className="font-display text-xl font-bold tracking-tight text-[#0b2e1e]">
+                <h2 className="font-display text-xl font-bold tracking-tight text-[#0b2e1e] min-h-[3.25rem] leading-snug line-clamp-2">
                   {t("infoBarItem3Title")}
                 </h2>
                 <p className="mt-2 text-xs sm:text-sm text-text-muted leading-relaxed">
@@ -408,7 +408,7 @@ export default async function HomePage({
 
               <Link
                 href="/services"
-                className="mt-6 inline-flex items-center justify-between rounded-md border border-[#124d34] text-[#124d34] hover:bg-[#124d34] hover:text-white font-semibold px-4 py-2.5 text-xs sm:text-sm transition-all duration-150"
+                className="mt-auto pt-6 inline-flex items-center justify-between rounded-md border border-[#124d34] text-[#124d34] hover:bg-[#124d34] hover:text-white font-semibold px-4 py-2.5 text-xs sm:text-sm transition-all duration-150"
               >
                 <span>{t("infoBarItem3Cta")}</span>
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -516,36 +516,38 @@ export default async function HomePage({
                 </Link>
               </div>
 
-              <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+              <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 items-stretch">
                 {keyLeaders.map((leader, idx) => (
                   <div
                     key={idx}
-                    className={`rounded-xl p-4 sm:p-5 transition-all ${
+                    className={`rounded-xl p-4 sm:p-5 transition-all flex h-full flex-1 flex-col justify-between ${
                       leader.isEmergency
                         ? "bg-[#0b2e1e] text-white border-2 border-[#c99a45]/60 shadow-md"
                         : "bg-[#fbfaf6] border border-[#e6e4dc] text-[#1c2420]"
                     }`}
                   >
-                    <div className="flex items-center justify-between gap-2 mb-2">
-                      <span
-                        className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
-                          leader.isEmergency
-                            ? "bg-[#c99a45] text-[#072015]"
-                            : "bg-[#e8f3ee] text-[#124d34]"
-                        }`}
-                      >
-                        {leader.role}
-                      </span>
-                    </div>
-                    <div className="font-display text-base sm:text-lg font-bold">
-                      {leader.name}
+                    <div className="flex flex-col flex-1">
+                      <div className="flex items-center justify-between gap-2 mb-2">
+                        <span
+                          className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
+                            leader.isEmergency
+                              ? "bg-[#c99a45] text-[#072015]"
+                              : "bg-[#e8f3ee] text-[#124d34]"
+                          }`}
+                        >
+                          {leader.role}
+                        </span>
+                      </div>
+                      <div className="font-display text-base sm:text-lg font-bold min-h-[2.5rem] flex items-center">
+                        {leader.name}
+                      </div>
                     </div>
                     <a
                       href={`tel:${leader.tel}`}
-                      className={`mt-4 inline-flex items-center gap-2 text-xs sm:text-sm font-bold transition-all ${
+                      className={`mt-auto pt-4 inline-flex items-center gap-2 text-xs sm:text-sm font-bold transition-all border-t ${
                         leader.isEmergency
-                          ? "text-[#d4a359] hover:text-white"
-                          : "text-[#124d34] hover:text-[#0b2e1e]"
+                          ? "text-[#d4a359] hover:text-white border-white/10"
+                          : "text-[#124d34] hover:text-[#0b2e1e] border-[#e6e4dc]"
                       }`}
                     >
                       <Phone className="h-3.5 w-3.5" />
@@ -584,10 +586,10 @@ export default async function HomePage({
             {coreServices.map((service, idx) => (
               <div
                 key={service.id || idx}
-                className="group flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-[#e6e4dc] bg-surface shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg"
+                className="group flex h-full flex-1 flex-col justify-between overflow-hidden rounded-2xl border border-[#e6e4dc] bg-surface shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg"
               >
                 {/* Photo with Aspect Ratio for Zero CLS */}
-                <div className="relative aspect-[16/10] overflow-hidden bg-muted">
+                <div className="relative aspect-[16/10] overflow-hidden bg-muted shrink-0">
                   <Image
                     src={formatGoogleDriveImageUrl(service.image)}
                     alt={service.title}
@@ -607,21 +609,23 @@ export default async function HomePage({
                 {/* Card Content */}
                 <div className="p-5 sm:p-6 flex flex-col justify-between flex-1">
                   <div className="flex flex-col flex-1">
-                    <h3 className="font-display text-base sm:text-lg font-bold text-[#0b2e1e] group-hover:text-primary transition-colors leading-snug min-h-[3.25rem] line-clamp-2">
+                    <h3 className="font-display text-base sm:text-lg font-bold text-[#0b2e1e] group-hover:text-primary transition-colors leading-snug min-h-[3rem] line-clamp-2">
                       {service.title}
                     </h3>
-                    <p className="mt-2 text-xs sm:text-sm text-text-muted leading-relaxed line-clamp-3 flex-1">
+                    <p className="mt-2 text-xs sm:text-sm text-text-muted leading-relaxed line-clamp-3">
                       {service.desc}
                     </p>
                   </div>
 
-                  <Link
-                    href="/services"
-                    className="mt-5 inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-primary hover:text-primary-hover group/link"
-                  >
-                    <span>{tCommon("learnMore")}</span>
-                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/link:translate-x-1" />
-                  </Link>
+                  <div className="mt-auto pt-5 border-t border-[#e6e4dc]/60">
+                    <Link
+                      href="/services"
+                      className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-primary hover:text-primary-hover group/link"
+                    >
+                      <span>{tCommon("learnMore")}</span>
+                      <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/link:translate-x-1" />
+                    </Link>
+                  </div>
                 </div>
               </div>
             ))}
@@ -660,56 +664,56 @@ export default async function HomePage({
 
           <ScrollRevealGroup
             staggerMs={80}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 items-stretch"
           >
             {/* Stat 1: Funerals Arranged */}
-            <div className="relative overflow-hidden rounded-2xl bg-white/[0.04] border border-white/10 p-5 sm:p-6 backdrop-blur-xs transition-all duration-300 hover:bg-white/[0.07] hover:border-[#d4a359]/40 group flex flex-col justify-between">
-              <div>
+            <div className="relative overflow-hidden rounded-2xl bg-white/[0.04] border border-white/10 p-5 sm:p-6 backdrop-blur-xs transition-all duration-300 hover:bg-white/[0.07] hover:border-[#d4a359]/40 group flex flex-col justify-between h-full flex-1">
+              <div className="flex flex-col flex-1">
                 <div className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-[#d4a359]">
                   <AnimatedCounter value={100} suffix="+" />
                 </div>
-                <h3 className="mt-2 text-sm sm:text-base font-semibold text-white tracking-tight">
+                <h3 className="mt-2 text-sm sm:text-base font-semibold text-white tracking-tight min-h-[2.5rem] flex items-center">
                   {t("statFuneralsLabel")}
                 </h3>
               </div>
-              <p className="mt-2 text-xs text-emerald-200/70 leading-relaxed">
+              <p className="mt-auto pt-3 text-xs text-emerald-200/70 leading-relaxed border-t border-white/10">
                 {t("statFuneralsDesc")}
               </p>
             </div>
 
             {/* Stat 2: Active Members */}
-            <div className="relative overflow-hidden rounded-2xl bg-white/[0.04] border border-white/10 p-5 sm:p-6 backdrop-blur-xs transition-all duration-300 hover:bg-white/[0.07] hover:border-[#d4a359]/40 group flex flex-col justify-between">
-              <div>
+            <div className="relative overflow-hidden rounded-2xl bg-white/[0.04] border border-white/10 p-5 sm:p-6 backdrop-blur-xs transition-all duration-300 hover:bg-white/[0.07] hover:border-[#d4a359]/40 group flex flex-col justify-between h-full flex-1">
+              <div className="flex flex-col flex-1">
                 <div className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-[#d4a359]">
                   <AnimatedCounter value={20} suffix="+" />
                 </div>
-                <h3 className="mt-2 text-sm sm:text-base font-semibold text-white tracking-tight">
+                <h3 className="mt-2 text-sm sm:text-base font-semibold text-white tracking-tight min-h-[2.5rem] flex items-center">
                   {t("statMembersLabel")}
                 </h3>
               </div>
-              <p className="mt-2 text-xs text-emerald-200/70 leading-relaxed">
+              <p className="mt-auto pt-3 text-xs text-emerald-200/70 leading-relaxed border-t border-white/10">
                 {t("statMembersDesc")}
               </p>
             </div>
 
             {/* Stat 3: Essential Needs Aid */}
-            <div className="relative overflow-hidden rounded-2xl bg-white/[0.04] border border-white/10 p-5 sm:p-6 backdrop-blur-xs transition-all duration-300 hover:bg-white/[0.07] hover:border-[#d4a359]/40 group flex flex-col justify-between">
-              <div>
+            <div className="relative overflow-hidden rounded-2xl bg-white/[0.04] border border-white/10 p-5 sm:p-6 backdrop-blur-xs transition-all duration-300 hover:bg-white/[0.07] hover:border-[#d4a359]/40 group flex flex-col justify-between h-full flex-1">
+              <div className="flex flex-col flex-1">
                 <div className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-[#d4a359] truncate">
                   {t("statRationsValue")}
                 </div>
-                <h3 className="mt-2 text-sm sm:text-base font-semibold text-white tracking-tight">
+                <h3 className="mt-2 text-sm sm:text-base font-semibold text-white tracking-tight min-h-[2.5rem] flex items-center">
                   {t("statRationsLabel")}
                 </h3>
               </div>
-              <p className="mt-2 text-xs text-emerald-200/70 leading-relaxed">
+              <p className="mt-auto pt-3 text-xs text-emerald-200/70 leading-relaxed border-t border-white/10">
                 {t("statRationsDesc")}
               </p>
             </div>
 
             {/* Stat 4: Cemetery Renovated */}
-            <div className="relative overflow-hidden rounded-2xl bg-white/[0.04] border border-white/10 p-5 sm:p-6 backdrop-blur-xs transition-all duration-300 hover:bg-white/[0.07] hover:border-[#d4a359]/40 group flex flex-col justify-between">
-              <div>
+            <div className="relative overflow-hidden rounded-2xl bg-white/[0.04] border border-white/10 p-5 sm:p-6 backdrop-blur-xs transition-all duration-300 hover:bg-white/[0.07] hover:border-[#d4a359]/40 group flex flex-col justify-between h-full flex-1">
+              <div className="flex flex-col flex-1">
                 <div className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-[#d4a359]">
                   <AnimatedCounter
                     value={1.5}
@@ -717,11 +721,11 @@ export default async function HomePage({
                     suffix={locale === "ta" ? " ஏக்கர்" : locale === "si" ? " අක්කර" : " Acres"}
                   />
                 </div>
-                <h3 className="mt-2 text-sm sm:text-base font-semibold text-white tracking-tight">
+                <h3 className="mt-2 text-sm sm:text-base font-semibold text-white tracking-tight min-h-[2.5rem] flex items-center">
                   {t("statCemeteryLabel")}
                 </h3>
               </div>
-              <p className="mt-2 text-xs text-emerald-200/70 leading-relaxed">
+              <p className="mt-auto pt-3 text-xs text-emerald-200/70 leading-relaxed border-t border-white/10">
                 {t("statCemeteryDesc")}
               </p>
             </div>
@@ -776,7 +780,7 @@ export default async function HomePage({
                 return (
                   <article
                     key={article.id}
-                    className="group flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-[#e6e4dc] bg-surface shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg"
+                    className="group flex h-full flex-1 flex-col justify-between overflow-hidden rounded-2xl border border-[#e6e4dc] bg-surface shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg"
                   >
                     <div className="relative aspect-[16/10] overflow-hidden bg-muted shrink-0">
                       <Image
@@ -802,12 +806,12 @@ export default async function HomePage({
                         <h3 className="font-display text-lg font-bold text-[#0b2e1e] group-hover:text-primary transition-colors leading-snug line-clamp-2 min-h-[3.25rem]">
                           {article.title}
                         </h3>
-                        <p className="mt-2 text-xs sm:text-sm text-text-muted leading-relaxed line-clamp-3 flex-1">
+                        <p className="mt-2 text-xs sm:text-sm text-text-muted leading-relaxed line-clamp-3">
                           {article.excerpt}
                         </p>
                       </div>
 
-                      <div className="mt-5 flex items-center justify-between border-t border-[#e6e4dc] pt-4">
+                      <div className="mt-auto flex items-center justify-between border-t border-[#e6e4dc] pt-4">
                         <span className="text-[11px] font-medium text-[#6b7280]">
                           {article.read_time_minutes} min read
                         </span>
@@ -909,8 +913,8 @@ export default async function HomePage({
                 </div>
               </div>
 
-              <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-left">
-                <div className="rounded-xl bg-black/25 p-4 border border-emerald-800/40">
+              <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-left items-stretch">
+                <div className="rounded-xl bg-black/25 p-4 border border-emerald-800/40 flex flex-col justify-between h-full flex-1">
                   <span className="block text-[11px] font-medium text-emerald-300/80 uppercase tracking-wider">
                     {t("bankNameLabel")}
                   </span>
@@ -919,7 +923,7 @@ export default async function HomePage({
                   </span>
                 </div>
 
-                <div className="rounded-xl bg-black/25 p-4 border border-emerald-800/40">
+                <div className="rounded-xl bg-black/25 p-4 border border-emerald-800/40 flex flex-col justify-between h-full flex-1">
                   <span className="block text-[11px] font-medium text-emerald-300/80 uppercase tracking-wider">
                     {t("branchLabel")}
                   </span>
@@ -928,7 +932,7 @@ export default async function HomePage({
                   </span>
                 </div>
 
-                <div className="rounded-xl bg-black/25 p-4 border border-[#c99a45]/50 bg-[#c99a45]/10">
+                <div className="rounded-xl bg-black/25 p-4 border border-[#c99a45]/50 bg-[#c99a45]/10 flex flex-col justify-between h-full flex-1">
                   <span className="block text-[11px] font-medium text-[#d4a359] uppercase tracking-wider">
                     {t("accountNoLabel")}
                   </span>
@@ -937,7 +941,7 @@ export default async function HomePage({
                   </span>
                 </div>
 
-                <div className="rounded-xl bg-black/25 p-4 border border-emerald-800/40">
+                <div className="rounded-xl bg-black/25 p-4 border border-emerald-800/40 flex flex-col justify-between h-full flex-1">
                   <span className="block text-[11px] font-medium text-emerald-300/80 uppercase tracking-wider">
                     {t("accountNameLabel")}
                   </span>

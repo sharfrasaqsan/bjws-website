@@ -192,7 +192,7 @@ export function NewsGrid({ articles, locale, translations }: NewsGridProps) {
             return (
               <article
                 key={article.id}
-                className="group flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-[#e6e4dc] bg-surface shadow-xs transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/40 hover:shadow-lg"
+                className="group flex h-full flex-1 flex-col justify-between overflow-hidden rounded-3xl border border-[#e6e4dc] bg-surface shadow-xs transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/40 hover:shadow-lg"
               >
                 {/* Photo Header */}
                 <div className="relative aspect-[16/10] overflow-hidden bg-muted shrink-0">

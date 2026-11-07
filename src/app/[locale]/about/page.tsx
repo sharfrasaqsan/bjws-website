@@ -409,20 +409,22 @@ export default async function AboutPage({
               {coreValues.map((val) => (
                 <div
                   key={val.number}
-                  className="group relative flex h-full flex-col justify-between rounded-2xl border border-[#0b2e1e]/10 bg-white p-6 shadow-xs transition-all duration-300 hover:-translate-y-1.5 hover:border-[#0b2e1e]/30 hover:shadow-md"
+                  className="group relative flex h-full flex-1 flex-col justify-between rounded-2xl border border-[#0b2e1e]/10 bg-white p-6 shadow-xs transition-all duration-300 hover:-translate-y-1.5 hover:border-[#0b2e1e]/30 hover:shadow-md"
                 >
                   <div className="flex flex-col flex-1">
                     <span className="font-display text-3xl font-bold text-[#d4af37] opacity-80 group-hover:opacity-100">
                       {val.number}
                     </span>
-                    <h3 className="mt-3 font-display text-lg font-bold text-[#0b2e1e] min-h-[1.75rem]">
+                    <h3 className="mt-3 font-display text-lg font-bold text-[#0b2e1e] min-h-[3rem] line-clamp-2 leading-snug">
                       {val.title}
                     </h3>
-                    <p className="mt-2 text-xs leading-relaxed text-[#6b7280] flex-1">
+                    <p className="mt-2 text-xs leading-relaxed text-[#6b7280]">
                       {val.desc}
                     </p>
                   </div>
-                  <div className="mt-5 h-1 w-8 rounded-full bg-[#0b2e1e]/15 transition-all group-hover:w-12 group-hover:bg-[#0b2e1e]" />
+                  <div className="mt-auto pt-6">
+                    <div className="h-1 w-8 rounded-full bg-[#0b2e1e]/15 transition-all group-hover:w-12 group-hover:bg-[#0b2e1e]" />
+                  </div>
                 </div>
               ))}
             </ScrollRevealGroup>
@@ -515,14 +517,14 @@ export default async function AboutPage({
                   Elected committee representatives serving the Buhary Jummah Mosque area under collective shura consultation.
                 </p>
 
-                <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 items-stretch">
                   {executiveOfficers.map((officer, idx) => (
                     <div
                       key={idx}
-                      className="flex flex-col justify-between rounded-2xl border border-[#0b2e1e]/10 bg-[#fbfaf6] p-5 transition-all hover:border-[#0b2e1e]/25 hover:shadow-xs"
+                      className="flex h-full flex-1 flex-col justify-between rounded-2xl border border-[#0b2e1e]/10 bg-[#fbfaf6] p-5 transition-all hover:border-[#0b2e1e]/25 hover:shadow-xs"
                     >
-                      <div>
-                        <div className="flex items-center justify-between">
+                      <div className="flex flex-col flex-1">
+                        <div className="flex items-center justify-between gap-2">
                           {officer.photo ? (
                             <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-[#c99a45]/40 shadow-xs bg-[#0b2e1e]">
                               <Image
@@ -534,21 +536,21 @@ export default async function AboutPage({
                               />
                             </div>
                           ) : (
-                            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#0b2e1e] font-display text-xs font-bold text-[#d4af37]">
+                            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#0b2e1e] font-display text-xs font-bold text-[#d4af37]">
                               {officer.initials}
                             </span>
                           )}
-                          <span className="rounded-full bg-[#e8f3ee] px-2.5 py-0.5 text-[11px] font-semibold text-[#0b2e1e]">
+                          <span className="rounded-full bg-[#e8f3ee] px-2.5 py-0.5 text-[11px] font-semibold text-[#0b2e1e] text-right truncate">
                             {officer.role}
                           </span>
                         </div>
-                        <h3 className="mt-3 font-display text-base font-bold text-[#0b2e1e]">
+                        <h3 className="mt-3 font-display text-base font-bold text-[#0b2e1e] min-h-[2.5rem] flex items-center">
                           {officer.name}
                         </h3>
                       </div>
                       <a
                         href={`tel:${officer.phone.replace(/\s+/g, "")}`}
-                        className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-[#0b2e1e] hover:text-[#b8952b]"
+                        className="mt-auto pt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-[#0b2e1e] hover:text-[#b8952b] border-t border-[#0b2e1e]/10"
                       >
                         <Phone className="h-3.5 w-3.5 text-[#d4af37]" />
                         {officer.phone}

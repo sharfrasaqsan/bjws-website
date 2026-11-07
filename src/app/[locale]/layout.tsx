@@ -88,12 +88,12 @@ export async function generateMetadata({
     alternates: {
       canonical: canonicalUrl,
       languages: {
-        "x-default": `${SITE_URL}/ta`,
-        ta: `${SITE_URL}/ta`,
+        "x-default": `${SITE_URL}/en`,
         en: `${SITE_URL}/en`,
+        ta: `${SITE_URL}/ta`,
         si: `${SITE_URL}/si`,
-        "ta-LK": `${SITE_URL}/ta`,
         "en-LK": `${SITE_URL}/en`,
+        "ta-LK": `${SITE_URL}/ta`,
         "si-LK": `${SITE_URL}/si`,
       },
     },

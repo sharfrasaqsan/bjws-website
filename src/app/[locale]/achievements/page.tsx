@@ -148,15 +148,15 @@ export default async function AchievementsPage({
               </p>
             </ScrollReveal>
 
-            <ScrollRevealGroup staggerMs={60} className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <ScrollRevealGroup staggerMs={60} className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 items-stretch">
               {achievementCategories.map((cat, idx) => {
                 const Icon = cat.icon;
                 return (
                   <article
                     key={idx}
-                    className="flex flex-col justify-between rounded-3xl border border-[#0b2e1e]/10 bg-white p-6 sm:p-8 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-[#0b2e1e]/25 hover:shadow-md"
+                    className="flex h-full flex-1 flex-col justify-between rounded-3xl border border-[#0b2e1e]/10 bg-white p-6 sm:p-8 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-[#0b2e1e]/25 hover:shadow-md"
                   >
-                    <div>
+                    <div className="flex flex-col flex-1">
                       <div className="mb-4 flex items-center justify-between gap-3 border-b border-[#0b2e1e]/10 pb-4">
                         <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#e8f3ee] text-[#0b2e1e]">
                           <Icon className="h-5 w-5" strokeWidth={2} />
@@ -170,10 +170,10 @@ export default async function AchievementsPage({
                           </span>
                         </div>
                       </div>
-                      <h3 className="font-display text-xl font-bold text-[#0b2e1e]">
+                      <h3 className="font-display text-xl font-bold text-[#0b2e1e] min-h-[3.25rem] flex items-center">
                         {cat.title}
                       </h3>
-                      <ul className="mt-4 space-y-2.5 text-sm text-[#4b5563]">
+                      <ul className="mt-4 space-y-2.5 text-sm text-[#4b5563] flex-1">
                         {cat.items.map((item, itemIdx) => (
                           <li key={itemIdx} className="flex items-start gap-2.5">
                             <span className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#0b2e1e] text-[9px] font-bold text-[#d4af37]">
