@@ -1435,22 +1435,29 @@ export async function createTeamMemberAction(
   if (isSupabaseConfigured()) {
     try {
       const supabase = await createAdminClient();
-      await supabase.from("team_members").insert({
-        id,
-        name,
-        role_en: roleEn,
-        role_ta: roleTa,
-        role_si: roleSi,
-        category,
-        phone,
-        whatsapp,
-        email,
-        address,
-        initials,
-        photo,
-        term,
-        is_inactive: isInactive,
-      });
+      await supabase.from("team_members").upsert(
+        {
+          id,
+          name,
+          role_en: roleEn,
+          role_ta: roleTa,
+          role_si: roleSi,
+          category,
+          phone,
+          whatsapp: whatsapp || null,
+          email: email || null,
+          address,
+          initials,
+          photo: photo || null,
+          term,
+          is_inactive: isInactive,
+          member_id: memberId || null,
+          nic: nic || null,
+          issue_date: issueDate || "2026-01-01",
+          verification_status: verificationStatus || "verified",
+        },
+        { onConflict: "id" }
+      );
     } catch (err) {
       console.warn("Supabase insert team member warning:", err);
     }
@@ -1460,6 +1467,12 @@ export async function createTeamMemberAction(
   revalidatePath("/admin");
   revalidatePath("/[locale]/team", "page");
   revalidatePath("/[locale]/about", "page");
+  revalidatePath("/en/team");
+  revalidatePath("/ta/team");
+  revalidatePath("/si/team");
+  revalidatePath("/en/about");
+  revalidatePath("/ta/about");
+  revalidatePath("/si/about");
   return { success: true };
 }
 
@@ -1527,24 +1540,29 @@ export async function updateTeamMemberAction(
   if (isSupabaseConfigured()) {
     try {
       const supabase = await createAdminClient();
-      await supabase
-        .from("team_members")
-        .update({
+      await supabase.from("team_members").upsert(
+        {
+          id,
           name,
           role_en: roleEn,
           role_ta: roleTa,
           role_si: roleSi,
           category,
           phone,
-          whatsapp,
-          email,
+          whatsapp: whatsapp || null,
+          email: email || null,
           address,
           initials,
-          photo,
+          photo: photo || null,
           term,
           is_inactive: isInactive,
-        })
-        .eq("id", id);
+          member_id: memberId || null,
+          nic: nic || null,
+          issue_date: issueDate || "2026-01-01",
+          verification_status: verificationStatus || "verified",
+        },
+        { onConflict: "id" }
+      );
     } catch (err) {
       console.warn("Supabase update team member warning:", err);
     }
@@ -1554,6 +1572,12 @@ export async function updateTeamMemberAction(
   revalidatePath("/admin");
   revalidatePath("/[locale]/team", "page");
   revalidatePath("/[locale]/about", "page");
+  revalidatePath("/en/team");
+  revalidatePath("/ta/team");
+  revalidatePath("/si/team");
+  revalidatePath("/en/about");
+  revalidatePath("/ta/about");
+  revalidatePath("/si/about");
   return { success: true };
 }
 

@@ -23,8 +23,11 @@ import {
 } from "lucide-react";
 import { formatGoogleDriveImageUrl } from "@/lib/utils";
 import { getSiteAssets } from "@/content/site-assets";
-import { getTeamMembers, type TeamMember } from "@/content/team";
+import { getTeamMembers, type TeamMember, resolveMemberPhoto } from "@/content/team";
 import { createPublicClient, isSupabaseConfigured } from "@/lib/supabase/server";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function generateMetadata({
   params,
@@ -175,7 +178,7 @@ export default async function AboutPage({
           email: d.email || undefined,
           address: d.address,
           initials: d.initials,
-          photo: d.photo || undefined,
+          photo: resolveMemberPhoto(d.photo || undefined),
           term: d.term,
           isInactive: d.is_inactive,
         }));
@@ -191,12 +194,13 @@ export default async function AboutPage({
   ) => {
     const member = allTeam.find((m) => m.id === id);
     if (!member) return fallback;
+    const resolvedPhoto = resolveMemberPhoto(member.photo);
     return {
       name: member.name,
       role: member.role[locale as "en" | "ta" | "si"] || member.role.en,
       phone: member.phone,
       initials: member.initials,
-      photo: member.photo ? formatGoogleDriveImageUrl(member.photo) : fallback.photo,
+      photo: resolvedPhoto ? formatGoogleDriveImageUrl(resolvedPhoto) : resolveMemberPhoto(fallback.photo),
     };
   };
 
@@ -206,7 +210,7 @@ export default async function AboutPage({
       role: t("rolePresident"),
       phone: "072 440 9574",
       initials: "AMS",
-      photo: "/images/team/sahibulla.webp",
+      photo: "/images/team/sahibulla_new.webp",
     }),
     getOfficer("siyam", {
       name: "A.L.M. Siyam",
@@ -232,7 +236,7 @@ export default async function AboutPage({
           : "Organizer & Field Operations",
       phone: "077 622 7323",
       initials: "AA",
-      photo: "/images/team/abuhuraira.webp",
+      photo: "/images/team/abuhuraira_new.webp",
     }),
   ];
 

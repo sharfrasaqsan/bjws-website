@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f3d29" />
+      <stop offset="100%" stop-color="#124d34" />
+    </linearGradient>
+  </defs>
+  <!-- Background Shield / Rounded Box -->
+  <rect width="512" height="512" rx="108" fill="url(#bg)" />
+  <!-- Inner Border Accent -->
+  <rect x="24" y="24" width="464" height="464" rx="88" fill="none" stroke="#256e4c" stroke-width="4" stroke-opacity="0.6" />
+  
+  <!-- Minaret & Dome Silhouette -->
+  <g transform="translate(128, 100) scale(10.66)" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Crescent & Finial -->
+    <path d="M12 2v2" stroke="#d1fae5" stroke-width="1.5" />
+    <circle cx="12" cy="1.5" r="0.8" fill="#d1fae5" />
+    <!-- Dome Arch -->
+    <path d="M12 4v2m0 0a6 6 0 0 1 6 6v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-7a6 6 0 0 1 6-6z" fill="#ffffff" fill-opacity="0.1" />
+    <!-- Archway Doorway -->
+    <path d="M9 20v-4a3 3 0 0 1 6 0v4" fill="#ffffff" fill-opacity="0.2" />
+  </g>
+</svg>
+

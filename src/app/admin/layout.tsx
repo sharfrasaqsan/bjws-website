@@ -41,13 +41,10 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: "/brand/logo.svg", type: "image/svg+xml" },
-      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
     ],
     shortcut: "/brand/logo.svg",
-    apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
-      { url: "/brand/logo.svg", type: "image/svg+xml" },
-    ],
+    apple: "/brand/logo.svg",
   },
 };
 
@@ -93,8 +90,8 @@ export default async function AdminLayout({
     >
       <head>
         <link rel="icon" href="/brand/logo.svg" type="image/svg+xml" />
-        <link rel="alternate icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="shortcut icon" href="/brand/logo.svg" />
+        <link rel="apple-touch-icon" href="/brand/logo.svg" />
         <ThemeScript />
       </head>
       <body

@@ -8,10 +8,15 @@ import {
   ASSIGNED_MEMBER_IDS,
   ASSIGNED_VERIFICATION_TOKENS,
   ASSIGNED_NIC_NUMBERS,
+  resolveMemberPhoto,
+  calculateExpiryDate,
 } from "@/content/team";
 import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { TeamManager } from "@/components/admin/team-manager";
 import { UserCheck, ArrowLeft } from "lucide-react";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: "Team Members Management | BJWS Admin",
@@ -60,7 +65,7 @@ export default async function AdminTeamPage() {
             email: d.email || undefined,
             address: d.address,
             initials: d.initials,
-            photo: d.photo || undefined,
+            photo: resolveMemberPhoto(d.photo || undefined),
             term: d.term,
             isInactive: d.is_inactive,
             memberId:
@@ -81,7 +86,8 @@ export default async function AdminTeamPage() {
             verificationStatus:
               (raw.verification_status as TeamMember["verificationStatus"]) ||
               (d.is_inactive ? "suspended" : "verified"),
-            issueDate: (raw.issue_date as string) || "2024-01-01",
+            issueDate: (raw.issue_date as string) || "2026-01-01",
+            expiryDate: calculateExpiryDate((raw.issue_date as string) || "2026-01-01", 3),
           };
         });
       }

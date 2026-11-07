@@ -205,6 +205,11 @@ export interface Database {
           photo: string | null;
           term: string;
           is_inactive: boolean;
+          member_id: string | null;
+          nic: string | null;
+          verification_token: string | null;
+          verification_status: string | null;
+          issue_date: string | null;
           created_at: string;
         };
         Insert: {
@@ -222,6 +227,11 @@ export interface Database {
           photo?: string | null;
           term?: string;
           is_inactive?: boolean;
+          member_id?: string | null;
+          nic?: string | null;
+          verification_token?: string | null;
+          verification_status?: string | null;
+          issue_date?: string | null;
           created_at?: string;
         };
         Update: {
@@ -239,6 +249,11 @@ export interface Database {
           photo?: string | null;
           term?: string;
           is_inactive?: boolean;
+          member_id?: string | null;
+          nic?: string | null;
+          verification_token?: string | null;
+          verification_status?: string | null;
+          issue_date?: string | null;
           created_at?: string;
         };
         Relationships: [];

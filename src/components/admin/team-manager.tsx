@@ -4,7 +4,7 @@ import * as React from "react";
 import { useState, useTransition } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { type TeamMember } from "@/content/team";
+import { type TeamMember, resolveMemberPhoto } from "@/content/team";
 import {
   createTeamMemberAction,
   updateTeamMemberAction,
@@ -42,18 +42,18 @@ interface TeamManagerProps {
 }
 
 const PRESET_TEAM_PHOTOS = [
-  { label: "A.M. Sahibullah", path: "/images/team/sahibulla.webp" },
+  { label: "A.M. Sahibullah", path: "/images/team/sahibulla_new.webp" },
   { label: "A.M.A. Gafoor", path: "/images/team/gafoor.webp" },
   { label: "A.L.M. Siyam", path: "/images/team/siyam.webp" },
   { label: "M.S. Riyas", path: "/images/team/riyas.webp" },
   { label: "M.S. Faizarkhan", path: "/images/team/faisarkhan.webp" },
-  { label: "A. Abuhuraira", path: "/images/team/abuhuraira.webp" },
+  { label: "A. Abuhuraira", path: "/images/team/abuhuraira_new.webp" },
   { label: "N.M. Shamed Nashraff", path: "/images/team/nashraf.webp" },
-  { label: "A.G.M. Niyas", path: "/images/team/niyas.webp" },
+  { label: "A.G.M. Niyas", path: "/images/team/niyas_new.webp" },
   { label: "M. Mansoor Ali", path: "/images/team/mansoor.webp" },
   { label: "M.I. Rikas Ahamed", path: "/images/team/rikas.webp" },
-  { label: "S.M. Jaisar", path: "/images/team/jaisar1.webp" },
-  { label: "M.M.M. Irfan", path: "/images/team/irfan.webp" },
+  { label: "S.M. Jaisar", path: "/images/team/jaisar.webp" },
+  { label: "M.M.M. Irfan", path: "/images/team/irfan_new.webp" },
   { label: "P.T.M. Saheeth", path: "/images/team/saheed.webp" },
   { label: "M.H. Hanees", path: "/images/team/hanees.webp" },
   { label: "A.M. Nawsath", path: "/images/team/nawshad.webp" },
@@ -220,25 +220,55 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
       formData.set("photo", photoToUse);
     }
 
+    const id = formData.get("id") as string;
+    const name = (formData.get("name") as string)?.trim();
+    const nic = (formData.get("nic") as string)?.trim();
+    const memberId = (formData.get("memberId") as string)?.trim();
+    const issueDate = (formData.get("issueDate") as string)?.trim();
+    const phone = (formData.get("phone") as string)?.trim();
+    const address = (formData.get("address") as string)?.trim();
+    const roleEn = (formData.get("roleEn") as string)?.trim();
+
     startTransition(async () => {
       const res = await updateTeamMemberAction(null, formData);
       if (res?.error) {
         setFormError(res.error);
       } else {
+        setMembers((prev) =>
+          prev.map((m) =>
+            m.id === id
+              ? {
+                  ...m,
+                  name: name || m.name,
+                  nic: nic !== undefined ? nic : m.nic,
+                  memberId: memberId || m.memberId,
+                  issueDate: issueDate || m.issueDate,
+                  phone: phone || m.phone,
+                  address: address || m.address,
+                  photo: photoToUse || m.photo,
+                  role: {
+                    ...m.role,
+                    en: roleEn || m.role.en,
+                  },
+                }
+              : m
+          )
+        );
         setEditingMember(null);
         setSelectedPhoto("");
         setCustomPhotoUrl("");
-        window.location.reload();
+        router.refresh();
       }
     });
   };
 
   const openEditModal = (member: TeamMember) => {
     setEditingMember(member);
-    setSelectedPhoto(member.photo || "");
+    const resolvedPhoto = resolveMemberPhoto(member.photo) || "";
+    setSelectedPhoto(resolvedPhoto);
     setCustomPhotoUrl(
-      member.photo && !PRESET_TEAM_PHOTOS.some((p) => p.path === member.photo)
-        ? member.photo
+      resolvedPhoto && !PRESET_TEAM_PHOTOS.some((p) => p.path === resolvedPhoto)
+        ? resolvedPhoto
         : ""
     );
     setFormError(null);
@@ -486,7 +516,9 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                 <div className="relative h-13 w-13 shrink-0 overflow-hidden rounded-2xl border border-border bg-background ring-1 ring-black/5">
                   {member.photo ? (
                     <Image
-                      src={formatGoogleDriveImageUrl(member.photo)}
+                      src={formatGoogleDriveImageUrl(
+                        resolveMemberPhoto(member.photo) || member.photo
+                      )}
                       alt={member.name}
                       fill
                       draggable={false}
@@ -740,6 +772,33 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                     className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs font-mono text-text focus:border-primary focus:outline-none"
                   />
                   <p className="text-[10px] text-text-muted mt-0.5">Printed on QR credential verification</p>
+                </div>
+              </div>
+
+              {/* ID Card Validity & Issue Date */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 rounded-2xl bg-[#fbfaf6] dark:bg-black/20 border border-[#e6e4dc] dark:border-white/10">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1 flex items-center gap-1.5">
+                    <Sparkles className="h-3 w-3 text-[#c99a45]" />
+                    <span>ID Issue Date</span>
+                  </label>
+                  <input
+                    type="date"
+                    name="issueDate"
+                    defaultValue={editingMember?.issueDate || "2026-01-01"}
+                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs font-mono text-text focus:border-primary focus:outline-none"
+                  />
+                  <p className="text-[10px] text-text-muted mt-0.5">Card issue date (default 2026-01-01)</p>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
+                    Card Validity (3 Years)
+                  </label>
+                  <div className="w-full rounded-xl border border-border bg-muted/40 px-3 py-2 text-xs font-mono font-bold text-primary flex items-center justify-between">
+                    <span>3 Years from Issue</span>
+                    <span className="text-[11px] text-text-muted">Auto-calculated</span>
+                  </div>
+                  <p className="text-[10px] text-text-muted mt-0.5">Valid until 3 years after issue date</p>
                 </div>
               </div>
 
@@ -1046,6 +1105,33 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                     className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs font-mono text-text focus:border-primary focus:outline-none"
                   />
                   <p className="text-[10px] text-text-muted mt-0.5">Printed on QR credential verification</p>
+                </div>
+              </div>
+
+              {/* ID Card Validity & Issue Date */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 rounded-2xl bg-[#fbfaf6] dark:bg-black/20 border border-[#e6e4dc] dark:border-white/10">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1 flex items-center gap-1.5">
+                    <Sparkles className="h-3 w-3 text-[#c99a45]" />
+                    <span>ID Issue Date</span>
+                  </label>
+                  <input
+                    type="date"
+                    name="issueDate"
+                    defaultValue={editingMember?.issueDate || "2026-01-01"}
+                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs font-mono text-text focus:border-primary focus:outline-none"
+                  />
+                  <p className="text-[10px] text-text-muted mt-0.5">Card issue date (default 2026-01-01)</p>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
+                    Card Validity (3 Years)
+                  </label>
+                  <div className="w-full rounded-xl border border-border bg-muted/40 px-3 py-2 text-xs font-mono font-bold text-primary flex items-center justify-between">
+                    <span>3 Years from Issue</span>
+                    <span className="text-[11px] text-text-muted">Auto-calculated</span>
+                  </div>
+                  <p className="text-[10px] text-text-muted mt-0.5">Valid until 3 years after issue date</p>
                 </div>
               </div>
 

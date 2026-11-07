@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { QRCodeSVG, QRCodeCanvas } from "qrcode.react";
-import { type TeamMember } from "@/content/team";
+import { type TeamMember, calculateExpiryDate, resolveMemberPhoto } from "@/content/team";
 import { regenerateMemberVerificationTokenAction } from "@/lib/admin-actions";
 import { formatGoogleDriveImageUrl } from "@/lib/utils";
 import {
@@ -150,7 +150,9 @@ export function MemberQrModal({
 
       if (member.photo) {
         try {
-          const photoUrl = formatGoogleDriveImageUrl(member.photo);
+          const photoUrl = formatGoogleDriveImageUrl(
+            resolveMemberPhoto(member.photo) || member.photo
+          );
           const photoImg = await loadImg(photoUrl);
 
           // Smart auto-alignment: Keep head and hair 100% visible
@@ -243,11 +245,11 @@ export function MemberQrModal({
         606
       );
 
-      // Attribute Rows (ID No, NIC, Address, Phone) - Unified Font, Size & Color
+      // Attribute Rows (ID No, NIC, Address, Phone, Issue Date, Exp Date) - Unified Font, Size & Color
       const startX = 105;
       const valX = 225;
       const addrMaxWidth = 365; // Ample width to prevent unnecessary line breaks
-      const addrLineHeight = 25;
+      const addrLineHeight = 24;
 
       // Calculate word-wrapped full address lines so nothing is cut off
       const rawAddress = (member.address || "Mullipothana, Sri Lanka").trim();
@@ -255,7 +257,7 @@ export function MemberQrModal({
       const addrLines: string[] = [];
       let currentAddrLine = "";
 
-      fCtx.font = `bold 21px ${ID_FONT}`;
+      fCtx.font = `bold 20px ${ID_FONT}`;
       for (let i = 0; i < addrWords.length; i++) {
         const word = addrWords[i];
         const testLine = currentAddrLine ? `${currentAddrLine} ${word}` : word;
@@ -271,6 +273,9 @@ export function MemberQrModal({
         addrLines.push(currentAddrLine);
       }
 
+      const issueDate = member.issueDate || "2026-01-01";
+      const expiryDate = member.expiryDate || calculateExpiryDate(issueDate, 3);
+
       const rows: Array<{
         label: string;
         val?: string;
@@ -281,28 +286,30 @@ export function MemberQrModal({
         ...(member.nic ? [{ label: "NIC", val: member.nic }] : []),
         { label: "Address", lines: addrLines, isAddr: true },
         { label: "Phone", val: member.phone || "+94 77 622 7323" },
+        { label: "Issue Date", val: issueDate },
+        { label: "Exp Date", val: expiryDate },
       ];
 
-      let startY = member.nic ? 672 : 685;
-      const rowGap = member.nic ? 42 : 48;
+      let startY = member.nic ? 646 : 658;
+      const rowGap = member.nic ? 35 : 39;
 
       for (const row of rows) {
         // Label - 100% unified font, size, weight & deep brand forest green
         fCtx.textAlign = "left";
-        fCtx.font = `bold 21px ${ID_FONT}`;
+        fCtx.font = `bold 20px ${ID_FONT}`;
         fCtx.fillStyle = "#0b2e1e";
         fCtx.fillText(row.label, startX, startY);
 
         // Value - 100% unified font, size, weight & deep brand forest green
         if (row.isAddr && row.lines) {
-          fCtx.font = `bold 21px ${ID_FONT}`;
+          fCtx.font = `bold 20px ${ID_FONT}`;
           fCtx.fillStyle = "#0b2e1e";
           row.lines.forEach((line, idx) => {
             fCtx.fillText(line, valX, startY + idx * addrLineHeight);
           });
           startY += (row.lines.length - 1) * addrLineHeight + rowGap;
         } else if (row.val) {
-          fCtx.font = `bold 21px ${ID_FONT}`;
+          fCtx.font = `bold 20px ${ID_FONT}`;
           fCtx.fillStyle = "#0b2e1e";
           fCtx.fillText(row.val, valX, startY);
           startY += rowGap;
@@ -386,6 +393,26 @@ export function MemberQrModal({
       bCtx.fillStyle = "#4b5563";
       bCtx.font = `500 11.5px ${ID_FONT}`;
       bCtx.fillText("Scan with mobile camera for live verification", 319, 532);
+
+      // Validity & Issue Metadata Box (3 Years Validity: 2026 - 2029)
+      bCtx.save();
+      bCtx.fillStyle = "#f4f8f5";
+      bCtx.strokeStyle = "#c99a45";
+      bCtx.lineWidth = 1.5;
+      bCtx.beginPath();
+      bCtx.roundRect(99, 560, 440, 36, 8);
+      bCtx.fill();
+      bCtx.stroke();
+
+      bCtx.fillStyle = "#0b2e1e";
+      bCtx.font = `bold 12.5px ${ID_FONT}`;
+      bCtx.textAlign = "center";
+      bCtx.fillText(
+        `ISSUED: ${issueDate}  •  EXPIRES: ${expiryDate} (3 YEARS VALIDITY)`,
+        319,
+        583
+      );
+      bCtx.restore();
 
       // 3. TWO DEDICATED SIGNATURE AREAS BELOW QR (Y: 575 to 735)
       // Generous, clean blank space for manual or digital signing
@@ -590,7 +617,7 @@ export function MemberQrModal({
         <body>
           <div class="header-info">
             <h2>Buhary Janaza Welfare Society (BJWS)</h2>
-            <p>Official Executive Committee ID Card • ${memberCode} - ${member.name} (${member.role.en})</p>
+            <p>Official Executive Committee ID Card • ${memberCode} - ${member.name} (${member.role.en}) • Issued: ${member.issueDate || "2026-01-01"} • Valid Thru: ${member.expiryDate || calculateExpiryDate(member.issueDate || "2026-01-01", 3)} (3 Years Validity)</p>
           </div>
           <div class="cards-container">
             <div class="card-wrapper">

@@ -10,12 +10,17 @@ import {
   ASSIGNED_MEMBER_IDS,
   ASSIGNED_VERIFICATION_TOKENS,
   ASSIGNED_NIC_NUMBERS,
+  resolveMemberPhoto,
+  calculateExpiryDate,
 } from "@/content/team";
 import { createPublicClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { buildPageMetadata } from "@/lib/seo";
 import { JsonLd, getBreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { ShieldCheck } from "lucide-react";
 import { getSiteAssets } from "@/content/site-assets";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function generateMetadata({
   params,
@@ -84,7 +89,7 @@ export default async function TeamPage({
             email: d.email || undefined,
             address: d.address,
             initials: d.initials,
-            photo: d.photo || undefined,
+            photo: resolveMemberPhoto(d.photo || undefined),
             term: d.term,
             isInactive: d.is_inactive,
             memberId:
@@ -105,7 +110,8 @@ export default async function TeamPage({
             verificationStatus:
               (raw.verification_status as TeamMember["verificationStatus"]) ||
               "verified",
-            issueDate: (raw.issue_date as string) || "2024-01-01",
+            issueDate: (raw.issue_date as string) || "2026-01-01",
+            expiryDate: calculateExpiryDate((raw.issue_date as string) || "2026-01-01", 3),
           };
         });
       }

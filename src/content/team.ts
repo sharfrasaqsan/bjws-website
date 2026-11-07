@@ -25,6 +25,7 @@ export interface TeamMember {
   verificationToken?: string; // Secure token for QR verification
   verificationStatus?: "verified" | "suspended" | "pending";
   issueDate?: string;
+  expiryDate?: string;
 }
 
 export const TEAM_MEMBERS: TeamMember[] = [
@@ -688,6 +689,30 @@ export const ASSIGNED_NIC_NUMBERS: Record<string, string> = Object.fromEntries(
   KNOWN_OFFICIAL_MEMBERS.map((m) => [m.key, m.nic])
 );
 
+export function calculateExpiryDate(issueDateStr: string = "2026-01-01", years = 3): string {
+  try {
+    const parts = issueDateStr.trim().split("-");
+    if (parts.length === 3) {
+      const year = parseInt(parts[0], 10);
+      if (!isNaN(year)) {
+        return `${year + years}-${parts[1]}-${parts[2]}`;
+      }
+    }
+  } catch {}
+  return "2029-01-01";
+}
+
+export function resolveMemberPhoto(photo?: string): string | undefined {
+  if (!photo) return undefined;
+  let p = photo.trim();
+  p = p.replace(/\/sahibulla\.webp$/i, "/sahibulla_new.webp");
+  p = p.replace(/\/abuhuraira\.webp$/i, "/abuhuraira_new.webp");
+  p = p.replace(/\/irfan\.webp$/i, "/irfan_new.webp");
+  p = p.replace(/\/jaisar1\.webp$/i, "/jaisar.webp");
+  p = p.replace(/\/niyas\.webp$/i, "/niyas_new.webp");
+  return p;
+}
+
 export function initializeTeamMemberDefaults(member: TeamMember, index: number): TeamMember {
   const known = findKnownMember({
     id: member.id,
@@ -696,49 +721,58 @@ export function initializeTeamMemberDefaults(member: TeamMember, index: number):
   });
 
   const memberId =
-    known?.memberId ||
     member.memberId ||
+    known?.memberId ||
     `BJWS${(index + 1).toString().padStart(3, "0")}`;
 
   const verificationToken =
-    known?.token ||
     member.verificationToken ||
+    known?.token ||
     `vtok_${member.id}_${memberId.toLowerCase()}`;
 
   const nic =
-    known?.nic ||
     member.nic ||
+    known?.nic ||
     `19${(70 + (index % 25)).toString()}${((index + 11) * 1234567).toString().slice(0, 8)}`;
 
   const verificationStatus =
     member.verificationStatus || (member.isInactive ? "suspended" : "verified");
 
-  const issueDate = member.issueDate || "2024-01-01";
+  const issueDate = member.issueDate || "2026-01-01";
+  const expiryDate = member.expiryDate || calculateExpiryDate(issueDate, 3);
+  const photo = resolveMemberPhoto(member.photo);
 
   return {
     ...member,
+    photo,
     memberId,
     nic,
     verificationToken,
     verificationStatus,
     issueDate,
+    expiryDate,
   };
 }
 
-// In-memory store for server actions in development / demo mode
-let liveTeamStore: TeamMember[] = TEAM_MEMBERS.map((m, idx) => initializeTeamMemberDefaults(m, idx));
+declare global {
+  var __liveTeamStore: TeamMember[] | undefined;
+}
+
+// In-memory store for server actions in development / demo mode (persists across module re-evaluations)
+let liveTeamStore: TeamMember[] =
+  globalThis.__liveTeamStore ||
+  TEAM_MEMBERS.map((m, idx) => initializeTeamMemberDefaults(m, idx));
 globalThis.__liveTeamStore = liveTeamStore;
 
 export function getTeamMembers(includeInactive: boolean = true): TeamMember[] {
-  const sanitized = liveTeamStore.map((m, idx) => initializeTeamMemberDefaults(m, idx));
   if (includeInactive) {
-    return [...sanitized];
+    return [...liveTeamStore];
   }
-  return sanitized.filter((m) => !m.isInactive);
+  return liveTeamStore.filter((m) => !m.isInactive);
 }
 
 export function getAllTeamMembersAdmin(): TeamMember[] {
-  return liveTeamStore.map((m, idx) => initializeTeamMemberDefaults(m, idx));
+  return [...liveTeamStore];
 }
 
 export function getNextMemberId(): string {
@@ -785,9 +819,9 @@ export function getMemberByVerification(
     if (fromStore) {
       return {
         ...fromStore,
-        memberId: known.memberId,
-        verificationToken: known.token,
-        nic: known.nic,
+        memberId: fromStore.memberId || known.memberId,
+        verificationToken: fromStore.verificationToken || known.token,
+        nic: fromStore.nic || known.nic,
         verificationStatus: fromStore.isInactive ? "suspended" : "verified",
       };
     }
@@ -809,8 +843,10 @@ export function regenerateMemberVerificationTokenStore(id: string): string | nul
 }
 
 export function addTeamMemberStore(member: TeamMember): void {
+  const issueDate = member.issueDate || "2026-01-01";
   const memberWithDefaults: TeamMember = {
     ...member,
+    photo: resolveMemberPhoto(member.photo),
     memberId: member.memberId || getNextMemberId(),
     nic: member.nic || "Pending NIC submission",
     verificationToken:
@@ -820,7 +856,8 @@ export function addTeamMemberStore(member: TeamMember): void {
       Math.random().toString(36).substring(2, 9),
     verificationStatus:
       member.verificationStatus || (member.isInactive ? "suspended" : "verified"),
-    issueDate: member.issueDate || new Date().toISOString().split("T")[0],
+    issueDate,
+    expiryDate: member.expiryDate || calculateExpiryDate(issueDate, 3),
   };
 
   const firstInactiveIndex = liveTeamStore.findIndex((m) => m.isInactive);
@@ -839,15 +876,27 @@ export function updateTeamMemberStore(
   const index = liveTeamStore.findIndex((m) => m.id === id || m.memberId === id);
   if (index === -1) return false;
 
+  const current = liveTeamStore[index];
+  const photo = updates.photo !== undefined ? resolveMemberPhoto(updates.photo) : current.photo;
+  const issueDate = updates.issueDate || current.issueDate || "2026-01-01";
+  const expiryDate = updates.expiryDate || current.expiryDate || calculateExpiryDate(issueDate, 3);
+  const nic = updates.nic !== undefined && updates.nic !== "" ? updates.nic : current.nic;
+  const memberId = updates.memberId !== undefined && updates.memberId !== "" ? updates.memberId : current.memberId;
+
   liveTeamStore[index] = {
-    ...liveTeamStore[index],
+    ...current,
     ...updates,
+    photo,
+    issueDate,
+    expiryDate,
+    nic,
+    memberId,
     role: {
-      ...liveTeamStore[index].role,
+      ...current.role,
       ...(updates.role || {}),
     },
     categoryLabel: {
-      ...liveTeamStore[index].categoryLabel,
+      ...current.categoryLabel,
       ...(updates.categoryLabel || {}),
     },
   };
