@@ -13,37 +13,37 @@ export interface HeroSlide {
 
 export const DEFAULT_HERO_SLIDES: HeroSlide[] = [
   {
-    src: "/images/hero/hero-banner-1.webp",
+    src: "/images/hero/hero-banner-1-updated.webp",
     alt: "Buhary Janaza Welfare Society Official Community Services & Funeral Care, Mullipothana",
     label: "Official Society",
   },
   {
-    src: "/images/hero/hero-banner-2.webp",
+    src: "/images/hero/hero-banner-2-updated.webp",
     alt: "24/7 Dignified Islamic Janaza, Washing, Shrouding & Funeral Assistance Services",
     label: "24/7 Janaza Care",
   },
   {
-    src: "/images/hero/hero-banner-3.webp",
+    src: "/images/hero/hero-banner-3-updated.webp",
     alt: "Mahallah Cemetery Grounds Preservation, Landscaping and Cleanliness Upkeep",
     label: "Cemetery Upkeep",
   },
   {
-    src: "/images/hero/hero-banner-4.webp",
+    src: "/images/hero/hero-banner-4-updated.webp",
     alt: "Community Shramadana Cleanliness and Youth Volunteering Campaigns",
     label: "Community Shramadana",
   },
   {
-    src: "/images/hero/hero-banner-5.webp",
+    src: "/images/hero/hero-banner-5-updated.webp",
     alt: "Essential Needs Food Packs & Ongoing Welfare Relief for Vulnerable Families",
     label: "Welfare & Relief",
   },
   {
-    src: "/images/hero/hero-banner-6.webp",
+    src: "/images/hero/hero-banner-6-updated.webp",
     alt: "Youth Sunnah Ghusl, Kafan & Funeral Awareness Educational Workshops",
     label: "Sunnah Workshops",
   },
   {
-    src: "/images/hero/hero-banner-7.webp",
+    src: "/images/hero/hero-banner-7-updated.webp",
     alt: "Kafalah Orphan Care and Vulnerable Household Sustenance Sponsorship",
     label: "Kafalah Sponsorship",
   },

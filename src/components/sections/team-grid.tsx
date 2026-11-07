@@ -158,24 +158,22 @@ export function TeamGrid({ members, locale, translations }: TeamGridProps) {
                   {/* Address */}
                   <div className="flex items-start gap-2 text-xs text-text-muted">
                     <MapPin className="h-3.5 w-3.5 shrink-0 text-[#c99a45] mt-0.5" />
-                    <span className="leading-relaxed line-clamp-2 min-h-[2.5rem]">{member.address}</span>
+                    <span className="leading-relaxed line-clamp-2">{member.address}</span>
                   </div>
 
                   {/* Email contact if available */}
-                  <div className="flex items-center gap-2 text-xs text-text-muted min-h-[1.25rem]">
-                    {member.email ? (
-                      <>
-                        <Mail className="h-3.5 w-3.5 shrink-0 text-[#c99a45]" />
-                        <a
-                          href={`mailto:${member.email}`}
-                          className="truncate hover:text-primary transition-colors font-medium text-[11px]"
-                          title={member.email}
-                        >
-                          {member.email}
-                        </a>
-                      </>
-                    ) : null}
-                  </div>
+                  {member.email ? (
+                    <div className="flex items-center gap-2 text-xs text-text-muted">
+                      <Mail className="h-3.5 w-3.5 shrink-0 text-[#c99a45]" />
+                      <a
+                        href={`mailto:${member.email}`}
+                        className="truncate hover:text-primary transition-colors font-medium text-[11px]"
+                        title={member.email}
+                      >
+                        {member.email}
+                      </a>
+                    </div>
+                  ) : null}
                 </div>
 
                 {/* Direct Action Buttons */}

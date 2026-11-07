@@ -217,37 +217,37 @@ export default async function HomePage({
 
   const heroSlides = [
     {
-      src: assets.heroSlide1 || "/images/hero/hero-banner-1.webp",
+      src: assets.heroSlide1 || "/images/hero/hero-banner-1-updated.webp",
       alt: "Buhary Janaza Welfare Society Official Community Services & Funeral Care, Mullipothana",
       label: "Official Society",
     },
     {
-      src: assets.heroSlide2 || "/images/hero/hero-banner-2.webp",
+      src: assets.heroSlide2 || "/images/hero/hero-banner-2-updated.webp",
       alt: "24/7 Dignified Islamic Janaza, Washing, Shrouding & Funeral Assistance Services",
       label: "24/7 Janaza Care",
     },
     {
-      src: assets.heroSlide3 || "/images/hero/hero-banner-3.webp",
+      src: assets.heroSlide3 || "/images/hero/hero-banner-3-updated.webp",
       alt: "Mahallah Cemetery Grounds Preservation, Landscaping and Cleanliness Upkeep",
       label: "Cemetery Upkeep",
     },
     {
-      src: assets.heroSlide4 || "/images/hero/hero-banner-4.webp",
+      src: assets.heroSlide4 || "/images/hero/hero-banner-4-updated.webp",
       alt: "Community Shramadana Cleanliness and Youth Volunteering Campaigns",
       label: "Community Shramadana",
     },
     {
-      src: assets.heroSlide5 || "/images/hero/hero-banner-5.webp",
+      src: assets.heroSlide5 || "/images/hero/hero-banner-5-updated.webp",
       alt: "Essential Needs Food Packs & Ongoing Welfare Relief for Vulnerable Families",
       label: "Welfare & Relief",
     },
     {
-      src: assets.heroSlide6 || "/images/hero/hero-banner-6.webp",
+      src: assets.heroSlide6 || "/images/hero/hero-banner-6-updated.webp",
       alt: "Youth Sunnah Ghusl, Kafan & Funeral Awareness Educational Workshops",
       label: "Sunnah Workshops",
     },
     {
-      src: assets.heroSlide7 || "/images/hero/hero-banner-7.webp",
+      src: assets.heroSlide7 || "/images/hero/hero-banner-7-updated.webp",
       alt: "Kafalah Orphan Care and Vulnerable Household Sustenance Sponsorship",
       label: "Kafalah Sponsorship",
     },
