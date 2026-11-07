@@ -225,12 +225,12 @@ export function NewsGrid({ articles, locale, translations }: NewsGridProps) {
                     </div>
 
                     <Link href={`/${locale}/news/${article.slug}`}>
-                      <h3 className="font-display text-base sm:text-lg font-bold text-text group-hover:text-primary transition-colors leading-snug line-clamp-2 min-h-[3rem]">
+                      <h3 className="font-display text-base sm:text-lg font-bold text-text group-hover:text-primary transition-colors leading-snug line-clamp-2 min-h-[3.25rem] flex items-center">
                         {article.title}
                       </h3>
                     </Link>
 
-                    <p className="text-xs sm:text-sm text-text-muted leading-relaxed line-clamp-3 flex-1">
+                    <p className="text-xs sm:text-sm text-text-muted leading-relaxed line-clamp-3 flex-1 min-h-[3.75rem]">
                       {article.excerpt}
                     </p>
                   </div>

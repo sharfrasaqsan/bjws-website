@@ -123,7 +123,7 @@ export function ScrollRevealGroup({
           <ScrollReveal
             variant={variant}
             delay={Math.min((index + 1) * staggerMs, 400)}
-            className="h-full w-full flex flex-col flex-1"
+            className="h-full w-full flex flex-col flex-1 self-stretch"
           >
             {React.cloneElement(childElement, {
               className: cn(childElement.props.className, "h-full w-full flex-1"),

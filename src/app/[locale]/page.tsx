@@ -327,92 +327,102 @@ export default async function HomePage({
               <div className="relative z-10 flex flex-col h-full justify-between flex-1">
                 <div className="flex flex-col flex-1">
                   <div className="flex items-center justify-between gap-2 mb-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#c99a45] text-[#072015] shadow-sm">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#c99a45] text-[#072015] shadow-sm">
                       <PhoneCall className="h-6 w-6" />
                     </div>
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider">
+                    <span className="inline-flex h-7 shrink-0 items-center gap-1.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30 px-2.5 text-[11px] font-bold uppercase tracking-wider">
                       <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />
                       24/7 Immediate Hotline
                     </span>
                   </div>
 
-                  <h2 className="font-display text-xl font-bold tracking-tight text-white min-h-[3.25rem] leading-snug line-clamp-2">
+                  <h2 className="font-display text-xl font-bold tracking-tight text-white min-h-[3.25rem] leading-snug line-clamp-2 flex items-center">
                     {t("infoBarItem1Title")}
                   </h2>
-                  <p className="mt-2 text-xs sm:text-sm text-emerald-100/85 leading-relaxed">
+                  <p className="mt-2 text-xs sm:text-sm text-emerald-100/85 leading-relaxed line-clamp-2 min-h-[2.75rem]">
                     {t("infoBarItem1Desc")}
                   </p>
                 </div>
 
-                <a
-                  href="tel:+94776227323"
-                  className="mt-auto pt-6 inline-flex items-center justify-between rounded-md bg-[#c99a45] hover:bg-[#b88937] text-[#072015] font-bold px-4 py-2.5 text-xs sm:text-sm shadow-sm transition-all duration-150"
-                >
-                  <span className="inline-flex items-center gap-1.5">
-                    <Phone className="h-4 w-4" />
-                    <span>{t("infoBarItem1Cta")}</span>
-                  </span>
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </a>
+                <div className="mt-auto pt-6">
+                  <a
+                    href="tel:+94776227323"
+                    className="inline-flex h-11 w-full items-center justify-between rounded-md bg-[#c99a45] hover:bg-[#b88937] text-[#072015] font-bold px-4 text-xs sm:text-sm shadow-sm transition-all duration-150"
+                  >
+                    <span className="inline-flex items-center gap-1.5">
+                      <Phone className="h-4 w-4" />
+                      <span>{t("infoBarItem1Cta")}</span>
+                    </span>
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </a>
+                </div>
               </div>
             </div>
 
             {/* Item 2: Become a Member (LKR 50/mo or LKR 500/yr) */}
-            <div className="rounded-xl bg-surface p-6 lg:p-7 text-foreground shadow-xl border border-[#e6e4dc] transition-all duration-200 hover:border-[#124d34]/40 hover:-translate-y-1 group flex flex-col justify-between h-full flex-1">
-              <div className="flex flex-col flex-1">
-                <div className="flex items-center justify-between gap-2 mb-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#124d34] text-white shadow-2xs">
-                    <Users className="h-6 w-6" />
+            <div className="relative overflow-hidden rounded-xl bg-surface p-6 lg:p-7 text-foreground shadow-xl border border-[#e6e4dc] transition-all duration-200 hover:border-[#124d34]/40 hover:-translate-y-1 group flex flex-col justify-between h-full flex-1">
+              <div className="relative z-10 flex flex-col h-full justify-between flex-1">
+                <div className="flex flex-col flex-1">
+                  <div className="flex items-center justify-between gap-2 mb-4">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#124d34] text-white shadow-2xs">
+                      <Users className="h-6 w-6" />
+                    </div>
+                    <span className="inline-flex h-7 shrink-0 items-center gap-1 rounded-full bg-[#e8f3ee] text-[#124d34] border border-[#124d34]/20 px-2.5 text-[11px] font-bold uppercase tracking-wider">
+                      50+ Members
+                    </span>
                   </div>
-                  <span className="inline-flex items-center gap-1 rounded-full bg-[#e8f3ee] text-[#124d34] border border-[#124d34]/20 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider">
-                    50+ Members
-                  </span>
+
+                  <h2 className="font-display text-xl font-bold tracking-tight text-[#0b2e1e] min-h-[3.25rem] leading-snug line-clamp-2 flex items-center">
+                    {t("infoBarItem2Title")}
+                  </h2>
+                  <p className="mt-2 text-xs sm:text-sm text-text-muted leading-relaxed line-clamp-2 min-h-[2.75rem]">
+                    {t("infoBarItem2Desc")}
+                  </p>
                 </div>
 
-                <h2 className="font-display text-xl font-bold tracking-tight text-[#0b2e1e] min-h-[3.25rem] leading-snug line-clamp-2">
-                  {t("infoBarItem2Title")}
-                </h2>
-                <p className="mt-2 text-xs sm:text-sm text-text-muted leading-relaxed">
-                  {t("infoBarItem2Desc")}
-                </p>
+                <div className="mt-auto pt-6">
+                  <Link
+                    href="/membership"
+                    className="inline-flex h-11 w-full items-center justify-between rounded-md bg-[#124d34] hover:bg-[#0b2e1e] text-white font-semibold px-4 text-xs sm:text-sm shadow-2xs transition-all duration-150"
+                  >
+                    <span>{t("infoBarItem2Cta")}</span>
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </div>
               </div>
-
-              <Link
-                href="/membership"
-                className="mt-auto pt-6 inline-flex items-center justify-between rounded-md bg-[#124d34] hover:bg-[#0b2e1e] text-white font-semibold px-4 py-2.5 text-xs sm:text-sm shadow-2xs transition-all duration-150"
-              >
-                <span>{t("infoBarItem2Cta")}</span>
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Link>
             </div>
 
             {/* Item 3: Relief & Humanitarian Aid */}
-            <div className="rounded-xl bg-surface p-6 lg:p-7 text-foreground shadow-xl border border-[#e6e4dc] transition-all duration-200 hover:border-[#124d34]/40 hover:-translate-y-1 group flex flex-col justify-between h-full flex-1">
-              <div className="flex flex-col flex-1">
-                <div className="flex items-center justify-between gap-2 mb-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#fef3c7] text-[#92400e] border border-amber-300 shadow-2xs">
-                    <HeartHandshake className="h-6 w-6" />
+            <div className="relative overflow-hidden rounded-xl bg-surface p-6 lg:p-7 text-foreground shadow-xl border border-[#e6e4dc] transition-all duration-200 hover:border-[#124d34]/40 hover:-translate-y-1 group flex flex-col justify-between h-full flex-1">
+              <div className="relative z-10 flex flex-col h-full justify-between flex-1">
+                <div className="flex flex-col flex-1">
+                  <div className="flex items-center justify-between gap-2 mb-4">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#fef3c7] text-[#92400e] border border-amber-300 shadow-2xs">
+                      <HeartHandshake className="h-6 w-6" />
+                    </div>
+                    <span className="inline-flex h-7 shrink-0 items-center gap-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200 px-2.5 text-[11px] font-bold uppercase tracking-wider">
+                      Welfare & Relief
+                    </span>
                   </div>
-                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider">
-                    Welfare & Relief
-                  </span>
+
+                  <h2 className="font-display text-xl font-bold tracking-tight text-[#0b2e1e] min-h-[3.25rem] leading-snug line-clamp-2 flex items-center">
+                    {t("infoBarItem3Title")}
+                  </h2>
+                  <p className="mt-2 text-xs sm:text-sm text-text-muted leading-relaxed line-clamp-2 min-h-[2.75rem]">
+                    {t("infoBarItem3Desc")}
+                  </p>
                 </div>
 
-                <h2 className="font-display text-xl font-bold tracking-tight text-[#0b2e1e] min-h-[3.25rem] leading-snug line-clamp-2">
-                  {t("infoBarItem3Title")}
-                </h2>
-                <p className="mt-2 text-xs sm:text-sm text-text-muted leading-relaxed">
-                  {t("infoBarItem3Desc")}
-                </p>
+                <div className="mt-auto pt-6">
+                  <Link
+                    href="/services"
+                    className="inline-flex h-11 w-full items-center justify-between rounded-md border border-[#124d34] text-[#124d34] hover:bg-[#124d34] hover:text-white font-semibold px-4 text-xs sm:text-sm transition-all duration-150"
+                  >
+                    <span>{t("infoBarItem3Cta")}</span>
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </div>
               </div>
-
-              <Link
-                href="/services"
-                className="mt-auto pt-6 inline-flex items-center justify-between rounded-md border border-[#124d34] text-[#124d34] hover:bg-[#124d34] hover:text-white font-semibold px-4 py-2.5 text-xs sm:text-sm transition-all duration-150"
-              >
-                <span>{t("infoBarItem3Cta")}</span>
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Link>
             </div>
           </ScrollRevealGroup>
         </div>
@@ -425,30 +435,31 @@ export default async function HomePage({
             {/* Visual Column with 2 Overlapping Real Photos + Badge */}
             <ScrollReveal
               variant="left"
-              className="lg:col-span-6 relative pb-6 sm:pb-0"
+              className="lg:col-span-6 relative pb-10 sm:pb-12"
             >
-              <div className="relative aspect-[4/3] sm:aspect-[14/11] rounded-2xl overflow-hidden shadow-xl border-4 border-white bg-surface">
+              <div className="relative aspect-[16/10] rounded-2xl overflow-hidden shadow-xl border-4 border-white bg-[#0b2e1e]">
                 <Image
                   src={assets.aboutGhusl}
-                  alt="BJWS Ritual Washing and Shrouding Training Workshop"
+                  alt="BJWS Executive Committee Leadership and Community Members"
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="object-cover object-center"
+                  className="object-cover object-top"
+                  priority
                 />
               </div>
 
-              <div className="absolute -bottom-2 right-2 sm:-bottom-8 sm:-right-6 w-1/2 aspect-[4/3] rounded-xl overflow-hidden shadow-2xl border-4 border-white bg-surface">
+              <div className="absolute -bottom-5 right-1 sm:-bottom-8 sm:-right-4 w-[62%] sm:w-[56%] aspect-[1280/785] rounded-xl overflow-hidden shadow-2xl border-4 border-white bg-white">
                 <Image
                   src={assets.aboutWater}
-                  alt="BJWS Cemetery Water Supply Infrastructure"
+                  alt="Buhary Janaza Welfare Society Official Registered Signboard Banner"
                   fill
-                  sizes="(max-width: 1024px) 60vw, 25vw"
-                  className="object-cover object-center"
+                  sizes="(max-width: 1024px) 60vw, 30vw"
+                  className="object-contain object-center"
                 />
               </div>
 
-              <div className="absolute top-3 left-3 sm:-top-6 sm:-left-6 bg-[#0b2e1e] text-white border-2 border-[#c99a45] rounded-xl p-2.5 sm:p-4 shadow-xl flex items-center gap-2.5 sm:gap-3">
-                <div className="flex h-8 w-8 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-lg bg-[#c99a45] text-[#072015]">
+              <div className="absolute top-3 left-3 sm:-top-5 sm:-left-5 bg-[#0b2e1e] text-white border-2 border-[#c99a45] rounded-xl p-2.5 sm:p-3.5 shadow-xl flex items-center gap-2.5 sm:gap-3 z-10">
+                <div className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-[#c99a45] text-[#072015]">
                   <Award className="h-4 w-4 sm:h-5 sm:w-5" />
                 </div>
                 <div>
@@ -609,10 +620,10 @@ export default async function HomePage({
                 {/* Card Content */}
                 <div className="p-5 sm:p-6 flex flex-col justify-between flex-1">
                   <div className="flex flex-col flex-1">
-                    <h3 className="font-display text-base sm:text-lg font-bold text-[#0b2e1e] group-hover:text-primary transition-colors leading-snug min-h-[3rem] line-clamp-2">
+                    <h3 className="font-display text-base sm:text-lg font-bold text-[#0b2e1e] group-hover:text-primary transition-colors leading-snug min-h-[3.25rem] flex items-center line-clamp-2">
                       {service.title}
                     </h3>
-                    <p className="mt-2 text-xs sm:text-sm text-text-muted leading-relaxed line-clamp-3">
+                    <p className="mt-2 text-xs sm:text-sm text-text-muted leading-relaxed line-clamp-3 min-h-[4.25rem]">
                       {service.desc}
                     </p>
                   </div>
@@ -620,7 +631,7 @@ export default async function HomePage({
                   <div className="mt-auto pt-5 border-t border-[#e6e4dc]/60">
                     <Link
                       href="/services"
-                      className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-primary hover:text-primary-hover group/link"
+                      className="inline-flex h-9 items-center gap-1.5 text-xs sm:text-sm font-semibold text-primary hover:text-primary-hover group/link"
                     >
                       <span>{tCommon("learnMore")}</span>
                       <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/link:translate-x-1" />
@@ -803,10 +814,10 @@ export default async function HomePage({
 
                     <div className="p-5 sm:p-6 flex flex-col justify-between flex-1">
                       <div className="flex flex-col flex-1">
-                        <h3 className="font-display text-lg font-bold text-[#0b2e1e] group-hover:text-primary transition-colors leading-snug line-clamp-2 min-h-[3.25rem]">
+                        <h3 className="font-display text-lg font-bold text-[#0b2e1e] group-hover:text-primary transition-colors leading-snug line-clamp-2 min-h-[3.25rem] flex items-center">
                           {article.title}
                         </h3>
-                        <p className="mt-2 text-xs sm:text-sm text-text-muted leading-relaxed line-clamp-3">
+                        <p className="mt-2 text-xs sm:text-sm text-text-muted leading-relaxed line-clamp-3 min-h-[3.75rem]">
                           {article.excerpt}
                         </p>
                       </div>

@@ -307,23 +307,28 @@ export default async function AboutPage({
 
               {/* Right: Real Photo & Stats Card */}
               <div className="space-y-6 lg:col-span-5">
-                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl border border-[#0b2e1e]/10 shadow-md">
-                  <Image
-                    src={assets.aboutCommunity}
-                    alt="BJWS Community Members Serving at Mullipothana"
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 40vw"
-                    className="object-cover"
-                  />
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                  <div className="absolute bottom-5 left-5 right-5">
-                    <span className="rounded-full bg-[#0b2e1e]/90 px-3 py-1.5 text-xs font-bold text-[#d4af37] backdrop-blur-xs">
-                      Serving Since 2023
-                    </span>
-                    <p className="mt-2 text-sm font-medium text-white/90">
-                      United under Shura consultation for community welfare and dignity.
-                    </p>
+                <div className="relative aspect-[1280/785] w-full overflow-hidden rounded-2xl sm:rounded-3xl border border-[#0b2e1e]/15 bg-white shadow-md p-1.5 sm:p-2">
+                  <div className="relative h-full w-full overflow-hidden rounded-xl sm:rounded-2xl bg-white">
+                    <Image
+                      src={assets.aboutCommunity}
+                      alt="Buhary Janaza Welfare Society Official Registered Signboard Banner"
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 40vw"
+                      className="object-contain object-center"
+                      priority
+                    />
                   </div>
+                </div>
+
+                {/* Information Pill */}
+                <div className="rounded-2xl border border-[#0b2e1e]/10 bg-white p-3 shadow-xs flex flex-wrap items-center justify-between gap-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#0b2e1e] px-3 py-1 text-xs font-bold text-[#d4af37]">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#d4af37] animate-pulse" />
+                    Serving Since 2023
+                  </span>
+                  <span className="text-xs font-semibold text-[#0b2e1e]">
+                    Official Society Signboard & Registry
+                  </span>
                 </div>
 
                 {/* Stat Highlights Bar */}
@@ -409,16 +414,16 @@ export default async function AboutPage({
               {coreValues.map((val) => (
                 <div
                   key={val.number}
-                  className="group relative flex h-full flex-1 flex-col justify-between rounded-2xl border border-[#0b2e1e]/10 bg-white p-6 shadow-xs transition-all duration-300 hover:-translate-y-1.5 hover:border-[#0b2e1e]/30 hover:shadow-md"
+                  className="group relative flex h-full min-h-[14rem] flex-1 flex-col justify-between rounded-2xl border border-[#0b2e1e]/10 bg-white p-6 shadow-xs transition-all duration-300 hover:-translate-y-1.5 hover:border-[#0b2e1e]/30 hover:shadow-md"
                 >
                   <div className="flex flex-col flex-1">
                     <span className="font-display text-3xl font-bold text-[#d4af37] opacity-80 group-hover:opacity-100">
                       {val.number}
                     </span>
-                    <h3 className="mt-3 font-display text-lg font-bold text-[#0b2e1e] min-h-[3rem] line-clamp-2 leading-snug">
+                    <h3 className="mt-3 font-display text-lg font-bold text-[#0b2e1e] min-h-[1.75rem] leading-snug flex items-center">
                       {val.title}
                     </h3>
-                    <p className="mt-2 text-xs leading-relaxed text-[#6b7280]">
+                    <p className="mt-2 text-xs leading-relaxed text-[#6b7280] min-h-[2.5rem] flex items-start">
                       {val.desc}
                     </p>
                   </div>
@@ -451,18 +456,18 @@ export default async function AboutPage({
 
                 {/* Documentary Frame */}
                 <div className="lg:col-span-5">
-                  <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-[#0b2e1e]/15 shadow-sm">
+                  <div className="relative aspect-[3/2] w-full overflow-hidden rounded-2xl border border-[#0b2e1e]/15 shadow-sm bg-[#0b2e1e]/5">
                     <Image
                       src={assets.aboutHistoryWater}
-                      alt="First BJWS Community Water and Infrastructure Work"
+                      alt="Historic Buhary Jummah Mosque, 95th Mile Post, Mullipothana"
                       fill
                       sizes="(max-width: 1024px) 100vw, 40vw"
-                      className="object-cover"
+                      className="object-cover object-center"
                     />
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                     <div className="absolute bottom-3 left-4 right-4">
-                      <span className="text-xs font-semibold text-white">
-                        Early civil works & on-site water facilities at the mosque & cemetery.
+                      <span className="text-xs font-semibold text-white drop-shadow-xs">
+                        Buhary Jummah Mosque Mahallah, Mullipothana
                       </span>
                     </div>
                   </div>

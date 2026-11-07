@@ -179,7 +179,7 @@ export default async function ReportsPage({
                           <FileText className="h-5 w-5" />
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-display text-lg font-bold text-[#0b2e1e] min-h-[3rem] line-clamp-2">
+                          <h3 className="font-display text-lg font-bold text-[#0b2e1e] min-h-[3rem] line-clamp-2 flex items-center">
                             {report.title}
                           </h3>
                           <p className="mt-1 text-xs text-[#6b7280]">
