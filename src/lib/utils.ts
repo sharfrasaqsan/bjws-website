@@ -33,45 +33,9 @@ export function formatAdminDate(dateStr?: string | null): string {
 }
 
 /**
- * Normalizes any Google Drive link (sharing link, open link, uc link)
- * into a direct high-speed Google UserContent CDN image URL (`https://lh3.googleusercontent.com/d/FILE_ID`).
- * Leaves local assets and standard image URLs untouched.
+ * Sanitizes an image URL by trimming whitespace.
+ * Retained for backwards compatibility across existing image components.
  */
 export function formatGoogleDriveImageUrl(url?: string | null): string {
-  if (!url) return "";
-  const trimmed = url.trim();
-
-  // Already normalized Google CDN format
-  if (
-    trimmed.startsWith("https://lh3.googleusercontent.com/d/") ||
-    trimmed.startsWith("http://lh3.googleusercontent.com/d/")
-  ) {
-    return trimmed;
-  }
-
-  // Pattern 1: drive.google.com/file/d/FILE_ID/...
-  const fileDMatch = trimmed.match(
-    /drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/
-  );
-  if (fileDMatch && fileDMatch[1]) {
-    return `https://lh3.googleusercontent.com/d/${fileDMatch[1]}`;
-  }
-
-  // Pattern 2: drive.google.com/open?id=FILE_ID or drive.google.com/uc?...id=FILE_ID or thumbnail?id=FILE_ID
-  const idMatch = trimmed.match(
-    /drive\.google\.com\/(?:open|uc|thumbnail).*?[?&]id=([a-zA-Z0-9_-]+)/
-  );
-  if (idMatch && idMatch[1]) {
-    return `https://lh3.googleusercontent.com/d/${idMatch[1]}`;
-  }
-
-  // Pattern 3: docs.google.com/uc?...id=FILE_ID
-  const docsMatch = trimmed.match(
-    /docs\.google\.com\/(?:uc|thumbnail).*?[?&]id=([a-zA-Z0-9_-]+)/
-  );
-  if (docsMatch && docsMatch[1]) {
-    return `https://lh3.googleusercontent.com/d/${docsMatch[1]}`;
-  }
-
-  return trimmed;
+  return url ? url.trim() : "";
 }

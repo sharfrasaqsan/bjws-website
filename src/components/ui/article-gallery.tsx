@@ -4,7 +4,6 @@ import * as React from "react";
 import { useState } from "react";
 import Image from "next/image";
 import { type ArticleImage } from "@/content/news";
-import { formatGoogleDriveImageUrl } from "@/lib/utils";
 import { Camera, Eye, X, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
 
 interface ArticleGalleryProps {
@@ -64,7 +63,7 @@ export function ArticleGallery({
         }`}
       >
         {images.map((img, idx) => {
-          const formattedUrl = formatGoogleDriveImageUrl(img.url);
+          const formattedUrl = img.url;
           return (
             <figure
               key={idx}
@@ -76,7 +75,6 @@ export function ArticleGallery({
                   src={formattedUrl}
                   alt={img.alt || `Related article photo ${idx + 1}`}
                   fill
-                  unoptimized={formattedUrl.includes("googleusercontent.com")}
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
                 />
@@ -129,7 +127,7 @@ export function ArticleGallery({
             {/* Modal Image */}
             <div className="relative aspect-[16/10] sm:aspect-[16/9] w-full bg-black">
               <Image
-                src={formatGoogleDriveImageUrl(currentImage.url)}
+                src={currentImage.url}
                 alt={currentImage.alt || "BJWS Article Photo"}
                 fill
                 unoptimized

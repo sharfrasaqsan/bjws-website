@@ -3,7 +3,6 @@
 import * as React from "react";
 import { useState } from "react";
 import Image from "next/image";
-import { formatGoogleDriveImageUrl } from "@/lib/utils";
 import { Eye, X, Sparkles, Tag, ShieldCheck } from "lucide-react";
 
 interface ArticleHeroImageProps {
@@ -22,7 +21,7 @@ export function ArticleHeroImage({
   priority = true,
 }: ArticleHeroImageProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const formattedUrl = formatGoogleDriveImageUrl(src);
+  const formattedUrl = src;
 
   return (
     <>
@@ -34,7 +33,6 @@ export function ArticleHeroImage({
           alt={alt}
           fill
           priority={priority}
-          unoptimized={formattedUrl.includes("googleusercontent.com")}
           sizes="(max-width: 1024px) 100vw, 850px"
           className="object-cover object-center transition-transform duration-700 group-hover:scale-103"
         />

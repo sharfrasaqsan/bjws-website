@@ -5,7 +5,6 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { QRCodeSVG, QRCodeCanvas } from "qrcode.react";
 import { type TeamMember, calculateExpiryDate, resolveMemberPhoto } from "@/content/team";
 import { regenerateMemberVerificationTokenAction } from "@/lib/admin-actions";
-import { formatGoogleDriveImageUrl } from "@/lib/utils";
 import {
   X,
   QrCode,
@@ -150,9 +149,7 @@ export function MemberQrModal({
 
       if (member.photo) {
         try {
-          const photoUrl = formatGoogleDriveImageUrl(
-            resolveMemberPhoto(member.photo) || member.photo
-          );
+          const photoUrl = resolveMemberPhoto(member.photo) || member.photo;
           const photoImg = await loadImg(photoUrl);
 
           // Smart auto-alignment: Keep head and hair 100% visible

@@ -3,7 +3,6 @@
 import * as React from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, Pause, Play, Sparkles } from "lucide-react";
-import { formatGoogleDriveImageUrl } from "@/lib/utils";
 
 export interface HeroSlide {
   src: string;
@@ -153,7 +152,7 @@ export function HeroSlideshow({
               }`}
             >
               <Image
-                src={formatGoogleDriveImageUrl(slide.src)}
+                src={slide.src}
                 alt={slide.alt || `BJWS Community Slide ${idx + 1}`}
                 fill
                 priority={isPriority}

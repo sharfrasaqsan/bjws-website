@@ -21,7 +21,6 @@ import {
   ArrowRight,
   Award,
 } from "lucide-react";
-import { formatGoogleDriveImageUrl } from "@/lib/utils";
 import { getSiteAssets } from "@/content/site-assets";
 import { getTeamMembers, type TeamMember, resolveMemberPhoto } from "@/content/team";
 import { createPublicClient, isSupabaseConfigured } from "@/lib/supabase/server";
@@ -200,7 +199,7 @@ export default async function AboutPage({
       role: member.role[locale as "en" | "ta" | "si"] || member.role.en,
       phone: member.phone,
       initials: member.initials,
-      photo: resolvedPhoto ? formatGoogleDriveImageUrl(resolvedPhoto) : resolveMemberPhoto(fallback.photo),
+      photo: resolvedPhoto || resolveMemberPhoto(fallback.photo),
     };
   };
 
@@ -533,7 +532,7 @@ export default async function AboutPage({
                           {officer.photo ? (
                             <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-[#c99a45]/40 shadow-xs bg-[#0b2e1e]">
                               <Image
-                                src={formatGoogleDriveImageUrl(officer.photo)}
+                                src={officer.photo}
                                 alt={officer.name}
                                 fill
                                 sizes="48px"

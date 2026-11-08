@@ -54,7 +54,7 @@ export default async function NewsPage({
         .eq("locale", locale)
         .order("published_at", { ascending: false });
 
-      if (!error && data) {
+      if (!error && data && data.length > 0) {
         articles = data.map((d) => ({
           id: d.id,
           slug: d.slug,
@@ -77,9 +77,10 @@ export default async function NewsPage({
       }
     } catch (err) {
       console.warn("Supabase articles query error, using local fallback:", err);
-      articles = getArticles(locale);
     }
-  } else {
+  }
+
+  if (articles.length === 0) {
     articles = getArticles(locale);
   }
 

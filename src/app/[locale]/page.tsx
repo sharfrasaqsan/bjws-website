@@ -43,7 +43,6 @@ import {
   createPublicClient,
   isSupabaseConfigured,
 } from "@/lib/supabase/server";
-import { formatGoogleDriveImageUrl } from "@/lib/utils";
 import { getSiteAssets } from "@/content/site-assets";
 
 export async function generateMetadata({
@@ -118,7 +117,7 @@ export default async function HomePage({
     }
   }
 
-  if (latestArticles.length === 0 && !isSupabaseConfigured()) {
+  if (latestArticles.length === 0) {
     latestArticles = getArticles(locale).slice(0, 3);
   }
 
@@ -631,7 +630,7 @@ export default async function HomePage({
                 {/* Photo with Aspect Ratio for Zero CLS */}
                 <div className="relative aspect-[16/10] overflow-hidden bg-muted shrink-0">
                   <Image
-                    src={formatGoogleDriveImageUrl(service.image)}
+                    src={service.image}
                     alt={service.title}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -824,7 +823,7 @@ export default async function HomePage({
                   >
                     <div className="relative aspect-[16/10] overflow-hidden bg-muted shrink-0">
                       <Image
-                        src={formatGoogleDriveImageUrl(article.image_url)}
+                        src={article.image_url}
                         alt={article.title}
                         fill
                         sizes="(max-width: 768px) 100vw, 33vw"
@@ -1084,7 +1083,7 @@ export default async function HomePage({
                 }`}
               >
                 <Image
-                  src={formatGoogleDriveImageUrl(photo.src)}
+                  src={photo.src}
                   alt={photo.caption}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 20vw"

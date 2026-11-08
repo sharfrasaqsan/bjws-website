@@ -47,7 +47,6 @@ export function ArticleInlineImage({
             src={src}
             alt={alt || "BJWS Article Illustration"}
             fill
-            unoptimized={src.includes("googleusercontent.com")}
             sizes="(max-width: 1024px) 100vw, 850px"
             className="object-cover object-center transition-transform duration-500 group-hover:scale-103"
           />
@@ -107,7 +106,6 @@ export function ArticleInlineImage({
                 src={src}
                 alt={alt || "BJWS Article Illustration"}
                 fill
-                unoptimized={src.includes("googleusercontent.com")}
                 className="object-contain"
                 sizes="(max-width: 1280px) 100vw, 1200px"
               />

@@ -14,7 +14,6 @@ import {
   deleteGalleryImageAction,
   toggleGalleryApprovalAction,
 } from "@/lib/admin-actions";
-import { formatGoogleDriveImageUrl } from "@/lib/utils";
 import {
   Image as ImageIcon,
   CheckCircle2,
@@ -31,23 +30,14 @@ import {
   X,
   FileCheck,
   Lock,
+  UploadCloud,
 } from "lucide-react";
+import { BatchGalleryUploader } from "@/components/admin/batch-gallery-uploader";
+import { SingleImageDropzone } from "@/components/admin/single-image-dropzone";
 
 interface GalleryManagerProps {
   initialImages: GalleryImage[];
 }
-
-const PRESET_GALLERY_PHOTOS = [
-  { label: "Cemetery Shramadana 01", path: "/images/gallery/shramadana-01.webp" },
-  { label: "Cemetery Shramadana 02", path: "/images/gallery/shramadana-02.webp" },
-  { label: "Ghusl Training 01", path: "/images/gallery/ghusl-01.webp" },
-  { label: "Ghusl Training 02", path: "/images/gallery/ghusl-02.webp" },
-  { label: "Iftar Function 01", path: "/images/gallery/iftar-01.webp" },
-  { label: "Iftar Function 02", path: "/images/gallery/iftar-02.webp" },
-  { label: "Water & Concrete Project", path: "/images/gallery/water-concrete-01.webp" },
-  { label: "Livelihood Welfare 01", path: "/images/gallery/livelihood-01.webp" },
-  { label: "Cemetery Road Project", path: "/images/gallery/cemetery-road-01.webp" },
-];
 
 export function GalleryManager({ initialImages }: GalleryManagerProps) {
   const router = useRouter();
@@ -59,13 +49,46 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
 
   // Modals
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isBatchOpen, setIsBatchOpen] = useState(false);
   const [editingImage, setEditingImage] = useState<GalleryImage | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
 
-  // Photo selector state for modal
-  const [selectedPhoto, setSelectedPhoto] = useState<string>("");
-  const [customPhotoUrl, setCustomPhotoUrl] = useState<string>("");
+  // Photo state separated for create and edit to guarantee no cross-contamination
+  const [createPhotoUrl, setCreatePhotoUrl] = useState<string>("");
+  const [editPhotoUrl, setEditPhotoUrl] = useState<string>("");
+
+  // Dynamic Category creation state
+  const [isCreateCustomCategory, setIsCreateCustomCategory] = useState(false);
+  const [createCustomCategoryInput, setCreateCustomCategoryInput] = useState("");
+  const [isEditCustomCategory, setIsEditCustomCategory] = useState(false);
+  const [editCustomCategoryInput, setEditCustomCategoryInput] = useState("");
+
+  // Dynamic unique categories list
+  const allCategories = React.useMemo(() => {
+    const list: Array<{ key: string; label: string }> = [];
+    const seen = new Set<string>();
+
+    GALLERY_CATEGORIES.forEach((cat) => {
+      seen.add(cat.key);
+      list.push({
+        key: cat.key,
+        label: cat.key.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+      });
+    });
+
+    images.forEach((img) => {
+      if (img.category && !seen.has(img.category)) {
+        seen.add(img.category);
+        list.push({
+          key: img.category,
+          label: img.category.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+        });
+      }
+    });
+
+    return list;
+  }, [images]);
 
   // Counts
   const totalCount = images.length;
@@ -125,13 +148,21 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
     e.preventDefault();
     setFormError(null);
     const formData = new FormData(e.currentTarget);
-    const rawPhoto = customPhotoUrl.trim() || selectedPhoto;
+    const rawPhoto = createPhotoUrl.trim();
     if (!rawPhoto) {
-      setFormError("Please select a preset photo or enter an image URL.");
+      setFormError("Please upload a photo or enter an image URL.");
       return;
     }
-    const photoToUse = formatGoogleDriveImageUrl(rawPhoto);
-    formData.set("src", photoToUse);
+    formData.set("src", rawPhoto);
+
+    if (isCreateCustomCategory && createCustomCategoryInput.trim()) {
+      const slug = createCustomCategoryInput
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+      formData.set("category", slug || "general");
+    }
 
     startTransition(async () => {
       const res = await createGalleryImageAction(null, formData);
@@ -139,8 +170,7 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
         setFormError(res.error);
       } else {
         setIsCreateOpen(false);
-        setSelectedPhoto("");
-        setCustomPhotoUrl("");
+        setCreatePhotoUrl("");
         window.location.reload();
       }
     });
@@ -150,9 +180,18 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
     e.preventDefault();
     setFormError(null);
     const formData = new FormData(e.currentTarget);
-    const rawPhoto = customPhotoUrl.trim() || (formData.get("src") as string)?.trim() || selectedPhoto;
+    const rawPhoto = editPhotoUrl.trim() || (formData.get("src") as string)?.trim();
     if (rawPhoto) {
-      formData.set("src", formatGoogleDriveImageUrl(rawPhoto));
+      formData.set("src", rawPhoto);
+    }
+
+    if (isEditCustomCategory && editCustomCategoryInput.trim()) {
+      const slug = editCustomCategoryInput
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+      formData.set("category", slug || "general");
     }
 
     startTransition(async () => {
@@ -161,8 +200,7 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
         setFormError(res.error);
       } else {
         setEditingImage(null);
-        setSelectedPhoto("");
-        setCustomPhotoUrl("");
+        setEditPhotoUrl("");
         window.location.reload();
       }
     });
@@ -170,17 +208,29 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
 
   const openEditModal = (image: GalleryImage) => {
     setEditingImage(image);
-    setSelectedPhoto(image.src);
-    setCustomPhotoUrl(
-      !PRESET_GALLERY_PHOTOS.some((p) => p.path === image.src) ? image.src : ""
-    );
+    setEditPhotoUrl(image.src);
+    setIsEditCustomCategory(false);
+    setEditCustomCategoryInput("");
+    setFormError(null);
+  };
+
+  const closeEditModal = () => {
+    setEditingImage(null);
+    setEditPhotoUrl("");
     setFormError(null);
   };
 
   const openCreateModal = () => {
     setIsCreateOpen(true);
-    setSelectedPhoto(PRESET_GALLERY_PHOTOS[0].path);
-    setCustomPhotoUrl("");
+    setCreatePhotoUrl("");
+    setIsCreateCustomCategory(false);
+    setCreateCustomCategoryInput("");
+    setFormError(null);
+  };
+
+  const closeCreateModal = () => {
+    setIsCreateOpen(false);
+    setCreatePhotoUrl("");
     setFormError(null);
   };
 
@@ -308,21 +358,30 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
             className="rounded-xl border border-border bg-background px-3 py-2 text-xs font-semibold text-text focus:border-primary focus:outline-none"
           >
             <option value="all">All Photo Albums</option>
-            {GALLERY_CATEGORIES.map((cat) => (
+            {allCategories.map((cat) => (
               <option key={cat.key} value={cat.key}>
-                {cat.key.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
+                {cat.label}
               </option>
             ))}
           </select>
 
-          {/* Add Button */}
+          {/* Batch Upload & Add Buttons */}
+          <button
+            type="button"
+            onClick={() => setIsBatchOpen(true)}
+            className="inline-flex items-center gap-1.5 rounded-xl bg-[#124d34] hover:bg-[#0b2e1e] text-white px-4 py-2 text-xs font-semibold shadow-xs transition-colors shrink-0 cursor-pointer"
+          >
+            <UploadCloud className="h-4 w-4 text-[#d4af37]" />
+            <span>Batch Upload Photos</span>
+          </button>
+
           <button
             type="button"
             onClick={openCreateModal}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-[#0b2e1e] hover:bg-[#124d34] px-4 py-2 text-xs font-semibold text-white shadow-xs transition-colors shrink-0"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-background hover:bg-surface px-4 py-2 text-xs font-semibold text-text shadow-xs transition-colors shrink-0 cursor-pointer"
           >
-            <Plus className="h-4 w-4 text-[#c99a45]" />
-            <span>Add Photo</span>
+            <Plus className="h-4 w-4 text-primary" />
+            <span>Add Single Photo</span>
           </button>
         </div>
       </div>
@@ -345,7 +404,7 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
                 {/* Image Banner */}
                 <div className="relative aspect-[16/10] w-full bg-black/5 overflow-hidden">
                   <Image
-                    src={formatGoogleDriveImageUrl(img.src)}
+                    src={img.src}
                     alt={img.captionKey}
                     fill
                     className="object-cover transition-transform duration-300 group-hover:scale-102"
@@ -465,11 +524,33 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
           <div className="col-span-full rounded-2xl border border-dashed border-border p-12 text-center bg-surface">
             <ImageIcon className="mx-auto h-10 w-10 text-text-muted/60" />
             <h3 className="mt-3 font-display text-base font-bold text-text">
-              No Photos Found
+              {totalCount === 0 ? "No Photos in Registry Yet" : "No Photos Found"}
             </h3>
-            <p className="mt-1 text-xs text-text-muted">
-              Try adjusting your search query or album filter.
+            <p className="mt-1 text-xs text-text-muted max-w-md mx-auto">
+              {totalCount === 0
+                ? "Your society gallery is currently empty. Start documenting community shramadhana drives, ghusl programs, and welfare activities."
+                : "Try adjusting your search query or album category filter."}
             </p>
+            {totalCount === 0 && (
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setIsBatchOpen(true)}
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#124d34] hover:bg-[#0b2e1e] text-white px-5 py-2.5 text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+                >
+                  <UploadCloud className="h-4 w-4 text-[#d4af37]" />
+                  <span>Batch Upload (50+ Photos)</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={openCreateModal}
+                  className="inline-flex items-center gap-2 rounded-xl border border-border bg-background hover:bg-surface px-5 py-2.5 text-xs font-semibold text-text shadow-xs transition-colors cursor-pointer"
+                >
+                  <Plus className="h-4 w-4 text-primary" />
+                  <span>Add Single Photo</span>
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -480,7 +561,7 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
           <div className="relative w-full max-w-2xl rounded-3xl border border-border bg-surface p-6 sm:p-8 shadow-2xl my-8 max-h-[90vh] overflow-y-auto">
             <button
               type="button"
-              onClick={() => setIsCreateOpen(false)}
+              onClick={closeCreateModal}
               className="absolute right-5 top-5 rounded-full p-2 text-text-muted hover:bg-background hover:text-text"
             >
               <X className="h-5 w-5" />
@@ -508,87 +589,15 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
             )}
 
             <form onSubmit={handleCreateSubmit} className="mt-6 space-y-4">
-              {/* Photo Selector */}
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-2">
-                  Select Photo *
-                </label>
-                <div className="space-y-3">
-                  <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 max-h-44 overflow-y-auto p-2 rounded-xl border border-border bg-background">
-                    {PRESET_GALLERY_PHOTOS.map((preset) => {
-                      const isSel = selectedPhoto === preset.path;
-                      return (
-                        <button
-                          key={preset.path}
-                          type="button"
-                          onClick={() => {
-                            setSelectedPhoto(preset.path);
-                            setCustomPhotoUrl("");
-                          }}
-                          className={`relative aspect-[16/10] rounded-xl overflow-hidden border-2 transition-all ${
-                            isSel
-                              ? "border-primary ring-2 ring-primary/40 scale-95"
-                              : "border-transparent opacity-70 hover:opacity-100"
-                          }`}
-                          title={preset.label}
-                        >
-                          <Image
-                            src={preset.path}
-                            alt={preset.label}
-                            fill
-                            className="object-cover"
-                            sizes="96px"
-                          />
-                          {isSel && (
-                            <div className="absolute inset-0 bg-primary/40 flex items-center justify-center text-white">
-                              <CheckCircle2 className="h-4 w-4" />
-                            </div>
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-semibold text-text-muted shrink-0">
-                        Photo URL / Google Drive:
-                      </span>
-                      <input
-                        type="text"
-                        value={customPhotoUrl}
-                        onChange={(e) => {
-                          setCustomPhotoUrl(e.target.value);
-                          setSelectedPhoto("");
-                        }}
-                        placeholder="Paste Google Drive share link or direct URL..."
-                        className="flex-1 rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
-                      />
-                    </div>
-                    <p className="text-[11px] text-text-muted/80">
-                      Supports Google Drive links (ensure &quot;Anyone with the link can view&quot; is turned on). Automatically converts to high-speed CDN.
-                    </p>
-                    {customPhotoUrl && (
-                      <div className="flex items-center gap-3 p-2 rounded-xl bg-background border border-border">
-                        <div className="relative h-12 w-16 rounded-lg overflow-hidden border border-border bg-black/5 shrink-0">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={formatGoogleDriveImageUrl(customPhotoUrl)}
-                            alt="Preview"
-                            className="h-full w-full object-cover"
-                            onError={(e) => {
-                              (e.target as HTMLElement).style.display = "none";
-                            }}
-                          />
-                        </div>
-                        <div className="text-[11px] text-text-muted truncate">
-                          Previewing: <span className="font-mono text-primary font-medium">{formatGoogleDriveImageUrl(customPhotoUrl)}</span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
+              {/* Photo Selector with Drag & Drop */}
+              <SingleImageDropzone
+                name="src"
+                value={createPhotoUrl}
+                onChange={(url) => setCreatePhotoUrl(url)}
+                folder="gallery"
+                label="Photo Upload *"
+                helperText="Drag & drop a photo from your computer/phone or click to browse. Automatically optimized to WebP."
+              />
 
               {/* Caption */}
               <div>
@@ -607,20 +616,43 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
               {/* Category, Date, Location */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
-                    Album Category *
-                  </label>
-                  <select
-                    name="category"
-                    required
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
-                  >
-                    {GALLERY_CATEGORIES.map((cat) => (
-                      <option key={cat.key} value={cat.key}>
-                        {cat.key.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-text-muted">
+                      Album Category *
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsCreateCustomCategory(!isCreateCustomCategory);
+                        setCreateCustomCategoryInput("");
+                      }}
+                      className="text-[11px] font-semibold text-primary hover:underline cursor-pointer"
+                    >
+                      {isCreateCustomCategory ? "Choose Existing" : "+ New Category"}
+                    </button>
+                  </div>
+                  {isCreateCustomCategory ? (
+                    <input
+                      type="text"
+                      value={createCustomCategoryInput}
+                      onChange={(e) => setCreateCustomCategoryInput(e.target.value)}
+                      placeholder="e.g. Ramadan Relief 2026"
+                      required
+                      className="w-full rounded-xl border border-primary bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
+                    />
+                  ) : (
+                    <select
+                      name="category"
+                      required
+                      className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
+                    >
+                      {allCategories.map((cat) => (
+                        <option key={cat.key} value={cat.key}>
+                          {cat.label}
+                        </option>
+                      ))}
+                    </select>
+                  )}
                 </div>
 
                 <div>
@@ -690,7 +722,7 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
               <div className="flex items-center justify-end gap-3 pt-4 border-t border-border">
                 <button
                   type="button"
-                  onClick={() => setIsCreateOpen(false)}
+                  onClick={closeCreateModal}
                   className="rounded-xl border border-border px-4 py-2 text-xs font-semibold text-text hover:bg-background"
                 >
                   Cancel
@@ -714,7 +746,7 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
           <div className="relative w-full max-w-2xl rounded-3xl border border-border bg-surface p-6 sm:p-8 shadow-2xl my-8 max-h-[90vh] overflow-y-auto">
             <button
               type="button"
-              onClick={() => setEditingImage(null)}
+              onClick={closeEditModal}
               className="absolute right-5 top-5 rounded-full p-2 text-text-muted hover:bg-background hover:text-text"
             >
               <X className="h-5 w-5" />
@@ -744,38 +776,16 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
             <form onSubmit={handleEditSubmit} className="mt-6 space-y-4">
               <input type="hidden" name="id" value={editingImage.id} />
 
-              {/* Photo Preview & Selector */}
+              {/* Photo Preview & Dropzone */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-2">
-                  Photo Path / Google Drive URL
-                </label>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-3">
-                    <div className="relative h-16 w-24 rounded-xl overflow-hidden border border-border shrink-0 bg-background">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={formatGoogleDriveImageUrl(customPhotoUrl || editingImage.src)}
-                        alt="Preview"
-                        className="h-full w-full object-cover"
-                        onError={(e) => {
-                          (e.target as HTMLElement).style.display = "none";
-                        }}
-                      />
-                    </div>
-                    <input
-                      type="text"
-                      name="src"
-                      defaultValue={editingImage.src}
-                      onChange={(e) => setCustomPhotoUrl(e.target.value)}
-                      required
-                      placeholder="Paste Google Drive share link or image URL..."
-                      className="flex-1 rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
-                    />
-                  </div>
-                  <p className="text-[11px] text-text-muted/80">
-                    Supports Google Drive links (ensure &quot;Anyone with the link can view&quot; is turned on).
-                  </p>
-                </div>
+                <SingleImageDropzone
+                  name="src"
+                  value={editPhotoUrl || editingImage.src}
+                  onChange={(url) => setEditPhotoUrl(url)}
+                  folder="gallery"
+                  label="Update Photo"
+                  helperText="Drop a replacement photo or click to browse. Automatically converts to WebP."
+                />
               </div>
 
               {/* Caption */}
@@ -795,21 +805,44 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
               {/* Category, Date, Location */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
-                    Album Category *
-                  </label>
-                  <select
-                    name="category"
-                    required
-                    defaultValue={editingImage.category}
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
-                  >
-                    {GALLERY_CATEGORIES.map((cat) => (
-                      <option key={cat.key} value={cat.key}>
-                        {cat.key.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-text-muted">
+                      Album Category *
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsEditCustomCategory(!isEditCustomCategory);
+                        setEditCustomCategoryInput("");
+                      }}
+                      className="text-[11px] font-semibold text-primary hover:underline cursor-pointer"
+                    >
+                      {isEditCustomCategory ? "Choose Existing" : "+ New Category"}
+                    </button>
+                  </div>
+                  {isEditCustomCategory ? (
+                    <input
+                      type="text"
+                      value={editCustomCategoryInput}
+                      onChange={(e) => setEditCustomCategoryInput(e.target.value)}
+                      placeholder="e.g. Ramadan Relief 2026"
+                      required
+                      className="w-full rounded-xl border border-primary bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
+                    />
+                  ) : (
+                    <select
+                      name="category"
+                      required
+                      defaultValue={editingImage.category}
+                      className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
+                    >
+                      {allCategories.map((cat) => (
+                        <option key={cat.key} value={cat.key}>
+                          {cat.label}
+                        </option>
+                      ))}
+                    </select>
+                  )}
                 </div>
 
                 <div>
@@ -876,7 +909,7 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
               <div className="flex items-center justify-end gap-3 pt-4 border-t border-border">
                 <button
                   type="button"
-                  onClick={() => setEditingImage(null)}
+                  onClick={closeEditModal}
                   className="rounded-xl border border-border px-4 py-2 text-xs font-semibold text-text hover:bg-background"
                 >
                   Cancel
@@ -927,6 +960,15 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
           </div>
         </div>
       )}
+      {/* BATCH UPLOADER MODAL */}
+      <BatchGalleryUploader
+        isOpen={isBatchOpen}
+        onClose={() => setIsBatchOpen(false)}
+        onSuccess={() => {
+          setIsBatchOpen(false);
+          window.location.reload();
+        }}
+      />
     </div>
   );
 }

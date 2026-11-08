@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { formatGoogleDriveImageUrl } from "@/lib/utils";
 import { CheckCircle2, ExternalLink, Quote } from "lucide-react";
 import { ArticleInlineImage } from "./article-inline-image";
 
@@ -126,7 +125,7 @@ export function RichArticleContent({
         const imgMatch = trimmed.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
         if (imgMatch) {
           const [, alt, rawUrl] = imgMatch;
-          const formattedUrl = formatGoogleDriveImageUrl(rawUrl);
+          const formattedUrl = rawUrl?.trim() || "";
           return (
             <ArticleInlineImage
               key={idx}

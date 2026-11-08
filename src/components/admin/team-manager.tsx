@@ -12,8 +12,8 @@ import {
   toggleTeamMemberActiveAction,
   reorderTeamMembersAction,
 } from "@/lib/admin-actions";
-import { formatGoogleDriveImageUrl } from "@/lib/utils";
 import { MemberQrModal } from "@/components/admin/member-qr-modal";
+import { SingleImageDropzone } from "@/components/admin/single-image-dropzone";
 import {
   Users,
   UserCheck,
@@ -33,36 +33,13 @@ import {
   ChevronUp,
   ChevronDown,
   ArrowUpDown,
-  QrCode,
+  IdCard,
   Sparkles,
 } from "lucide-react";
 
 interface TeamManagerProps {
   initialMembers: TeamMember[];
 }
-
-const PRESET_TEAM_PHOTOS = [
-  { label: "A.M. Sahibullah", path: "/images/team/sahibulla_new.webp" },
-  { label: "A.M.A. Gafoor", path: "/images/team/gafoor.webp" },
-  { label: "A.L.M. Siyam", path: "/images/team/siyam.webp" },
-  { label: "M.S. Riyas", path: "/images/team/riyas.webp" },
-  { label: "M.S. Faizarkhan", path: "/images/team/faisarkhan.webp" },
-  { label: "A. Abuhuraira", path: "/images/team/abuhuraira_new.webp" },
-  { label: "N.M. Shamed Nashraff", path: "/images/team/nashraf.webp" },
-  { label: "A.G.M. Niyas", path: "/images/team/niyas_new.webp" },
-  { label: "M. Mansoor Ali", path: "/images/team/mansoor.webp" },
-  { label: "M.I. Rikas Ahamed", path: "/images/team/rikas.webp" },
-  { label: "S.M. Jaisar", path: "/images/team/jaisar.webp" },
-  { label: "M.M.M. Irfan", path: "/images/team/irfan_new.webp" },
-  { label: "P.T.M. Saheeth", path: "/images/team/saheed.webp" },
-  { label: "M.H. Hanees", path: "/images/team/hanees.webp" },
-  { label: "A.M. Nawsath", path: "/images/team/nawshad.webp" },
-  { label: "A.H. Jawffar", path: "/images/team/jawffar.webp" },
-  { label: "A. Naleem", path: "/images/team/naleem.webp" },
-  { label: "A.M. Sharfras Aqsan", path: "/images/team/sharfras.webp" },
-  { label: "T.F.M. Yaseer", path: "/images/team/yaseer.webp" },
-  { label: "A. Ramees", path: "/images/team/ramees.webp" },
-];
 
 export function TeamManager({ initialMembers }: TeamManagerProps) {
   const router = useRouter();
@@ -92,9 +69,9 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
     }
   };
 
-  // Photo selector state for modal
-  const [selectedPhoto, setSelectedPhoto] = useState<string>("");
-  const [customPhotoUrl, setCustomPhotoUrl] = useState<string>("");
+  // Photo state separated for create and edit to guarantee no cross-contamination
+  const [createPhotoUrl, setCreatePhotoUrl] = useState<string>("");
+  const [editPhotoUrl, setEditPhotoUrl] = useState<string>("");
 
   // Counts
   const totalCount = members.length;
@@ -191,8 +168,7 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
     e.preventDefault();
     setFormError(null);
     const formData = new FormData(e.currentTarget);
-    const rawPhoto = customPhotoUrl.trim() || selectedPhoto;
-    const photoToUse = formatGoogleDriveImageUrl(rawPhoto);
+    const photoToUse = createPhotoUrl.trim();
     if (photoToUse) {
       formData.set("photo", photoToUse);
     }
@@ -203,8 +179,7 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
         setFormError(res.error);
       } else {
         setIsCreateOpen(false);
-        setSelectedPhoto("");
-        setCustomPhotoUrl("");
+        setCreatePhotoUrl("");
         window.location.reload();
       }
     });
@@ -214,8 +189,7 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
     e.preventDefault();
     setFormError(null);
     const formData = new FormData(e.currentTarget);
-    const rawPhoto = customPhotoUrl.trim() || selectedPhoto;
-    const photoToUse = formatGoogleDriveImageUrl(rawPhoto);
+    const photoToUse = editPhotoUrl.trim();
     if (photoToUse) {
       formData.set("photo", photoToUse);
     }
@@ -255,8 +229,7 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
           )
         );
         setEditingMember(null);
-        setSelectedPhoto("");
-        setCustomPhotoUrl("");
+        setEditPhotoUrl("");
         router.refresh();
       }
     });
@@ -265,19 +238,25 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
   const openEditModal = (member: TeamMember) => {
     setEditingMember(member);
     const resolvedPhoto = resolveMemberPhoto(member.photo) || "";
-    setSelectedPhoto(resolvedPhoto);
-    setCustomPhotoUrl(
-      resolvedPhoto && !PRESET_TEAM_PHOTOS.some((p) => p.path === resolvedPhoto)
-        ? resolvedPhoto
-        : ""
-    );
+    setEditPhotoUrl(resolvedPhoto);
     setFormError(null);
   };
 
   const openCreateModal = () => {
     setIsCreateOpen(true);
-    setSelectedPhoto("");
-    setCustomPhotoUrl("");
+    setCreatePhotoUrl("");
+    setFormError(null);
+  };
+
+  const closeCreateModal = () => {
+    setIsCreateOpen(false);
+    setCreatePhotoUrl("");
+    setFormError(null);
+  };
+
+  const closeEditModal = () => {
+    setEditingMember(null);
+    setEditPhotoUrl("");
     setFormError(null);
   };
 
@@ -516,9 +495,7 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                 <div className="relative h-13 w-13 shrink-0 overflow-hidden rounded-2xl border border-border bg-background ring-1 ring-black/5">
                   {member.photo ? (
                     <Image
-                      src={formatGoogleDriveImageUrl(
-                        resolveMemberPhoto(member.photo) || member.photo
-                      )}
+                      src={resolveMemberPhoto(member.photo) || member.photo}
                       alt={member.name}
                       fill
                       draggable={false}
@@ -651,15 +628,15 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                   )}
                 </button>
 
-                {/* QR Code Credential Badge Button */}
+                {/* Member ID Card Button */}
                 <button
                   type="button"
                   onClick={() => setQrMember(member)}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-[#c99a45]/40 bg-[#c99a45]/10 px-2.5 py-1.5 text-xs font-semibold text-[#8b651e] hover:bg-[#c99a45] hover:text-white transition-colors cursor-pointer shadow-2xs"
-                  title="View & Download QR ID Badge"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-[#c99a45]/50 bg-[#c99a45]/10 px-2.5 py-1.5 text-xs font-semibold text-[#8b651e] hover:bg-[#c99a45] hover:text-white transition-colors cursor-pointer shadow-2xs"
+                  title="View & Download Member ID Card"
                 >
-                  <QrCode className="h-3.5 w-3.5" />
-                  <span className="hidden sm:inline">QR Badge</span>
+                  <IdCard className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">ID Card</span>
                 </button>
 
                 <button
@@ -703,7 +680,7 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
           <div className="relative w-full max-w-2xl rounded-3xl border border-border bg-surface p-6 sm:p-8 shadow-2xl my-8 max-h-[90vh] overflow-y-auto">
             <button
               type="button"
-              onClick={() => setIsCreateOpen(false)}
+              onClick={closeCreateModal}
               className="absolute right-5 top-5 rounded-full p-2 text-text-muted hover:bg-background hover:text-text"
             >
               <X className="h-5 w-5" />
@@ -903,87 +880,15 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                 </div>
               </div>
 
-              {/* Photo Selector */}
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-2">
-                  Officer Portrait Photo
-                </label>
-                <div className="space-y-3">
-                  <div className="grid grid-cols-5 sm:grid-cols-10 gap-2 max-h-36 overflow-y-auto p-2 rounded-xl border border-border bg-background">
-                    {PRESET_TEAM_PHOTOS.map((preset) => {
-                      const isSel = selectedPhoto === preset.path;
-                      return (
-                        <button
-                          key={preset.path}
-                          type="button"
-                          onClick={() => {
-                            setSelectedPhoto(preset.path);
-                            setCustomPhotoUrl("");
-                          }}
-                          className={`relative aspect-square rounded-xl overflow-hidden border-2 transition-all ${
-                            isSel
-                              ? "border-primary ring-2 ring-primary/40 scale-95"
-                              : "border-transparent opacity-70 hover:opacity-100"
-                          }`}
-                          title={preset.label}
-                        >
-                          <Image
-                            src={preset.path}
-                            alt={preset.label}
-                            fill
-                            className="object-cover"
-                            sizes="48px"
-                          />
-                          {isSel && (
-                            <div className="absolute inset-0 bg-primary/40 flex items-center justify-center text-white">
-                              <Check className="h-3 w-3 stroke-[3]" />
-                            </div>
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-semibold text-text-muted shrink-0">
-                        Photo URL / Google Drive:
-                      </span>
-                      <input
-                        type="text"
-                        value={customPhotoUrl}
-                        onChange={(e) => {
-                          setCustomPhotoUrl(e.target.value);
-                          setSelectedPhoto("");
-                        }}
-                        placeholder="Paste Google Drive share link or image URL..."
-                        className="flex-1 rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
-                      />
-                    </div>
-                    <p className="text-[11px] text-text-muted/80">
-                      Supports Google Drive links (ensure &quot;Anyone with the link can view&quot; is turned on). Automatically formats to high-speed CDN.
-                    </p>
-                    {customPhotoUrl && (
-                      <div className="flex items-center gap-3 p-2 rounded-xl bg-background border border-border">
-                        <div className="relative h-12 w-12 rounded-lg overflow-hidden border border-border bg-black/5 shrink-0">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={formatGoogleDriveImageUrl(customPhotoUrl)}
-                            alt="Preview"
-                            className="h-full w-full object-cover"
-                            onError={(e) => {
-                              (e.target as HTMLElement).style.display = "none";
-                            }}
-                          />
-                        </div>
-                        <div className="text-[11px] text-text-muted truncate">
-                          Previewing: <span className="font-mono text-primary font-medium">{formatGoogleDriveImageUrl(customPhotoUrl)}</span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
+              {/* Officer Portrait Photo Dropzone */}
+              <SingleImageDropzone
+                name="photo"
+                value={createPhotoUrl}
+                onChange={(url) => setCreatePhotoUrl(url)}
+                folder="team"
+                label="Officer Portrait Photo"
+                helperText="Drag & drop member portrait or click to browse. Automatically converts to WebP."
+              />
 
               {/* Inactive toggle */}
               <div className="flex items-center gap-2 pt-2">
@@ -1005,7 +910,7 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
               <div className="flex items-center justify-end gap-3 pt-4 border-t border-border">
                 <button
                   type="button"
-                  onClick={() => setIsCreateOpen(false)}
+                  onClick={closeCreateModal}
                   className="rounded-xl border border-border px-4 py-2 text-xs font-semibold text-text hover:bg-background"
                 >
                   Cancel
@@ -1029,7 +934,7 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
           <div className="relative w-full max-w-2xl rounded-3xl border border-border bg-surface p-6 sm:p-8 shadow-2xl my-8 max-h-[90vh] overflow-y-auto">
             <button
               type="button"
-              onClick={() => setEditingMember(null)}
+              onClick={closeEditModal}
               className="absolute right-5 top-5 rounded-full p-2 text-text-muted hover:bg-background hover:text-text"
             >
               <X className="h-5 w-5" />
@@ -1236,87 +1141,15 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                 </div>
               </div>
 
-              {/* Photo Selector */}
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-2">
-                  Officer Portrait Photo
-                </label>
-                <div className="space-y-3">
-                  <div className="grid grid-cols-5 sm:grid-cols-10 gap-2 max-h-36 overflow-y-auto p-2 rounded-xl border border-border bg-background">
-                    {PRESET_TEAM_PHOTOS.map((preset) => {
-                      const isSel = selectedPhoto === preset.path;
-                      return (
-                        <button
-                          key={preset.path}
-                          type="button"
-                          onClick={() => {
-                            setSelectedPhoto(preset.path);
-                            setCustomPhotoUrl("");
-                          }}
-                          className={`relative aspect-square rounded-xl overflow-hidden border-2 transition-all ${
-                            isSel
-                              ? "border-primary ring-2 ring-primary/40 scale-95"
-                              : "border-transparent opacity-70 hover:opacity-100"
-                          }`}
-                          title={preset.label}
-                        >
-                          <Image
-                            src={preset.path}
-                            alt={preset.label}
-                            fill
-                            className="object-cover"
-                            sizes="48px"
-                          />
-                          {isSel && (
-                            <div className="absolute inset-0 bg-primary/40 flex items-center justify-center text-white">
-                              <Check className="h-3 w-3 stroke-[3]" />
-                            </div>
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-semibold text-text-muted shrink-0">
-                        Photo URL / Google Drive:
-                      </span>
-                      <input
-                        type="text"
-                        value={customPhotoUrl}
-                        onChange={(e) => {
-                          setCustomPhotoUrl(e.target.value);
-                          setSelectedPhoto("");
-                        }}
-                        placeholder="Paste Google Drive share link or image URL..."
-                        className="flex-1 rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
-                      />
-                    </div>
-                    <p className="text-[11px] text-text-muted/80">
-                      Supports Google Drive links (ensure &quot;Anyone with the link can view&quot; is turned on). Automatically formats to high-speed CDN.
-                    </p>
-                    {customPhotoUrl && (
-                      <div className="flex items-center gap-3 p-2 rounded-xl bg-background border border-border">
-                        <div className="relative h-12 w-12 rounded-lg overflow-hidden border border-border bg-black/5 shrink-0">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={formatGoogleDriveImageUrl(customPhotoUrl)}
-                            alt="Preview"
-                            className="h-full w-full object-cover"
-                            onError={(e) => {
-                              (e.target as HTMLElement).style.display = "none";
-                            }}
-                          />
-                        </div>
-                        <div className="text-[11px] text-text-muted truncate">
-                          Previewing: <span className="font-mono text-primary font-medium">{formatGoogleDriveImageUrl(customPhotoUrl)}</span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
+              {/* Officer Portrait Photo Dropzone */}
+              <SingleImageDropzone
+                name="photo"
+                value={editPhotoUrl}
+                onChange={(url) => setEditPhotoUrl(url)}
+                folder="team"
+                label="Officer Portrait Photo"
+                helperText="Drag & drop replacement photo or click to browse. Automatically converts to WebP."
+              />
 
               {/* Inactive toggle */}
               <div className="flex items-center gap-2 pt-2">
@@ -1339,7 +1172,7 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
               <div className="flex items-center justify-end gap-3 pt-4 border-t border-border">
                 <button
                   type="button"
-                  onClick={() => setEditingMember(null)}
+                  onClick={closeEditModal}
                   className="rounded-xl border border-border px-4 py-2 text-xs font-semibold text-text hover:bg-background"
                 >
                   Cancel

@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS public.membership_requests (
 
 -- 3. Table: notices
 CREATE TABLE IF NOT EXISTS public.notices (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
     title TEXT NOT NULL,
     body TEXT NOT NULL,
     locale TEXT NOT NULL DEFAULT 'ta',

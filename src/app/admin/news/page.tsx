@@ -39,7 +39,7 @@ export default async function AdminNewsPage() {
             si: "පුවත්",
           },
           author: d.author || "BJWS Secretariat",
-          image_url: d.image_url || "/images/gallery/shramadana-01.webp",
+          image_url: d.image_url || "",
           locale: (d.locale as "en" | "ta" | "si") || "en",
           published_at: d.published_at || d.created_at,
           is_published: d.is_published ?? true,

@@ -3,7 +3,6 @@
 import * as React from "react";
 import Image from "next/image";
 import { type TeamMember, resolveMemberPhoto } from "@/content/team";
-import { formatGoogleDriveImageUrl } from "@/lib/utils";
 import { Phone, MessageCircle, Mail, MapPin, Search } from "lucide-react";
 import { IslamicPattern } from "@/components/ui/islamic-pattern";
 import { ScrollRevealGroup } from "@/components/ui/scroll-reveal";
@@ -100,7 +99,7 @@ export function TeamGrid({ members, locale, translations }: TeamGridProps) {
                 <div className="relative aspect-[3/4] max-h-[360px] sm:max-h-[380px] w-full overflow-hidden bg-[#0c2e1e]">
                   {member.photo ? (
                     <Image
-                      src={formatGoogleDriveImageUrl(resolveMemberPhoto(member.photo) || "")}
+                      src={resolveMemberPhoto(member.photo) || ""}
                       alt={member.name}
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"

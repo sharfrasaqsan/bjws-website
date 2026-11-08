@@ -45,8 +45,8 @@ export default async function GalleryPage({
   const tCommon = await getTranslations("common");
   const assets = getSiteAssets();
 
-  // Load approved images from manifest or Supabase
-  let approvedImages: GalleryImage[] = getApprovedGalleryImages();
+  // Load approved images from Supabase or fallback manifest
+  let approvedImages: GalleryImage[] = [];
 
   if (isSupabaseConfigured()) {
     try {
@@ -57,7 +57,7 @@ export default async function GalleryPage({
         .eq("approved", true)
         .order("created_at", { ascending: false });
 
-      if (!error && data && data.length > 0) {
+      if (!error && data) {
         approvedImages = data.map((d) => ({
           id: d.id,
           src: d.src,
@@ -72,10 +72,15 @@ export default async function GalleryPage({
           approved: d.approved,
           consentNotes: d.consent_notes || undefined,
         }));
+      } else {
+        approvedImages = getApprovedGalleryImages();
       }
     } catch (err) {
       console.warn("Supabase fetch gallery images warning:", err);
+      approvedImages = getApprovedGalleryImages();
     }
+  } else {
+    approvedImages = getApprovedGalleryImages();
   }
 
   // Prepare localized categories mapping
@@ -106,6 +111,11 @@ export default async function GalleryPage({
     categories: categoriesMap,
     captions: captionsMap,
     viewInLightbox: t("viewInLightbox"),
+    noPhotosTitle: t("noPhotosTitle"),
+    noPhotosDesc: t("noPhotosDesc"),
+    noPhotosCategoryTitle: t("noPhotosCategoryTitle"),
+    noPhotosCategoryDesc: t("noPhotosCategoryDesc"),
+    viewAllPhotos: t("viewAllPhotos"),
   };
 
   return (

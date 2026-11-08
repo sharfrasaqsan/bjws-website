@@ -8,7 +8,6 @@ import {
   type TeamMember,
 } from "@/content/team";
 import { createPublicClient, isSupabaseConfigured } from "@/lib/supabase/server";
-import { formatGoogleDriveImageUrl } from "@/lib/utils";
 import {
   ShieldCheck,
   ShieldAlert,
@@ -172,7 +171,7 @@ export default async function CredentialVerificationPage({
                 <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl border-2 border-[#c99a45] bg-[#0c2e1e] shadow-md">
                   {memberPhoto ? (
                     <Image
-                      src={formatGoogleDriveImageUrl(memberPhoto)}
+                      src={memberPhoto}
                       alt={member.name}
                       fill
                       className="object-cover object-top"

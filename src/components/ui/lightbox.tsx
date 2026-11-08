@@ -4,7 +4,6 @@ import * as React from "react";
 import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import { type GalleryImage } from "@/content/gallery";
-import { formatGoogleDriveImageUrl } from "@/lib/utils";
 import {
   X,
   ChevronLeft,
@@ -79,7 +78,7 @@ export function Lightbox({
 
   const handleCopyLink = useCallback(async () => {
     if (!activeImage) return;
-    const url = formatGoogleDriveImageUrl(activeImage.src);
+    const url = activeImage.src;
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
@@ -171,7 +170,7 @@ export function Lightbox({
 
   if (!isOpen || !activeImage) return null;
 
-  const formattedSrc = formatGoogleDriveImageUrl(activeImage.src);
+  const formattedSrc = activeImage.src;
   const caption = getCaption(activeImage.captionKey);
   const categoryTitle = getCategoryTitle(activeImage.category);
 
@@ -300,7 +299,6 @@ export function Lightbox({
             alt={caption}
             fill
             priority
-            unoptimized={formattedSrc.includes("googleusercontent.com")}
             sizes="(max-width: 1280px) 100vw, 1600px"
             className="object-contain"
           />
@@ -353,7 +351,7 @@ export function Lightbox({
             <div className="flex items-center gap-2 overflow-x-auto py-1 scrollbar-thin scrollbar-thumb-white/20">
               {images.map((img, idx) => {
                 const isSelected = idx === currentIndex;
-                const thumbUrl = formatGoogleDriveImageUrl(img.src);
+                const thumbUrl = img.src;
                 return (
                   <button
                     key={img.id || idx}
@@ -374,7 +372,6 @@ export function Lightbox({
                       src={thumbUrl}
                       alt={`Thumbnail ${idx + 1}`}
                       fill
-                      unoptimized={thumbUrl.includes("googleusercontent.com")}
                       className="object-cover"
                       sizes="80px"
                     />

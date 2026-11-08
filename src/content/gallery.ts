@@ -22,7 +22,8 @@ export type GalleryCategory =
   | "iftar-functions"
   | "water-concrete"
   | "livelihood-project"
-  | "cemetery-road";
+  | "cemetery-road"
+  | (string & {});
 
 export interface GalleryCategoryMeta {
   key: GalleryCategory;
@@ -229,8 +230,6 @@ export const GALLERY_MANIFEST: GalleryImage[] = [
   },
 ];
 
-import { formatGoogleDriveImageUrl } from "@/lib/utils";
-
 declare global {
   var __galleryStore: GalleryImage[] | undefined;
 }
@@ -243,12 +242,7 @@ globalThis.__galleryStore = liveGalleryStore;
  * Returns strictly approved gallery images in compliance with the Privacy & Consent Policy.
  */
 export function getApprovedGalleryImages(): GalleryImage[] {
-  return liveGalleryStore
-    .filter((item) => item.approved === true)
-    .map((item) => ({
-      ...item,
-      src: formatGoogleDriveImageUrl(item.src),
-    }));
+  return liveGalleryStore.filter((item) => item.approved === true);
 }
 
 /**
@@ -257,32 +251,20 @@ export function getApprovedGalleryImages(): GalleryImage[] {
 export function getApprovedGalleryByCategory(
   category: GalleryCategory
 ): GalleryImage[] {
-  return liveGalleryStore
-    .filter((item) => item.approved === true && item.category === category)
-    .map((item) => ({
-      ...item,
-      src: formatGoogleDriveImageUrl(item.src),
-    }));
+  return liveGalleryStore.filter(
+    (item) => item.approved === true && item.category === category
+  );
 }
 
 /**
  * Returns all gallery images for executive administration, including unapproved/pending.
  */
 export function getAllGalleryImagesAdmin(): GalleryImage[] {
-  return liveGalleryStore.map((item) => ({
-    ...item,
-    src: formatGoogleDriveImageUrl(item.src),
-  }));
+  return [...liveGalleryStore];
 }
 
 export function addGalleryImageStore(image: GalleryImage): void {
-  liveGalleryStore = [
-    {
-      ...image,
-      src: formatGoogleDriveImageUrl(image.src),
-    },
-    ...liveGalleryStore,
-  ];
+  liveGalleryStore = [image, ...liveGalleryStore];
   globalThis.__galleryStore = liveGalleryStore;
 }
 
@@ -293,14 +275,9 @@ export function updateGalleryImageStore(
   const index = liveGalleryStore.findIndex((img) => img.id === id);
   if (index === -1) return false;
 
-  const nextUpdates = { ...updates };
-  if (nextUpdates.src) {
-    nextUpdates.src = formatGoogleDriveImageUrl(nextUpdates.src);
-  }
-
   liveGalleryStore[index] = {
     ...liveGalleryStore[index],
-    ...nextUpdates,
+    ...updates,
   };
   globalThis.__galleryStore = liveGalleryStore;
   return true;

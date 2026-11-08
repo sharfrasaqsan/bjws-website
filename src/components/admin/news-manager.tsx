@@ -16,8 +16,9 @@ import {
   deleteUnifiedArticleAction,
   toggleUnifiedArticlePublishAction,
 } from "@/lib/admin-actions";
-import { formatAdminDate, formatGoogleDriveImageUrl } from "@/lib/utils";
+import { formatAdminDate } from "@/lib/utils";
 import { WritingToolbar } from "@/components/admin/writing-toolbar";
+import { SingleImageDropzone } from "@/components/admin/single-image-dropzone";
 import {
   Newspaper,
   Plus,
@@ -34,23 +35,11 @@ import {
   Sparkles,
   AlertCircle,
   Camera,
-  Image as ImageIcon,
 } from "lucide-react";
 
 interface NewsManagerProps {
   initialArticles: Article[];
 }
-
-const PRESET_IMAGES = [
-  { label: "Cemetery Shramadhana 01", url: "/images/gallery/shramadana-01.webp" },
-  { label: "Cemetery Shramadhana 02", url: "/images/gallery/shramadana-02.webp" },
-  { label: "Ghusl Training 01", url: "/images/gallery/ghusl-01.webp" },
-  { label: "Ghusl Training 02", url: "/images/gallery/ghusl-02.webp" },
-  { label: "Dry Ration Distribution", url: "/images/gallery/iftar-01.webp" },
-  { label: "Community Welfare Aid", url: "/images/gallery/iftar-02.webp" },
-  { label: "Livelihood & Support", url: "/images/gallery/livelihood-01.webp" },
-  { label: "Cemetery Access Road", url: "/images/gallery/cemetery-road-01.webp" },
-];
 
 export function NewsManager({ initialArticles }: NewsManagerProps) {
   const [unifiedArticles, setUnifiedArticles] = useState<UnifiedArticle[]>(() =>
@@ -92,7 +81,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
     slug: "",
     category: "general" as Article["category"],
     author: "BJWS Editorial Board",
-    image_url: "/images/gallery/shramadana-01.webp",
+    image_url: "",
     is_published: true,
   });
 
@@ -109,7 +98,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
     content_si: "",
     category: "general" as Article["category"],
     author: "BJWS Editorial Board",
-    image_url: "/images/gallery/shramadana-01.webp",
+    image_url: "",
     is_published: true,
   });
 
@@ -281,10 +270,61 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
     });
   };
 
+  const openCreateModal = () => {
+    setFormError(null);
+    setCreateFields({
+      title_ta: "",
+      excerpt_ta: "",
+      content_ta: "",
+      title_en: "",
+      excerpt_en: "",
+      content_en: "",
+      title_si: "",
+      excerpt_si: "",
+      content_si: "",
+      slug: "",
+      category: "general" as Article["category"],
+      author: "BJWS Editorial Board",
+      image_url: "",
+      is_published: true,
+    });
+    setCreateGallery([]);
+    setIsCreateOpen(true);
+  };
+
+  const closeCreateModal = () => {
+    setIsCreateOpen(false);
+    setCreateFields({
+      title_ta: "",
+      excerpt_ta: "",
+      content_ta: "",
+      title_en: "",
+      excerpt_en: "",
+      content_en: "",
+      title_si: "",
+      excerpt_si: "",
+      content_si: "",
+      slug: "",
+      category: "general" as Article["category"],
+      author: "BJWS Editorial Board",
+      image_url: "",
+      is_published: true,
+    });
+    setCreateGallery([]);
+    setFormError(null);
+  };
+
+  const closeEditModal = () => {
+    setEditingArticle(null);
+    setEditGallery([]);
+    setFormError(null);
+  };
+
   const handleCreateSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormError(null);
     const formData = new FormData(e.currentTarget);
+    formData.set("image_url", createFields.image_url.trim());
     formData.set("gallery", JSON.stringify(createGallery));
 
     startTransition(async () => {
@@ -292,7 +332,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
       if (res?.error) {
         setFormError(res.error);
       } else {
-        setIsCreateOpen(false);
+        closeCreateModal();
         window.location.reload();
       }
     });
@@ -303,6 +343,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
     if (!editingArticle) return;
     setFormError(null);
     const formData = new FormData(e.currentTarget);
+    formData.set("image_url", editFields.image_url.trim());
     formData.set("gallery", JSON.stringify(editGallery));
 
     startTransition(async () => {
@@ -314,7 +355,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
       if (res?.error) {
         setFormError(res.error);
       } else {
-        setEditingArticle(null);
+        closeEditModal();
         window.location.reload();
       }
     });
@@ -354,10 +395,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
         {/* Create Button */}
         <button
           type="button"
-          onClick={() => {
-            setFormError(null);
-            setIsCreateOpen(true);
-          }}
+          onClick={openCreateModal}
           className="cursor-pointer inline-flex items-center justify-center gap-2 rounded-xl bg-[#124d34] px-4 py-2.5 text-xs sm:text-sm font-bold text-white shadow-xs transition-all hover:bg-[#0b2e1e] hover:-translate-y-0.5"
         >
           <Plus className="h-4 w-4 text-[#c99a45]" />
@@ -418,14 +456,20 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                 className="flex flex-col md:flex-row items-stretch gap-5 p-5 rounded-2xl border border-[#e6e4dc] bg-white shadow-xs transition-all hover:border-[#124d34]/40 hover:shadow-md"
               >
                 {/* Thumbnail Image */}
-                <div className="relative h-32 md:h-auto md:w-44 shrink-0 rounded-xl overflow-hidden bg-[#f3f1ea] border border-[#e6e4dc]">
-                  <Image
-                    src={formatGoogleDriveImageUrl(art.image_url)}
-                    alt={activeTrans?.title || "News cover"}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 176px"
-                  />
+                <div className="relative h-32 md:h-auto md:w-44 shrink-0 rounded-xl overflow-hidden bg-[#f3f1ea] border border-[#e6e4dc] min-h-[110px]">
+                  {art.image_url ? (
+                    <Image
+                      src={art.image_url}
+                      alt={activeTrans?.title || "News cover"}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, 176px"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center text-[#9ca3af] bg-[#fbfaf6]">
+                      <Newspaper className="h-8 w-8 opacity-40 text-[#124d34]" />
+                    </div>
+                  )}
                   <div className="absolute top-2 left-2">
                     <span
                       className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold tracking-wide uppercase shadow-xs ${
@@ -634,7 +678,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
         >
           <div
             className="fixed inset-0 bg-black/75 backdrop-blur-xs"
-            onClick={() => setIsCreateOpen(false)}
+            onClick={closeCreateModal}
           />
 
           <div className="relative w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-3xl border border-[#e6e4dc] bg-white p-6 sm:p-8 shadow-2xl z-10 space-y-6">
@@ -655,7 +699,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
               </div>
               <button
                 type="button"
-                onClick={() => setIsCreateOpen(false)}
+                onClick={closeCreateModal}
                 className="rounded-lg p-2 text-[#6b7280] hover:bg-[#f3f1ea]"
               >
                 <X className="h-5 w-5" />
@@ -733,70 +777,17 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <label className="font-semibold text-[#1c2420] text-xs flex items-center gap-1.5">
-                      <ImageIcon className="h-4 w-4 text-[#c99a45]" />
-                      <span>Main Hero / Featured Cover Photo</span>
-                    </label>
-                    <span className="text-[10px] text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded font-semibold border border-emerald-200">
-                      Google Drive Supported
-                    </span>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <div className="relative h-20 w-32 shrink-0 rounded-xl overflow-hidden border border-[#e6e4dc] bg-muted shadow-2xs">
-                      {createFields.image_url ? (
-                        <Image
-                          src={formatGoogleDriveImageUrl(createFields.image_url)}
-                          alt="Main Hero Preview"
-                          fill
-                          unoptimized
-                          className="object-cover object-center"
-                        />
-                      ) : (
-                        <div className="flex h-full w-full items-center justify-center text-[10px] text-text-muted">
-                          No photo
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="flex-1 space-y-1.5">
-                      <input
-                        type="text"
-                        name="image_url"
-                        value={createFields.image_url}
-                        onChange={(e) =>
-                          setCreateFields((p) => ({
-                            ...p,
-                            image_url: e.target.value,
-                          }))
-                        }
-                        placeholder="Paste Google Drive sharing link or image URL..."
-                        className="w-full rounded-xl border border-[#e6e4dc] bg-[#fbfaf6] px-3 py-2 text-xs font-mono text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none"
-                      />
-
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] text-text-muted shrink-0">Presets:</span>
-                        <select
-                          value={PRESET_IMAGES.some((p) => p.url === createFields.image_url) ? createFields.image_url : ""}
-                          onChange={(e) => {
-                            if (e.target.value) {
-                              setCreateFields((p) => ({ ...p, image_url: e.target.value }));
-                            }
-                          }}
-                          className="rounded-lg border border-[#e6e4dc] bg-white px-2 py-1 text-[11px] text-[#1c2420] focus:border-[#124d34] focus:outline-none flex-1 truncate"
-                        >
-                          <option value="">Select a community preset photo...</option>
-                          {PRESET_IMAGES.map((img) => (
-                            <option key={img.url} value={img.url}>
-                              {img.label}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
+                <div>
+                  <SingleImageDropzone
+                    name="image_url"
+                    value={createFields.image_url}
+                    onChange={(url) =>
+                      setCreateFields((p) => ({ ...p, image_url: url }))
+                    }
+                    folder="news"
+                    label="Main Hero / Featured Cover Photo *"
+                    helperText="Drag & drop cover photo or browse (auto-compressed to WebP)."
+                  />
                 </div>
               </div>
 
@@ -1053,75 +1044,50 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    {createGallery.map((img, idx) => {
-                      const formatted = formatGoogleDriveImageUrl(img.url);
-                      return (
-                        <div
-                          key={idx}
-                          className="rounded-xl border border-[#e6e4dc] bg-white p-3 shadow-2xs space-y-2.5"
-                        >
-                          <div className="flex items-start gap-3">
-                            <div className="relative h-16 w-24 shrink-0 rounded-lg overflow-hidden border border-[#e6e4dc] bg-muted">
-                              {img.url ? (
-                                <Image
-                                  src={formatted}
-                                  alt={img.alt || `Photo ${idx + 1}`}
-                                  fill
-                                  unoptimized
-                                  className="object-cover object-center"
-                                />
-                              ) : (
-                                <div className="flex h-full w-full items-center justify-center text-[10px] text-text-muted">
-                                  No URL
-                                </div>
-                              )}
+                    {createGallery.map((img, idx) => (
+                      <div
+                        key={idx}
+                        className="rounded-xl border border-[#e6e4dc] bg-white p-3 shadow-2xs space-y-3"
+                      >
+                          <SingleImageDropzone
+                            value={img.url}
+                            onChange={(url) =>
+                              handleUpdateInternalImage(false, idx, "url", url)
+                            }
+                            folder="news"
+                            label={`Article Photo #${idx + 1}`}
+                            helperText="Drag & drop or browse photo (auto-compressed to WebP)."
+                          />
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <div>
+                              <label className="block text-[10px] font-semibold text-text mb-0.5">
+                                Alt Text <span className="text-red-500">*</span>:
+                              </label>
+                              <input
+                                type="text"
+                                value={img.alt}
+                                onChange={(e) =>
+                                  handleUpdateInternalImage(false, idx, "alt", e.target.value)
+                                }
+                                placeholder="Describe the photo for accessibility & SEO..."
+                                className="w-full rounded-lg border border-[#e6e4dc] bg-[#fbfaf6] px-2.5 py-1.5 text-xs text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none"
+                              />
                             </div>
 
-                            <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-2">
-                              <div className="sm:col-span-3">
-                                <label className="block text-[10px] font-semibold text-text mb-0.5">
-                                  Photo URL (Google Drive Share Link or direct link):
-                                </label>
-                                <input
-                                  type="text"
-                                  value={img.url}
-                                  onChange={(e) =>
-                                    handleUpdateInternalImage(false, idx, "url", e.target.value)
-                                  }
-                                  placeholder="Paste Google Drive share link..."
-                                  className="w-full rounded-lg border border-[#e6e4dc] bg-[#fbfaf6] px-2.5 py-1.5 text-xs font-mono text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none"
-                                />
-                              </div>
-
-                              <div className="sm:col-span-2">
-                                <label className="block text-[10px] font-semibold text-text mb-0.5">
-                                  Alt Text <span className="text-red-500">*</span>:
-                                </label>
-                                <input
-                                  type="text"
-                                  value={img.alt}
-                                  onChange={(e) =>
-                                    handleUpdateInternalImage(false, idx, "alt", e.target.value)
-                                  }
-                                  placeholder="Describe the photo for accessibility & SEO..."
-                                  className="w-full rounded-lg border border-[#e6e4dc] bg-[#fbfaf6] px-2.5 py-1.5 text-xs text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none"
-                                />
-                              </div>
-
-                              <div>
-                                <label className="block text-[10px] font-semibold text-text mb-0.5">
-                                  Caption (Optional):
-                                </label>
-                                <input
-                                  type="text"
-                                  value={img.caption || ""}
-                                  onChange={(e) =>
-                                    handleUpdateInternalImage(false, idx, "caption", e.target.value)
-                                  }
-                                  placeholder="Caption..."
-                                  className="w-full rounded-lg border border-[#e6e4dc] bg-[#fbfaf6] px-2.5 py-1.5 text-xs text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none"
-                                />
-                              </div>
+                            <div>
+                              <label className="block text-[10px] font-semibold text-text mb-0.5">
+                                Caption (Optional):
+                              </label>
+                              <input
+                                type="text"
+                                value={img.caption || ""}
+                                onChange={(e) =>
+                                  handleUpdateInternalImage(false, idx, "caption", e.target.value)
+                                }
+                                placeholder="Caption..."
+                                className="w-full rounded-lg border border-[#e6e4dc] bg-[#fbfaf6] px-2.5 py-1.5 text-xs text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none"
+                              />
                             </div>
                           </div>
 
@@ -1146,9 +1112,8 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                             </button>
                           </div>
                         </div>
-                      );
-                    })}
-                  </div>
+                      ))}
+                    </div>
                 )}
               </div>
 
@@ -1173,7 +1138,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
               <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#e6e4dc]">
                 <button
                   type="button"
-                  onClick={() => setIsCreateOpen(false)}
+                  onClick={closeCreateModal}
                   className="rounded-xl border border-[#e6e4dc] px-4 py-2 font-medium text-[#6b7280] hover:bg-[#f3f1ea]"
                 >
                   Cancel
@@ -1201,7 +1166,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
         >
           <div
             className="fixed inset-0 bg-black/75 backdrop-blur-xs"
-            onClick={() => setEditingArticle(null)}
+            onClick={closeEditModal}
           />
 
           <div className="relative w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-3xl border border-[#c99a45] bg-white p-6 sm:p-8 shadow-2xl z-10 space-y-6">
@@ -1221,7 +1186,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
               </div>
               <button
                 type="button"
-                onClick={() => setEditingArticle(null)}
+                onClick={closeEditModal}
                 className="rounded-lg p-2 text-[#6b7280] hover:bg-[#f3f1ea]"
               >
                 <X className="h-5 w-5" />
@@ -1280,70 +1245,17 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <label className="font-semibold text-[#1c2420] text-xs flex items-center gap-1.5">
-                      <ImageIcon className="h-4 w-4 text-[#c99a45]" />
-                      <span>Main Hero / Featured Cover Photo</span>
-                    </label>
-                    <span className="text-[10px] text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded font-semibold border border-emerald-200">
-                      Google Drive Supported
-                    </span>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <div className="relative h-20 w-32 shrink-0 rounded-xl overflow-hidden border border-[#e6e4dc] bg-muted shadow-2xs">
-                      {editFields.image_url ? (
-                        <Image
-                          src={formatGoogleDriveImageUrl(editFields.image_url)}
-                          alt="Main Hero Preview"
-                          fill
-                          unoptimized
-                          className="object-cover object-center"
-                        />
-                      ) : (
-                        <div className="flex h-full w-full items-center justify-center text-[10px] text-text-muted">
-                          No photo
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="flex-1 space-y-1.5">
-                      <input
-                        type="text"
-                        name="image_url"
-                        value={editFields.image_url}
-                        onChange={(e) =>
-                          setEditFields((p) => ({
-                            ...p,
-                            image_url: e.target.value,
-                          }))
-                        }
-                        placeholder="Paste Google Drive sharing link or image URL..."
-                        className="w-full rounded-xl border border-[#e6e4dc] bg-[#fbfaf6] px-3 py-2 text-xs font-mono text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none"
-                      />
-
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] text-text-muted shrink-0">Presets:</span>
-                        <select
-                          value={PRESET_IMAGES.some((p) => p.url === editFields.image_url) ? editFields.image_url : ""}
-                          onChange={(e) => {
-                            if (e.target.value) {
-                              setEditFields((p) => ({ ...p, image_url: e.target.value }));
-                            }
-                          }}
-                          className="rounded-lg border border-[#e6e4dc] bg-white px-2 py-1 text-[11px] text-[#1c2420] focus:border-[#124d34] focus:outline-none flex-1 truncate"
-                        >
-                          <option value="">Select a community preset photo...</option>
-                          {PRESET_IMAGES.map((img) => (
-                            <option key={img.url} value={img.url}>
-                              {img.label}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
+                <div>
+                  <SingleImageDropzone
+                    name="image_url"
+                    value={editFields.image_url}
+                    onChange={(url) =>
+                      setEditFields((p) => ({ ...p, image_url: url }))
+                    }
+                    folder="news"
+                    label="Main Hero / Featured Cover Photo *"
+                    helperText="Drag & drop cover photo or browse (auto-compressed to WebP)."
+                  />
                 </div>
               </div>
 
@@ -1594,101 +1506,75 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    {editGallery.map((img, idx) => {
-                      const formatted = formatGoogleDriveImageUrl(img.url);
-                      return (
-                        <div
-                          key={idx}
-                          className="rounded-xl border border-[#e6e4dc] bg-white p-3 shadow-2xs space-y-2.5"
-                        >
-                          <div className="flex items-start gap-3">
-                            <div className="relative h-16 w-24 shrink-0 rounded-lg overflow-hidden border border-[#e6e4dc] bg-muted">
-                              {img.url ? (
-                                <Image
-                                  src={formatted}
-                                  alt={img.alt || `Photo ${idx + 1}`}
-                                  fill
-                                  unoptimized
-                                  className="object-cover object-center"
-                                />
-                              ) : (
-                                <div className="flex h-full w-full items-center justify-center text-[10px] text-text-muted">
-                                  No URL
-                                </div>
-                              )}
-                            </div>
+                    {editGallery.map((img, idx) => (
+                      <div
+                        key={idx}
+                        className="rounded-xl border border-[#e6e4dc] bg-white p-3 shadow-2xs space-y-3"
+                      >
+                        <SingleImageDropzone
+                          value={img.url}
+                          onChange={(url) =>
+                            handleUpdateInternalImage(true, idx, "url", url)
+                          }
+                          folder="news"
+                          label={`Article Photo #${idx + 1}`}
+                          helperText="Drag & drop or browse photo (auto-compressed to WebP)."
+                        />
 
-                            <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-2">
-                              <div className="sm:col-span-3">
-                                <label className="block text-[10px] font-semibold text-text mb-0.5">
-                                  Photo URL (Google Drive Share Link or direct link):
-                                </label>
-                                <input
-                                  type="text"
-                                  value={img.url}
-                                  onChange={(e) =>
-                                    handleUpdateInternalImage(true, idx, "url", e.target.value)
-                                  }
-                                  placeholder="Paste Google Drive share link..."
-                                  className="w-full rounded-lg border border-[#e6e4dc] bg-[#fbfaf6] px-2.5 py-1.5 text-xs font-mono text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none"
-                                />
-                              </div>
-
-                              <div className="sm:col-span-2">
-                                <label className="block text-[10px] font-semibold text-text mb-0.5">
-                                  Alt Text <span className="text-red-500">*</span>:
-                                </label>
-                                <input
-                                  type="text"
-                                  value={img.alt}
-                                  onChange={(e) =>
-                                    handleUpdateInternalImage(true, idx, "alt", e.target.value)
-                                  }
-                                  placeholder="Describe the photo for accessibility & SEO..."
-                                  className="w-full rounded-lg border border-[#e6e4dc] bg-[#fbfaf6] px-2.5 py-1.5 text-xs text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none"
-                                />
-                              </div>
-
-                              <div>
-                                <label className="block text-[10px] font-semibold text-text mb-0.5">
-                                  Caption (Optional):
-                                </label>
-                                <input
-                                  type="text"
-                                  value={img.caption || ""}
-                                  onChange={(e) =>
-                                    handleUpdateInternalImage(true, idx, "caption", e.target.value)
-                                  }
-                                  placeholder="Caption..."
-                                  className="w-full rounded-lg border border-[#e6e4dc] bg-[#fbfaf6] px-2.5 py-1.5 text-xs text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none"
-                                />
-                              </div>
-                            </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          <div>
+                            <label className="block text-[10px] font-semibold text-text mb-0.5">
+                              Alt Text <span className="text-red-500">*</span>:
+                            </label>
+                            <input
+                              type="text"
+                              value={img.alt}
+                              onChange={(e) =>
+                                handleUpdateInternalImage(true, idx, "alt", e.target.value)
+                              }
+                              placeholder="Describe the photo for accessibility & SEO..."
+                              className="w-full rounded-lg border border-[#e6e4dc] bg-[#fbfaf6] px-2.5 py-1.5 text-xs text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none"
+                            />
                           </div>
 
-                          <div className="flex items-center justify-between pt-2 border-t border-[#f0eee6] text-xs">
-                            <button
-                              type="button"
-                              onClick={() => handleInsertImageToContent(img, true)}
-                              disabled={!img.url}
-                              className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#124d34] hover:underline disabled:opacity-40 cursor-pointer"
-                            >
-                              <Sparkles className="h-3 w-3 text-[#c99a45]" />
-                              <span>Insert into active content tab</span>
-                            </button>
-
-                            <button
-                              type="button"
-                              onClick={() => handleRemoveInternalImage(true, idx)}
-                              className="inline-flex items-center gap-1 text-[11px] font-semibold text-red-600 hover:text-red-800 cursor-pointer"
-                            >
-                              <Trash2 className="h-3 w-3" />
-                              <span>Remove</span>
-                            </button>
+                          <div>
+                            <label className="block text-[10px] font-semibold text-text mb-0.5">
+                              Caption (Optional):
+                            </label>
+                            <input
+                              type="text"
+                              value={img.caption || ""}
+                              onChange={(e) =>
+                                handleUpdateInternalImage(true, idx, "caption", e.target.value)
+                              }
+                              placeholder="Caption..."
+                              className="w-full rounded-lg border border-[#e6e4dc] bg-[#fbfaf6] px-2.5 py-1.5 text-xs text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none"
+                            />
                           </div>
                         </div>
-                      );
-                    })}
+
+                        <div className="flex items-center justify-between pt-2 border-t border-[#f0eee6] text-xs">
+                          <button
+                            type="button"
+                            onClick={() => handleInsertImageToContent(img, true)}
+                            disabled={!img.url}
+                            className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#124d34] hover:underline disabled:opacity-40 cursor-pointer"
+                          >
+                            <Sparkles className="h-3 w-3 text-[#c99a45]" />
+                            <span>Insert into active content tab</span>
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveInternalImage(true, idx)}
+                            className="inline-flex items-center gap-1 text-[11px] font-semibold text-red-600 hover:text-red-800 cursor-pointer"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                            <span>Remove</span>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
@@ -1714,7 +1600,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
               <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#e6e4dc]">
                 <button
                   type="button"
-                  onClick={() => setEditingArticle(null)}
+                  onClick={closeEditModal}
                   className="rounded-xl border border-[#e6e4dc] px-4 py-2 font-medium text-[#6b7280] hover:bg-[#f3f1ea]"
                 >
                   Cancel

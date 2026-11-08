@@ -5,7 +5,7 @@ export const revalidate = 0;
 
 import { getAdminSession } from "@/lib/admin-auth";
 import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/server";
-import { type NoticeRecord } from "@/content/notices";
+import { getAllNotices, type NoticeRecord } from "@/content/notices";
 import { NoticesManager } from "@/components/admin/notices-manager";
 import { Megaphone, ArrowLeft } from "lucide-react";
 
@@ -24,12 +24,16 @@ export default async function AdminNoticesPage() {
         )
         .order("published_at", { ascending: false });
 
-      if (!error && data) {
+      if (!error && data && data.length > 0) {
         notices = data;
       }
     } catch (err) {
       console.warn("Failed to fetch notices:", err);
     }
+  }
+
+  if (notices.length === 0) {
+    notices = getAllNotices();
   }
 
   return (

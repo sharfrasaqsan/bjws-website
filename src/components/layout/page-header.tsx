@@ -4,7 +4,6 @@ import { Link } from "@/i18n/routing";
 import { Container } from "@/components/ui/container";
 import { IslamicPattern } from "@/components/ui/islamic-pattern";
 import { ChevronRight, Home } from "lucide-react";
-import { formatGoogleDriveImageUrl } from "@/lib/utils";
 
 export interface BreadcrumbItem {
   label: string;
@@ -33,7 +32,7 @@ export function PageHeader({
       {/* Real background photography with deep evergreen overlay */}
       <div className="absolute inset-0 z-0">
         <Image
-          src={formatGoogleDriveImageUrl(imageSrc)}
+          src={imageSrc}
           alt={imageAlt}
           fill
           priority

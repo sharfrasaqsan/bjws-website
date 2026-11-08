@@ -5,8 +5,8 @@
 
 -- 1. Table: articles (News, Blog & Community Articles)
 CREATE TABLE IF NOT EXISTS public.articles (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    slug TEXT NOT NULL,
+    id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
+    slug TEXT NOT NULL UNIQUE,
     title TEXT NOT NULL,
     excerpt TEXT NOT NULL,
     content TEXT NOT NULL,
@@ -94,11 +94,12 @@ CREATE POLICY "Authenticated admins can manage articles"
 -- RLS: team_members
 -- --------------------------------------------------------------------
 DROP POLICY IF EXISTS "Public can view active team members" ON public.team_members;
-CREATE POLICY "Public can view active team members"
+DROP POLICY IF EXISTS "Public can view team members for transparency and verification" ON public.team_members;
+CREATE POLICY "Public can view team members for transparency and verification"
     ON public.team_members
     FOR SELECT
     TO anon, authenticated
-    USING (is_inactive = false);
+    USING (true);
 
 DROP POLICY IF EXISTS "Authenticated admins can manage team members" ON public.team_members;
 CREATE POLICY "Authenticated admins can manage team members"

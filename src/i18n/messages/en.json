@@ -357,7 +357,12 @@
     "photoLivelihood1Caption": "Social assistance and community livelihood initiative",
     "photoLivelihood1Alt": "Livelihood aid delivery to community beneficiaries",
     "photoCemeteryRoad1Caption": "Cemetery access road clearing and improvement work",
-    "photoCemeteryRoad1Alt": "Road grading and access pathway enhancement for cemetery"
+    "photoCemeteryRoad1Alt": "Road grading and access pathway enhancement for cemetery",
+    "noPhotosTitle": "No Photos Cataloged Yet",
+    "noPhotosDesc": "Community welfare activities, cemetery shramadhana programs, and official society events will be photographed and documented here soon.",
+    "noPhotosCategoryTitle": "No Photos in This Album",
+    "noPhotosCategoryDesc": "There are currently no photos uploaded under this specific album category. Select another album or return to all photos.",
+    "viewAllPhotos": "View All Photos"
   },
   "membershipPage": {
     "pageTitle": "Society Membership & Registration",

@@ -1,5 +1,3 @@
-import { formatGoogleDriveImageUrl } from "@/lib/utils";
-
 export interface SiteAssetConfig {
   // Global & Brand
   logo: string;
@@ -92,9 +90,5 @@ export const DEFAULT_SITE_ASSETS: SiteAssetConfig = {
 };
 
 export function getSiteAssets(): SiteAssetConfig {
-  const formatted = {} as SiteAssetConfig;
-  for (const [key, val] of Object.entries(DEFAULT_SITE_ASSETS)) {
-    formatted[key as keyof SiteAssetConfig] = formatGoogleDriveImageUrl(val as string);
-  }
-  return formatted;
+  return DEFAULT_SITE_ASSETS;
 }

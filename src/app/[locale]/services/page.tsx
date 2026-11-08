@@ -25,7 +25,6 @@ import {
   Heart,
   LifeBuoy,
 } from "lucide-react";
-import { formatGoogleDriveImageUrl } from "@/lib/utils";
 import { getSiteAssets } from "@/content/site-assets";
 
 export async function generateMetadata({
@@ -240,7 +239,7 @@ export default async function ServicesPage({
                     <div className="lg:col-span-5">
                       <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-[#0b2e1e]/10 bg-[#0b2e1e]/5 shadow-sm">
                         <Image
-                          src={formatGoogleDriveImageUrl(svc.image)}
+                          src={svc.image}
                           alt={svc.imageAlt}
                           fill
                           sizes="(max-width: 1024px) 100vw, 40vw"

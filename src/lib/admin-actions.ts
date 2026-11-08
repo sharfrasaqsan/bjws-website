@@ -1,5 +1,7 @@
 "use server";
 
+import fs from "fs/promises";
+import path from "path";
 import { revalidatePath } from "next/cache";
 import { getAdminSession } from "@/lib/admin-auth";
 import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/server";
@@ -43,7 +45,6 @@ import {
   getAllNotices,
   type NoticeRecord,
 } from "@/content/notices";
-import { formatGoogleDriveImageUrl } from "@/lib/utils";
 
 // ====================================================================
 // Contact Messages Actions
@@ -583,9 +584,7 @@ export async function createMultilingualArticleAction(
     (formData.get("category") as Article["category"]) || "general";
   const author =
     (formData.get("author") as string)?.trim() || "BJWS Editorial Board";
-  const image_url =
-    formatGoogleDriveImageUrl((formData.get("image_url") as string)?.trim()) ||
-    "/images/gallery/shramadana-01.webp";
+  const image_url = ((formData.get("image_url") as string)?.trim()) || "";
   const is_published = formData.get("is_published") === "on";
 
   const title_en = (formData.get("title_en") as string)?.trim();
@@ -613,7 +612,7 @@ export async function createMultilingualArticleAction(
           )
           .filter((item) => typeof item.url === "string" && item.url.trim().length > 0)
           .map((item) => ({
-            url: formatGoogleDriveImageUrl(String(item.url).trim()),
+            url: String(item.url).trim(),
             alt: typeof item.alt === "string" ? item.alt.trim() : "",
             caption: typeof item.caption === "string" ? item.caption.trim() : undefined,
           }));
@@ -789,9 +788,7 @@ export async function updateMultilingualArticleAction(
     (formData.get("category") as Article["category"]) || "general";
   const author =
     (formData.get("author") as string)?.trim() || "BJWS Editorial Board";
-  const image_url =
-    formatGoogleDriveImageUrl((formData.get("image_url") as string)?.trim()) ||
-    "/images/gallery/shramadana-01.webp";
+  const image_url = ((formData.get("image_url") as string)?.trim()) || "";
   const is_published = formData.get("is_published") === "on";
 
   const title_en = (formData.get("title_en") as string)?.trim();
@@ -819,7 +816,7 @@ export async function updateMultilingualArticleAction(
           )
           .filter((item) => typeof item.url === "string" && item.url.trim().length > 0)
           .map((item) => ({
-            url: formatGoogleDriveImageUrl(String(item.url).trim()),
+            url: String(item.url).trim(),
             alt: typeof item.alt === "string" ? item.alt.trim() : "",
             caption: typeof item.caption === "string" ? item.caption.trim() : undefined,
           }));
@@ -974,17 +971,20 @@ export async function updateMultilingualArticleAction(
       for (const spec of langSpecs) {
         if (spec.title && spec.content) {
           const s = `${normalizedBase}${spec.slugSuffix}`;
-          await supabase.from("articles").upsert({
-            slug: s,
-            title: spec.title,
-            excerpt: spec.excerpt || spec.content.slice(0, 160) + "...",
-            content: spec.content,
-            category,
-            author,
-            image_url,
-            locale: spec.loc,
-            is_published,
-          });
+          await supabase.from("articles").upsert(
+            {
+              slug: s,
+              title: spec.title,
+              excerpt: spec.excerpt || spec.content.slice(0, 160) + "...",
+              content: spec.content,
+              category,
+              author,
+              image_url,
+              locale: spec.loc,
+              is_published,
+            },
+            { onConflict: "slug" }
+          );
         }
       }
     } catch (err) {
@@ -1075,9 +1075,7 @@ export async function createArticleAction(
   const author =
     (formData.get("author") as string)?.trim() || "BJWS Editorial Board";
   const locale = (formData.get("locale") as "en" | "ta" | "si") || "en";
-  const image_url =
-    formatGoogleDriveImageUrl((formData.get("image_url") as string)?.trim()) ||
-    "/images/gallery/shramadana-01.webp";
+  const image_url = ((formData.get("image_url") as string)?.trim()) || "";
   const is_published = formData.get("is_published") === "on";
 
   if (!title || !content) {
@@ -1370,9 +1368,7 @@ export async function createTeamMemberAction(
   const email = (formData.get("email") as string)?.trim();
   const address = (formData.get("address") as string)?.trim() || "Mullipothana";
   const initialsInput = (formData.get("initials") as string)?.trim();
-  const photo = formatGoogleDriveImageUrl(
-    (formData.get("photo") as string)?.trim()
-  );
+  const photo = (formData.get("photo") as string)?.trim() || "";
   const term = (formData.get("term") as string)?.trim() || "2023 - Present";
   const isInactive = formData.get("isInactive") === "on";
   const memberId = (formData.get("memberId") as string)?.trim();
@@ -1495,9 +1491,7 @@ export async function updateTeamMemberAction(
   const email = (formData.get("email") as string)?.trim();
   const address = (formData.get("address") as string)?.trim() || "Mullipothana";
   const initials = (formData.get("initials") as string)?.trim() || "BJWS";
-  const photo = formatGoogleDriveImageUrl(
-    (formData.get("photo") as string)?.trim()
-  );
+  const photo = (formData.get("photo") as string)?.trim() || "";
   const term = (formData.get("term") as string)?.trim() || "2023 - Present";
   const isInactive = formData.get("isInactive") === "on";
   const memberId = (formData.get("memberId") as string)?.trim();
@@ -1655,6 +1649,18 @@ export async function regenerateMemberVerificationTokenAction(id: string) {
   const token = regenerateMemberVerificationTokenStore(id);
   if (!token) return { error: "Team member not found" };
 
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createAdminClient();
+      await supabase
+        .from("team_members")
+        .update({ verification_token: token })
+        .eq("id", id);
+    } catch (err) {
+      console.warn("Supabase update verification token warning:", err);
+    }
+  }
+
   revalidatePath("/admin/team");
   revalidatePath("/[locale]/verify/credential", "page");
   return { success: true, token };
@@ -1671,9 +1677,7 @@ export async function createGalleryImageAction(
   const session = await getAdminSession();
   if (!session) return { error: "Unauthorized" };
 
-  const src = formatGoogleDriveImageUrl(
-    (formData.get("src") as string)?.trim()
-  );
+  const src = (formData.get("src") as string)?.trim() || "";
   const caption = (formData.get("caption") as string)?.trim();
   const category =
     (formData.get("category") as GalleryCategory) || "cemetery-shramadana";
@@ -1741,9 +1745,7 @@ export async function updateGalleryImageAction(
   if (!session) return { error: "Unauthorized" };
 
   const id = formData.get("id") as string;
-  const src = formatGoogleDriveImageUrl(
-    (formData.get("src") as string)?.trim()
-  );
+  const src = (formData.get("src") as string)?.trim() || "";
   const caption = (formData.get("caption") as string)?.trim();
   const category =
     (formData.get("category") as GalleryCategory) || "cemetery-shramadana";
@@ -1848,4 +1850,201 @@ export async function deleteGalleryImageAction(id: string) {
   revalidatePath("/[locale]/gallery", "page");
   revalidatePath("/[locale]", "page");
   return { success: true };
+}
+
+// ====================================================================
+// Modern Image Upload Pipeline (Supabase Storage + Local Fallback)
+// ====================================================================
+
+async function saveUploadedImageFile(
+  file: File,
+  folder: string = "gallery"
+): Promise<string> {
+  const arrayBuffer = await file.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+
+  const cleanName = file.name
+    .toLowerCase()
+    .replace(/[^a-z0-9.]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  const extension = path.extname(cleanName) || ".webp";
+  const baseName = path.basename(cleanName, extension) || "photo";
+  const uniqueFileName = `${Date.now()}-${baseName}${extension}`;
+
+  // 1. Try Supabase Storage if configured
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createAdminClient();
+      const storagePath = `${folder}/${uniqueFileName}`;
+      const contentType =
+        file.type || (extension === ".webp" ? "image/webp" : "image/jpeg");
+
+      const { error: uploadError } = await supabase.storage
+        .from("gallery")
+        .upload(storagePath, buffer, {
+          contentType,
+          upsert: true,
+        });
+
+      if (!uploadError) {
+        const { data: publicUrlData } = supabase.storage
+          .from("gallery")
+          .getPublicUrl(storagePath);
+        if (publicUrlData?.publicUrl) {
+          return publicUrlData.publicUrl;
+        }
+      } else {
+        console.warn(
+          "Supabase Storage bucket upload warning, falling back to local storage:",
+          uploadError.message
+        );
+      }
+    } catch (storageErr) {
+      console.warn(
+        "Supabase Storage exception, using local storage fallback:",
+        storageErr
+      );
+    }
+  }
+
+  // 2. Local File System Fallback (public/images/uploads/)
+  const uploadDir = path.join(
+    process.cwd(),
+    "public",
+    "images",
+    "uploads",
+    folder
+  );
+  await fs.mkdir(uploadDir, { recursive: true });
+  const localFilePath = path.join(uploadDir, uniqueFileName);
+  await fs.writeFile(localFilePath, buffer);
+
+  return `/images/uploads/${folder}/${uniqueFileName}`;
+}
+
+export async function uploadSingleImageAction(
+  formData: FormData
+): Promise<{ success?: boolean; url?: string; error?: string }> {
+  const session = await getAdminSession();
+  if (!session) return { error: "Unauthorized" };
+
+  const file = formData.get("file") as File | null;
+  const folder = (formData.get("folder") as string)?.trim() || "gallery";
+
+  if (!file || file.size === 0) {
+    return { error: "No image file provided." };
+  }
+
+  try {
+    const url = await saveUploadedImageFile(file, folder);
+    return { success: true, url };
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : "Image upload failed.";
+    return { error: msg };
+  }
+}
+
+export async function batchUploadGalleryAction(
+  formData: FormData
+): Promise<{ success?: boolean; count?: number; error?: string }> {
+  const session = await getAdminSession();
+  if (!session) return { error: "Unauthorized" };
+
+  const files = formData.getAll("files") as File[];
+  const category =
+    (formData.get("category") as GalleryCategory) || "cemetery-shramadana";
+  const date =
+    (formData.get("date") as string)?.trim() ||
+    new Date().getFullYear().toString();
+  const location =
+    (formData.get("location") as string)?.trim() || "Mullipothana";
+  const approved =
+    formData.get("approved") === "on" || formData.get("approved") === "true";
+  const captionPrefix = (formData.get("captionPrefix") as string)?.trim() || "";
+  const consentNotes = (formData.get("consentNotes") as string)?.trim();
+
+  if (!files || files.length === 0) {
+    return { error: "Please select at least one image file to upload." };
+  }
+
+  const validFiles = files.filter((f) => f && f.size > 0);
+  if (validFiles.length === 0) {
+    return { error: "No valid image files received." };
+  }
+
+  let uploadedCount = 0;
+  const newImagesToInsert: Array<{
+    id: string;
+    src: string;
+    caption: string;
+    category: GalleryCategory;
+    date: string;
+    location: string;
+    approved: boolean;
+    consent_notes?: string;
+  }> = [];
+
+  for (let i = 0; i < validFiles.length; i++) {
+    const file = validFiles[i];
+    try {
+      const src = await saveUploadedImageFile(file, "gallery");
+      const id = `gal-${Date.now()}-${i + 1}-${Math.random()
+        .toString(36)
+        .substring(2, 7)}`;
+      const caption =
+        validFiles.length === 1 && captionPrefix
+          ? captionPrefix
+          : captionPrefix
+          ? `${captionPrefix} (${i + 1})`
+          : `Community Activity - Photo ${i + 1}`;
+
+      const newImage: GalleryImage = {
+        id,
+        src,
+        altKey: caption,
+        captionKey: caption,
+        category,
+        date,
+        location,
+        width: 1200,
+        height: 800,
+        blurDataURL: DEFAULT_BLUR,
+        approved,
+        ...(consentNotes ? { consentNotes } : {}),
+      };
+
+      addGalleryImageStore(newImage);
+
+      newImagesToInsert.push({
+        id,
+        src,
+        caption,
+        category,
+        date,
+        location,
+        approved,
+        ...(consentNotes ? { consent_notes: consentNotes } : {}),
+      });
+
+      uploadedCount++;
+    } catch (uploadErr) {
+      console.error(`Error processing file ${file.name}:`, uploadErr);
+    }
+  }
+
+  if (isSupabaseConfigured() && newImagesToInsert.length > 0) {
+    try {
+      const supabase = await createAdminClient();
+      await supabase.from("gallery_images").insert(newImagesToInsert);
+    } catch (err) {
+      console.warn("Supabase batch insert gallery warning:", err);
+    }
+  }
+
+  revalidatePath("/admin/gallery");
+  revalidatePath("/admin");
+  revalidatePath("/[locale]/gallery", "page");
+  revalidatePath("/[locale]", "page");
+
+  return { success: true, count: uploadedCount };
 }

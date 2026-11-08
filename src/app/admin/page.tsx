@@ -33,23 +33,23 @@ export default async function AdminDashboardPage() {
   let noticeStats = { total: 0, published: 0 };
   let reportStats = { total: 0, published: 0 };
 
-  // Team, Gallery, and News stats
-  const teamMembers = getAllTeamMembersAdmin();
-  const teamStats = {
-    total: teamMembers.length,
-    active: teamMembers.filter((m) => !m.isInactive).length,
+  // Team, Gallery, and News stats (initialized with local fallback)
+  const fallbackTeam = getAllTeamMembersAdmin();
+  let teamStats = {
+    total: fallbackTeam.length,
+    active: fallbackTeam.filter((m) => !m.isInactive).length,
   };
 
-  const galleryImages = getAllGalleryImagesAdmin();
-  const galleryStats = {
-    total: galleryImages.length,
-    approved: galleryImages.filter((g) => g.approved).length,
+  const fallbackGallery = getAllGalleryImagesAdmin();
+  let galleryStats = {
+    total: fallbackGallery.length,
+    approved: fallbackGallery.filter((g) => g.approved).length,
   };
 
-  const articlesList = getAllArticlesAdmin();
-  const newsStats = {
-    total: articlesList.length,
-    published: articlesList.filter((a) => a.is_published).length,
+  const fallbackArticles = getAllArticlesAdmin();
+  let newsStats = {
+    total: fallbackArticles.length,
+    published: fallbackArticles.filter((a) => a.is_published).length,
   };
 
   let recentMessages: Array<{
@@ -75,12 +75,15 @@ export default async function AdminDashboardPage() {
     try {
       const supabase = await createAdminClient();
 
-      // Parallel metric fetching to minimize latency
+      // Parallel metric fetching across all 7 operational collections
       const [
         { data: messages },
         { data: memberships },
         { data: notices },
         { data: reports },
+        { data: dbTeam },
+        { data: dbGallery },
+        { data: dbArticles },
       ] = await Promise.all([
         supabase
           .from("contact_messages")
@@ -92,6 +95,9 @@ export default async function AdminDashboardPage() {
           .order("created_at", { ascending: false }),
         supabase.from("notices").select("id, is_published"),
         supabase.from("reports").select("id, is_published"),
+        supabase.from("team_members").select("id, is_inactive"),
+        supabase.from("gallery_images").select("id, approved"),
+        supabase.from("articles").select("id, is_published"),
       ]);
 
       if (messages) {
@@ -121,6 +127,27 @@ export default async function AdminDashboardPage() {
         reportStats = {
           total: reports.length,
           published: reports.filter((r) => r.is_published).length,
+        };
+      }
+
+      if (dbTeam && dbTeam.length > 0) {
+        teamStats = {
+          total: dbTeam.length,
+          active: dbTeam.filter((m) => !m.is_inactive).length,
+        };
+      }
+
+      if (dbGallery && dbGallery.length > 0) {
+        galleryStats = {
+          total: dbGallery.length,
+          approved: dbGallery.filter((g) => g.approved).length,
+        };
+      }
+
+      if (dbArticles && dbArticles.length > 0) {
+        newsStats = {
+          total: dbArticles.length,
+          published: dbArticles.filter((a) => a.is_published).length,
         };
       }
     } catch (err) {

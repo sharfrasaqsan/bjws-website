@@ -17,7 +17,7 @@ import {
 import { createPublicClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { buildPageMetadata, SITE_URL } from "@/lib/seo";
 import { JsonLd, getBreadcrumbJsonLd } from "@/components/seo/json-ld";
-import { formatAdminDate, formatGoogleDriveImageUrl } from "@/lib/utils";
+import { formatAdminDate } from "@/lib/utils";
 import { IslamicPattern } from "@/components/ui/islamic-pattern";
 import {
   Calendar,
@@ -58,16 +58,16 @@ export async function generateMetadata({
   params,
 }: ArticleDetailPageProps): Promise<Metadata> {
   const { locale, slug } = await params;
-  let article = getArticleBySlug(slug, locale);
+  let article: Article | null = null;
 
-  if (!article && isSupabaseConfigured()) {
+  if (isSupabaseConfigured()) {
     try {
       const supabase = createPublicClient();
       const { data } = await supabase
         .from("articles")
         .select("*")
         .eq("slug", slug)
-        .single();
+        .maybeSingle();
       if (data) {
         article = {
           id: data.id,
@@ -86,8 +86,12 @@ export async function generateMetadata({
         };
       }
     } catch {
-      // fallback
+      // fallback handled below
     }
+  }
+
+  if (!article) {
+    article = getArticleBySlug(slug, locale) || null;
   }
 
   if (!article) {
@@ -117,16 +121,16 @@ export default async function ArticleDetailPage({
   const t = await getTranslations("newsPage");
   const tCommon = await getTranslations("common");
 
-  let article = getArticleBySlug(slug, locale);
+  let article: Article | null = null;
 
-  if (!article && isSupabaseConfigured()) {
+  if (isSupabaseConfigured()) {
     try {
       const supabase = createPublicClient();
       const { data } = await supabase
         .from("articles")
         .select("*")
         .eq("slug", slug)
-        .single();
+        .maybeSingle();
       if (data) {
         article = {
           id: data.id,
@@ -145,8 +149,12 @@ export default async function ArticleDetailPage({
         };
       }
     } catch {
-      // fallback
+      // fallback handled below
     }
+  }
+
+  if (!article) {
+    article = getArticleBySlug(slug, locale) || null;
   }
 
   if (!article) {
@@ -326,7 +334,7 @@ export default async function ArticleDetailPage({
                   >
                     <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-muted mb-3">
                       <Image
-                        src={formatGoogleDriveImageUrl(rel.image_url)}
+                        src={rel.image_url}
                         alt={rel.title}
                         fill
                         sizes="(max-width: 640px) 100vw, 33vw"
