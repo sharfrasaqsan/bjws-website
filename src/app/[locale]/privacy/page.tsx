@@ -78,7 +78,7 @@ export default async function PrivacyPage({
         title={t("pageTitle")}
         subtitle={t("subtitle")}
         eyebrow={tCommon("regNo")}
-        imageSrc={assets.headerPrivacy || "/images/gallery/shramadana-01.webp"}
+        imageSrc={assets.headerPrivacy || "/images/gallery/home-about.webp"}
         imageAlt="BJWS Privacy & Data Protection"
         breadcrumbs={[
           { label: tCommon("home"), href: "/" },

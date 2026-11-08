@@ -23,7 +23,7 @@ export function PageHeader({
   title,
   subtitle,
   eyebrow,
-  imageSrc = "/images/gallery/shramadana-01.webp",
+  imageSrc = "/images/gallery/home-service-community-shramadana-campaigns.webp",
   imageAlt = "Buhary Janaza Welfare Society",
   breadcrumbs,
 }: PageHeaderProps) {

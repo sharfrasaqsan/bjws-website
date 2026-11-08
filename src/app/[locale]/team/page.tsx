@@ -153,7 +153,7 @@ export default async function TeamPage({
         title={t("pageTitle")}
         subtitle={t("subtitle")}
         eyebrow={tCommon("regNo")}
-        imageSrc={assets.headerTeam || "/images/gallery/shramadana-01.webp"}
+        imageSrc={assets.headerTeam || "/images/gallery/home-about.webp"}
         imageAlt="BJWS Society Executive Team and Volunteer Committee"
         breadcrumbs={[
           { label: tCommon("home"), href: "/" },

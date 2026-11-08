@@ -68,7 +68,7 @@ export default async function NewsPage({
             si: "පුවත්",
           },
           author: d.author || "BJWS Secretariat",
-          image_url: d.image_url || "/images/gallery/shramadana-01.webp",
+          image_url: d.image_url || "/images/gallery/home-service-community-shramadana-campaigns.webp",
           locale: (d.locale as "en" | "ta" | "si") || "en",
           published_at: d.published_at || d.created_at,
           is_published: true,

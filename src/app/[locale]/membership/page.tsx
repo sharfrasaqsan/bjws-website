@@ -92,7 +92,7 @@ export default async function MembershipPage({
         title={t("pageTitle")}
         subtitle={t("subtitle")}
         eyebrow={tCommon("regNo")}
-        imageSrc={assets.headerMembership || "/images/gallery/shramadana-01.webp"}
+        imageSrc={assets.headerMembership || "/images/gallery/home-about.webp"}
         imageAlt="BJWS Membership Registration and Community Solidarity"
         breadcrumbs={[
           { label: tCommon("home"), href: "/" },
