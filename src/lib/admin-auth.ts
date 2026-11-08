@@ -66,12 +66,14 @@ export async function loginAdminAction(
 
   let shouldRedirect = false;
 
+  const isProduction = process.env.NODE_ENV === "production";
+
   // Development-only demo login bypass (disabled in production)
-  if (isDemo && process.env.NODE_ENV !== "production") {
+  if (isDemo && !isProduction) {
     const cookieStore = await cookies();
     cookieStore.set(DEMO_ADMIN_COOKIE, "active", {
       httpOnly: true,
-      secure: false,
+      secure: isProduction,
       sameSite: "lax",
       path: "/",
       maxAge: 60 * 60 * 8, // 8 hours
@@ -91,15 +93,15 @@ export async function loginAdminAction(
         });
 
         if (error || !data.user) {
-          // Development/testing fallback if email is admin@bjws.org
+          // Development/testing fallback only in non-production
           if (
-            email === "admin@bjws.org" ||
-            email.endsWith("@bjws.org")
+            !isProduction &&
+            (email === "admin@bjws.org" || email.endsWith("@bjws.org"))
           ) {
             const cookieStore = await cookies();
             cookieStore.set(DEMO_ADMIN_COOKIE, "active", {
               httpOnly: true,
-              secure: false,
+              secure: isProduction,
               sameSite: "lax",
               path: "/",
               maxAge: 60 * 60 * 8,
@@ -113,12 +115,12 @@ export async function loginAdminAction(
         }
       } catch (err) {
         console.error("Login authentication error:", err);
-        // Fallback for admin@bjws.org if network fails
-        if (email === "admin@bjws.org" && password.length >= 6) {
+        // Fallback for admin@bjws.org if network fails (development only)
+        if (!isProduction && email === "admin@bjws.org" && password.length >= 6) {
           const cookieStore = await cookies();
           cookieStore.set(DEMO_ADMIN_COOKIE, "active", {
             httpOnly: true,
-            secure: false,
+            secure: isProduction,
             sameSite: "lax",
             path: "/",
             maxAge: 60 * 60 * 8,
@@ -129,19 +131,30 @@ export async function loginAdminAction(
         }
       }
     } else {
-      // Fallback when Supabase is not yet configured
-      if (password.length >= 6) {
+      // Fallback when Supabase is not configured
+      const configuredAdminPassword = process.env.ADMIN_PASSWORD;
+      const isPasswordValid = configuredAdminPassword
+        ? password === configuredAdminPassword
+        : !isProduction && password.length >= 6;
+
+      if (isPasswordValid) {
         const cookieStore = await cookies();
         cookieStore.set(DEMO_ADMIN_COOKIE, "active", {
           httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
+          secure: isProduction,
           sameSite: "lax",
           path: "/",
           maxAge: 60 * 60 * 8,
         });
         shouldRedirect = true;
       } else {
-        return { error: "Password must be at least 6 characters." };
+        return {
+          error: configuredAdminPassword
+            ? "Invalid admin password."
+            : isProduction
+            ? "Authentication service unconfigured. Please configure Supabase or ADMIN_PASSWORD."
+            : "Password must be at least 6 characters.",
+        };
       }
     }
   }
