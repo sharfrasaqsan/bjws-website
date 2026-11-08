@@ -35,13 +35,18 @@ import {
   ArrowUpDown,
   IdCard,
   Sparkles,
+  HeartHandshake,
 } from "lucide-react";
 
 interface TeamManagerProps {
   initialMembers: TeamMember[];
+  mode?: "committee" | "volunteer";
 }
 
-export function TeamManager({ initialMembers }: TeamManagerProps) {
+export function TeamManager({
+  initialMembers,
+  mode = "committee",
+}: TeamManagerProps) {
   const router = useRouter();
   const [members, setMembers] = useState<TeamMember[]>(initialMembers);
   const [searchQuery, setSearchQuery] = useState("");
@@ -57,6 +62,9 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
 
   // Modals
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [createCategory, setCreateCategory] = useState<string>(
+    mode === "volunteer" ? "volunteer" : "operations"
+  );
   const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
   const [qrMember, setQrMember] = useState<TeamMember | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
@@ -206,6 +214,8 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
     const phone = (formData.get("phone") as string)?.trim();
     const address = (formData.get("address") as string)?.trim();
     const roleEn = (formData.get("roleEn") as string)?.trim();
+    const category =
+      (formData.get("category") as TeamMember["category"]) || undefined;
 
     startTransition(async () => {
       const res = await updateTeamMemberAction(null, formData);
@@ -224,6 +234,7 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                   phone: phone || m.phone,
                   address: address || m.address,
                   photo: photoToUse || m.photo,
+                  category: category || m.category,
                   role: {
                     ...m.role,
                     en: roleEn || m.role.en,
@@ -271,21 +282,27 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
         <div className="border-border bg-surface flex items-center justify-between rounded-2xl border p-4 shadow-2xs">
           <div>
             <div className="text-text-muted text-xs font-semibold tracking-wider uppercase">
-              Total Enrolled Team
+              {mode === "volunteer" ? "Total Volunteers" : "Total Committee"}
             </div>
             <div className="font-display text-primary mt-1 text-2xl font-bold">
               {totalCount}
             </div>
           </div>
           <div className="bg-primary/10 text-primary flex h-11 w-11 items-center justify-center rounded-xl">
-            <Users className="text-primary h-5 w-5" />
+            {mode === "volunteer" ? (
+              <HeartHandshake className="text-primary h-5 w-5" />
+            ) : (
+              <Users className="text-primary h-5 w-5" />
+            )}
           </div>
         </div>
 
         <div className="border-border bg-surface flex items-center justify-between rounded-2xl border p-4 shadow-2xs">
           <div>
             <div className="text-xs font-semibold tracking-wider text-[#166534] uppercase">
-              Active On-Duty Officers
+              {mode === "volunteer"
+                ? "Active Field Volunteers"
+                : "Active On-Duty Officers"}
             </div>
             <div className="font-display mt-1 text-2xl font-bold text-[#166534]">
               {activeCount}
@@ -299,7 +316,9 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
         <div className="border-border bg-surface flex items-center justify-between rounded-2xl border p-4 shadow-2xs">
           <div>
             <div className="text-xs font-semibold tracking-wider text-[#9f1239] uppercase">
-              Former / Honorary Alumni
+              {mode === "volunteer"
+                ? "Former Volunteers"
+                : "Former Committee Members"}
             </div>
             <div className="font-display mt-1 text-2xl font-bold text-[#9f1239]">
               {inactiveCount}
@@ -329,7 +348,7 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
         )}
       </div>
 
-      {/* Filter and Action Bar (Department dropdown removed as requested) */}
+      {/* Filter and Action Bar */}
       <div className="border-border bg-surface flex flex-col items-stretch justify-between gap-4 rounded-2xl border p-4 shadow-2xs md:flex-row md:items-center">
         {/* Search Input */}
         <div className="relative min-w-[220px] flex-1">
@@ -338,59 +357,80 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
             type="search"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by name, role, phone, or address..."
+            placeholder={
+              mode === "volunteer"
+                ? "Search volunteer by name, role, phone, or address..."
+                : "Search officer by name, role, phone, or address..."
+            }
             className="border-border bg-background text-text placeholder:text-text-muted/70 focus:border-primary focus:ring-primary w-full rounded-xl border py-2.5 pr-4 pl-10 text-xs focus:ring-1 focus:outline-none sm:text-sm"
           />
         </div>
 
-        {/* Filter Pills */}
+        {/* Filter Pills & Add Button */}
         <div className="flex flex-wrap items-center gap-2.5">
           {/* Status Filter */}
           <div className="bg-background border-border inline-flex rounded-xl border p-1">
             <button
               type="button"
               onClick={() => setStatusFilter("all")}
-              className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+              className={`rounded-lg px-2.5 py-1 text-xs font-semibold transition-all ${
                 statusFilter === "all"
                   ? "bg-primary text-white shadow-xs"
                   : "text-text-muted hover:text-text"
               }`}
             >
-              All Status
+              All ({totalCount})
             </button>
             <button
               type="button"
               onClick={() => setStatusFilter("active")}
-              className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+              className={`rounded-lg px-2.5 py-1 text-xs font-semibold transition-all ${
                 statusFilter === "active"
                   ? "bg-primary text-white shadow-xs"
                   : "text-text-muted hover:text-text"
               }`}
             >
-              Active Officers
+              Active ({activeCount})
             </button>
             <button
               type="button"
               onClick={() => setStatusFilter("inactive")}
-              className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+              className={`rounded-lg px-2.5 py-1 text-xs font-semibold transition-all ${
                 statusFilter === "inactive"
                   ? "bg-primary text-white shadow-xs"
                   : "text-text-muted hover:text-text"
               }`}
             >
-              Former Members
+              Former ({inactiveCount})
             </button>
           </div>
 
           {/* Add Button */}
-          <button
-            type="button"
-            onClick={openCreateModal}
-            className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-[#0b2e1e] px-4 py-2.5 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-[#124d34]"
-          >
-            <Plus className="h-4 w-4 text-[#c99a45]" />
-            <span>Add Member</span>
-          </button>
+          {mode === "volunteer" ? (
+            <button
+              type="button"
+              onClick={() => {
+                setCreateCategory("volunteer");
+                openCreateModal();
+              }}
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-[#0b2e1e] px-4 py-2.5 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-[#124d34]"
+            >
+              <HeartHandshake className="h-4 w-4 text-[#c99a45]" />
+              <span>Add Volunteer</span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => {
+                setCreateCategory("operations");
+                openCreateModal();
+              }}
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-[#0b2e1e] px-4 py-2.5 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-[#124d34]"
+            >
+              <Plus className="h-4 w-4 text-[#c99a45]" />
+              <span>Add Officer</span>
+            </button>
+          )}
         </div>
       </div>
 
@@ -525,6 +565,15 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                     <h3 className="font-display text-text truncate text-base font-bold">
                       {member.name}
                     </h3>
+                    {member.category === "volunteer" ? (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-[10px] font-bold text-amber-800 ring-1 ring-amber-500/30 dark:bg-amber-950 dark:text-amber-300">
+                        <HeartHandshake className="h-3 w-3" /> Youth Volunteer
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100/60 px-2 py-0.5 text-[10px] font-semibold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                        {member.categoryLabel?.en || "Officer"}
+                      </span>
+                    )}
                     <span
                       className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold ${
                         isInactive
@@ -706,10 +755,14 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
               </div>
               <div>
                 <h2 className="font-display text-text text-xl font-bold">
-                  Add New Team Member
+                  {mode === "volunteer"
+                    ? "Add New Youth Volunteer"
+                    : "Add New Committee Officer"}
                 </h2>
                 <p className="text-text-muted text-xs">
-                  Register a committee officer or dedicated volunteer.
+                  {mode === "volunteer"
+                    ? "Register a dedicated field worker or youth coordinator."
+                    : "Register an elected committee officer or executive council member."}
                 </p>
               </div>
             </div>
@@ -722,17 +775,49 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
             )}
 
             <form onSubmit={handleCreateSubmit} className="mt-6 space-y-4">
-              <input type="hidden" name="category" value="operations" />
+              {/* Personnel Category Selector */}
+              {mode === "volunteer" ? (
+                <input type="hidden" name="category" value="volunteer" />
+              ) : (
+                <div>
+                  <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
+                    Department &amp; Committee Category *
+                  </label>
+                  <select
+                    name="category"
+                    defaultValue={createCategory}
+                    className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2.5 text-xs font-semibold focus:outline-none sm:text-sm"
+                  >
+                    <option value="operations">
+                      Operations &amp; Field Committee
+                    </option>
+                    <option value="executive">
+                      Executive Council (Leadership)
+                    </option>
+                    <option value="funeral">Funeral Services Taskforce</option>
+                    <option value="welfare">Community Welfare Officer</option>
+                    <option value="cemetery">
+                      Cemetery Care &amp; Shramadhana
+                    </option>
+                  </select>
+                </div>
+              )}
 
               <div>
                 <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
-                  Officer Full Name *
+                  {mode === "volunteer"
+                    ? "Volunteer Full Name *"
+                    : "Officer Full Name *"}
                 </label>
                 <input
                   type="text"
                   name="name"
                   required
-                  placeholder="e.g. A.M. Sahibullah"
+                  placeholder={
+                    mode === "volunteer"
+                      ? "e.g. M.I. Mohamed Anfas"
+                      : "e.g. A.M. Sahibullah"
+                  }
                   className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3.5 py-2.5 text-xs focus:outline-none sm:text-sm"
                 />
               </div>
@@ -970,11 +1055,13 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
               </div>
               <div>
                 <h2 className="font-display text-text text-xl font-bold">
-                  Edit Member: {editingMember.name}
+                  {mode === "volunteer" ? "Edit Volunteer" : "Edit Officer"}:{" "}
+                  {editingMember.name}
                 </h2>
                 <p className="text-text-muted text-xs">
-                  Update officer details, responsibilities, or contact
-                  information.
+                  {mode === "volunteer"
+                    ? "Update volunteer details, role, or contact information."
+                    : "Update officer details, responsibilities, or contact information."}
                 </p>
               </div>
             </div>
@@ -988,15 +1075,40 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
 
             <form onSubmit={handleEditSubmit} className="mt-6 space-y-4">
               <input type="hidden" name="id" value={editingMember.id} />
-              <input
-                type="hidden"
-                name="category"
-                value={editingMember.category || "operations"}
-              />
+
+              {/* Personnel Category */}
+              {mode === "volunteer" ? (
+                <input type="hidden" name="category" value="volunteer" />
+              ) : (
+                <div>
+                  <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
+                    Personnel Type &amp; Category *
+                  </label>
+                  <select
+                    name="category"
+                    defaultValue={editingMember.category || "operations"}
+                    className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2.5 text-xs font-semibold focus:outline-none sm:text-sm"
+                  >
+                    <option value="operations">
+                      Operations &amp; Committee Officer
+                    </option>
+                    <option value="executive">
+                      Executive Council (Leadership)
+                    </option>
+                    <option value="funeral">Funeral Services Taskforce</option>
+                    <option value="welfare">Community Welfare Officer</option>
+                    <option value="cemetery">
+                      Cemetery Care &amp; Shramadhana
+                    </option>
+                  </select>
+                </div>
+              )}
 
               <div>
                 <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
-                  Officer Full Name *
+                  {mode === "volunteer"
+                    ? "Volunteer Full Name *"
+                    : "Officer Full Name *"}
                 </label>
                 <input
                   type="text"

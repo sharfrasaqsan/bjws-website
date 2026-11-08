@@ -1368,6 +1368,11 @@ const TEAM_CATEGORY_LABELS: Record<
     ta: "மையவாடி பராமரிப்பு",
     si: "සුසාන භූමි නඩත්තුව",
   },
+  volunteer: {
+    en: "Youth Volunteers",
+    ta: "இளைஞர் தொண்டர்கள்",
+    si: "තරුණ ස්වේච්ඡා සේවකයන්",
+  },
 };
 
 export async function createTeamMemberAction(
@@ -1481,6 +1486,7 @@ export async function createTeamMemberAction(
   }
 
   revalidatePath("/admin/team");
+  revalidatePath("/admin/volunteers");
   revalidatePath("/admin");
   revalidatePath("/[locale]/team", "page");
   revalidatePath("/[locale]/about", "page");
@@ -1584,6 +1590,7 @@ export async function updateTeamMemberAction(
   }
 
   revalidatePath("/admin/team");
+  revalidatePath("/admin/volunteers");
   revalidatePath("/admin");
   revalidatePath("/[locale]/team", "page");
   revalidatePath("/[locale]/about", "page");
@@ -1622,6 +1629,7 @@ export async function toggleTeamMemberActiveAction(id: string) {
   }
 
   revalidatePath("/admin/team");
+  revalidatePath("/admin/volunteers");
   revalidatePath("/admin");
   revalidatePath("/[locale]/team", "page");
   revalidatePath("/[locale]/about", "page");
@@ -1644,6 +1652,7 @@ export async function deleteTeamMemberAction(id: string) {
   }
 
   revalidatePath("/admin/team");
+  revalidatePath("/admin/volunteers");
   revalidatePath("/admin");
   revalidatePath("/[locale]/team", "page");
   revalidatePath("/[locale]/about", "page");
@@ -1656,7 +1665,24 @@ export async function reorderTeamMembersAction(orderedIds: string[]) {
 
   reorderTeamMembersStore(orderedIds);
 
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createAdminClient();
+      for (let i = 0; i < orderedIds.length; i++) {
+        const seq = (i + 1).toString().padStart(2, "0");
+        const dateStr = `2026-01-01T00:${seq}:00.000Z`;
+        await supabase
+          .from("team_members")
+          .update({ created_at: dateStr })
+          .eq("id", orderedIds[i]);
+      }
+    } catch (err) {
+      console.warn("Supabase reorder team members warning:", err);
+    }
+  }
+
   revalidatePath("/admin/team");
+  revalidatePath("/admin/volunteers");
   revalidatePath("/admin");
   revalidatePath("/[locale]/team", "page");
   revalidatePath("/[locale]/about", "page");

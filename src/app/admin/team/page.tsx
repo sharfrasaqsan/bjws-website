@@ -13,15 +13,15 @@ import {
 } from "@/content/team";
 import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { TeamManager } from "@/components/admin/team-manager";
-import { UserCheck, ArrowLeft } from "lucide-react";
+import { UserCheck, ArrowLeft, HeartHandshake } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export const metadata: Metadata = {
-  title: "Team Members Management | BJWS Admin",
+  title: "Executive Committee Directory | BJWS Admin",
   description:
-    "Manage executive committee officers, field volunteers, and funeral service personnel of Buhary Janaza Welfare Society.",
+    "Manage elected officers, executive council, and department leads of Buhary Janaza Welfare Society.",
 };
 
 export default async function AdminTeamPage() {
@@ -35,7 +35,8 @@ export default async function AdminTeamPage() {
       const { data, error } = await supabase
         .from("team_members")
         .select("*")
-        .order("created_at", { ascending: false });
+        .neq("category", "volunteer")
+        .order("created_at", { ascending: true });
 
       if (!error && data) {
         members = data.map((d, idx) => {
@@ -99,10 +100,14 @@ export default async function AdminTeamPage() {
         "Could not query Supabase team_members table, using fallback store:",
         err
       );
-      members = getAllTeamMembersAdmin();
+      members = getAllTeamMembersAdmin().filter(
+        (m) => m.category !== "volunteer"
+      );
     }
   } else {
-    members = getAllTeamMembersAdmin();
+    members = getAllTeamMembersAdmin().filter(
+      (m) => m.category !== "volunteer"
+    );
   }
 
   return (
@@ -121,7 +126,7 @@ export default async function AdminTeamPage() {
               </Link>
               <span className="text-[#cbd5e1]">/</span>
               <span className="text-xs font-medium text-[#6b7280]">
-                Team Directory
+                Committee Directory
               </span>
             </div>
             <div className="flex items-center gap-2.5">
@@ -130,19 +135,28 @@ export default async function AdminTeamPage() {
               </div>
               <div>
                 <h1 className="font-serif text-2xl font-bold tracking-tight text-[#0b2e1e] sm:text-3xl">
-                  Team Members &amp; Leadership Directory
+                  Executive Committee Directory
                 </h1>
                 <p className="text-xs text-[#6b7280] sm:text-sm">
-                  Manage executive committee officers, field volunteers, and
-                  funeral service personnel of Buhary Janaza Welfare Society.
+                  Manage elected officers, executive council, and department
+                  leads of Buhary Janaza Welfare Society.
                 </p>
               </div>
             </div>
           </div>
+
+          {/* Quick link to separate Volunteers management */}
+          <Link
+            href="/admin/volunteers"
+            className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-[#c99a45]/40 bg-[#c99a45]/15 px-4 py-2.5 text-xs font-semibold text-[#8b651e] transition-colors hover:bg-[#c99a45]/25 dark:text-[#f5d78e]"
+          >
+            <HeartHandshake className="h-4 w-4 text-[#c99a45]" />
+            <span>Manage Youth Volunteers &rarr;</span>
+          </Link>
         </div>
 
         {/* Main Client Manager */}
-        <TeamManager initialMembers={members} />
+        <TeamManager initialMembers={members} mode="committee" />
       </div>
     </div>
   );

@@ -510,7 +510,12 @@
     "addressLabel": "Address",
     "noResults": "No team members matched your search criteria.",
     "activeBadge": "Active Duty",
-    "inactiveBadge": "Temporary Inactive"
+    "inactiveBadge": "Temporary Inactive",
+    "volunteersTitle": "Youth Volunteers & Field Taskforce",
+    "volunteersEyebrow": "Community Service Volunteers",
+    "volunteersSubtitle": "Dedicated youth volunteers assisting in cemetery maintenance (Shramadhana), funeral logistics, relief distribution, and community emergency operations.",
+    "volunteerBadge": "Youth Volunteers",
+    "volunteersEmpty": "No volunteers registered at this moment. You can sign up through our secretariat."
   },
   "newsPage": {
     "pageTitle": "News & Community Bulletin",

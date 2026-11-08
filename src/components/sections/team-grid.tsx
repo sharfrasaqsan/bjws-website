@@ -120,6 +120,15 @@ export function TeamGrid({ members, locale, translations }: TeamGridProps) {
                     className="pointer-events-none text-[#d4af37]"
                   />
 
+                  {/* Top-Left: Volunteer Ribbon if member is a volunteer */}
+                  {member.category === "volunteer" && (
+                    <div className="absolute top-2.5 left-2.5 z-10 flex items-center sm:top-3 sm:left-3">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-[#c99a45] px-2.5 py-0.5 text-[10px] font-bold text-[#041a10] shadow-xs ring-1 ring-[#c99a45]/60 backdrop-blur-xs">
+                        <span>Volunteer</span>
+                      </span>
+                    </div>
+                  )}
+
                   {/* Status Badge on Photo (Active vs Temporary Inactive) */}
                   <div className="absolute top-2.5 right-2.5 flex items-center sm:top-3 sm:right-3">
                     {member.isInactive ? (

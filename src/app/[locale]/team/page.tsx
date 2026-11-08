@@ -19,7 +19,7 @@ import {
 } from "@/lib/supabase/server";
 import { buildPageMetadata } from "@/lib/seo";
 import { JsonLd, getBreadcrumbJsonLd } from "@/components/seo/json-ld";
-import { ShieldCheck } from "lucide-react";
+import { ShieldCheck, HeartHandshake } from "lucide-react";
 import { getSiteAssets } from "@/content/site-assets";
 
 export const dynamic = "force-dynamic";
@@ -61,8 +61,7 @@ export default async function TeamPage({
       const { data, error } = await supabase
         .from("team_members")
         .select("*")
-        .eq("is_inactive", false)
-        .order("created_at", { ascending: false });
+        .order("created_at", { ascending: true });
 
       if (!error && data) {
         teamMembers = data.map((d, idx) => {
@@ -194,7 +193,10 @@ export default async function TeamPage({
               <div className="flex flex-wrap items-center gap-3">
                 <div className="border-border rounded-xl border bg-[#fbfaf6] px-3.5 py-2 text-center">
                   <div className="font-display text-primary text-lg font-bold">
-                    {teamMembers.length}
+                    {
+                      teamMembers.filter((m) => m.category !== "volunteer")
+                        .length
+                    }
                   </div>
                   <div className="text-text-muted text-[10px] font-semibold tracking-wider uppercase">
                     {t("statMembers")}
@@ -220,12 +222,65 @@ export default async function TeamPage({
             </div>
           </div>
 
-          {/* Team Grid with Interactive Filtering & Search */}
+          {/* 1. Main Team / Executive Council Grid */}
           <TeamGrid
-            members={teamMembers}
+            members={teamMembers.filter((m) => m.category !== "volunteer")}
             locale={validLocale}
             translations={translations}
           />
+
+          {/* 2. Volunteers Section Under the Team Section */}
+          <section
+            className="mt-20 border-t border-[#0b2e1e]/15 pt-16"
+            id="volunteers"
+          >
+            {/* Volunteers Heading Banner */}
+            <div className="mb-10 rounded-3xl border border-[#0b2e1e]/20 bg-gradient-to-br from-[#0c2e1e] via-[#082015] to-[#04120c] p-6 text-white shadow-md sm:p-8">
+              <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#c99a45]/20 text-[#f5eedf] ring-1 ring-[#c99a45]/40">
+                    <HeartHandshake className="h-6 w-6 text-[#c99a45]" />
+                  </div>
+                  <div>
+                    <span className="font-sans text-xs font-bold tracking-wider text-[#d4af37] uppercase">
+                      {t("volunteersEyebrow")}
+                    </span>
+                    <h2 className="font-display mt-1 text-xl font-bold text-white sm:text-2xl">
+                      {t("volunteersTitle")}
+                    </h2>
+                    <p className="mt-1 max-w-2xl text-xs leading-relaxed text-emerald-100/80 sm:text-sm">
+                      {t("volunteersSubtitle")}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-3">
+                  <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-center backdrop-blur-xs">
+                    <div className="font-display text-lg font-bold text-[#f5eedf]">
+                      {
+                        teamMembers.filter((m) => m.category === "volunteer")
+                          .length
+                      }
+                    </div>
+                    <div className="text-[10px] font-semibold tracking-wider text-emerald-200/70 uppercase">
+                      {t("volunteerBadge")}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Volunteers Directory Grid */}
+            <TeamGrid
+              members={teamMembers.filter((m) => m.category === "volunteer")}
+              locale={validLocale}
+              translations={{
+                ...translations,
+                filterAll: t("volunteerBadge"),
+                noResults: t("volunteersEmpty"),
+              }}
+            />
+          </section>
         </Container>
       </div>
     </>

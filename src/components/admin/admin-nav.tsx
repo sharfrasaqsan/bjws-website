@@ -11,6 +11,7 @@ import {
   FileText,
   Newspaper,
   UserCheck,
+  HeartHandshake,
   Image as ImageIcon,
   ChevronDown,
 } from "lucide-react";
@@ -53,8 +54,13 @@ const navItems = [
   },
   {
     href: "/admin/team",
-    label: "Team Directory",
+    label: "Committee",
     icon: UserCheck,
+  },
+  {
+    href: "/admin/volunteers",
+    label: "Volunteers",
+    icon: HeartHandshake,
   },
   {
     href: "/admin/gallery",

@@ -1,3 +1,42 @@
+export type TeamCategory =
+  "executive" | "operations" | "funeral" | "welfare" | "cemetery" | "volunteer";
+
+export const TEAM_CATEGORY_LABELS: Record<
+  TeamCategory,
+  { en: string; ta: string; si: string }
+> = {
+  executive: {
+    en: "Executive Council",
+    ta: "நிர்வாகக் குழு",
+    si: "විධායක සභාව",
+  },
+  operations: {
+    en: "Operations & Committee",
+    ta: "செயற்குழு",
+    si: "මෙහෙයුම් කමිටුව",
+  },
+  funeral: {
+    en: "Funeral Services",
+    ta: "ஜனாஸா சேவைகள்",
+    si: "අවමංගල්‍ය සේවා",
+  },
+  welfare: {
+    en: "Community Welfare",
+    ta: "பொது நலன்புரி",
+    si: "ප්‍රජා සුභසාධන",
+  },
+  cemetery: {
+    en: "Cemetery Care",
+    ta: "மையவாடி பராமரிப்பு",
+    si: "සුසාන භූමි නඩත්තුව",
+  },
+  volunteer: {
+    en: "Youth Volunteers",
+    ta: "இளைஞர் தொண்டர்கள்",
+    si: "තරුණ ස්වේච්ඡා සේවකයන්",
+  },
+};
+
 export interface TeamMember {
   id: string;
   name: string;
@@ -6,7 +45,7 @@ export interface TeamMember {
     ta: string;
     si: string;
   };
-  category: "executive" | "operations" | "funeral" | "welfare" | "cemetery";
+  category: TeamCategory;
   categoryLabel: {
     en: string;
     ta: string;
@@ -20,7 +59,7 @@ export interface TeamMember {
   photo?: string;
   term: string;
   isInactive?: boolean;
-  memberId?: string; // Format: BJWS000
+  memberId?: string; // Format: BJWS000 or BJWS-VOL-000
   nic?: string; // National Identity Card number
   verificationToken?: string; // Secure token for QR verification
   verificationStatus?: "verified" | "suspended" | "pending";
@@ -469,6 +508,32 @@ export const TEAM_MEMBERS: TeamMember[] = [
     term: "2023 - 2024",
     isInactive: true,
   },
+  {
+    id: "volunteer-anfas",
+    name: "M.I. Mohamed Anfas",
+    role: {
+      en: "Youth Volunteer Team Leader",
+      ta: "இளைஞர் தொண்டர் அணித் தலைவர்",
+      si: "තරුණ ස්වේච්ඡා කණ්ඩායම් නායක",
+    },
+    category: "volunteer",
+    categoryLabel: {
+      en: "Youth Volunteers",
+      ta: "இளைஞர் தொண்டர்கள்",
+      si: "තරුණ ස්වේච්ඡා සේවකයන්",
+    },
+    phone: "077 891 2345",
+    whatsapp: "+94778912345",
+    email: "anfas.volunteers@gmail.com",
+    address: "Main Street, Mullipothana",
+    initials: "MIA",
+    term: "2024 - Present",
+    memberId: "BJWS-VOL-001",
+    nic: "199824501234",
+    verificationToken: "vtok_volunteer_anfas_001",
+    verificationStatus: "verified",
+    issueDate: "2026-01-01",
+  },
 ];
 
 // Global store persistence for Next.js hot-reload in development
@@ -656,6 +721,14 @@ export const KNOWN_OFFICIAL_MEMBERS: OfficialMemberRegistryItem[] = [
     memberId: "BJWS020",
     token: "vtok_aqsan_bjws020",
     nic: "199720401928",
+  },
+  {
+    key: "volunteer-anfas",
+    name: "M.I. Mohamed Anfas",
+    nameKeywords: ["anfas", "mohamed anfas", "m.i. mohamed anfas"],
+    memberId: "BJWS-VOL-001",
+    token: "vtok_volunteer_anfas_001",
+    nic: "199824501234",
   },
 ];
 
