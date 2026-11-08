@@ -2,12 +2,7 @@
 
 import * as React from "react";
 import { useState, useSyncExternalStore } from "react";
-import {
-  Share2,
-  Copy,
-  Check,
-  MessageCircle,
-} from "lucide-react";
+import { Share2, Copy, Check, MessageCircle } from "lucide-react";
 
 interface ShareButtonsProps {
   title: string;
@@ -34,12 +29,14 @@ export function ShareButtons({
 
   const canNativeShare = useSyncExternalStore(
     emptySubscribe,
-    () => typeof navigator !== "undefined" && typeof navigator.share === "function",
+    () =>
+      typeof navigator !== "undefined" && typeof navigator.share === "function",
     () => false
   );
 
   const handleCopyLink = async () => {
-    const targetUrl = currentUrl || (typeof window !== "undefined" ? window.location.href : "");
+    const targetUrl =
+      currentUrl || (typeof window !== "undefined" ? window.location.href : "");
     if (!targetUrl) return;
 
     try {
@@ -67,15 +64,17 @@ export function ShareButtons({
   };
 
   const encodedUrl = encodeURIComponent(currentUrl);
-  const encodedText = encodeURIComponent(`${title}\n\nRead more on Buhary Janaza Welfare Society:`);
+  const encodedText = encodeURIComponent(
+    `${title}\n\nRead more on Buhary Janaza Welfare Society:`
+  );
   const whatsappUrl = `https://api.whatsapp.com/send?text=${encodedText}%20${encodedUrl}`;
   const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
   const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodedUrl}`;
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[#e6e4dc] pt-6 mt-8">
+    <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-[#e6e4dc] pt-6">
       {/* Label with icon */}
-      <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0b2e1e]">
+      <div className="flex items-center gap-2 text-xs font-bold tracking-wider text-[#0b2e1e] uppercase">
         <Share2 className="h-4 w-4 text-[#c99a45]" />
         <span>{label}</span>
       </div>
@@ -87,7 +86,7 @@ export function ShareButtons({
           <button
             type="button"
             onClick={handleNativeShare}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-[#0b2e1e] text-white px-3.5 py-1.5 text-xs font-semibold hover:bg-[#124d34] shadow-2xs transition-all cursor-pointer"
+            className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl bg-[#0b2e1e] px-3.5 py-1.5 text-xs font-semibold text-white shadow-2xs transition-all hover:bg-[#124d34]"
           >
             <Share2 className="h-3.5 w-3.5 text-[#d4a359]" />
             <span>Share via App</span>
@@ -99,7 +98,7 @@ export function ShareButtons({
           href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-600/30 bg-[#25D366]/10 px-3.5 py-1.5 text-xs font-bold text-emerald-900 hover:bg-[#25D366]/20 transition-all shadow-2xs cursor-pointer"
+          className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-emerald-600/30 bg-[#25D366]/10 px-3.5 py-1.5 text-xs font-bold text-emerald-900 shadow-2xs transition-all hover:bg-[#25D366]/20"
           title="Share on WhatsApp"
         >
           <MessageCircle className="h-3.5 w-3.5 text-[#25D366]" />
@@ -111,7 +110,7 @@ export function ShareButtons({
           href={facebookUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 rounded-xl border border-blue-600/30 bg-[#1877F2]/10 px-3.5 py-1.5 text-xs font-bold text-blue-900 hover:bg-[#1877F2]/20 transition-all shadow-2xs cursor-pointer"
+          className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-blue-600/30 bg-[#1877F2]/10 px-3.5 py-1.5 text-xs font-bold text-blue-900 shadow-2xs transition-all hover:bg-[#1877F2]/20"
           title="Share on Facebook"
         >
           <svg className="h-3.5 w-3.5 fill-[#1877F2]" viewBox="0 0 24 24">
@@ -125,7 +124,7 @@ export function ShareButtons({
           href={twitterUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 rounded-xl border border-black/20 bg-black/5 px-3.5 py-1.5 text-xs font-bold text-black hover:bg-black/10 transition-all shadow-2xs cursor-pointer"
+          className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-black/20 bg-black/5 px-3.5 py-1.5 text-xs font-bold text-black shadow-2xs transition-all hover:bg-black/10"
           title="Share on X"
         >
           <svg className="h-3.5 w-3.5 fill-black" viewBox="0 0 24 24">
@@ -138,10 +137,10 @@ export function ShareButtons({
         <button
           type="button"
           onClick={handleCopyLink}
-          className={`inline-flex items-center gap-1.5 rounded-xl border px-3.5 py-1.5 text-xs font-semibold transition-all shadow-2xs cursor-pointer ${
+          className={`inline-flex cursor-pointer items-center gap-1.5 rounded-xl border px-3.5 py-1.5 text-xs font-semibold shadow-2xs transition-all ${
             copied
               ? "border-emerald-600 bg-emerald-50 text-emerald-800"
-              : "border-[#e6e4dc] bg-white text-text hover:bg-muted"
+              : "text-text hover:bg-muted border-[#e6e4dc] bg-white"
           }`}
           title="Copy article link to clipboard"
         >
@@ -152,7 +151,7 @@ export function ShareButtons({
             </>
           ) : (
             <>
-              <Copy className="h-3.5 w-3.5 text-text-muted" />
+              <Copy className="text-text-muted h-3.5 w-3.5" />
               <span>Copy Link</span>
             </>
           )}

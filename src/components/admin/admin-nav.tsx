@@ -101,7 +101,7 @@ export function AdminNav({ counts }: AdminNavProps) {
   return (
     <div className="w-full">
       {/* Mobile Selector Dropdown (visible on small screens) */}
-      <div className="sm:hidden py-2.5">
+      <div className="py-2.5 sm:hidden">
         <label htmlFor="admin-nav-mobile" className="sr-only">
           Select Admin Section
         </label>
@@ -110,7 +110,7 @@ export function AdminNav({ counts }: AdminNavProps) {
             id="admin-nav-mobile"
             value={currentActiveHref}
             onChange={(e) => router.push(e.target.value)}
-            className="w-full appearance-none rounded-xl border border-[#1a432f] bg-[#0c2e1e] px-3.5 py-2 text-xs font-semibold text-white shadow-xs focus:border-[#c99a45] focus:outline-none pr-8 cursor-pointer"
+            className="w-full cursor-pointer appearance-none rounded-xl border border-[#1a432f] bg-[#0c2e1e] px-3.5 py-2 pr-8 text-xs font-semibold text-white shadow-xs focus:border-[#c99a45] focus:outline-none"
           >
             {navItems.map((item) => {
               const badgeCount = item.badgeKey
@@ -126,13 +126,13 @@ export function AdminNav({ counts }: AdminNavProps) {
               );
             })}
           </select>
-          <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#a7c5b6]" />
+          <ChevronDown className="pointer-events-none absolute top-1/2 right-2.5 h-4 w-4 -translate-y-1/2 text-[#a7c5b6]" />
         </div>
       </div>
 
       {/* Horizontal Scrollable Tabs Bar */}
       <nav
-        className="flex items-center gap-1 overflow-x-auto py-0 -mb-px [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+        className="-mb-px flex [scrollbar-width:none] items-center gap-1 overflow-x-auto py-0 [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
         aria-label="Admin Navigation Tabs"
       >
         {navItems.map((item) => {

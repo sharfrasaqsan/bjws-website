@@ -42,18 +42,18 @@ export function Footer() {
   ];
 
   return (
-    <footer className="relative overflow-hidden bg-[#062115] text-emerald-100/90 border-t border-emerald-950 mt-auto">
+    <footer className="relative mt-auto overflow-hidden border-t border-emerald-950 bg-[#062115] text-emerald-100/90">
       {/* Subtle Islamic lattice background texture */}
       <IslamicPattern
         opacity={0.04}
-        className="text-[#d4a359] pointer-events-none"
+        className="pointer-events-none text-[#d4a359]"
       />
 
       <Container size="xl" className="relative z-10 py-12 sm:py-16">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-12 lg:gap-8">
           {/* Column 1: Identity & Legal Registration (Col span 4) */}
-          <div className="lg:col-span-4 space-y-5">
-            <Link href="/" className="inline-flex items-center gap-3 group">
+          <div className="space-y-5 lg:col-span-4">
+            <Link href="/" className="group inline-flex items-center gap-3">
               <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg border border-emerald-800/40 bg-white p-1 shadow-2xs">
                 <Image
                   src="/images/bjws logo.webp"
@@ -64,26 +64,26 @@ export function Footer() {
                 />
               </div>
               <div>
-                <h3 className="font-display text-base sm:text-lg font-bold text-white leading-tight">
+                <h3 className="font-display text-base leading-tight font-bold text-white sm:text-lg">
                   {t("common.societyName")}
                 </h3>
-                <p className="text-xs text-[#d4a359] font-medium">
+                <p className="text-xs font-medium text-[#d4a359]">
                   {t("common.location")} • {t("common.foundedYear")}
                 </p>
               </div>
             </Link>
 
-            <p className="text-xs sm:text-sm text-emerald-200/80 leading-relaxed">
+            <p className="text-xs leading-relaxed text-emerald-200/80 sm:text-sm">
               {t("footer.tagline")}
             </p>
 
             {/* Official Registration Box */}
-            <div className="rounded-lg bg-white/5 border border-white/10 p-3.5 space-y-1">
+            <div className="space-y-1 rounded-lg border border-white/10 bg-white/5 p-3.5">
               <div className="flex items-center gap-1.5 text-xs font-bold text-[#d4a359]">
                 <ShieldCheck className="h-4 w-4" />
                 <span>{t("footer.registrationLabel")}</span>
               </div>
-              <p className="text-[11px] text-emerald-200/85 leading-relaxed">
+              <p className="text-[11px] leading-relaxed text-emerald-200/85">
                 {t("footer.registrationDetails")}
               </p>
             </div>
@@ -91,7 +91,7 @@ export function Footer() {
 
           {/* Column 2: Quick Links (Col span 2) */}
           <div className="lg:col-span-2">
-            <h4 className="font-display text-xs font-bold tracking-wider uppercase text-[#d4a359] mb-4">
+            <h4 className="font-display mb-4 text-xs font-bold tracking-wider text-[#d4a359] uppercase">
               {t("footer.quickLinks")}
             </h4>
             <ul className="space-y-2 text-xs sm:text-sm">
@@ -99,7 +99,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="inline-flex items-center gap-1.5 text-emerald-200/75 hover:text-white transition-colors"
+                    className="inline-flex items-center gap-1.5 text-emerald-200/75 transition-colors hover:text-white"
                   >
                     <ChevronRight className="h-3 w-3 text-[#c99a45]" />
                     <span>{link.label}</span>
@@ -111,7 +111,7 @@ export function Footer() {
 
           {/* Column 3: Community Services (Col span 3) */}
           <div className="lg:col-span-3">
-            <h4 className="font-display text-xs font-bold tracking-wider uppercase text-[#d4a359] mb-4">
+            <h4 className="font-display mb-4 text-xs font-bold tracking-wider text-[#d4a359] uppercase">
               {t("footer.servicesTitle")}
             </h4>
             <ul className="space-y-2.5 text-xs sm:text-sm">
@@ -119,9 +119,11 @@ export function Footer() {
                 <li key={idx}>
                   <Link
                     href={service.href}
-                    className="inline-flex items-start gap-2 text-emerald-200/75 hover:text-white transition-colors"
+                    className="inline-flex items-start gap-2 text-emerald-200/75 transition-colors hover:text-white"
                   >
-                    <span className="text-[#c99a45] font-bold text-xs mt-0.5">•</span>
+                    <span className="mt-0.5 text-xs font-bold text-[#c99a45]">
+                      •
+                    </span>
                     <span className="leading-snug">{service.label}</span>
                   </Link>
                 </li>
@@ -129,7 +131,7 @@ export function Footer() {
               <li className="pt-2">
                 <Link
                   href="/donate"
-                  className="inline-flex items-center gap-1.5 rounded-md bg-[#124d34] px-3 py-1.5 text-xs font-semibold text-white shadow-2xs hover:bg-[#0b2e1e] transition-colors"
+                  className="inline-flex items-center gap-1.5 rounded-md bg-[#124d34] px-3 py-1.5 text-xs font-semibold text-white shadow-2xs transition-colors hover:bg-[#0b2e1e]"
                 >
                   <Heart className="h-3.5 w-3.5 fill-white/20" />
                   <span>Support Our Welfare Work</span>
@@ -139,30 +141,30 @@ export function Footer() {
           </div>
 
           {/* Column 4: Registered Office & 24/7 Hotline (Col span 3) */}
-          <div className="lg:col-span-3 space-y-4">
-            <h4 className="font-display text-xs font-bold tracking-wider uppercase text-[#d4a359] mb-4">
+          <div className="space-y-4 lg:col-span-3">
+            <h4 className="font-display mb-4 text-xs font-bold tracking-wider text-[#d4a359] uppercase">
               {t("footer.registeredOffice")}
             </h4>
 
             <div className="space-y-3 text-xs sm:text-sm">
               {/* Address */}
               <div className="flex items-start gap-2.5 text-emerald-200/80">
-                <MapPin className="h-4 w-4 text-[#c99a45] shrink-0 mt-0.5" />
-                <address className="not-italic leading-relaxed text-xs">
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#c99a45]" />
+                <address className="text-xs leading-relaxed not-italic">
                   {t("footer.address")}
                 </address>
               </div>
 
               {/* 24/7 Emergency Phone */}
               <div className="flex items-start gap-2.5">
-                <Phone className="h-4 w-4 text-amber-400 shrink-0 mt-0.5" />
+                <Phone className="mt-0.5 h-4 w-4 shrink-0 text-amber-400" />
                 <div>
-                  <span className="block text-[11px] text-amber-300 font-semibold uppercase tracking-wider">
+                  <span className="block text-[11px] font-semibold tracking-wider text-amber-300 uppercase">
                     24/7 Emergency Line
                   </span>
                   <a
                     href="tel:+94776227323"
-                    className="text-white hover:text-amber-200 font-bold transition-colors"
+                    className="font-bold text-white transition-colors hover:text-amber-200"
                   >
                     077 622 7323
                   </a>
@@ -171,23 +173,23 @@ export function Footer() {
 
               {/* Email */}
               <div className="flex items-center gap-2.5">
-                <Mail className="h-4 w-4 text-emerald-300 shrink-0" />
+                <Mail className="h-4 w-4 shrink-0 text-emerald-300" />
                 <a
                   href={`mailto:${t("footer.email")}`}
-                  className="text-emerald-200/90 hover:text-white transition-colors"
+                  className="text-emerald-200/90 transition-colors hover:text-white"
                 >
                   {t("footer.email")}
                 </a>
               </div>
 
               {/* Social */}
-              <div className="pt-2 flex items-center gap-3">
+              <div className="flex items-center gap-3 pt-2">
                 <a
                   href="https://www.facebook.com"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="BJWS Facebook Community"
-                  className="inline-flex items-center gap-2 text-xs text-emerald-200/80 hover:text-white bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded border border-white/10 transition-colors"
+                  className="inline-flex items-center gap-2 rounded border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-emerald-200/80 transition-colors hover:bg-white/10 hover:text-white"
                 >
                   <svg
                     className="h-3.5 w-3.5 fill-current"
@@ -204,16 +206,18 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar: Copyright & Reg No */}
-        <div className="mt-12 border-t border-emerald-900/60 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-emerald-200/70 text-center sm:text-left">
+        <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-emerald-900/60 pt-6 text-center text-xs text-emerald-200/70 sm:flex-row sm:text-left">
           <p>© 2026 {t("footer.rights")}</p>
-          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5 sm:gap-4">
-            <span className="font-mono text-[#d4a359]">{t("common.regNo")}</span>
+          <div className="flex flex-wrap items-center justify-center gap-2.5 sm:justify-start sm:gap-4">
+            <span className="font-mono text-[#d4a359]">
+              {t("common.regNo")}
+            </span>
             <span className="hidden sm:inline">•</span>
             <span>Mullipothana, Sri Lanka</span>
             <span className="hidden sm:inline">•</span>
             <Link
               href="/privacy"
-              className="text-emerald-300/80 hover:text-white transition-colors underline-offset-2 hover:underline"
+              className="text-emerald-300/80 underline-offset-2 transition-colors hover:text-white hover:underline"
             >
               {t("nav.privacy") || "Privacy Policy"}
             </Link>
@@ -221,44 +225,46 @@ export function Footer() {
         </div>
 
         {/* Developer Credit & Direct Contact */}
-        <div className="mt-5 pt-4 border-t border-emerald-950/80 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-emerald-200/70 text-center md:text-left">
-          <div className="flex flex-wrap items-center justify-center md:justify-start gap-1.5">
+        <div className="mt-5 flex flex-col items-center justify-between gap-3 border-t border-emerald-950/80 pt-4 text-center text-xs text-emerald-200/70 md:flex-row md:text-left">
+          <div className="flex flex-wrap items-center justify-center gap-1.5 md:justify-start">
             <Code2 className="h-3.5 w-3.5 text-[#d4a359]" />
-            <span className="text-emerald-200/60 text-[11px]">Designed & Developed by:</span>
+            <span className="text-[11px] text-emerald-200/60">
+              Designed & Developed by:
+            </span>
             <a
               href="https://linkedin.com/in/sharfiras"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-bold text-[#f5d78e] hover:text-white hover:underline transition-colors ml-0.5"
+              className="ml-0.5 font-bold text-[#f5d78e] transition-colors hover:text-white hover:underline"
             >
               A.M. Sharfras Aqsan
             </a>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center md:justify-end gap-y-2 gap-x-3 sm:gap-x-4 font-mono text-[11px]">
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 font-mono text-[11px] sm:gap-x-4 md:justify-end">
             <a
               href="tel:+94751230001"
-              className="inline-flex items-center gap-1.5 text-emerald-200/80 hover:text-white transition-colors"
+              className="inline-flex items-center gap-1.5 text-emerald-200/80 transition-colors hover:text-white"
               title="Call Developer"
             >
               <Phone className="h-3 w-3 text-[#d4a359]" />
               <span>+94 75 123 0001</span>
             </a>
-            <span className="hidden sm:inline text-emerald-800">•</span>
+            <span className="hidden text-emerald-800 sm:inline">•</span>
             <a
               href="mailto:sharfrasaqsan@gmail.com"
-              className="inline-flex items-center gap-1.5 text-emerald-200/80 hover:text-white transition-colors"
+              className="inline-flex items-center gap-1.5 text-emerald-200/80 transition-colors hover:text-white"
               title="Email Developer"
             >
               <Mail className="h-3 w-3 text-[#d4a359]" />
               <span>sharfrasaqsan@gmail.com</span>
             </a>
-            <span className="hidden sm:inline text-emerald-800">•</span>
+            <span className="hidden text-emerald-800 sm:inline">•</span>
             <a
               href="https://sharfrasaqsan.vercel.app"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-[#f5d78e] hover:text-white hover:underline transition-colors"
+              className="inline-flex items-center gap-1.5 text-[#f5d78e] transition-colors hover:text-white hover:underline"
               title="Developer Portfolio"
             >
               <Globe className="h-3 w-3 text-[#d4a359]" />

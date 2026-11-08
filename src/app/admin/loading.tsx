@@ -1,10 +1,14 @@
-import { Skeleton, SkeletonTable, SkeletonStatCard } from "@/components/ui/skeleton";
+import {
+  Skeleton,
+  SkeletonTable,
+  SkeletonStatCard,
+} from "@/components/ui/skeleton";
 
 export default function AdminDashboardLoading() {
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="animate-fade-in space-y-8">
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border/80 pb-6">
+      <div className="border-border/80 flex flex-col justify-between gap-4 border-b pb-6 sm:flex-row sm:items-center">
         <div className="space-y-2">
           <Skeleton className="h-8 w-60" />
           <Skeleton className="h-4 w-96 max-w-full" />
@@ -16,7 +20,7 @@ export default function AdminDashboardLoading() {
       </div>
 
       {/* 4 Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <SkeletonStatCard />
         <SkeletonStatCard />
         <SkeletonStatCard />
@@ -36,4 +40,3 @@ export default function AdminDashboardLoading() {
     </div>
   );
 }
-

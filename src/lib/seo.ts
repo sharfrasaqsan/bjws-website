@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 
 export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || "https://buharyjanazawelfaresociety.org";
+  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
+  "https://buharyjanazawelfaresociety.org";
 
 export const LOCALES = ["en", "ta", "si"] as const;
 export type Locale = (typeof LOCALES)[number];

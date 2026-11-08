@@ -5,7 +5,8 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
     id: "uploaded-masjid-renovation-1",
     src: "/images/uploads/gallery/1794127787470-masjid-renewal-1-5.webp",
     altKey: "Buhary Jummah Mosque Area - Interior Renewal & Renovation Works",
-    captionKey: "Buhary Jummah Mosque Area - Interior Renewal & Renovation Works",
+    captionKey:
+      "Buhary Jummah Mosque Area - Interior Renewal & Renovation Works",
     category: "masjid-renovation",
     date: "2024",
     location: "Mullipothana",
@@ -19,7 +20,8 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
     id: "uploaded-masjid-renovation-2",
     src: "/images/uploads/gallery/1794127787477-masjid-renewal-2-6.webp",
     altKey: "Buhary Jummah Mosque Area - Wall Plastering & Structural Upgrades",
-    captionKey: "Buhary Jummah Mosque Area - Wall Plastering & Structural Upgrades",
+    captionKey:
+      "Buhary Jummah Mosque Area - Wall Plastering & Structural Upgrades",
     category: "masjid-renovation",
     date: "2024",
     location: "Mullipothana",
@@ -46,8 +48,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-masjid-renovation-4",
     src: "/images/uploads/gallery/1794127787424-masjid-renewal-4-1.webp",
-    altKey: "Buhary Jummah Mosque Area - Floor Tiling & Ablution Area Restoration",
-    captionKey: "Buhary Jummah Mosque Area - Floor Tiling & Ablution Area Restoration",
+    altKey:
+      "Buhary Jummah Mosque Area - Floor Tiling & Ablution Area Restoration",
+    captionKey:
+      "Buhary Jummah Mosque Area - Floor Tiling & Ablution Area Restoration",
     category: "masjid-renovation",
     date: "2024",
     location: "Mullipothana",
@@ -75,7 +79,8 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
     id: "uploaded-masjid-renovation-6",
     src: "/images/uploads/gallery/1794127787449-masjid-renewal-6-3.webp",
     altKey: "Buhary Jummah Mosque Area - Volunteer Team Facility Inspection",
-    captionKey: "Buhary Jummah Mosque Area - Volunteer Team Facility Inspection",
+    captionKey:
+      "Buhary Jummah Mosque Area - Volunteer Team Facility Inspection",
     category: "masjid-renovation",
     date: "2024",
     location: "Mullipothana",
@@ -102,8 +107,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-society-meetings-1",
     src: "/images/uploads/gallery/1794127976270-meeting-1-1.webp",
-    altKey: "BJWS Executive Council - Annual Welfare Planning & Budget Consultation",
-    captionKey: "BJWS Executive Council - Annual Welfare Planning & Budget Consultation",
+    altKey:
+      "BJWS Executive Council - Annual Welfare Planning & Budget Consultation",
+    captionKey:
+      "BJWS Executive Council - Annual Welfare Planning & Budget Consultation",
     category: "society-meetings",
     date: "2024",
     location: "Mullipothana",
@@ -117,7 +124,8 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
     id: "uploaded-society-meetings-2",
     src: "/images/uploads/gallery/1794127976291-meeting-2-2.webp",
     altKey: "BJWS Committee - Mahallah Representatives Service Coordination",
-    captionKey: "BJWS Committee - Mahallah Representatives Service Coordination",
+    captionKey:
+      "BJWS Committee - Mahallah Representatives Service Coordination",
     category: "society-meetings",
     date: "2024",
     location: "Mullipothana",
@@ -131,7 +139,8 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
     id: "uploaded-society-meetings-3",
     src: "/images/uploads/gallery/1794127976311-meeting-3-3.webp",
     altKey: "BJWS Executive Council - Funeral Welfare Policy & Registry Review",
-    captionKey: "BJWS Executive Council - Funeral Welfare Policy & Registry Review",
+    captionKey:
+      "BJWS Executive Council - Funeral Welfare Policy & Registry Review",
     category: "society-meetings",
     date: "2024",
     location: "Mullipothana",
@@ -159,7 +168,8 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
     id: "uploaded-society-meetings-5",
     src: "/images/uploads/gallery/1794127976357-meeting-5-5.webp",
     altKey: "BJWS Committee - Volunteer Welfare Officer Appointment Session",
-    captionKey: "BJWS Committee - Volunteer Welfare Officer Appointment Session",
+    captionKey:
+      "BJWS Committee - Volunteer Welfare Officer Appointment Session",
     category: "society-meetings",
     date: "2024",
     location: "Mullipothana",
@@ -172,8 +182,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-society-meetings-6",
     src: "/images/uploads/gallery/1794127976375-meeting-6-6.webp",
-    altKey: "BJWS Executive Council - Concluding Dua & Society Action Plan Ratification",
-    captionKey: "BJWS Executive Council - Concluding Dua & Society Action Plan Ratification",
+    altKey:
+      "BJWS Executive Council - Concluding Dua & Society Action Plan Ratification",
+    captionKey:
+      "BJWS Executive Council - Concluding Dua & Society Action Plan Ratification",
     category: "society-meetings",
     date: "2024",
     location: "Mullipothana",
@@ -186,8 +198,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-water-concrete-1",
     src: "/images/uploads/gallery/1794128175698-masjid-water-connection-and-concrete-1-1.webp",
-    altKey: "Mosque Water Infrastructure - Main Pipeline Trenching & Connection",
-    captionKey: "Mosque Water Infrastructure - Main Pipeline Trenching & Connection",
+    altKey:
+      "Mosque Water Infrastructure - Main Pipeline Trenching & Connection",
+    captionKey:
+      "Mosque Water Infrastructure - Main Pipeline Trenching & Connection",
     category: "water-concrete",
     date: "2024",
     location: "Mullipothana",
@@ -200,8 +214,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-water-concrete-2",
     src: "/images/uploads/gallery/1794128175712-masjid-water-connection-and-concrete-2-2.webp",
-    altKey: "Mosque Water Infrastructure - Water Storage Tank Plumbing Installation",
-    captionKey: "Mosque Water Infrastructure - Water Storage Tank Plumbing Installation",
+    altKey:
+      "Mosque Water Infrastructure - Water Storage Tank Plumbing Installation",
+    captionKey:
+      "Mosque Water Infrastructure - Water Storage Tank Plumbing Installation",
     category: "water-concrete",
     date: "2024",
     location: "Mullipothana",
@@ -214,8 +230,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-water-concrete-3",
     src: "/images/uploads/gallery/1794128175728-masjid-water-connection-and-concrete-3-3.webp",
-    altKey: "Mosque Civil Works - Foundation Concrete Pouring & Ground Leveling",
-    captionKey: "Mosque Civil Works - Foundation Concrete Pouring & Ground Leveling",
+    altKey:
+      "Mosque Civil Works - Foundation Concrete Pouring & Ground Leveling",
+    captionKey:
+      "Mosque Civil Works - Foundation Concrete Pouring & Ground Leveling",
     category: "water-concrete",
     date: "2024",
     location: "Mullipothana",
@@ -228,8 +246,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-water-concrete-4",
     src: "/images/uploads/gallery/1794128175741-masjid-water-connection-and-concrete-4-4.webp",
-    altKey: "Mosque Civil Works - Reinforcement Mesh Preparation for Concrete Slab",
-    captionKey: "Mosque Civil Works - Reinforcement Mesh Preparation for Concrete Slab",
+    altKey:
+      "Mosque Civil Works - Reinforcement Mesh Preparation for Concrete Slab",
+    captionKey:
+      "Mosque Civil Works - Reinforcement Mesh Preparation for Concrete Slab",
     category: "water-concrete",
     date: "2024",
     location: "Mullipothana",
@@ -243,7 +263,8 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
     id: "uploaded-water-concrete-5",
     src: "/images/uploads/gallery/1794128175753-masjid-water-connection-and-concrete-5-5.webp",
     altKey: "Mosque Water Infrastructure - Supply Pipeline Pressure Testing",
-    captionKey: "Mosque Water Infrastructure - Supply Pipeline Pressure Testing",
+    captionKey:
+      "Mosque Water Infrastructure - Supply Pipeline Pressure Testing",
     category: "water-concrete",
     date: "2024",
     location: "Mullipothana",
@@ -271,7 +292,8 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
     id: "uploaded-water-concrete-7",
     src: "/images/uploads/gallery/1794128175784-masjid-water-connection-and-concrete-7-7.webp",
     altKey: "Mosque Civil Works - Courtyard Paving & Drainage Channel Setup",
-    captionKey: "Mosque Civil Works - Courtyard Paving & Drainage Channel Setup",
+    captionKey:
+      "Mosque Civil Works - Courtyard Paving & Drainage Channel Setup",
     category: "water-concrete",
     date: "2024",
     location: "Mullipothana",
@@ -284,8 +306,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-water-concrete-8",
     src: "/images/uploads/gallery/1794128175795-masjid-water-connection-and-concrete-8-8.webp",
-    altKey: "Mosque Water Infrastructure - Completed Clean Water Supply Facility",
-    captionKey: "Mosque Water Infrastructure - Completed Clean Water Supply Facility",
+    altKey:
+      "Mosque Water Infrastructure - Completed Clean Water Supply Facility",
+    captionKey:
+      "Mosque Water Infrastructure - Completed Clean Water Supply Facility",
     category: "water-concrete",
     date: "2024",
     location: "Mullipothana",
@@ -298,8 +322,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-didwa-collection-1",
     src: "/images/uploads/gallery/1794128336798-didwa-campaign-1-4.webp",
-    altKey: "DIDWA Collection Campaign - Awareness Briefing & Volunteer Team Setup (Photo 1)",
-    captionKey: "DIDWA Collection Campaign - Awareness Briefing & Volunteer Team Setup (Photo 1)",
+    altKey:
+      "DIDWA Collection Campaign - Awareness Briefing & Volunteer Team Setup (Photo 1)",
+    captionKey:
+      "DIDWA Collection Campaign - Awareness Briefing & Volunteer Team Setup (Photo 1)",
     category: "didwa-collection",
     date: "2024",
     location: "Mullipothana",
@@ -312,8 +338,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-didwa-collection-2",
     src: "/images/uploads/gallery/1794128336829-didwa-campaign-2-7.webp",
-    altKey: "DIDWA Collection Campaign - Public Contribution Gathering (Photo 2)",
-    captionKey: "DIDWA Collection Campaign - Public Contribution Gathering (Photo 2)",
+    altKey:
+      "DIDWA Collection Campaign - Public Contribution Gathering (Photo 2)",
+    captionKey:
+      "DIDWA Collection Campaign - Public Contribution Gathering (Photo 2)",
     category: "didwa-collection",
     date: "2024",
     location: "Mullipothana",
@@ -326,8 +354,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-didwa-collection-3",
     src: "/images/uploads/gallery/1794128336842-didwa-campaign-3-8.webp",
-    altKey: "DIDWA Collection Campaign - Community Consultation & Engagement (Photo 3)",
-    captionKey: "DIDWA Collection Campaign - Community Consultation & Engagement (Photo 3)",
+    altKey:
+      "DIDWA Collection Campaign - Community Consultation & Engagement (Photo 3)",
+    captionKey:
+      "DIDWA Collection Campaign - Community Consultation & Engagement (Photo 3)",
     category: "didwa-collection",
     date: "2024",
     location: "Mullipothana",
@@ -340,8 +370,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-didwa-collection-4",
     src: "/images/uploads/gallery/1794128336764-didwa-campaign-4-1.webp",
-    altKey: "DIDWA Collection Campaign - Distribution of Campaign Pamphlets (Photo 4)",
-    captionKey: "DIDWA Collection Campaign - Distribution of Campaign Pamphlets (Photo 4)",
+    altKey:
+      "DIDWA Collection Campaign - Distribution of Campaign Pamphlets (Photo 4)",
+    captionKey:
+      "DIDWA Collection Campaign - Distribution of Campaign Pamphlets (Photo 4)",
     category: "didwa-collection",
     date: "2024",
     location: "Mullipothana",
@@ -354,8 +386,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-didwa-collection-5",
     src: "/images/uploads/gallery/1794128336780-didwa-campaign-5-2.webp",
-    altKey: "DIDWA Collection Campaign - Community Q&A Session with Scholars (Photo 5)",
-    captionKey: "DIDWA Collection Campaign - Community Q&A Session with Scholars (Photo 5)",
+    altKey:
+      "DIDWA Collection Campaign - Community Q&A Session with Scholars (Photo 5)",
+    captionKey:
+      "DIDWA Collection Campaign - Community Q&A Session with Scholars (Photo 5)",
     category: "didwa-collection",
     date: "2024",
     location: "Mullipothana",
@@ -368,8 +402,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-didwa-collection-6",
     src: "/images/uploads/gallery/1794128336789-didwa-campaign-6-3.webp",
-    altKey: "DIDWA Collection Campaign - Mahallah Elders & Youth Joint Gathering (Photo 6)",
-    captionKey: "DIDWA Collection Campaign - Mahallah Elders & Youth Joint Gathering (Photo 6)",
+    altKey:
+      "DIDWA Collection Campaign - Mahallah Elders & Youth Joint Gathering (Photo 6)",
+    captionKey:
+      "DIDWA Collection Campaign - Mahallah Elders & Youth Joint Gathering (Photo 6)",
     category: "didwa-collection",
     date: "2024",
     location: "Mullipothana",
@@ -382,8 +418,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-didwa-collection-7",
     src: "/images/uploads/gallery/1794128336810-didwa-campaign-7-5.webp",
-    altKey: "DIDWA Collection Campaign - Community Solidarity & Campaign Coordination (Photo 7)",
-    captionKey: "DIDWA Collection Campaign - Community Solidarity & Campaign Coordination (Photo 7)",
+    altKey:
+      "DIDWA Collection Campaign - Community Solidarity & Campaign Coordination (Photo 7)",
+    captionKey:
+      "DIDWA Collection Campaign - Community Solidarity & Campaign Coordination (Photo 7)",
     category: "didwa-collection",
     date: "2024",
     location: "Mullipothana",
@@ -396,8 +434,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-didwa-collection-8",
     src: "/images/uploads/gallery/1794128336819-didwa-campaign-8-6.webp",
-    altKey: "DIDWA Collection Campaign - Concluding Supplication & Participant Felicitation (Photo 8)",
-    captionKey: "DIDWA Collection Campaign - Concluding Supplication & Participant Felicitation (Photo 8)",
+    altKey:
+      "DIDWA Collection Campaign - Concluding Supplication & Participant Felicitation (Photo 8)",
+    captionKey:
+      "DIDWA Collection Campaign - Concluding Supplication & Participant Felicitation (Photo 8)",
     category: "didwa-collection",
     date: "2024",
     location: "Mullipothana",
@@ -410,8 +450,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-didwa-welfare-1",
     src: "/images/uploads/gallery/1794128401848-whatsapp-image-2026-11-07-at-12.10.07-am-1.webp",
-    altKey: "DIDWA Welfare - Essential Food Stock Procurement & Quality Check (Photo 1)",
-    captionKey: "DIDWA Welfare - Essential Food Stock Procurement & Quality Check (Photo 1)",
+    altKey:
+      "DIDWA Welfare - Essential Food Stock Procurement & Quality Check (Photo 1)",
+    captionKey:
+      "DIDWA Welfare - Essential Food Stock Procurement & Quality Check (Photo 1)",
     category: "didwa-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -424,8 +466,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-didwa-welfare-2",
     src: "/images/uploads/gallery/1794128401864-whatsapp-image-2026-11-07-at-12.10.07-am1-2.webp",
-    altKey: "DIDWA Welfare - Rice, Flour & Sugar Sorting at Society Centre (Photo 2)",
-    captionKey: "DIDWA Welfare - Rice, Flour & Sugar Sorting at Society Centre (Photo 2)",
+    altKey:
+      "DIDWA Welfare - Rice, Flour & Sugar Sorting at Society Centre (Photo 2)",
+    captionKey:
+      "DIDWA Welfare - Rice, Flour & Sugar Sorting at Society Centre (Photo 2)",
     category: "didwa-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -439,7 +483,8 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
     id: "uploaded-didwa-welfare-3",
     src: "/images/uploads/gallery/1794128401876-whatsapp-image-2026-11-07-at-12.10.06-am1-3.webp",
     altKey: "DIDWA Welfare - Packaging Line for Family Grocery Kits (Photo 3)",
-    captionKey: "DIDWA Welfare - Packaging Line for Family Grocery Kits (Photo 3)",
+    captionKey:
+      "DIDWA Welfare - Packaging Line for Family Grocery Kits (Photo 3)",
     category: "didwa-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -452,8 +497,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-didwa-welfare-4",
     src: "/images/uploads/gallery/1794128401888-whatsapp-image-2026-11-07-at-12.10.06-am-4.webp",
-    altKey: "DIDWA Welfare - Sealing & Labeling Essential Grocery Packs (Photo 4)",
-    captionKey: "DIDWA Welfare - Sealing & Labeling Essential Grocery Packs (Photo 4)",
+    altKey:
+      "DIDWA Welfare - Sealing & Labeling Essential Grocery Packs (Photo 4)",
+    captionKey:
+      "DIDWA Welfare - Sealing & Labeling Essential Grocery Packs (Photo 4)",
     category: "didwa-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -466,8 +513,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-didwa-welfare-5",
     src: "/images/uploads/gallery/1794128401898-whatsapp-image-2026-11-07-at-12.10.22-am-5.webp",
-    altKey: "DIDWA Welfare - Beneficiary Registry Verification & Records (Photo 5)",
-    captionKey: "DIDWA Welfare - Beneficiary Registry Verification & Records (Photo 5)",
+    altKey:
+      "DIDWA Welfare - Beneficiary Registry Verification & Records (Photo 5)",
+    captionKey:
+      "DIDWA Welfare - Beneficiary Registry Verification & Records (Photo 5)",
     category: "didwa-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -480,8 +529,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-didwa-welfare-6",
     src: "/images/uploads/gallery/1794128401910-whatsapp-image-2026-11-07-at-12.10.16-am-6.webp",
-    altKey: "DIDWA Welfare - Loading Relief Packs for Mahallah Distribution (Photo 6)",
-    captionKey: "DIDWA Welfare - Loading Relief Packs for Mahallah Distribution (Photo 6)",
+    altKey:
+      "DIDWA Welfare - Loading Relief Packs for Mahallah Distribution (Photo 6)",
+    captionKey:
+      "DIDWA Welfare - Loading Relief Packs for Mahallah Distribution (Photo 6)",
     category: "didwa-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -494,8 +545,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-didwa-welfare-7",
     src: "/images/uploads/gallery/1794128401919-whatsapp-image-2026-11-07-at-12.10.10-am1-7.webp",
-    altKey: "DIDWA Welfare - Handover of Food Relief to Vulnerable Families (Pack 1)",
-    captionKey: "DIDWA Welfare - Handover of Food Relief to Vulnerable Families (Pack 1)",
+    altKey:
+      "DIDWA Welfare - Handover of Food Relief to Vulnerable Families (Pack 1)",
+    captionKey:
+      "DIDWA Welfare - Handover of Food Relief to Vulnerable Families (Pack 1)",
     category: "didwa-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -508,8 +561,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-didwa-welfare-8",
     src: "/images/uploads/gallery/1794128401932-whatsapp-image-2026-11-07-at-12.10.12-am-8.webp",
-    altKey: "DIDWA Welfare - Handover of Food Relief to Vulnerable Families (Pack 2)",
-    captionKey: "DIDWA Welfare - Handover of Food Relief to Vulnerable Families (Pack 2)",
+    altKey:
+      "DIDWA Welfare - Handover of Food Relief to Vulnerable Families (Pack 2)",
+    captionKey:
+      "DIDWA Welfare - Handover of Food Relief to Vulnerable Families (Pack 2)",
     category: "didwa-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -522,8 +577,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-didwa-welfare-9",
     src: "/images/uploads/gallery/1794128401946-whatsapp-image-2026-11-07-at-12.10.14-am-9.webp",
-    altKey: "DIDWA Welfare - Doorstep Delivery to Elderly & Disabled Residents (Photo 9)",
-    captionKey: "DIDWA Welfare - Doorstep Delivery to Elderly & Disabled Residents (Photo 9)",
+    altKey:
+      "DIDWA Welfare - Doorstep Delivery to Elderly & Disabled Residents (Photo 9)",
+    captionKey:
+      "DIDWA Welfare - Doorstep Delivery to Elderly & Disabled Residents (Photo 9)",
     category: "didwa-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -536,8 +593,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-didwa-welfare-10",
     src: "/images/uploads/gallery/1794128401958-whatsapp-image-2026-11-07-at-12.10.11-am-10.webp",
-    altKey: "DIDWA Welfare - Community Welfare Volunteers Field Team (Photo 10)",
-    captionKey: "DIDWA Welfare - Community Welfare Volunteers Field Team (Photo 10)",
+    altKey:
+      "DIDWA Welfare - Community Welfare Volunteers Field Team (Photo 10)",
+    captionKey:
+      "DIDWA Welfare - Community Welfare Volunteers Field Team (Photo 10)",
     category: "didwa-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -550,8 +609,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-didwa-welfare-11",
     src: "/images/uploads/gallery/1794128401970-whatsapp-image-2026-11-07-at-12.10.09-am-11.webp",
-    altKey: "DIDWA Welfare - Aid Package Verification by Society Officers (Photo 11)",
-    captionKey: "DIDWA Welfare - Aid Package Verification by Society Officers (Photo 11)",
+    altKey:
+      "DIDWA Welfare - Aid Package Verification by Society Officers (Photo 11)",
+    captionKey:
+      "DIDWA Welfare - Aid Package Verification by Society Officers (Photo 11)",
     category: "didwa-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -564,8 +625,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-didwa-welfare-12",
     src: "/images/uploads/gallery/1794128401980-whatsapp-image-2026-11-07-at-12.10.10-am-12.webp",
-    altKey: "DIDWA Welfare - Completed Community Food Security Drive (Photo 12)",
-    captionKey: "DIDWA Welfare - Completed Community Food Security Drive (Photo 12)",
+    altKey:
+      "DIDWA Welfare - Completed Community Food Security Drive (Photo 12)",
+    captionKey:
+      "DIDWA Welfare - Completed Community Food Security Drive (Photo 12)",
     category: "didwa-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -578,8 +641,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-funeral-education-1",
     src: "/images/uploads/gallery/1794128587834-education-campaign-1-4.webp",
-    altKey: "Practical Janaza Education - Sharia Guidelines for Ghusl (Ritual Bath)",
-    captionKey: "Practical Janaza Education - Sharia Guidelines for Ghusl (Ritual Bath)",
+    altKey:
+      "Practical Janaza Education - Sharia Guidelines for Ghusl (Ritual Bath)",
+    captionKey:
+      "Practical Janaza Education - Sharia Guidelines for Ghusl (Ritual Bath)",
     category: "funeral-education",
     date: "2024",
     location: "Mullipothana",
@@ -592,8 +657,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-funeral-education-2",
     src: "/images/uploads/gallery/1794128587712-education-campaign-2-1.webp",
-    altKey: "Practical Janaza Education - Demonstration of Kafan (Shrouding) Cutting",
-    captionKey: "Practical Janaza Education - Demonstration of Kafan (Shrouding) Cutting",
+    altKey:
+      "Practical Janaza Education - Demonstration of Kafan (Shrouding) Cutting",
+    captionKey:
+      "Practical Janaza Education - Demonstration of Kafan (Shrouding) Cutting",
     category: "funeral-education",
     date: "2024",
     location: "Mullipothana",
@@ -606,8 +673,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-funeral-education-3",
     src: "/images/uploads/gallery/1794128587743-education-campaign-3-2.webp",
-    altKey: "Practical Janaza Education - Step-by-Step Shrouding Protocols Workshop",
-    captionKey: "Practical Janaza Education - Step-by-Step Shrouding Protocols Workshop",
+    altKey:
+      "Practical Janaza Education - Step-by-Step Shrouding Protocols Workshop",
+    captionKey:
+      "Practical Janaza Education - Step-by-Step Shrouding Protocols Workshop",
     category: "funeral-education",
     date: "2024",
     location: "Mullipothana",
@@ -620,8 +689,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-funeral-education-4",
     src: "/images/uploads/gallery/1794128587786-education-campaign-4-3.webp",
-    altKey: "Practical Janaza Education - Janaza Prayer Rulings & Etiquette Seminar",
-    captionKey: "Practical Janaza Education - Janaza Prayer Rulings & Etiquette Seminar",
+    altKey:
+      "Practical Janaza Education - Janaza Prayer Rulings & Etiquette Seminar",
+    captionKey:
+      "Practical Janaza Education - Janaza Prayer Rulings & Etiquette Seminar",
     category: "funeral-education",
     date: "2024",
     location: "Mullipothana",
@@ -634,8 +705,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-funeral-education-5",
     src: "/images/uploads/gallery/1794128587882-education-campaign-5-5.webp",
-    altKey: "Practical Janaza Education - Cemetery Protocols & Burial Etiquette Training",
-    captionKey: "Practical Janaza Education - Cemetery Protocols & Burial Etiquette Training",
+    altKey:
+      "Practical Janaza Education - Cemetery Protocols & Burial Etiquette Training",
+    captionKey:
+      "Practical Janaza Education - Cemetery Protocols & Burial Etiquette Training",
     category: "funeral-education",
     date: "2024",
     location: "Mullipothana",
@@ -648,8 +721,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-funeral-education-6",
     src: "/images/uploads/gallery/1794128587911-education-campaign-6-6.webp",
-    altKey: "Practical Janaza Education - Volunteer Certificate Distribution & Commitment",
-    captionKey: "Practical Janaza Education - Volunteer Certificate Distribution & Commitment",
+    altKey:
+      "Practical Janaza Education - Volunteer Certificate Distribution & Commitment",
+    captionKey:
+      "Practical Janaza Education - Volunteer Certificate Distribution & Commitment",
     category: "funeral-education",
     date: "2024",
     location: "Mullipothana",
@@ -662,8 +737,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-cemetery-road-1",
     src: "/images/uploads/gallery/1794128703314-cementry-road-1-7.webp",
-    altKey: "Mahallah Cemetery Access Road - Heavy Machinery Earthwork & Leveling",
-    captionKey: "Mahallah Cemetery Access Road - Heavy Machinery Earthwork & Leveling",
+    altKey:
+      "Mahallah Cemetery Access Road - Heavy Machinery Earthwork & Leveling",
+    captionKey:
+      "Mahallah Cemetery Access Road - Heavy Machinery Earthwork & Leveling",
     category: "cemetery-road",
     date: "2024",
     location: "Mullipothana",
@@ -676,8 +753,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-cemetery-road-2",
     src: "/images/uploads/gallery/1794128703203-cementry-road-2-3.webp",
-    altKey: "Mahallah Cemetery Access Road - Clearing Roadside Overgrowth & Brush",
-    captionKey: "Mahallah Cemetery Access Road - Clearing Roadside Overgrowth & Brush",
+    altKey:
+      "Mahallah Cemetery Access Road - Clearing Roadside Overgrowth & Brush",
+    captionKey:
+      "Mahallah Cemetery Access Road - Clearing Roadside Overgrowth & Brush",
     category: "cemetery-road",
     date: "2024",
     location: "Mullipothana",
@@ -690,8 +769,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-cemetery-road-3",
     src: "/images/uploads/gallery/1794128703236-cementry-road-3-4.webp",
-    altKey: "Mahallah Cemetery Access Road - Sub-base Gravel Spreading & Compaction",
-    captionKey: "Mahallah Cemetery Access Road - Sub-base Gravel Spreading & Compaction",
+    altKey:
+      "Mahallah Cemetery Access Road - Sub-base Gravel Spreading & Compaction",
+    captionKey:
+      "Mahallah Cemetery Access Road - Sub-base Gravel Spreading & Compaction",
     category: "cemetery-road",
     date: "2024",
     location: "Mullipothana",
@@ -704,8 +785,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-cemetery-road-4",
     src: "/images/uploads/gallery/1794128703274-cementry-road-4-5.webp",
-    altKey: "Mahallah Cemetery Access Road - Drainage Culvert & Water Channel Construction",
-    captionKey: "Mahallah Cemetery Access Road - Drainage Culvert & Water Channel Construction",
+    altKey:
+      "Mahallah Cemetery Access Road - Drainage Culvert & Water Channel Construction",
+    captionKey:
+      "Mahallah Cemetery Access Road - Drainage Culvert & Water Channel Construction",
     category: "cemetery-road",
     date: "2024",
     location: "Mullipothana",
@@ -718,8 +801,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-cemetery-road-5",
     src: "/images/uploads/gallery/1794128703293-cementry-road-5-6.webp",
-    altKey: "Mahallah Cemetery Access Road - Road Surface Grading for Hearse Vehicle Access",
-    captionKey: "Mahallah Cemetery Access Road - Road Surface Grading for Hearse Vehicle Access",
+    altKey:
+      "Mahallah Cemetery Access Road - Road Surface Grading for Hearse Vehicle Access",
+    captionKey:
+      "Mahallah Cemetery Access Road - Road Surface Grading for Hearse Vehicle Access",
     category: "cemetery-road",
     date: "2024",
     location: "Mullipothana",
@@ -732,8 +817,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-cemetery-road-6",
     src: "/images/uploads/gallery/1794128703140-cementry-road-6-1.webp",
-    altKey: "Mahallah Cemetery Access Road - Community Volunteers Assisting Road Civil Works",
-    captionKey: "Mahallah Cemetery Access Road - Community Volunteers Assisting Road Civil Works",
+    altKey:
+      "Mahallah Cemetery Access Road - Community Volunteers Assisting Road Civil Works",
+    captionKey:
+      "Mahallah Cemetery Access Road - Community Volunteers Assisting Road Civil Works",
     category: "cemetery-road",
     date: "2024",
     location: "Mullipothana",
@@ -746,8 +833,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-cemetery-road-7",
     src: "/images/uploads/gallery/1794128703176-cementry-road-7-2.webp",
-    altKey: "Mahallah Cemetery Access Road - Completed Weather-Resistant Access Pathway",
-    captionKey: "Mahallah Cemetery Access Road - Completed Weather-Resistant Access Pathway",
+    altKey:
+      "Mahallah Cemetery Access Road - Completed Weather-Resistant Access Pathway",
+    captionKey:
+      "Mahallah Cemetery Access Road - Completed Weather-Resistant Access Pathway",
     category: "cemetery-road",
     date: "2024",
     location: "Mullipothana",
@@ -760,8 +849,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-cemetery-shramadana-1",
     src: "/images/uploads/gallery/1794132227776-cementry-shramadana-1-1.webp",
-    altKey: "Mahallah Cemetery Shramadhana - Volunteer Assembly & Tool Briefing",
-    captionKey: "Mahallah Cemetery Shramadhana - Volunteer Assembly & Tool Briefing",
+    altKey:
+      "Mahallah Cemetery Shramadhana - Volunteer Assembly & Tool Briefing",
+    captionKey:
+      "Mahallah Cemetery Shramadhana - Volunteer Assembly & Tool Briefing",
     category: "cemetery-shramadana",
     date: "2024",
     location: "Mullipothana",
@@ -774,8 +865,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-cemetery-shramadana-2",
     src: "/images/uploads/gallery/1794132227782-cementry-shramadana-2-2.webp",
-    altKey: "Mahallah Cemetery Shramadhana - Clearing Wild Shrubbery & Dense Vegetation",
-    captionKey: "Mahallah Cemetery Shramadhana - Clearing Wild Shrubbery & Dense Vegetation",
+    altKey:
+      "Mahallah Cemetery Shramadhana - Clearing Wild Shrubbery & Dense Vegetation",
+    captionKey:
+      "Mahallah Cemetery Shramadhana - Clearing Wild Shrubbery & Dense Vegetation",
     category: "cemetery-shramadana",
     date: "2024",
     location: "Mullipothana",
@@ -789,7 +882,8 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
     id: "uploaded-cemetery-shramadana-3",
     src: "/images/uploads/gallery/1794132227788-cementry-shramadana-3-3.webp",
     altKey: "Mahallah Cemetery Shramadhana - Grass Cutting & Pathway Clearing",
-    captionKey: "Mahallah Cemetery Shramadhana - Grass Cutting & Pathway Clearing",
+    captionKey:
+      "Mahallah Cemetery Shramadhana - Grass Cutting & Pathway Clearing",
     category: "cemetery-shramadana",
     date: "2024",
     location: "Mullipothana",
@@ -802,8 +896,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-cemetery-shramadana-4",
     src: "/images/uploads/gallery/1794132227793-cementry-shramadana-4-4.webp",
-    altKey: "Mahallah Cemetery Shramadhana - Boundary Fence Repair & Weed Removal",
-    captionKey: "Mahallah Cemetery Shramadhana - Boundary Fence Repair & Weed Removal",
+    altKey:
+      "Mahallah Cemetery Shramadhana - Boundary Fence Repair & Weed Removal",
+    captionKey:
+      "Mahallah Cemetery Shramadhana - Boundary Fence Repair & Weed Removal",
     category: "cemetery-shramadana",
     date: "2024",
     location: "Mullipothana",
@@ -816,8 +912,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-cemetery-shramadana-5",
     src: "/images/uploads/gallery/1794132227798-cementry-shramadana-5-5.webp",
-    altKey: "Mahallah Cemetery Shramadhana - Debris Collection & Waste Disposal",
-    captionKey: "Mahallah Cemetery Shramadhana - Debris Collection & Waste Disposal",
+    altKey:
+      "Mahallah Cemetery Shramadhana - Debris Collection & Waste Disposal",
+    captionKey:
+      "Mahallah Cemetery Shramadhana - Debris Collection & Waste Disposal",
     category: "cemetery-shramadana",
     date: "2024",
     location: "Mullipothana",
@@ -830,8 +928,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-cemetery-shramadana-6",
     src: "/images/uploads/gallery/1794132227804-cementry-shramadana-6-6.webp",
-    altKey: "Mahallah Cemetery Shramadhana - Water Channel Cleaning in Burial Grounds",
-    captionKey: "Mahallah Cemetery Shramadhana - Water Channel Cleaning in Burial Grounds",
+    altKey:
+      "Mahallah Cemetery Shramadhana - Water Channel Cleaning in Burial Grounds",
+    captionKey:
+      "Mahallah Cemetery Shramadhana - Water Channel Cleaning in Burial Grounds",
     category: "cemetery-shramadana",
     date: "2024",
     location: "Mullipothana",
@@ -844,8 +944,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-cemetery-shramadana-7",
     src: "/images/uploads/gallery/1794132227811-cementry-shramadana-7-7.webp",
-    altKey: "Mahallah Cemetery Shramadhana - Leveling Sunken Pathways Between Plots",
-    captionKey: "Mahallah Cemetery Shramadhana - Leveling Sunken Pathways Between Plots",
+    altKey:
+      "Mahallah Cemetery Shramadhana - Leveling Sunken Pathways Between Plots",
+    captionKey:
+      "Mahallah Cemetery Shramadhana - Leveling Sunken Pathways Between Plots",
     category: "cemetery-shramadana",
     date: "2024",
     location: "Mullipothana",
@@ -858,8 +960,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-cemetery-shramadana-8",
     src: "/images/uploads/gallery/1794132227816-cementry-shramadana-8-8.webp",
-    altKey: "Mahallah Cemetery Shramadhana - Community Elders & Youths Working Together",
-    captionKey: "Mahallah Cemetery Shramadhana - Community Elders & Youths Working Together",
+    altKey:
+      "Mahallah Cemetery Shramadhana - Community Elders & Youths Working Together",
+    captionKey:
+      "Mahallah Cemetery Shramadhana - Community Elders & Youths Working Together",
     category: "cemetery-shramadana",
     date: "2024",
     location: "Mullipothana",
@@ -872,8 +976,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-cemetery-shramadana-9",
     src: "/images/uploads/gallery/1794132227821-cementry-shramadana-9-9.webp",
-    altKey: "Mahallah Cemetery Shramadhana - Mid-Day Tea & Refreshment for Volunteers",
-    captionKey: "Mahallah Cemetery Shramadhana - Mid-Day Tea & Refreshment for Volunteers",
+    altKey:
+      "Mahallah Cemetery Shramadhana - Mid-Day Tea & Refreshment for Volunteers",
+    captionKey:
+      "Mahallah Cemetery Shramadhana - Mid-Day Tea & Refreshment for Volunteers",
     category: "cemetery-shramadana",
     date: "2024",
     location: "Mullipothana",
@@ -886,8 +992,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-cemetery-shramadana-10",
     src: "/images/uploads/gallery/1794132227829-cementry-shramadana-10-10.webp",
-    altKey: "Mahallah Cemetery Shramadhana - Cleaned Landscape & Restored Pathways",
-    captionKey: "Mahallah Cemetery Shramadhana - Cleaned Landscape & Restored Pathways",
+    altKey:
+      "Mahallah Cemetery Shramadhana - Cleaned Landscape & Restored Pathways",
+    captionKey:
+      "Mahallah Cemetery Shramadhana - Cleaned Landscape & Restored Pathways",
     category: "cemetery-shramadana",
     date: "2024",
     location: "Mullipothana",
@@ -900,8 +1008,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-cemetery-shramadana-11",
     src: "/images/uploads/gallery/1794132227834-cementry-shramadana-11-11.webp",
-    altKey: "Mahallah Cemetery Shramadhana - Concluding Dua by Imam for Society Volunteers",
-    captionKey: "Mahallah Cemetery Shramadhana - Concluding Dua by Imam for Society Volunteers",
+    altKey:
+      "Mahallah Cemetery Shramadhana - Concluding Dua by Imam for Society Volunteers",
+    captionKey:
+      "Mahallah Cemetery Shramadhana - Concluding Dua by Imam for Society Volunteers",
     category: "cemetery-shramadana",
     date: "2024",
     location: "Mullipothana",
@@ -914,8 +1024,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-education-aid-1",
     src: "/images/uploads/gallery/1794132279190-school-donation-1-1.webp",
-    altKey: "Student Educational Aid - School Bags, Stationery & Notebook Kits Preparation",
-    captionKey: "Student Educational Aid - School Bags, Stationery & Notebook Kits Preparation",
+    altKey:
+      "Student Educational Aid - School Bags, Stationery & Notebook Kits Preparation",
+    captionKey:
+      "Student Educational Aid - School Bags, Stationery & Notebook Kits Preparation",
     category: "education-aid",
     date: "2024",
     location: "Mullipothana",
@@ -928,8 +1040,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-education-aid-2",
     src: "/images/uploads/gallery/1794132279198-school-donation-2-2.webp",
-    altKey: "Student Educational Aid - Distribution Ceremony for Underprivileged Students",
-    captionKey: "Student Educational Aid - Distribution Ceremony for Underprivileged Students",
+    altKey:
+      "Student Educational Aid - Distribution Ceremony for Underprivileged Students",
+    captionKey:
+      "Student Educational Aid - Distribution Ceremony for Underprivileged Students",
     category: "education-aid",
     date: "2024",
     location: "Mullipothana",
@@ -942,8 +1056,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-education-aid-3",
     src: "/images/uploads/gallery/1794132279205-school-donation-3-3.webp",
-    altKey: "Student Educational Aid - Students Receiving Academic Support Packages",
-    captionKey: "Student Educational Aid - Students Receiving Academic Support Packages",
+    altKey:
+      "Student Educational Aid - Students Receiving Academic Support Packages",
+    captionKey:
+      "Student Educational Aid - Students Receiving Academic Support Packages",
     category: "education-aid",
     date: "2024",
     location: "Mullipothana",
@@ -956,8 +1072,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-education-aid-4",
     src: "/images/uploads/gallery/1794132279213-school-donation-4-4.webp",
-    altKey: "Student Educational Aid - Encouragement Speech by Community Educators",
-    captionKey: "Student Educational Aid - Encouragement Speech by Community Educators",
+    altKey:
+      "Student Educational Aid - Encouragement Speech by Community Educators",
+    captionKey:
+      "Student Educational Aid - Encouragement Speech by Community Educators",
     category: "education-aid",
     date: "2024",
     location: "Mullipothana",
@@ -970,8 +1088,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-education-aid-5",
     src: "/images/uploads/gallery/1794132279220-school-donation-5-5.webp",
-    altKey: "Student Educational Aid - Group Photo with Student Beneficiaries & Teachers",
-    captionKey: "Student Educational Aid - Group Photo with Student Beneficiaries & Teachers",
+    altKey:
+      "Student Educational Aid - Group Photo with Student Beneficiaries & Teachers",
+    captionKey:
+      "Student Educational Aid - Group Photo with Student Beneficiaries & Teachers",
     category: "education-aid",
     date: "2024",
     location: "Mullipothana",
@@ -985,7 +1105,8 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
     id: "uploaded-uzhiya-1",
     src: "/images/uploads/gallery/1794132318681-whatsapp-image-2026-11-07-at-12.37.24-am-1.webp",
     altKey: "Annual Uzhiya Programme - Field Assessment & Qurbani Coordination",
-    captionKey: "Annual Uzhiya Programme - Field Assessment & Qurbani Coordination",
+    captionKey:
+      "Annual Uzhiya Programme - Field Assessment & Qurbani Coordination",
     category: "uzhiya",
     date: "2024",
     location: "Mullipothana",
@@ -998,8 +1119,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-uzhiya-2",
     src: "/images/uploads/gallery/1794132318688-whatsapp-image-2026-11-07-at-12.37.17-am-2.webp",
-    altKey: "Annual Uzhiya Programme - Fresh Meat Packaging & Quality Verification",
-    captionKey: "Annual Uzhiya Programme - Fresh Meat Packaging & Quality Verification",
+    altKey:
+      "Annual Uzhiya Programme - Fresh Meat Packaging & Quality Verification",
+    captionKey:
+      "Annual Uzhiya Programme - Fresh Meat Packaging & Quality Verification",
     category: "uzhiya",
     date: "2024",
     location: "Mullipothana",
@@ -1012,8 +1135,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-uzhiya-3",
     src: "/images/uploads/gallery/1794132318697-whatsapp-image-2026-11-07-at-12.37.17-am1-3.webp",
-    altKey: "Annual Uzhiya Programme - Direct Handover of Qurbani Share to Deserving Household",
-    captionKey: "Annual Uzhiya Programme - Direct Handover of Qurbani Share to Deserving Household",
+    altKey:
+      "Annual Uzhiya Programme - Direct Handover of Qurbani Share to Deserving Household",
+    captionKey:
+      "Annual Uzhiya Programme - Direct Handover of Qurbani Share to Deserving Household",
     category: "uzhiya",
     date: "2024",
     location: "Mullipothana",
@@ -1026,8 +1151,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-uzhiya-4",
     src: "/images/uploads/gallery/1794132318706-whatsapp-image-2026-11-07-at-12.37.16-am-4.webp",
-    altKey: "Annual Uzhiya Programme - Village-wide Distribution & Beneficiary Check",
-    captionKey: "Annual Uzhiya Programme - Village-wide Distribution & Beneficiary Check",
+    altKey:
+      "Annual Uzhiya Programme - Village-wide Distribution & Beneficiary Check",
+    captionKey:
+      "Annual Uzhiya Programme - Village-wide Distribution & Beneficiary Check",
     category: "uzhiya",
     date: "2024",
     location: "Mullipothana",
@@ -1040,8 +1167,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-community-welfare-1",
     src: "/images/uploads/gallery/1794132362651-donation-1-1.webp",
-    altKey: "Social Welfare Relief - Verification & Intake at Society Center (Photo 1)",
-    captionKey: "Social Welfare Relief - Verification & Intake at Society Center (Photo 1)",
+    altKey:
+      "Social Welfare Relief - Verification & Intake at Society Center (Photo 1)",
+    captionKey:
+      "Social Welfare Relief - Verification & Intake at Society Center (Photo 1)",
     category: "community-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -1054,8 +1183,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-community-welfare-2",
     src: "/images/uploads/gallery/1794132362658-donation-2-2.webp",
-    altKey: "Social Welfare Relief - Food Ration & Essential Items Sorting (Photo 2)",
-    captionKey: "Social Welfare Relief - Food Ration & Essential Items Sorting (Photo 2)",
+    altKey:
+      "Social Welfare Relief - Food Ration & Essential Items Sorting (Photo 2)",
+    captionKey:
+      "Social Welfare Relief - Food Ration & Essential Items Sorting (Photo 2)",
     category: "community-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -1068,8 +1199,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-community-welfare-3",
     src: "/images/uploads/gallery/1794132362665-donation-3-3.webp",
-    altKey: "Social Welfare Relief - Direct Family Welfare Assistance (Photo 3)",
-    captionKey: "Social Welfare Relief - Direct Family Welfare Assistance (Photo 3)",
+    altKey:
+      "Social Welfare Relief - Direct Family Welfare Assistance (Photo 3)",
+    captionKey:
+      "Social Welfare Relief - Direct Family Welfare Assistance (Photo 3)",
     category: "community-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -1082,8 +1215,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-community-welfare-4",
     src: "/images/uploads/gallery/1794132362672-donation-4-4.webp",
-    altKey: "Social Welfare Relief - Direct Family Welfare Assistance (Photo 4)",
-    captionKey: "Social Welfare Relief - Direct Family Welfare Assistance (Photo 4)",
+    altKey:
+      "Social Welfare Relief - Direct Family Welfare Assistance (Photo 4)",
+    captionKey:
+      "Social Welfare Relief - Direct Family Welfare Assistance (Photo 4)",
     category: "community-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -1096,8 +1231,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-community-welfare-5",
     src: "/images/uploads/gallery/1794132362678-donation-5-5.webp",
-    altKey: "Social Welfare Relief - Beneficiary Record Updating & Handover (Photo 5)",
-    captionKey: "Social Welfare Relief - Beneficiary Record Updating & Handover (Photo 5)",
+    altKey:
+      "Social Welfare Relief - Beneficiary Record Updating & Handover (Photo 5)",
+    captionKey:
+      "Social Welfare Relief - Beneficiary Record Updating & Handover (Photo 5)",
     category: "community-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -1110,8 +1247,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-community-welfare-6",
     src: "/images/uploads/gallery/1794132362683-donation-6-6.webp",
-    altKey: "Social Welfare Relief - Widow & Elderly Family Support Handover (Photo 6)",
-    captionKey: "Social Welfare Relief - Widow & Elderly Family Support Handover (Photo 6)",
+    altKey:
+      "Social Welfare Relief - Widow & Elderly Family Support Handover (Photo 6)",
+    captionKey:
+      "Social Welfare Relief - Widow & Elderly Family Support Handover (Photo 6)",
     category: "community-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -1124,8 +1263,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-community-welfare-7",
     src: "/images/uploads/gallery/1794132362689-donation-7-7.webp",
-    altKey: "Social Welfare Relief - Low-Income Mahallah Household Aid (Photo 7)",
-    captionKey: "Social Welfare Relief - Low-Income Mahallah Household Aid (Photo 7)",
+    altKey:
+      "Social Welfare Relief - Low-Income Mahallah Household Aid (Photo 7)",
+    captionKey:
+      "Social Welfare Relief - Low-Income Mahallah Household Aid (Photo 7)",
     category: "community-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -1138,8 +1279,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-community-welfare-8",
     src: "/images/uploads/gallery/1794132362694-donation-8-8.webp",
-    altKey: "Social Welfare Relief - Low-Income Mahallah Household Aid (Photo 8)",
-    captionKey: "Social Welfare Relief - Low-Income Mahallah Household Aid (Photo 8)",
+    altKey:
+      "Social Welfare Relief - Low-Income Mahallah Household Aid (Photo 8)",
+    captionKey:
+      "Social Welfare Relief - Low-Income Mahallah Household Aid (Photo 8)",
     category: "community-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -1152,8 +1295,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-community-welfare-9",
     src: "/images/uploads/gallery/1794132362701-donation-9-9.webp",
-    altKey: "Social Welfare Relief - Basic Amenities & Dry Grocery Delivery (Photo 9)",
-    captionKey: "Social Welfare Relief - Basic Amenities & Dry Grocery Delivery (Photo 9)",
+    altKey:
+      "Social Welfare Relief - Basic Amenities & Dry Grocery Delivery (Photo 9)",
+    captionKey:
+      "Social Welfare Relief - Basic Amenities & Dry Grocery Delivery (Photo 9)",
     category: "community-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -1166,8 +1311,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-community-welfare-10",
     src: "/images/uploads/gallery/1794132362707-donation-10-10.webp",
-    altKey: "Social Welfare Relief - Society Volunteer Team Organizing Aid (Photo 10)",
-    captionKey: "Social Welfare Relief - Society Volunteer Team Organizing Aid (Photo 10)",
+    altKey:
+      "Social Welfare Relief - Society Volunteer Team Organizing Aid (Photo 10)",
+    captionKey:
+      "Social Welfare Relief - Society Volunteer Team Organizing Aid (Photo 10)",
     category: "community-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -1181,7 +1328,8 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
     id: "uploaded-community-welfare-11",
     src: "/images/uploads/gallery/1794132362713-donation-11-11.webp",
     altKey: "Social Welfare Relief - Family Staple Food Assistance (Photo 11)",
-    captionKey: "Social Welfare Relief - Family Staple Food Assistance (Photo 11)",
+    captionKey:
+      "Social Welfare Relief - Family Staple Food Assistance (Photo 11)",
     category: "community-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -1195,7 +1343,8 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
     id: "uploaded-community-welfare-12",
     src: "/images/uploads/gallery/1794132362722-donation-12-12.webp",
     altKey: "Social Welfare Relief - Family Staple Food Assistance (Photo 12)",
-    captionKey: "Social Welfare Relief - Family Staple Food Assistance (Photo 12)",
+    captionKey:
+      "Social Welfare Relief - Family Staple Food Assistance (Photo 12)",
     category: "community-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -1209,7 +1358,8 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
     id: "uploaded-community-welfare-13",
     src: "/images/uploads/gallery/1794132362730-donation-13-13.webp",
     altKey: "Social Welfare Relief - Community Aid Handover Session (Photo 13)",
-    captionKey: "Social Welfare Relief - Community Aid Handover Session (Photo 13)",
+    captionKey:
+      "Social Welfare Relief - Community Aid Handover Session (Photo 13)",
     category: "community-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -1222,8 +1372,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-community-welfare-14",
     src: "/images/uploads/gallery/1794132362735-donation-14-14.webp",
-    altKey: "Social Welfare Relief - Essential Provisions Distribution (Photo 14)",
-    captionKey: "Social Welfare Relief - Essential Provisions Distribution (Photo 14)",
+    altKey:
+      "Social Welfare Relief - Essential Provisions Distribution (Photo 14)",
+    captionKey:
+      "Social Welfare Relief - Essential Provisions Distribution (Photo 14)",
     category: "community-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -1236,8 +1388,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-community-welfare-15",
     src: "/images/uploads/gallery/1794132362739-donation-15-15.webp",
-    altKey: "Social Welfare Relief - Direct Beneficiary Delivery in Mullipothana (Photo 15)",
-    captionKey: "Social Welfare Relief - Direct Beneficiary Delivery in Mullipothana (Photo 15)",
+    altKey:
+      "Social Welfare Relief - Direct Beneficiary Delivery in Mullipothana (Photo 15)",
+    captionKey:
+      "Social Welfare Relief - Direct Beneficiary Delivery in Mullipothana (Photo 15)",
     category: "community-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -1250,8 +1404,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-community-welfare-16",
     src: "/images/uploads/gallery/1794132362745-donation-16-16.webp",
-    altKey: "Social Welfare Relief - Social Assistance Package Handover (Photo 16)",
-    captionKey: "Social Welfare Relief - Social Assistance Package Handover (Photo 16)",
+    altKey:
+      "Social Welfare Relief - Social Assistance Package Handover (Photo 16)",
+    captionKey:
+      "Social Welfare Relief - Social Assistance Package Handover (Photo 16)",
     category: "community-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -1264,8 +1420,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-community-welfare-17",
     src: "/images/uploads/gallery/1794132362749-donation-17-17.webp",
-    altKey: "Social Welfare Relief - Welfare Officer Handover to Local Resident (Photo 17)",
-    captionKey: "Social Welfare Relief - Welfare Officer Handover to Local Resident (Photo 17)",
+    altKey:
+      "Social Welfare Relief - Welfare Officer Handover to Local Resident (Photo 17)",
+    captionKey:
+      "Social Welfare Relief - Welfare Officer Handover to Local Resident (Photo 17)",
     category: "community-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -1279,7 +1437,8 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
     id: "uploaded-community-welfare-18",
     src: "/images/uploads/gallery/1794132362753-donation-18-18.webp",
     altKey: "Social Welfare Relief - Monthly Mahallah Welfare Drive (Photo 18)",
-    captionKey: "Social Welfare Relief - Monthly Mahallah Welfare Drive (Photo 18)",
+    captionKey:
+      "Social Welfare Relief - Monthly Mahallah Welfare Drive (Photo 18)",
     category: "community-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -1293,7 +1452,8 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
     id: "uploaded-community-welfare-19",
     src: "/images/uploads/gallery/1794132362758-donation-19-19.webp",
     altKey: "Social Welfare Relief - Essential Grocery Distribution (Photo 19)",
-    captionKey: "Social Welfare Relief - Essential Grocery Distribution (Photo 19)",
+    captionKey:
+      "Social Welfare Relief - Essential Grocery Distribution (Photo 19)",
     category: "community-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -1320,8 +1480,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-community-welfare-21",
     src: "/images/uploads/gallery/1794132362769-donation-21-21.webp",
-    altKey: "Social Welfare Relief - Beneficiary Household Aid Handover (Photo 21)",
-    captionKey: "Social Welfare Relief - Beneficiary Household Aid Handover (Photo 21)",
+    altKey:
+      "Social Welfare Relief - Beneficiary Household Aid Handover (Photo 21)",
+    captionKey:
+      "Social Welfare Relief - Beneficiary Household Aid Handover (Photo 21)",
     category: "community-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -1335,7 +1497,8 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
     id: "uploaded-community-welfare-22",
     src: "/images/uploads/gallery/1794132362775-donation-22-22.webp",
     altKey: "Social Welfare Relief - Family Relief Box Distribution (Photo 22)",
-    captionKey: "Social Welfare Relief - Family Relief Box Distribution (Photo 22)",
+    captionKey:
+      "Social Welfare Relief - Family Relief Box Distribution (Photo 22)",
     category: "community-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -1348,8 +1511,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-community-welfare-23",
     src: "/images/uploads/gallery/1794132362780-donation-23-23.webp",
-    altKey: "Social Welfare Relief - Society Committee Distributing Welfare Packs (Photo 23)",
-    captionKey: "Social Welfare Relief - Society Committee Distributing Welfare Packs (Photo 23)",
+    altKey:
+      "Social Welfare Relief - Society Committee Distributing Welfare Packs (Photo 23)",
+    captionKey:
+      "Social Welfare Relief - Society Committee Distributing Welfare Packs (Photo 23)",
     category: "community-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -1362,8 +1527,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-community-welfare-24",
     src: "/images/uploads/gallery/1794132362787-donation-24-24.webp",
-    altKey: "Social Welfare Relief - Mahallah Resident Welfare Handover (Photo 24)",
-    captionKey: "Social Welfare Relief - Mahallah Resident Welfare Handover (Photo 24)",
+    altKey:
+      "Social Welfare Relief - Mahallah Resident Welfare Handover (Photo 24)",
+    captionKey:
+      "Social Welfare Relief - Mahallah Resident Welfare Handover (Photo 24)",
     category: "community-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -1376,8 +1543,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-community-welfare-25",
     src: "/images/uploads/gallery/1794132362792-donation-25-25.webp",
-    altKey: "Social Welfare Relief - Community Support Box Provision (Photo 25)",
-    captionKey: "Social Welfare Relief - Community Support Box Provision (Photo 25)",
+    altKey:
+      "Social Welfare Relief - Community Support Box Provision (Photo 25)",
+    captionKey:
+      "Social Welfare Relief - Community Support Box Provision (Photo 25)",
     category: "community-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -1390,8 +1559,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-community-welfare-26",
     src: "/images/uploads/gallery/1794132362797-donation-26-26.webp",
-    altKey: "Social Welfare Relief - Concluding Welfare Distribution & Acknowledgment (Photo 26)",
-    captionKey: "Social Welfare Relief - Concluding Welfare Distribution & Acknowledgment (Photo 26)",
+    altKey:
+      "Social Welfare Relief - Concluding Welfare Distribution & Acknowledgment (Photo 26)",
+    captionKey:
+      "Social Welfare Relief - Concluding Welfare Distribution & Acknowledgment (Photo 26)",
     category: "community-welfare",
     date: "2024",
     location: "Mullipothana",
@@ -1404,8 +1575,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-iftar-1",
     src: "/images/uploads/gallery/1794132409060-whatsapp-image-2026-11-06-at-11.48.15-pm-1.webp",
-    altKey: "Community Iftar Programme - Volunteer Assembly & Food Pack Preparation",
-    captionKey: "Community Iftar Programme - Volunteer Assembly & Food Pack Preparation",
+    altKey:
+      "Community Iftar Programme - Volunteer Assembly & Food Pack Preparation",
+    captionKey:
+      "Community Iftar Programme - Volunteer Assembly & Food Pack Preparation",
     category: "iftar",
     date: "2024",
     location: "Mullipothana",
@@ -1418,8 +1591,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-iftar-2",
     src: "/images/uploads/gallery/1794132409066-whatsapp-image-2026-11-06-at-11.48.12-pm-2.webp",
-    altKey: "Community Iftar Programme - Logistics & Transport Coordination for Meals",
-    captionKey: "Community Iftar Programme - Logistics & Transport Coordination for Meals",
+    altKey:
+      "Community Iftar Programme - Logistics & Transport Coordination for Meals",
+    captionKey:
+      "Community Iftar Programme - Logistics & Transport Coordination for Meals",
     category: "iftar",
     date: "2024",
     location: "Mullipothana",
@@ -1433,7 +1608,8 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
     id: "uploaded-iftar-3",
     src: "/images/uploads/gallery/1794132409072-whatsapp-image-2026-11-06-at-11.48.14-pm-3.webp",
     altKey: "Community Iftar Programme - Evening Fast-Breaking Meal Packaging",
-    captionKey: "Community Iftar Programme - Evening Fast-Breaking Meal Packaging",
+    captionKey:
+      "Community Iftar Programme - Evening Fast-Breaking Meal Packaging",
     category: "iftar",
     date: "2024",
     location: "Mullipothana",
@@ -1446,8 +1622,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-iftar-4",
     src: "/images/uploads/gallery/1794132409080-whatsapp-image-2026-11-06-at-11.48.19-pm-4.webp",
-    altKey: "Community Iftar Programme - Delivery & Area Allocation for Fasting Families",
-    captionKey: "Community Iftar Programme - Delivery & Area Allocation for Fasting Families",
+    altKey:
+      "Community Iftar Programme - Delivery & Area Allocation for Fasting Families",
+    captionKey:
+      "Community Iftar Programme - Delivery & Area Allocation for Fasting Families",
     category: "iftar",
     date: "2024",
     location: "Mullipothana",
@@ -1460,8 +1638,10 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
   {
     id: "uploaded-iftar-5",
     src: "/images/uploads/gallery/1794132409087-whatsapp-image-2026-11-06-at-11.48.15-pm1-5.webp",
-    altKey: "Community Iftar Programme - Distribution to Local Mahallah Community",
-    captionKey: "Community Iftar Programme - Distribution to Local Mahallah Community",
+    altKey:
+      "Community Iftar Programme - Distribution to Local Mahallah Community",
+    captionKey:
+      "Community Iftar Programme - Distribution to Local Mahallah Community",
     category: "iftar",
     date: "2024",
     location: "Mullipothana",
@@ -1475,7 +1655,8 @@ export const INITIAL_UPLOADED_IMAGES: GalleryImage[] = [
     id: "uploaded-iftar-6",
     src: "/images/uploads/gallery/1794132409094-whatsapp-image-2026-11-06-at-11.48.17-pm-6.webp",
     altKey: "Community Iftar Programme - Volunteer Debriefing & Supplication",
-    captionKey: "Community Iftar Programme - Volunteer Debriefing & Supplication",
+    captionKey:
+      "Community Iftar Programme - Volunteer Debriefing & Supplication",
     category: "iftar",
     date: "2024",
     location: "Mullipothana",

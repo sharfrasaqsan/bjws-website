@@ -25,8 +25,9 @@ declare global {
   var __liveNoticesStore: NoticeRecord[] | undefined;
 }
 
-let liveNoticesStore: NoticeRecord[] =
-  globalThis.__liveNoticesStore || [...INITIAL_NOTICES];
+let liveNoticesStore: NoticeRecord[] = globalThis.__liveNoticesStore || [
+  ...INITIAL_NOTICES,
+];
 globalThis.__liveNoticesStore = liveNoticesStore;
 
 export function getAllNotices(): NoticeRecord[] {
@@ -118,7 +119,8 @@ export function groupNotices(raw: NoticeRecord[]): UnifiedNoticeRecord[] {
 export function getUnifiedNoticesAdmin(
   noticesList?: NoticeRecord[]
 ): UnifiedNoticeRecord[] {
-  const source = noticesList && noticesList.length > 0 ? noticesList : liveNoticesStore;
+  const source =
+    noticesList && noticesList.length > 0 ? noticesList : liveNoticesStore;
   return groupNotices(source);
 }
 
@@ -129,7 +131,9 @@ export function addUnifiedNoticeStore(entries: NoticeRecord[]): void {
 
 export function updateUnifiedNoticeStore(
   baseId: string,
-  updatedTranslations: Partial<Record<"ta" | "en" | "si", { title: string; body: string }>>,
+  updatedTranslations: Partial<
+    Record<"ta" | "en" | "si", { title: string; body: string }>
+  >,
   is_published: boolean
 ): void {
   const now = new Date().toISOString();
@@ -137,9 +141,13 @@ export function updateUnifiedNoticeStore(
   const targetGroup = currentGroups.find((g) => g.baseId === baseId);
 
   if (targetGroup) {
-    const existingIds = Object.values(targetGroup.translations).map((t) => t?.id).filter(Boolean);
+    const existingIds = Object.values(targetGroup.translations)
+      .map((t) => t?.id)
+      .filter(Boolean);
     // Remove old items of this group
-    liveNoticesStore = liveNoticesStore.filter((n) => !existingIds.includes(n.id));
+    liveNoticesStore = liveNoticesStore.filter(
+      (n) => !existingIds.includes(n.id)
+    );
 
     // Re-insert updated items
     for (const loc of ["ta", "en", "si"] as const) {
@@ -182,7 +190,9 @@ export function toggleUnifiedNoticePublishStore(
   const groups = groupNotices(liveNoticesStore);
   const target = groups.find((g) => g.baseId === baseId);
   if (target) {
-    const ids = Object.values(target.translations).map((t) => t?.id).filter(Boolean);
+    const ids = Object.values(target.translations)
+      .map((t) => t?.id)
+      .filter(Boolean);
     liveNoticesStore = liveNoticesStore.map((n) =>
       ids.includes(n.id) ? { ...n, is_published: newState } : n
     );
@@ -194,7 +204,9 @@ export function deleteUnifiedNoticeStore(baseId: string): void {
   const groups = groupNotices(liveNoticesStore);
   const target = groups.find((g) => g.baseId === baseId);
   if (target) {
-    const ids = Object.values(target.translations).map((t) => t?.id).filter(Boolean);
+    const ids = Object.values(target.translations)
+      .map((t) => t?.id)
+      .filter(Boolean);
     liveNoticesStore = liveNoticesStore.filter((n) => !ids.includes(n.id));
   }
   globalThis.__liveNoticesStore = liveNoticesStore;

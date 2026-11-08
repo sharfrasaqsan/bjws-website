@@ -1,10 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
-import {
-  Inter,
-  Playfair_Display,
-} from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google";
 import {
   getMessages,
   getTranslations,
@@ -158,7 +155,7 @@ export default async function LocaleLayout({
       .select("id, title, body, locale, published_at")
       .eq("is_published", true)
       .order("published_at", { ascending: false })
-      .limit(5);
+      .limit(15);
     if (data) {
       notices = data;
     }

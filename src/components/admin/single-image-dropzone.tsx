@@ -139,13 +139,13 @@ export function SingleImageDropzone({
       {name && <input type="hidden" name={name} value={value} />}
       {label && (
         <div className="flex items-center justify-between">
-          <label className="block text-xs font-bold uppercase tracking-wider text-text-muted">
+          <label className="text-text-muted block text-xs font-bold tracking-wider uppercase">
             {label}
           </label>
           <button
             type="button"
             onClick={() => setShowManualInput(!showManualInput)}
-            className="text-[11px] font-semibold text-primary hover:underline"
+            className="text-primary text-[11px] font-semibold hover:underline"
           >
             {showManualInput ? "Use Dropzone" : "Paste URL / Path"}
           </button>
@@ -153,7 +153,7 @@ export function SingleImageDropzone({
       )}
 
       {error && (
-        <p className="text-xs font-semibold text-rose-600 bg-rose-50 p-2 rounded-lg">
+        <p className="rounded-lg bg-rose-50 p-2 text-xs font-semibold text-rose-600">
           {error}
         </p>
       )}
@@ -166,13 +166,13 @@ export function SingleImageDropzone({
             value={value}
             onChange={(e) => onChange(e.target.value)}
             placeholder="e.g. /images/gallery/photo.webp or https://..."
-            className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
+            className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 text-xs focus:outline-none"
           />
         </div>
       ) : value ? (
         /* Image Preview Box with Replace / Remove controls */
-        <div className="flex items-center gap-3 p-3 rounded-2xl bg-background border border-border">
-          <div className="relative h-16 w-24 rounded-xl overflow-hidden border border-border bg-black/5 shrink-0">
+        <div className="bg-background border-border flex items-center gap-3 rounded-2xl border p-3">
+          <div className="border-border relative h-16 w-24 shrink-0 overflow-hidden rounded-xl border bg-black/5">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={value}
@@ -184,25 +184,33 @@ export function SingleImageDropzone({
             />
           </div>
 
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-400">
               <CheckCircle2 className="h-3.5 w-3.5" />
               <span>Image Attached</span>
             </div>
-            <p className="font-mono text-[11px] text-text-muted truncate mt-0.5">
+            <p className="text-text-muted mt-0.5 truncate font-mono text-[11px]">
               {value}
             </p>
-            {compressionStats && compressionStats.original > compressionStats.compressed && (
-              <span className="inline-block mt-1 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 px-2 py-0.5 text-[10px] font-bold">
-                Auto-WebP: {formatBytes(compressionStats.original)} → {formatBytes(compressionStats.compressed)} (-{Math.round(((compressionStats.original - compressionStats.compressed) / compressionStats.original) * 100)}%)
-              </span>
-            )}
-            <div className="flex items-center gap-2 mt-1.5">
+            {compressionStats &&
+              compressionStats.original > compressionStats.compressed && (
+                <span className="mt-1 inline-block rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+                  Auto-WebP: {formatBytes(compressionStats.original)} →{" "}
+                  {formatBytes(compressionStats.compressed)} (-
+                  {Math.round(
+                    ((compressionStats.original - compressionStats.compressed) /
+                      compressionStats.original) *
+                      100
+                  )}
+                  %)
+                </span>
+              )}
+            <div className="mt-1.5 flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isUploading}
-                className="text-[11px] font-semibold text-primary hover:underline cursor-pointer"
+                className="text-primary cursor-pointer text-[11px] font-semibold hover:underline"
               >
                 Change Photo
               </button>
@@ -214,7 +222,7 @@ export function SingleImageDropzone({
                   setCompressionStats(null);
                 }}
                 disabled={isUploading}
-                className="text-[11px] font-semibold text-rose-600 hover:underline cursor-pointer"
+                className="cursor-pointer text-[11px] font-semibold text-rose-600 hover:underline"
               >
                 Remove
               </button>
@@ -240,24 +248,26 @@ export function SingleImageDropzone({
             }
           }}
           onClick={() => fileInputRef.current?.click()}
-          className={`flex flex-col items-center justify-center rounded-2xl border-2 border-dashed p-4 sm:p-5 text-center cursor-pointer transition-all ${
+          className={`flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed p-4 text-center transition-all sm:p-5 ${
             isDragging
               ? "border-primary bg-primary/5"
-              : "border-[#d8d5cb] hover:border-primary/60 hover:bg-[#faf9f5]"
+              : "hover:border-primary/60 border-[#d8d5cb] hover:bg-[#faf9f5]"
           }`}
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f3f1ea] text-[#124d34] mb-2">
+          <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-[#f3f1ea] text-[#124d34]">
             {isUploading ? (
-              <Loader2 className="h-5 w-5 animate-spin text-primary" />
+              <Loader2 className="text-primary h-5 w-5 animate-spin" />
             ) : (
               <UploadCloud className="h-5 w-5" />
             )}
           </div>
 
-          <p className="text-xs font-bold text-text">
-            {isUploading ? "Compressing & Uploading..." : "Click to select or drag photo here"}
+          <p className="text-text text-xs font-bold">
+            {isUploading
+              ? "Compressing & Uploading..."
+              : "Click to select or drag photo here"}
           </p>
-          <p className="text-[11px] text-text-muted mt-0.5 max-w-xs">
+          <p className="text-text-muted mt-0.5 max-w-xs text-[11px]">
             {helperText}
           </p>
         </div>

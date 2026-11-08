@@ -56,7 +56,10 @@ declare global {
 globalThis.__articlesStore = [];
 let liveArticlesStore: Article[] = globalThis.__articlesStore;
 
-export function getArticles(locale: string = "en", includeDrafts: boolean = false): Article[] {
+export function getArticles(
+  locale: string = "en",
+  includeDrafts: boolean = false
+): Article[] {
   let list = liveArticlesStore;
   if (!includeDrafts) {
     list = list.filter((a) => a.is_published);
@@ -65,7 +68,8 @@ export function getArticles(locale: string = "en", includeDrafts: boolean = fals
   const localized = list.filter((a) => a.locale === locale);
   if (localized.length > 0) {
     return localized.sort(
-      (a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
+      (a, b) =>
+        new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
     );
   }
 
@@ -73,13 +77,15 @@ export function getArticles(locale: string = "en", includeDrafts: boolean = fals
   return list
     .filter((a) => a.locale === "en")
     .sort(
-      (a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
+      (a, b) =>
+        new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
     );
 }
 
 export function getAllArticlesAdmin(): Article[] {
   return [...liveArticlesStore].sort(
-    (a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
+    (a, b) =>
+      new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
   );
 }
 
@@ -91,7 +97,9 @@ export function extractBaseId(id: string): string {
   return id.replace(/-(ta|si|en)$/, "");
 }
 
-export function getUnifiedArticlesAdmin(articlesList?: Article[]): UnifiedArticle[] {
+export function getUnifiedArticlesAdmin(
+  articlesList?: Article[]
+): UnifiedArticle[] {
   const source = articlesList || liveArticlesStore;
   const map = new Map<string, UnifiedArticle>();
 
@@ -126,14 +134,18 @@ export function getUnifiedArticlesAdmin(articlesList?: Article[]): UnifiedArticl
   }
 
   return Array.from(map.values()).sort(
-    (a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
+    (a, b) =>
+      new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
   );
 }
 
-export function getArticleBySlug(slug: string, locale: string = "en"): Article | undefined {
+export function getArticleBySlug(
+  slug: string,
+  locale: string = "en"
+): Article | undefined {
   const cleanSlug = decodeURIComponent(slug).toLowerCase();
   const base = extractBaseSlug(cleanSlug);
-  
+
   // 1. Direct match with locale
   let match = liveArticlesStore.find(
     (a) => a.slug.toLowerCase() === cleanSlug && a.locale === locale
@@ -172,7 +184,10 @@ export function addUnifiedArticleStore(articles: Article[]): void {
   globalThis.__articlesStore = liveArticlesStore;
 }
 
-export function updateArticleStore(id: string, updates: Partial<Article>): boolean {
+export function updateArticleStore(
+  id: string,
+  updates: Partial<Article>
+): boolean {
   const index = liveArticlesStore.findIndex((a) => a.id === id);
   if (index === -1) return false;
 
@@ -187,7 +202,12 @@ export function updateArticleStore(id: string, updates: Partial<Article>): boole
 export function updateUnifiedArticleStore(
   baseSlug: string,
   commonUpdates: Partial<Article>,
-  translationUpdates?: Partial<Record<"en" | "ta" | "si", { title: string; excerpt: string; content: string }>>
+  translationUpdates?: Partial<
+    Record<
+      "en" | "ta" | "si",
+      { title: string; excerpt: string; content: string }
+    >
+  >
 ): boolean {
   const normalizedBase = extractBaseSlug(baseSlug);
   let updatedAny = false;
@@ -195,7 +215,9 @@ export function updateUnifiedArticleStore(
   liveArticlesStore = liveArticlesStore.map((art) => {
     if (extractBaseSlug(art.slug) === normalizedBase) {
       updatedAny = true;
-      const langUpdate = translationUpdates ? translationUpdates[art.locale] : undefined;
+      const langUpdate = translationUpdates
+        ? translationUpdates[art.locale]
+        : undefined;
       return {
         ...art,
         ...commonUpdates,
@@ -204,7 +226,10 @@ export function updateUnifiedArticleStore(
               title: langUpdate.title,
               excerpt: langUpdate.excerpt,
               content: langUpdate.content,
-              read_time_minutes: Math.max(1, Math.ceil((langUpdate.content.split(/\s+/).length || 200) / 180)),
+              read_time_minutes: Math.max(
+                1,
+                Math.ceil((langUpdate.content.split(/\s+/).length || 200) / 180)
+              ),
             }
           : {}),
       };
@@ -226,12 +251,17 @@ export function deleteArticleStore(id: string): boolean {
 export function deleteUnifiedArticleStore(baseSlug: string): boolean {
   const normalizedBase = extractBaseSlug(baseSlug);
   const initialLen = liveArticlesStore.length;
-  liveArticlesStore = liveArticlesStore.filter((a) => extractBaseSlug(a.slug) !== normalizedBase);
+  liveArticlesStore = liveArticlesStore.filter(
+    (a) => extractBaseSlug(a.slug) !== normalizedBase
+  );
   globalThis.__articlesStore = liveArticlesStore;
   return liveArticlesStore.length < initialLen;
 }
 
-export function toggleUnifiedArticlePublishStore(baseSlug: string, newState: boolean): boolean {
+export function toggleUnifiedArticlePublishStore(
+  baseSlug: string,
+  newState: boolean
+): boolean {
   const normalizedBase = extractBaseSlug(baseSlug);
   let updated = false;
   liveArticlesStore = liveArticlesStore.map((art) => {
@@ -244,4 +274,3 @@ export function toggleUnifiedArticlePublishStore(baseSlug: string, newState: boo
   globalThis.__articlesStore = liveArticlesStore;
   return updated;
 }
-

@@ -364,17 +364,17 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
   return (
     <div className="space-y-6">
       {/* Top Action Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-[#e6e4dc] shadow-xs">
+      <div className="flex flex-col items-stretch justify-between gap-4 rounded-2xl border border-[#e6e4dc] bg-white p-4 shadow-xs sm:flex-row sm:items-center">
         {/* Search & Category Filter */}
-        <div className="flex flex-wrap items-center gap-2.5 flex-1">
-          <div className="relative flex-1 min-w-[200px]">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#9ca3af]" />
+        <div className="flex flex-1 flex-wrap items-center gap-2.5">
+          <div className="relative min-w-[200px] flex-1">
+            <Search className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-[#9ca3af]" />
             <input
               type="search"
               placeholder="Search news by title, content or author..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 text-xs sm:text-sm rounded-xl border border-[#e6e4dc] bg-[#fbfaf6] text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none"
+              className="w-full rounded-xl border border-[#e6e4dc] bg-[#fbfaf6] py-2 pr-4 pl-9 text-xs text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none sm:text-sm"
             />
           </div>
 
@@ -396,7 +396,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
         <button
           type="button"
           onClick={openCreateModal}
-          className="cursor-pointer inline-flex items-center justify-center gap-2 rounded-xl bg-[#124d34] px-4 py-2.5 text-xs sm:text-sm font-bold text-white shadow-xs transition-all hover:bg-[#0b2e1e] hover:-translate-y-0.5"
+          className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#124d34] px-4 py-2.5 text-xs font-bold text-white shadow-xs transition-all hover:-translate-y-0.5 hover:bg-[#0b2e1e] sm:text-sm"
         >
           <Plus className="h-4 w-4 text-[#c99a45]" />
           <span>Publish Article (All Languages)</span>
@@ -404,7 +404,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
       </div>
 
       {/* Publications Count & Status Pill */}
-      <div className="flex items-center justify-between text-xs text-[#6b7280] px-1">
+      <div className="flex items-center justify-between px-1 text-xs text-[#6b7280]">
         <span>
           Showing <strong>{filteredArticles.length}</strong> of{" "}
           <strong>{unifiedArticles.length}</strong> publications
@@ -424,12 +424,12 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
       {/* Articles Grid / List */}
       <div className="space-y-4">
         {filteredArticles.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-[#e6e4dc] p-12 text-center text-[#6b7280] bg-white">
-            <Newspaper className="h-8 w-8 mx-auto text-[#c99a45] mb-2 opacity-80" />
+          <div className="rounded-2xl border border-dashed border-[#e6e4dc] bg-white p-12 text-center text-[#6b7280]">
+            <Newspaper className="mx-auto mb-2 h-8 w-8 text-[#c99a45] opacity-80" />
             <p className="text-sm font-semibold text-[#1c2420]">
               No publications found
             </p>
-            <p className="text-xs text-[#6b7280] mt-1">
+            <p className="mt-1 text-xs text-[#6b7280]">
               Click &quot;Publish Article (All Languages)&quot; above to create
               your first multilingual story.
             </p>
@@ -438,11 +438,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
           filteredArticles.map((art) => {
             const currentLang =
               cardPreviewLang[art.baseSlug] ||
-              (art.translations.ta
-                ? "ta"
-                : art.translations.en
-                  ? "en"
-                  : "si");
+              (art.translations.ta ? "ta" : art.translations.en ? "en" : "si");
 
             const activeTrans =
               art.translations[currentLang] ||
@@ -453,10 +449,10 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
             return (
               <div
                 key={art.baseSlug}
-                className="flex flex-col md:flex-row items-stretch gap-5 p-5 rounded-2xl border border-[#e6e4dc] bg-white shadow-xs transition-all hover:border-[#124d34]/40 hover:shadow-md"
+                className="flex flex-col items-stretch gap-5 rounded-2xl border border-[#e6e4dc] bg-white p-5 shadow-xs transition-all hover:border-[#124d34]/40 hover:shadow-md md:flex-row"
               >
                 {/* Thumbnail Image */}
-                <div className="relative h-32 md:h-auto md:w-44 shrink-0 rounded-xl overflow-hidden bg-[#f3f1ea] border border-[#e6e4dc] min-h-[110px]">
+                <div className="relative h-32 min-h-[110px] shrink-0 overflow-hidden rounded-xl border border-[#e6e4dc] bg-[#f3f1ea] md:h-auto md:w-44">
                   {art.image_url ? (
                     <Image
                       src={art.image_url}
@@ -466,13 +462,13 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                       sizes="(max-width: 768px) 100vw, 176px"
                     />
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center text-[#9ca3af] bg-[#fbfaf6]">
-                      <Newspaper className="h-8 w-8 opacity-40 text-[#124d34]" />
+                    <div className="flex h-full w-full items-center justify-center bg-[#fbfaf6] text-[#9ca3af]">
+                      <Newspaper className="h-8 w-8 text-[#124d34] opacity-40" />
                     </div>
                   )}
                   <div className="absolute top-2 left-2">
                     <span
-                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold tracking-wide uppercase shadow-xs ${
+                      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase shadow-xs ${
                         art.is_published
                           ? "bg-emerald-600 text-white"
                           : "bg-amber-600 text-white"
@@ -484,7 +480,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                 </div>
 
                 {/* Middle Column: Details & Content Preview */}
-                <div className="flex-1 min-w-0 space-y-2">
+                <div className="min-w-0 flex-1 space-y-2">
                   <div className="flex flex-wrap items-center gap-2">
                     {/* Category */}
                     <span className="inline-flex items-center gap-1 rounded-md bg-[#e8f3ee] px-2 py-0.5 text-[11px] font-semibold text-[#124d34]">
@@ -493,12 +489,12 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                     </span>
 
                     {/* Language Badges */}
-                    <div className="flex items-center gap-1 rounded-lg bg-[#fbfaf6] px-2 py-0.5 border border-[#e6e4dc]">
+                    <div className="flex items-center gap-1 rounded-lg border border-[#e6e4dc] bg-[#fbfaf6] px-2 py-0.5">
                       <span className="text-[10px] font-semibold text-[#8b651e]">
                         Languages:
                       </span>
                       <span
-                        className={`rounded px-1.5 py-0.2 text-[10px] font-bold ${
+                        className={`py-0.2 rounded px-1.5 text-[10px] font-bold ${
                           art.translations.ta
                             ? "bg-[#124d34] text-white"
                             : "bg-gray-100 text-gray-400"
@@ -507,7 +503,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                         தமிழ் (TA)
                       </span>
                       <span
-                        className={`rounded px-1.5 py-0.2 text-[10px] font-bold ${
+                        className={`py-0.2 rounded px-1.5 text-[10px] font-bold ${
                           art.translations.en
                             ? "bg-[#124d34] text-white"
                             : "bg-gray-100 text-gray-400"
@@ -516,7 +512,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                         EN
                       </span>
                       <span
-                        className={`rounded px-1.5 py-0.2 text-[10px] font-bold ${
+                        className={`py-0.2 rounded px-1.5 text-[10px] font-bold ${
                           art.translations.si
                             ? "bg-[#124d34] text-white"
                             : "bg-gray-100 text-gray-400"
@@ -536,18 +532,18 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                   </div>
 
                   {/* Title */}
-                  <h3 className="font-serif text-base sm:text-lg font-bold text-[#0b2e1e] line-clamp-1">
+                  <h3 className="line-clamp-1 font-serif text-base font-bold text-[#0b2e1e] sm:text-lg">
                     {activeTrans?.title || "Untitled Article"}
                   </h3>
 
                   {/* Excerpt */}
-                  <p className="text-xs text-[#4b5563] line-clamp-2 leading-relaxed">
+                  <p className="line-clamp-2 text-xs leading-relaxed text-[#4b5563]">
                     {activeTrans?.excerpt ||
                       "(No summary provided for this language)"}
                   </p>
 
                   {/* Metadata & Preview Switcher */}
-                  <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-[#f3f1ea] text-[11px] text-[#6b7280]">
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[#f3f1ea] pt-1 text-[11px] text-[#6b7280]">
                     <div className="flex items-center gap-2">
                       <span>By {art.author}</span>
                       <span>•</span>
@@ -579,12 +575,12 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                                 [art.baseSlug]: code,
                               }))
                             }
-                            className={`rounded px-1.5 py-0.2 text-[10px] font-semibold transition-all ${
+                            className={`py-0.2 rounded px-1.5 text-[10px] font-semibold transition-all ${
                               isCurrent
                                 ? "bg-[#124d34] text-white"
                                 : hasTrans
                                   ? "bg-[#fbfaf6] text-[#4b5563] hover:bg-[#e6e4dc]"
-                                  : "bg-gray-100 text-gray-300 cursor-not-allowed"
+                                  : "cursor-not-allowed bg-gray-100 text-gray-300"
                             }`}
                             disabled={!hasTrans}
                           >
@@ -601,12 +597,12 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                 </div>
 
                 {/* Right Column: Actions */}
-                <div className="flex md:flex-col items-center justify-end md:justify-center gap-2 shrink-0 border-t md:border-t-0 md:border-l border-[#e6e4dc] pt-3 md:pt-0 md:pl-4">
+                <div className="flex shrink-0 items-center justify-end gap-2 border-t border-[#e6e4dc] pt-3 md:flex-col md:justify-center md:border-t-0 md:border-l md:pt-0 md:pl-4">
                   {/* View on Public Site */}
                   <Link
                     href={`/${currentLang}/news/${art.translations[currentLang]?.slug || art.baseSlug}`}
                     target="_blank"
-                    className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[#e6e4dc] bg-[#fbfaf6] px-3 py-1.5 text-xs font-semibold text-[#1c2420] hover:bg-[#e6e4dc] transition-colors"
+                    className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[#e6e4dc] bg-[#fbfaf6] px-3 py-1.5 text-xs font-semibold text-[#1c2420] transition-colors hover:bg-[#e6e4dc]"
                     title="View Public Article in current language"
                   >
                     <ExternalLink className="h-3.5 w-3.5 text-[#c99a45]" />
@@ -617,7 +613,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                   <button
                     type="button"
                     onClick={() => handleOpenEdit(art)}
-                    className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[#c99a45]/40 bg-[#fbfaf6] px-3 py-1.5 text-xs font-semibold text-[#0b2e1e] hover:bg-[#f5eedf] transition-colors"
+                    className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[#c99a45]/40 bg-[#fbfaf6] px-3 py-1.5 text-xs font-semibold text-[#0b2e1e] transition-colors hover:bg-[#f5eedf]"
                     title="Edit article in all languages"
                   >
                     <Edit2 className="h-3.5 w-3.5 text-[#c99a45]" />
@@ -657,7 +653,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                   <button
                     type="button"
                     onClick={() => setDeleteConfirmSlug(art.baseSlug)}
-                    className="inline-flex cursor-pointer items-center gap-1 rounded-lg border border-red-200 bg-red-50 hover:bg-red-100 p-1.5 text-xs font-semibold text-red-700 transition-colors"
+                    className="inline-flex cursor-pointer items-center gap-1 rounded-lg border border-red-200 bg-red-50 p-1.5 text-xs font-semibold text-red-700 transition-colors hover:bg-red-100"
                     title="Delete publication across all languages"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
@@ -681,7 +677,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
             onClick={closeCreateModal}
           />
 
-          <div className="relative w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-3xl border border-[#e6e4dc] bg-white p-6 sm:p-8 shadow-2xl z-10 space-y-6">
+          <div className="relative z-10 max-h-[92vh] w-full max-w-3xl space-y-6 overflow-y-auto rounded-3xl border border-[#e6e4dc] bg-white p-6 shadow-2xl sm:p-8">
             <div className="flex items-center justify-between border-b border-[#e6e4dc] pb-4">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e8f3ee] text-[#124d34]">
@@ -707,20 +703,23 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
             </div>
 
             {formError && (
-              <div className="flex items-start gap-2 p-3 text-xs rounded-lg bg-red-50 text-red-700 border border-red-200 font-medium">
-                <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
+              <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-xs font-medium text-red-700">
+                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
                 <span>{formError}</span>
               </div>
             )}
 
-            <form onSubmit={handleCreateSubmit} className="space-y-5 text-xs sm:text-sm">
+            <form
+              onSubmit={handleCreateSubmit}
+              className="space-y-5 text-xs sm:text-sm"
+            >
               {/* Top Common Details: Category, Author, Featured Image, Slug */}
-              <div className="rounded-2xl border border-[#e6e4dc] bg-[#fbfaf6] p-4 space-y-4">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-[#8b651e]">
+              <div className="space-y-4 rounded-2xl border border-[#e6e4dc] bg-[#fbfaf6] p-4">
+                <h4 className="text-xs font-bold tracking-wider text-[#8b651e] uppercase">
                   Common Article Settings
                 </h4>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                   <div className="space-y-1">
                     <label className="font-semibold text-[#1c2420]">
                       Category *
@@ -753,7 +752,10 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                       name="author"
                       value={createFields.author}
                       onChange={(e) =>
-                        setCreateFields((p) => ({ ...p, author: e.target.value }))
+                        setCreateFields((p) => ({
+                          ...p,
+                          author: e.target.value,
+                        }))
                       }
                       placeholder="BJWS Editorial Board"
                       className="w-full rounded-xl border border-[#e6e4dc] bg-white px-3 py-2 text-xs text-[#1c2420] focus:border-[#124d34] focus:outline-none"
@@ -877,7 +879,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                       }))
                     }
                     placeholder="கட்டுரையின் முக்கிய சுருக்கம்..."
-                    className="w-full rounded-xl border border-[#e6e4dc] bg-[#fbfaf6] px-3.5 py-2 text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none leading-relaxed"
+                    className="w-full rounded-xl border border-[#e6e4dc] bg-[#fbfaf6] px-3.5 py-2 leading-relaxed text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none"
                   />
                 </div>
 
@@ -935,7 +937,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                       }))
                     }
                     placeholder="One or two sentences summarizing the article..."
-                    className="w-full rounded-xl border border-[#e6e4dc] bg-[#fbfaf6] px-3.5 py-2 text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none leading-relaxed"
+                    className="w-full rounded-xl border border-[#e6e4dc] bg-[#fbfaf6] px-3.5 py-2 leading-relaxed text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none"
                   />
                 </div>
 
@@ -993,7 +995,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                       }))
                     }
                     placeholder="ලිපියේ සාරාංශය..."
-                    className="w-full rounded-xl border border-[#e6e4dc] bg-[#fbfaf6] px-3.5 py-2 text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none leading-relaxed"
+                    className="w-full rounded-xl border border-[#e6e4dc] bg-[#fbfaf6] px-3.5 py-2 leading-relaxed text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none"
                   />
                 </div>
 
@@ -1012,18 +1014,19 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
               </div>
 
               {/* ARTICLE MEDIA & RELATED INTERNAL IMAGES SECTION */}
-              <div className="rounded-2xl border border-[#e6e4dc] bg-[#fbfaf6] p-4 sm:p-5 space-y-4">
+              <div className="space-y-4 rounded-2xl border border-[#e6e4dc] bg-[#fbfaf6] p-4 sm:p-5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#0b2e1e] text-[#d4af37]">
                       <Camera className="h-4 w-4" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-xs sm:text-sm text-[#0b2e1e]">
+                      <h4 className="text-xs font-semibold text-[#0b2e1e] sm:text-sm">
                         Related Internal Images (with Alt & Captions)
                       </h4>
-                      <p className="text-[11px] text-text-muted">
-                        Add extra photos for the article archive or embed them into content using writing tools.
+                      <p className="text-text-muted text-[11px]">
+                        Add extra photos for the article archive or embed them
+                        into content using writing tools.
                       </p>
                     </div>
                   </div>
@@ -1031,7 +1034,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                   <button
                     type="button"
                     onClick={() => handleAddInternalImage(false)}
-                    className="inline-flex items-center gap-1.5 rounded-xl bg-[#124d34] text-white px-3 py-1.5 text-xs font-semibold hover:bg-[#0b2e1e] transition-colors cursor-pointer shadow-2xs"
+                    className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl bg-[#124d34] px-3 py-1.5 text-xs font-semibold text-white shadow-2xs transition-colors hover:bg-[#0b2e1e]"
                   >
                     <Plus className="h-3.5 w-3.5" />
                     <span>Add Photo</span>
@@ -1039,86 +1042,101 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                 </div>
 
                 {createGallery.length === 0 ? (
-                  <div className="rounded-xl border border-dashed border-[#e6e4dc] p-6 text-center text-xs text-text-muted">
-                    No related internal images added yet. Click &quot;Add Photo&quot; to include photo galleries with alt text.
+                  <div className="text-text-muted rounded-xl border border-dashed border-[#e6e4dc] p-6 text-center text-xs">
+                    No related internal images added yet. Click &quot;Add
+                    Photo&quot; to include photo galleries with alt text.
                   </div>
                 ) : (
                   <div className="space-y-3">
                     {createGallery.map((img, idx) => (
                       <div
                         key={idx}
-                        className="rounded-xl border border-[#e6e4dc] bg-white p-3 shadow-2xs space-y-3"
+                        className="space-y-3 rounded-xl border border-[#e6e4dc] bg-white p-3 shadow-2xs"
                       >
-                          <SingleImageDropzone
-                            value={img.url}
-                            onChange={(url) =>
-                              handleUpdateInternalImage(false, idx, "url", url)
-                            }
-                            folder="news"
-                            label={`Article Photo #${idx + 1}`}
-                            helperText="Drag & drop or browse photo (auto-compressed to WebP)."
-                          />
+                        <SingleImageDropzone
+                          value={img.url}
+                          onChange={(url) =>
+                            handleUpdateInternalImage(false, idx, "url", url)
+                          }
+                          folder="news"
+                          label={`Article Photo #${idx + 1}`}
+                          helperText="Drag & drop or browse photo (auto-compressed to WebP)."
+                        />
 
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            <div>
-                              <label className="block text-[10px] font-semibold text-text mb-0.5">
-                                Alt Text <span className="text-red-500">*</span>:
-                              </label>
-                              <input
-                                type="text"
-                                value={img.alt}
-                                onChange={(e) =>
-                                  handleUpdateInternalImage(false, idx, "alt", e.target.value)
-                                }
-                                placeholder="Describe the photo for accessibility & SEO..."
-                                className="w-full rounded-lg border border-[#e6e4dc] bg-[#fbfaf6] px-2.5 py-1.5 text-xs text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none"
-                              />
-                            </div>
-
-                            <div>
-                              <label className="block text-[10px] font-semibold text-text mb-0.5">
-                                Caption (Optional):
-                              </label>
-                              <input
-                                type="text"
-                                value={img.caption || ""}
-                                onChange={(e) =>
-                                  handleUpdateInternalImage(false, idx, "caption", e.target.value)
-                                }
-                                placeholder="Caption..."
-                                className="w-full rounded-lg border border-[#e6e4dc] bg-[#fbfaf6] px-2.5 py-1.5 text-xs text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none"
-                              />
-                            </div>
+                        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                          <div>
+                            <label className="text-text mb-0.5 block text-[10px] font-semibold">
+                              Alt Text <span className="text-red-500">*</span>:
+                            </label>
+                            <input
+                              type="text"
+                              value={img.alt}
+                              onChange={(e) =>
+                                handleUpdateInternalImage(
+                                  false,
+                                  idx,
+                                  "alt",
+                                  e.target.value
+                                )
+                              }
+                              placeholder="Describe the photo for accessibility & SEO..."
+                              className="w-full rounded-lg border border-[#e6e4dc] bg-[#fbfaf6] px-2.5 py-1.5 text-xs text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none"
+                            />
                           </div>
 
-                          <div className="flex items-center justify-between pt-2 border-t border-[#f0eee6] text-xs">
-                            <button
-                              type="button"
-                              onClick={() => handleInsertImageToContent(img, false)}
-                              disabled={!img.url}
-                              className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#124d34] hover:underline disabled:opacity-40 cursor-pointer"
-                            >
-                              <Sparkles className="h-3 w-3 text-[#c99a45]" />
-                              <span>Insert into active content tab</span>
-                            </button>
-
-                            <button
-                              type="button"
-                              onClick={() => handleRemoveInternalImage(false, idx)}
-                              className="inline-flex items-center gap-1 text-[11px] font-semibold text-red-600 hover:text-red-800 cursor-pointer"
-                            >
-                              <Trash2 className="h-3 w-3" />
-                              <span>Remove</span>
-                            </button>
+                          <div>
+                            <label className="text-text mb-0.5 block text-[10px] font-semibold">
+                              Caption (Optional):
+                            </label>
+                            <input
+                              type="text"
+                              value={img.caption || ""}
+                              onChange={(e) =>
+                                handleUpdateInternalImage(
+                                  false,
+                                  idx,
+                                  "caption",
+                                  e.target.value
+                                )
+                              }
+                              placeholder="Caption..."
+                              className="w-full rounded-lg border border-[#e6e4dc] bg-[#fbfaf6] px-2.5 py-1.5 text-xs text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none"
+                            />
                           </div>
                         </div>
-                      ))}
-                    </div>
+
+                        <div className="flex items-center justify-between border-t border-[#f0eee6] pt-2 text-xs">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleInsertImageToContent(img, false)
+                            }
+                            disabled={!img.url}
+                            className="inline-flex cursor-pointer items-center gap-1 text-[11px] font-semibold text-[#124d34] hover:underline disabled:opacity-40"
+                          >
+                            <Sparkles className="h-3 w-3 text-[#c99a45]" />
+                            <span>Insert into active content tab</span>
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleRemoveInternalImage(false, idx)
+                            }
+                            className="inline-flex cursor-pointer items-center gap-1 text-[11px] font-semibold text-red-600 hover:text-red-800"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                            <span>Remove</span>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
 
               {/* Publish Checkbox */}
-              <div className="flex items-center gap-2 pt-2 border-t border-[#e6e4dc]">
+              <div className="flex items-center gap-2 border-t border-[#e6e4dc] pt-2">
                 <input
                   type="checkbox"
                   id="create_is_published"
@@ -1128,14 +1146,15 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                 />
                 <label
                   htmlFor="create_is_published"
-                  className="font-medium text-[#1c2420] cursor-pointer"
+                  className="cursor-pointer font-medium text-[#1c2420]"
                 >
-                  Publish immediately to public website in all provided languages
+                  Publish immediately to public website in all provided
+                  languages
                 </label>
               </div>
 
               {/* Modal Actions */}
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#e6e4dc]">
+              <div className="flex items-center justify-end gap-3 border-t border-[#e6e4dc] pt-4">
                 <button
                   type="button"
                   onClick={closeCreateModal}
@@ -1146,7 +1165,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#124d34] px-5 py-2 font-bold text-white hover:bg-[#0b2e1e] shadow-xs disabled:opacity-50"
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#124d34] px-5 py-2 font-bold text-white shadow-xs hover:bg-[#0b2e1e] disabled:opacity-50"
                 >
                   <Sparkles className="h-4 w-4 text-[#c99a45]" />
                   <span>{isPending ? "Publishing..." : "Save & Publish"}</span>
@@ -1169,7 +1188,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
             onClick={closeEditModal}
           />
 
-          <div className="relative w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-3xl border border-[#c99a45] bg-white p-6 sm:p-8 shadow-2xl z-10 space-y-6">
+          <div className="relative z-10 max-h-[92vh] w-full max-w-3xl space-y-6 overflow-y-auto rounded-3xl border border-[#c99a45] bg-white p-6 shadow-2xl sm:p-8">
             <div className="flex items-center justify-between border-b border-[#e6e4dc] pb-4">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e8f3ee] text-[#124d34]">
@@ -1194,22 +1213,27 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
             </div>
 
             {formError && (
-              <div className="flex items-start gap-2 p-3 text-xs rounded-lg bg-red-50 text-red-700 border border-red-200 font-medium">
-                <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
+              <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-xs font-medium text-red-700">
+                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
                 <span>{formError}</span>
               </div>
             )}
 
-            <form onSubmit={handleEditSubmit} className="space-y-5 text-xs sm:text-sm">
+            <form
+              onSubmit={handleEditSubmit}
+              className="space-y-5 text-xs sm:text-sm"
+            >
               {/* Common Article Settings */}
-              <div className="rounded-2xl border border-[#e6e4dc] bg-[#fbfaf6] p-4 space-y-4">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-[#8b651e]">
+              <div className="space-y-4 rounded-2xl border border-[#e6e4dc] bg-[#fbfaf6] p-4">
+                <h4 className="text-xs font-bold tracking-wider text-[#8b651e] uppercase">
                   Common Article Settings
                 </h4>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <div className="space-y-1">
-                    <label className="font-semibold text-[#1c2420]">Category</label>
+                    <label className="font-semibold text-[#1c2420]">
+                      Category
+                    </label>
                     <select
                       name="category"
                       value={editFields.category}
@@ -1343,7 +1367,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                         excerpt_ta: e.target.value,
                       }))
                     }
-                    className="w-full rounded-xl border border-[#e6e4dc] bg-[#fbfaf6] px-3.5 py-2 text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none leading-relaxed"
+                    className="w-full rounded-xl border border-[#e6e4dc] bg-[#fbfaf6] px-3.5 py-2 leading-relaxed text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none"
                   />
                 </div>
 
@@ -1399,7 +1423,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                         excerpt_en: e.target.value,
                       }))
                     }
-                    className="w-full rounded-xl border border-[#e6e4dc] bg-[#fbfaf6] px-3.5 py-2 text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none leading-relaxed"
+                    className="w-full rounded-xl border border-[#e6e4dc] bg-[#fbfaf6] px-3.5 py-2 leading-relaxed text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none"
                   />
                 </div>
 
@@ -1455,7 +1479,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                         excerpt_si: e.target.value,
                       }))
                     }
-                    className="w-full rounded-xl border border-[#e6e4dc] bg-[#fbfaf6] px-3.5 py-2 text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none leading-relaxed"
+                    className="w-full rounded-xl border border-[#e6e4dc] bg-[#fbfaf6] px-3.5 py-2 leading-relaxed text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none"
                   />
                 </div>
 
@@ -1474,18 +1498,19 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
               </div>
 
               {/* ARTICLE MEDIA & RELATED INTERNAL IMAGES SECTION */}
-              <div className="rounded-2xl border border-[#e6e4dc] bg-[#fbfaf6] p-4 sm:p-5 space-y-4">
+              <div className="space-y-4 rounded-2xl border border-[#e6e4dc] bg-[#fbfaf6] p-4 sm:p-5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#0b2e1e] text-[#d4af37]">
                       <Camera className="h-4 w-4" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-xs sm:text-sm text-[#0b2e1e]">
+                      <h4 className="text-xs font-semibold text-[#0b2e1e] sm:text-sm">
                         Related Internal Images (with Alt & Captions)
                       </h4>
-                      <p className="text-[11px] text-text-muted">
-                        Add extra photos for the article archive or embed them into content using writing tools.
+                      <p className="text-text-muted text-[11px]">
+                        Add extra photos for the article archive or embed them
+                        into content using writing tools.
                       </p>
                     </div>
                   </div>
@@ -1493,7 +1518,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                   <button
                     type="button"
                     onClick={() => handleAddInternalImage(true)}
-                    className="inline-flex items-center gap-1.5 rounded-xl bg-[#124d34] text-white px-3 py-1.5 text-xs font-semibold hover:bg-[#0b2e1e] transition-colors cursor-pointer shadow-2xs"
+                    className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl bg-[#124d34] px-3 py-1.5 text-xs font-semibold text-white shadow-2xs transition-colors hover:bg-[#0b2e1e]"
                   >
                     <Plus className="h-3.5 w-3.5" />
                     <span>Add Photo</span>
@@ -1501,15 +1526,16 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                 </div>
 
                 {editGallery.length === 0 ? (
-                  <div className="rounded-xl border border-dashed border-[#e6e4dc] p-6 text-center text-xs text-text-muted">
-                    No related internal images added yet. Click &quot;Add Photo&quot; to include photo galleries with alt text.
+                  <div className="text-text-muted rounded-xl border border-dashed border-[#e6e4dc] p-6 text-center text-xs">
+                    No related internal images added yet. Click &quot;Add
+                    Photo&quot; to include photo galleries with alt text.
                   </div>
                 ) : (
                   <div className="space-y-3">
                     {editGallery.map((img, idx) => (
                       <div
                         key={idx}
-                        className="rounded-xl border border-[#e6e4dc] bg-white p-3 shadow-2xs space-y-3"
+                        className="space-y-3 rounded-xl border border-[#e6e4dc] bg-white p-3 shadow-2xs"
                       >
                         <SingleImageDropzone
                           value={img.url}
@@ -1521,16 +1547,21 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                           helperText="Drag & drop or browse photo (auto-compressed to WebP)."
                         />
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                           <div>
-                            <label className="block text-[10px] font-semibold text-text mb-0.5">
+                            <label className="text-text mb-0.5 block text-[10px] font-semibold">
                               Alt Text <span className="text-red-500">*</span>:
                             </label>
                             <input
                               type="text"
                               value={img.alt}
                               onChange={(e) =>
-                                handleUpdateInternalImage(true, idx, "alt", e.target.value)
+                                handleUpdateInternalImage(
+                                  true,
+                                  idx,
+                                  "alt",
+                                  e.target.value
+                                )
                               }
                               placeholder="Describe the photo for accessibility & SEO..."
                               className="w-full rounded-lg border border-[#e6e4dc] bg-[#fbfaf6] px-2.5 py-1.5 text-xs text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none"
@@ -1538,14 +1569,19 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                           </div>
 
                           <div>
-                            <label className="block text-[10px] font-semibold text-text mb-0.5">
+                            <label className="text-text mb-0.5 block text-[10px] font-semibold">
                               Caption (Optional):
                             </label>
                             <input
                               type="text"
                               value={img.caption || ""}
                               onChange={(e) =>
-                                handleUpdateInternalImage(true, idx, "caption", e.target.value)
+                                handleUpdateInternalImage(
+                                  true,
+                                  idx,
+                                  "caption",
+                                  e.target.value
+                                )
                               }
                               placeholder="Caption..."
                               className="w-full rounded-lg border border-[#e6e4dc] bg-[#fbfaf6] px-2.5 py-1.5 text-xs text-[#1c2420] focus:border-[#124d34] focus:bg-white focus:outline-none"
@@ -1553,12 +1589,14 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                           </div>
                         </div>
 
-                        <div className="flex items-center justify-between pt-2 border-t border-[#f0eee6] text-xs">
+                        <div className="flex items-center justify-between border-t border-[#f0eee6] pt-2 text-xs">
                           <button
                             type="button"
-                            onClick={() => handleInsertImageToContent(img, true)}
+                            onClick={() =>
+                              handleInsertImageToContent(img, true)
+                            }
                             disabled={!img.url}
-                            className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#124d34] hover:underline disabled:opacity-40 cursor-pointer"
+                            className="inline-flex cursor-pointer items-center gap-1 text-[11px] font-semibold text-[#124d34] hover:underline disabled:opacity-40"
                           >
                             <Sparkles className="h-3 w-3 text-[#c99a45]" />
                             <span>Insert into active content tab</span>
@@ -1567,7 +1605,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                           <button
                             type="button"
                             onClick={() => handleRemoveInternalImage(true, idx)}
-                            className="inline-flex items-center gap-1 text-[11px] font-semibold text-red-600 hover:text-red-800 cursor-pointer"
+                            className="inline-flex cursor-pointer items-center gap-1 text-[11px] font-semibold text-red-600 hover:text-red-800"
                           >
                             <Trash2 className="h-3 w-3" />
                             <span>Remove</span>
@@ -1580,7 +1618,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
               </div>
 
               {/* Publish Checkbox */}
-              <div className="flex items-center gap-2 pt-2 border-t border-[#e6e4dc]">
+              <div className="flex items-center gap-2 border-t border-[#e6e4dc] pt-2">
                 <input
                   type="checkbox"
                   id="edit_is_published"
@@ -1590,14 +1628,14 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                 />
                 <label
                   htmlFor="edit_is_published"
-                  className="font-medium text-[#1c2420] cursor-pointer"
+                  className="cursor-pointer font-medium text-[#1c2420]"
                 >
                   Published and visible on public website across all languages
                 </label>
               </div>
 
               {/* Modal Actions */}
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#e6e4dc]">
+              <div className="flex items-center justify-end gap-3 border-t border-[#e6e4dc] pt-4">
                 <button
                   type="button"
                   onClick={closeEditModal}
@@ -1608,7 +1646,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#124d34] px-5 py-2 font-bold text-white hover:bg-[#0b2e1e] shadow-xs disabled:opacity-50"
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#124d34] px-5 py-2 font-bold text-white shadow-xs hover:bg-[#0b2e1e] disabled:opacity-50"
                 >
                   {isPending ? "Updating..." : "Save Updates"}
                 </button>
@@ -1630,17 +1668,17 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
             onClick={() => setDeleteConfirmSlug(null)}
           />
 
-          <div className="relative w-full max-w-md rounded-3xl border border-[#e6e4dc] bg-white p-6 shadow-2xl z-10 space-y-4">
+          <div className="relative z-10 w-full max-w-md space-y-4 rounded-3xl border border-[#e6e4dc] bg-white p-6 shadow-2xl">
             <h3 className="font-serif text-lg font-bold text-[#0b2e1e]">
               Delete Publication in All Languages?
             </h3>
-            <p className="text-xs text-[#6b7280] leading-relaxed">
+            <p className="text-xs leading-relaxed text-[#6b7280]">
               Are you sure you want to delete this publication? This will remove
               the story across Tamil, English, and Sinhala versions permanently
               from the portal.
             </p>
 
-            <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#e6e4dc]">
+            <div className="flex items-center justify-end gap-3 border-t border-[#e6e4dc] pt-4">
               <button
                 type="button"
                 onClick={() => setDeleteConfirmSlug(null)}
@@ -1652,7 +1690,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                 type="button"
                 disabled={isPending}
                 onClick={() => handleDelete(deleteConfirmSlug)}
-                className="rounded-xl bg-red-600 hover:bg-red-700 text-white px-4 py-2 text-xs font-bold shadow-xs"
+                className="rounded-xl bg-red-600 px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-red-700"
               >
                 {isPending ? "Deleting..." : "Confirm Delete"}
               </button>

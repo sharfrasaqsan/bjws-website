@@ -116,7 +116,11 @@ export async function loginAdminAction(
       } catch (err) {
         console.error("Login authentication error:", err);
         // Fallback for admin@bjws.org if network fails (development only)
-        if (!isProduction && email === "admin@bjws.org" && password.length >= 6) {
+        if (
+          !isProduction &&
+          email === "admin@bjws.org" &&
+          password.length >= 6
+        ) {
           const cookieStore = await cookies();
           cookieStore.set(DEMO_ADMIN_COOKIE, "active", {
             httpOnly: true,
@@ -152,8 +156,8 @@ export async function loginAdminAction(
           error: configuredAdminPassword
             ? "Invalid admin password."
             : isProduction
-            ? "Authentication service unconfigured. Please configure Supabase or ADMIN_PASSWORD."
-            : "Password must be at least 6 characters.",
+              ? "Authentication service unconfigured. Please configure Supabase or ADMIN_PASSWORD."
+              : "Password must be at least 6 characters.",
         };
       }
     }

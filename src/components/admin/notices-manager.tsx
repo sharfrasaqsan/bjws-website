@@ -48,9 +48,8 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
     () => groupNotices(initialNotices)
   );
   const [showCreate, setShowCreate] = useState(false);
-  const [editingNotice, setEditingNotice] = useState<UnifiedNoticeRecord | null>(
-    null
-  );
+  const [editingNotice, setEditingNotice] =
+    useState<UnifiedNoticeRecord | null>(null);
   const [filter, setFilter] = useState<"all" | "published" | "draft">("all");
   const [isPending, startTransition] = useTransition();
 
@@ -105,7 +104,10 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
     else setActiveFormTab("ta");
 
     setTimeout(() => {
-      editFormRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      editFormRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     }, 60);
   };
 
@@ -199,7 +201,8 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
 
         if (editFields.title_ta && editFields.body_ta) {
           updatedTranslations.ta = {
-            id: editingNotice.translations.ta?.id || `${editingNotice.baseId}-ta`,
+            id:
+              editingNotice.translations.ta?.id || `${editingNotice.baseId}-ta`,
             title: editFields.title_ta,
             body: editFields.body_ta,
             locale: "ta",
@@ -209,7 +212,8 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
         }
         if (editFields.title_en && editFields.body_en) {
           updatedTranslations.en = {
-            id: editingNotice.translations.en?.id || `${editingNotice.baseId}-en`,
+            id:
+              editingNotice.translations.en?.id || `${editingNotice.baseId}-en`,
             title: editFields.title_en,
             body: editFields.body_en,
             locale: "en",
@@ -219,7 +223,8 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
         }
         if (editFields.title_si && editFields.body_si) {
           updatedTranslations.si = {
-            id: editingNotice.translations.si?.id || `${editingNotice.baseId}-si`,
+            id:
+              editingNotice.translations.si?.id || `${editingNotice.baseId}-si`,
             title: editFields.title_si,
             body: editFields.body_si,
             locale: "si",
@@ -252,7 +257,11 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
   ) => {
     startTransition(async () => {
       try {
-        await toggleNoticeGroupPublishAction(baseId, currentState, translationIds);
+        await toggleNoticeGroupPublishAction(
+          baseId,
+          currentState,
+          translationIds
+        );
         setUnifiedNotices((prev) =>
           prev.map((n) =>
             n.baseId === baseId
@@ -336,7 +345,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
               >
                 <span>{tab.label}</span>
                 <span
-                  className={`rounded-full px-1.5 py-0.2 text-[10px] font-bold ${
+                  className={`py-0.2 rounded-full px-1.5 text-[10px] font-bold ${
                     isSelected
                       ? "bg-white/20 text-white"
                       : "bg-[#e6e4dc] text-[#6b7280]"
@@ -390,7 +399,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
       {showCreate && (
         <div
           ref={createFormRef}
-          className="overflow-hidden rounded-2xl border border-[#e6e4dc] border-t-4 border-t-[#c99a45] bg-white p-6 shadow-sm sm:p-8 animate-fade-in"
+          className="animate-fade-in overflow-hidden rounded-2xl border border-t-4 border-[#e6e4dc] border-t-[#c99a45] bg-white p-6 shadow-sm sm:p-8"
         >
           <div className="mb-6 border-b border-[#e6e4dc] pb-4">
             <div className="flex items-center gap-2">
@@ -424,17 +433,23 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
                 {
                   code: "ta" as const,
                   label: "Tamil (தமிழ்) - முதன்மை",
-                  filled: Boolean(createFields.title_ta && createFields.body_ta),
+                  filled: Boolean(
+                    createFields.title_ta && createFields.body_ta
+                  ),
                 },
                 {
                   code: "en" as const,
                   label: "English (Official)",
-                  filled: Boolean(createFields.title_en && createFields.body_en),
+                  filled: Boolean(
+                    createFields.title_en && createFields.body_en
+                  ),
                 },
                 {
                   code: "si" as const,
                   label: "Sinhala (සිංහල)",
-                  filled: Boolean(createFields.title_si && createFields.body_si),
+                  filled: Boolean(
+                    createFields.title_si && createFields.body_si
+                  ),
                 },
               ].map((tab) => (
                 <button
@@ -619,8 +634,8 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
                 htmlFor="is_published"
                 className="cursor-pointer text-xs font-medium text-[#1c2420] select-none"
               >
-                Publish immediately to homepage announcement notice bar across all
-                languages
+                Publish immediately to homepage announcement notice bar across
+                all languages
               </label>
             </div>
 
@@ -654,7 +669,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
       {editingNotice && (
         <div
           ref={editFormRef}
-          className="overflow-hidden rounded-2xl border border-[#c99a45] border-t-4 border-t-[#124d34] bg-white p-6 shadow-md sm:p-8 animate-fade-in"
+          className="animate-fade-in overflow-hidden rounded-2xl border border-t-4 border-[#c99a45] border-t-[#124d34] bg-white p-6 shadow-md sm:p-8"
         >
           <div className="mb-6 flex items-center justify-between border-b border-[#e6e4dc] pb-4">
             <div>
@@ -907,7 +922,9 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
               >
                 <Sparkles className="h-3.5 w-3.5 text-[#c99a45]" />
                 <span>
-                  {isEditing ? "Updating Database..." : "Save Announcement Updates"}
+                  {isEditing
+                    ? "Updating Database..."
+                    : "Save Announcement Updates"}
                 </span>
               </button>
             </div>
@@ -918,7 +935,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
       {/* Notices List */}
       {filteredNotices.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-[#e6e4dc] bg-white p-12 text-center">
-          <Layers className="h-8 w-8 mx-auto text-[#c99a45] mb-2 opacity-80" />
+          <Layers className="mx-auto mb-2 h-8 w-8 text-[#c99a45] opacity-80" />
           <p className="font-serif text-base font-bold text-[#0b2e1e]">
             No announcements found
           </p>
@@ -966,7 +983,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
               >
                 {/* Header row */}
                 <div className="flex flex-col gap-4 border-b border-[#f3f1ea] bg-[#fbfaf6] p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
-                  <div className="space-y-1.5 flex-1 min-w-0">
+                  <div className="min-w-0 flex-1 space-y-1.5">
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="font-serif text-base font-bold text-[#0b2e1e]">
                         {activeTrans?.title || "Untitled Announcement"}
@@ -1064,7 +1081,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
                           "_blank"
                         );
                       }}
-                      className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-emerald-300 bg-emerald-50 px-2.5 py-1.5 text-xs font-bold text-emerald-800 shadow-2xs hover:bg-emerald-100 transition-colors"
+                      className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-emerald-300 bg-emerald-50 px-2.5 py-1.5 text-xs font-bold text-emerald-800 shadow-2xs transition-colors hover:bg-emerald-100"
                       title="Broadcast this notice to WhatsApp community groups"
                     >
                       <MessageCircle className="h-3.5 w-3.5 text-[#25d366]" />
@@ -1075,7 +1092,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
                     <button
                       disabled={isPending}
                       onClick={() => handleOpenEdit(item)}
-                      className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[#c99a45]/40 bg-[#fbfaf6] px-3 py-1.5 text-xs font-semibold text-[#0b2e1e] shadow-2xs hover:bg-[#f5eedf] transition-colors disabled:opacity-50"
+                      className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[#c99a45]/40 bg-[#fbfaf6] px-3 py-1.5 text-xs font-semibold text-[#0b2e1e] shadow-2xs transition-colors hover:bg-[#f5eedf] disabled:opacity-50"
                       title="Edit Notice in All Languages"
                     >
                       <Pencil className="h-3.5 w-3.5 text-[#c99a45]" />
@@ -1129,9 +1146,9 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
                 </div>
 
                 {/* Body Preview with Language Switcher */}
-                <div className="p-4 sm:p-5 space-y-3">
+                <div className="space-y-3 p-4 sm:p-5">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-bold text-[#6b7280] uppercase tracking-wider">
+                    <span className="text-[11px] font-bold tracking-wider text-[#6b7280] uppercase">
                       Preview Content:
                     </span>
                     <div className="flex items-center gap-1">
@@ -1153,7 +1170,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
                                 ? "bg-[#124d34] text-white"
                                 : hasTrans
                                   ? "bg-[#fbfaf6] text-[#4b5563] hover:bg-[#e6e4dc]"
-                                  : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                                  : "cursor-not-allowed bg-gray-100 text-gray-400"
                             }`}
                             disabled={!hasTrans}
                           >
@@ -1168,7 +1185,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
                     </div>
                   </div>
 
-                  <div className="rounded-xl border border-[#f3f1ea] bg-[#fbfaf6] p-4 text-xs leading-relaxed text-[#1c2420] whitespace-pre-wrap sm:text-sm">
+                  <div className="rounded-xl border border-[#f3f1ea] bg-[#fbfaf6] p-4 text-xs leading-relaxed whitespace-pre-wrap text-[#1c2420] sm:text-sm">
                     {activeTrans?.body || "(No translation for this language)"}
                   </div>
                 </div>

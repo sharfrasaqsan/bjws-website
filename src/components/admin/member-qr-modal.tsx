@@ -3,7 +3,11 @@
 import * as React from "react";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { QRCodeSVG, QRCodeCanvas } from "qrcode.react";
-import { type TeamMember, calculateExpiryDate, resolveMemberPhoto } from "@/content/team";
+import {
+  type TeamMember,
+  calculateExpiryDate,
+  resolveMemberPhoto,
+} from "@/content/team";
 import { regenerateMemberVerificationTokenAction } from "@/lib/admin-actions";
 import {
   X,
@@ -48,9 +52,7 @@ export function MemberQrModal({
   const memberCode = member?.memberId || "BJWS000";
 
   const origin =
-    typeof window !== "undefined"
-      ? window.location.origin
-      : "https://bjws.org";
+    typeof window !== "undefined" ? window.location.origin : "https://bjws.org";
 
   const verifyUrl = `${origin}/en/verify/credential?id=${encodeURIComponent(
     memberCode
@@ -461,11 +463,19 @@ export function MemberQrModal({
       bCtx.fillStyle = "#0b2e1e";
       bCtx.font = `bold 13px ${ID_FONT}`;
       bCtx.textAlign = "center";
-      bCtx.fillText("24/7 Emergency Hotline: 077 622 7323 • 077 278 2829", 319, 785);
+      bCtx.fillText(
+        "24/7 Emergency Hotline: 077 622 7323 • 077 278 2829",
+        319,
+        785
+      );
 
       bCtx.fillStyle = "#4b5563";
       bCtx.font = `600 11.5px ${ID_FONT}`;
-      bCtx.fillText("Email: bjwsociety@gmail.com • Reg: DS/TH/SS/VSSO/2023/01", 319, 805);
+      bCtx.fillText(
+        "Email: bjwsociety@gmail.com • Reg: DS/TH/SS/VSSO/2023/01",
+        319,
+        805
+      );
 
       // Save Back Image Data URL
       setBackDataUrl(backCanvas.toDataURL("image/png"));
@@ -645,7 +655,7 @@ export function MemberQrModal({
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 overflow-y-auto"
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-3 sm:p-5"
     >
       {/* Backdrop */}
       <div
@@ -653,22 +663,22 @@ export function MemberQrModal({
         onClick={handleClose}
       />
 
-      <div className="relative w-full max-w-2xl overflow-hidden rounded-3xl border border-[#c99a45] bg-[#072115] text-white p-5 sm:p-7 shadow-2xl z-10 space-y-5 my-auto max-h-[92vh] overflow-y-auto">
+      <div className="relative z-10 my-auto max-h-[92vh] w-full max-w-2xl space-y-5 overflow-hidden overflow-y-auto rounded-3xl border border-[#c99a45] bg-[#072115] p-5 text-white shadow-2xl sm:p-7">
         {/* Header */}
         <div className="flex items-start justify-between border-b border-white/10 pb-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#c99a45]/20 text-[#f5d78e] border border-[#c99a45]/30 shrink-0">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[#c99a45]/30 bg-[#c99a45]/20 text-[#f5d78e]">
               <CreditCard className="h-6 w-6" />
             </div>
             <div>
-              <h3 className="font-serif text-lg font-bold text-white flex items-center gap-2">
+              <h3 className="flex items-center gap-2 font-serif text-lg font-bold text-white">
                 <span>Official Identity Card &amp; QR Portal</span>
-                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 text-emerald-300 px-2 py-0.5 text-[10px] font-bold border border-emerald-500/30">
+                <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-300">
                   <Sparkles className="h-2.5 w-2.5 text-[#d4af37]" />
                   Verified
                 </span>
               </h3>
-              <p className="text-xs text-[#f5d78e] font-mono">
+              <p className="font-mono text-xs text-[#f5d78e]">
                 {memberCode} &bull; {member.name} ({member.role.en})
               </p>
             </div>
@@ -677,7 +687,7 @@ export function MemberQrModal({
           <button
             type="button"
             onClick={handleClose}
-            className="rounded-xl p-2 text-white/60 hover:bg-white/10 hover:text-white transition-colors cursor-pointer"
+            className="cursor-pointer rounded-xl p-2 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
           >
             <X className="h-5 w-5" />
           </button>
@@ -689,7 +699,7 @@ export function MemberQrModal({
             <button
               type="button"
               onClick={() => setActiveTab("card")}
-              className={`rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`flex cursor-pointer items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all ${
                 activeTab === "card"
                   ? "bg-[#c99a45] text-[#072115] shadow-sm"
                   : "bg-white/10 text-white/70 hover:bg-white/15 hover:text-white"
@@ -702,7 +712,7 @@ export function MemberQrModal({
             <button
               type="button"
               onClick={() => setActiveTab("qr")}
-              className={`rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`flex cursor-pointer items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all ${
                 activeTab === "qr"
                   ? "bg-[#c99a45] text-[#072115] shadow-sm"
                   : "bg-white/10 text-white/70 hover:bg-white/15 hover:text-white"
@@ -719,10 +729,12 @@ export function MemberQrModal({
               onClick={() =>
                 setCardSide((prev) => (prev === "front" ? "back" : "front"))
               }
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#f5d78e] hover:text-white transition-colors bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-xl border border-white/10 cursor-pointer"
+              className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-[#f5d78e] transition-colors hover:bg-white/10 hover:text-white"
             >
               <RotateCw className="h-3.5 w-3.5" />
-              <span>Flip to {cardSide === "front" ? "Back Side" : "Front Side"}</span>
+              <span>
+                Flip to {cardSide === "front" ? "Back Side" : "Front Side"}
+              </span>
             </button>
           )}
         </div>
@@ -734,16 +746,22 @@ export function MemberQrModal({
           <div className="space-y-4">
             {/* Interactive Card Canvas Preview Container */}
             <div className="flex flex-col items-center justify-center py-2">
-              <div className="relative w-[280px] sm:w-[320px] aspect-[638/1004] rounded-2xl overflow-hidden shadow-2xl border-2 border-[#c99a45]/60 bg-white">
+              <div className="relative aspect-[638/1004] w-[280px] overflow-hidden rounded-2xl border-2 border-[#c99a45]/60 bg-white shadow-2xl sm:w-[320px]">
                 {isRendering ? (
-                  <div className="flex h-full w-full flex-col items-center justify-center bg-[#072115] text-[#d4af37] gap-3">
+                  <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-[#072115] text-[#d4af37]">
                     <RotateCw className="h-8 w-8 animate-spin" />
-                    <span className="text-xs font-mono">Generating ID Card...</span>
+                    <span className="font-mono text-xs">
+                      Generating ID Card...
+                    </span>
                   </div>
                 ) : (
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img
-                    src={cardSide === "front" ? frontDataUrl || "" : backDataUrl || ""}
+                    src={
+                      cardSide === "front"
+                        ? frontDataUrl || ""
+                        : backDataUrl || ""
+                    }
                     alt={`BJWS ID Card - ${cardSide} side`}
                     className="h-full w-full object-cover transition-opacity duration-300"
                   />
@@ -755,7 +773,7 @@ export function MemberQrModal({
                   onClick={() =>
                     setCardSide((prev) => (prev === "front" ? "back" : "front"))
                   }
-                  className="absolute bottom-3 right-3 rounded-full bg-black/75 backdrop-blur-xs text-white px-3 py-1 text-[11px] font-semibold flex items-center gap-1 border border-white/20 shadow-md hover:bg-black transition-colors cursor-pointer"
+                  className="absolute right-3 bottom-3 flex cursor-pointer items-center gap-1 rounded-full border border-white/20 bg-black/75 px-3 py-1 text-[11px] font-semibold text-white shadow-md backdrop-blur-xs transition-colors hover:bg-black"
                 >
                   <RotateCw className="h-3 w-3 text-[#d4af37]" />
                   <span>Showing {cardSide.toUpperCase()} (Click to flip)</span>
@@ -764,12 +782,12 @@ export function MemberQrModal({
             </div>
 
             {/* ID Card Action Buttons */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-2">
+            <div className="grid grid-cols-1 gap-2.5 pt-2 sm:grid-cols-3">
               <button
                 type="button"
                 onClick={handlePrintBoth}
                 disabled={isRendering || !frontDataUrl}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#c99a45] hover:bg-[#b58837] text-[#072115] px-4 py-2.5 text-xs font-bold shadow-md transition-all cursor-pointer disabled:opacity-50"
+                className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#c99a45] px-4 py-2.5 text-xs font-bold text-[#072115] shadow-md transition-all hover:bg-[#b58837] disabled:opacity-50"
               >
                 <Printer className="h-4 w-4" />
                 <span>Print Both Sides (PVC)</span>
@@ -779,7 +797,7 @@ export function MemberQrModal({
                 type="button"
                 onClick={downloadFront}
                 disabled={isRendering || !frontDataUrl}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-white/10 hover:bg-white/20 text-white px-4 py-2.5 text-xs font-semibold border border-white/15 transition-all cursor-pointer disabled:opacity-50"
+                className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 text-xs font-semibold text-white transition-all hover:bg-white/20 disabled:opacity-50"
               >
                 <Download className="h-4 w-4 text-[#f5d78e]" />
                 <span>Download Front PNG</span>
@@ -789,7 +807,7 @@ export function MemberQrModal({
                 type="button"
                 onClick={downloadBack}
                 disabled={isRendering || !backDataUrl}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-white/10 hover:bg-white/20 text-white px-4 py-2.5 text-xs font-semibold border border-white/15 transition-all cursor-pointer disabled:opacity-50"
+                className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 text-xs font-semibold text-white transition-all hover:bg-white/20 disabled:opacity-50"
               >
                 <Download className="h-4 w-4 text-[#f5d78e]" />
                 <span>Download Back PNG</span>
@@ -803,7 +821,7 @@ export function MemberQrModal({
         {/* ======================================================== */}
         {activeTab === "qr" && (
           <div className="space-y-4">
-            <div className="flex flex-col items-center justify-center p-6 rounded-2xl bg-white shadow-xl">
+            <div className="flex flex-col items-center justify-center rounded-2xl bg-white p-6 shadow-xl">
               <QRCodeSVG
                 value={verifyUrl}
                 size={220}
@@ -819,19 +837,19 @@ export function MemberQrModal({
                 }}
               />
 
-              <p className="mt-3 text-center text-xs font-mono font-bold text-[#072015]">
+              <p className="mt-3 text-center font-mono text-xs font-bold text-[#072015]">
                 {memberCode} &bull; Official Digital Verification
               </p>
-              <p className="text-[11px] text-gray-500 text-center font-sans">
+              <p className="text-center font-sans text-[11px] text-gray-500">
                 Cryptographic token embedded in QR
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
               <button
                 type="button"
                 onClick={downloadQrOnly}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#c99a45] hover:bg-[#b58837] text-[#072115] px-4 py-2.5 text-xs font-bold shadow-md transition-all cursor-pointer"
+                className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#c99a45] px-4 py-2.5 text-xs font-bold text-[#072115] shadow-md transition-all hover:bg-[#b58837]"
               >
                 <Download className="h-4 w-4" />
                 <span>Download QR Code (800x800 PNG)</span>
@@ -840,12 +858,14 @@ export function MemberQrModal({
               <button
                 type="button"
                 onClick={handleCopyLink}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-white/10 hover:bg-white/20 text-white px-4 py-2.5 text-xs font-semibold border border-white/15 transition-all cursor-pointer"
+                className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 text-xs font-semibold text-white transition-all hover:bg-white/20"
               >
                 {copied ? (
                   <>
                     <Check className="h-4 w-4 text-emerald-400" />
-                    <span className="text-emerald-400 font-bold">Link Copied!</span>
+                    <span className="font-bold text-emerald-400">
+                      Link Copied!
+                    </span>
                   </>
                 ) : (
                   <>
@@ -859,8 +879,8 @@ export function MemberQrModal({
         )}
 
         {/* Revoke / Regenerate QR Control Footer */}
-        <div className="flex items-center justify-between text-xs pt-2 border-t border-white/10">
-          <span className="text-white/50 text-[11px]">
+        <div className="flex items-center justify-between border-t border-white/10 pt-2 text-xs">
+          <span className="text-[11px] text-white/50">
             Target: <code className="text-[#f5d78e]">{memberCode}</code>
           </span>
 
@@ -869,25 +889,27 @@ export function MemberQrModal({
               <button
                 type="button"
                 onClick={() => setConfirmRevoke(true)}
-                className="text-[11px] text-rose-300 hover:text-rose-200 underline cursor-pointer"
+                className="cursor-pointer text-[11px] text-rose-300 underline hover:text-rose-200"
               >
                 Lost Card? Revoke &amp; Regenerate QR
               </button>
             ) : (
               <div className="flex items-center gap-2">
-                <span className="text-[11px] text-rose-300">Deactivate old card?</span>
+                <span className="text-[11px] text-rose-300">
+                  Deactivate old card?
+                </span>
                 <button
                   type="button"
                   onClick={handleRegenerateToken}
                   disabled={isRegenerating}
-                  className="rounded-lg bg-rose-600 hover:bg-rose-700 text-white px-2 py-0.5 text-[11px] font-bold cursor-pointer disabled:opacity-50"
+                  className="cursor-pointer rounded-lg bg-rose-600 px-2 py-0.5 text-[11px] font-bold text-white hover:bg-rose-700 disabled:opacity-50"
                 >
                   {isRegenerating ? "Regenerating..." : "Confirm Revoke"}
                 </button>
                 <button
                   type="button"
                   onClick={() => setConfirmRevoke(false)}
-                  className="text-[11px] text-white/60 hover:text-white cursor-pointer"
+                  className="cursor-pointer text-[11px] text-white/60 hover:text-white"
                 >
                   Cancel
                 </button>

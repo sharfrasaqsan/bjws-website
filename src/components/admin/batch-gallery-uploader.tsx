@@ -310,7 +310,10 @@ export function BatchGalleryUploader({
     });
   };
 
-  const totalOriginalSize = items.reduce((acc, cur) => acc + cur.originalSize, 0);
+  const totalOriginalSize = items.reduce(
+    (acc, cur) => acc + cur.originalSize,
+    0
+  );
   const totalCompressedSize = items.reduce(
     (acc, cur) => acc + cur.compressedSize,
     0
@@ -323,60 +326,62 @@ export function BatchGalleryUploader({
       : 0;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3 sm:p-6 backdrop-blur-xs overflow-y-auto">
-      <div className="relative w-full max-w-4xl rounded-3xl border border-border bg-surface p-5 sm:p-8 shadow-2xl my-6 max-h-[92vh] flex flex-col overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/60 p-3 backdrop-blur-xs sm:p-6">
+      <div className="border-border bg-surface relative my-6 flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-3xl border p-5 shadow-2xl sm:p-8">
         {/* Modal Close Button */}
         <button
           type="button"
           onClick={onClose}
           disabled={isPending}
-          className="absolute right-5 top-5 rounded-full p-2 text-text-muted hover:bg-background hover:text-text transition-colors disabled:opacity-30 cursor-pointer"
+          className="text-text-muted hover:bg-background hover:text-text absolute top-5 right-5 cursor-pointer rounded-full p-2 transition-colors disabled:opacity-30"
           aria-label="Close"
         >
           <X className="h-5 w-5" />
         </button>
 
         {/* Modal Header */}
-        <div className="flex items-center gap-3 border-b border-border pb-4 shrink-0">
+        <div className="border-border flex shrink-0 items-center gap-3 border-b pb-4">
           <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#124d34] text-white shadow-xs">
             <UploadCloud className="h-6 w-6 text-[#d4af37]" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="font-display text-lg sm:text-xl font-bold text-text">
+              <h2 className="font-display text-text text-lg font-bold sm:text-xl">
                 Batch Upload Gallery Photos
               </h2>
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-600/30 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+              <span className="inline-flex items-center gap-1 rounded-full border border-emerald-600/30 bg-emerald-50 px-2 py-0.5 text-[10px] font-bold tracking-wider text-emerald-800 uppercase dark:bg-emerald-950/60 dark:text-emerald-300">
                 <Sparkles className="h-3 w-3" />
                 Auto-WebP
               </span>
             </div>
-            <p className="text-xs text-text-muted">
-              Select multiple photos at once. You can edit individual titles for every photo below.
+            <p className="text-text-muted text-xs">
+              Select multiple photos at once. You can edit individual titles for
+              every photo below.
             </p>
           </div>
         </div>
 
         {/* Scrollable Content Body */}
-        <div className="flex-1 overflow-y-auto py-5 space-y-5">
+        <div className="flex-1 space-y-5 overflow-y-auto py-5">
           {/* Success Banner */}
           {successCount !== null && (
-            <div className="flex items-center justify-between rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 p-4 border border-emerald-600/30 text-emerald-800 dark:text-emerald-200">
+            <div className="flex items-center justify-between rounded-2xl border border-emerald-600/30 bg-emerald-50 p-4 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200">
               <div className="flex items-center gap-3">
-                <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0" />
+                <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
                 <div>
-                  <h4 className="text-xs sm:text-sm font-bold">
+                  <h4 className="text-xs font-bold sm:text-sm">
                     Successfully Uploaded {successCount} Photos!
                   </h4>
                   <p className="text-xs opacity-90">
-                    The gallery has been refreshed and updated with all new photos.
+                    The gallery has been refreshed and updated with all new
+                    photos.
                   </p>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white px-3.5 py-1.5 text-xs font-semibold shadow-xs cursor-pointer"
+                className="cursor-pointer rounded-xl bg-emerald-700 px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-emerald-800"
               >
                 Done
               </button>
@@ -385,7 +390,7 @@ export function BatchGalleryUploader({
 
           {/* Error Banner */}
           {errorMsg && (
-            <div className="flex items-center gap-2 rounded-2xl bg-rose-50 dark:bg-rose-950/40 p-4 text-xs font-semibold text-rose-700 dark:text-rose-300 border border-rose-300">
+            <div className="flex items-center gap-2 rounded-2xl border border-rose-300 bg-rose-50 p-4 text-xs font-semibold text-rose-700 dark:bg-rose-950/40 dark:text-rose-300">
               <AlertCircle className="h-4 w-4 shrink-0" />
               <span>{errorMsg}</span>
             </div>
@@ -397,10 +402,10 @@ export function BatchGalleryUploader({
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
-            className={`group relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed p-6 sm:p-8 text-center cursor-pointer transition-all ${
+            className={`group relative flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed p-6 text-center transition-all sm:p-8 ${
               isDragging
                 ? "border-primary bg-primary/5 scale-[1.005]"
-                : "border-[#d8d5cb] hover:border-primary/60 hover:bg-[#faf9f5]"
+                : "hover:border-primary/60 border-[#d8d5cb] hover:bg-[#faf9f5]"
             }`}
           >
             <input
@@ -414,35 +419,36 @@ export function BatchGalleryUploader({
               }}
             />
 
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#f3f1ea] group-hover:bg-[#e8f3ee] text-[#124d34] transition-colors mb-3">
+            <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#f3f1ea] text-[#124d34] transition-colors group-hover:bg-[#e8f3ee]">
               {isCompressing ? (
-                <Loader2 className="h-7 w-7 animate-spin text-primary" />
+                <Loader2 className="text-primary h-7 w-7 animate-spin" />
               ) : (
                 <UploadCloud className="h-7 w-7" />
               )}
             </div>
 
-            <h3 className="text-sm sm:text-base font-bold text-text">
+            <h3 className="text-text text-sm font-bold sm:text-base">
               {isCompressing
                 ? "Optimizing and converting images to WebP..."
                 : "Drag & drop photos here, or click to browse"}
             </h3>
-            <p className="mt-1 text-xs text-text-muted max-w-md">
-              Supports selecting 50+ photos at once (JPG, PNG, WebP). Automatic client-side compression reduces bandwidth by ~90%.
+            <p className="text-text-muted mt-1 max-w-md text-xs">
+              Supports selecting 50+ photos at once (JPG, PNG, WebP). Automatic
+              client-side compression reduces bandwidth by ~90%.
             </p>
           </div>
 
           {/* Common Event Title Helper */}
-          <div className="rounded-2xl border border-border bg-surface p-4 space-y-2">
+          <div className="border-border bg-surface space-y-2 rounded-2xl border p-4">
             <div className="flex items-center justify-between">
-              <label className="block text-xs font-bold uppercase tracking-wider text-text-muted">
+              <label className="text-text-muted block text-xs font-bold tracking-wider uppercase">
                 Common Event Name (Optional Prefix)
               </label>
               {items.length > 0 && commonCaption.trim() && (
                 <button
                   type="button"
                   onClick={handleApplyCommonTitle}
-                  className="text-[11px] font-bold text-primary hover:underline cursor-pointer flex items-center gap-1"
+                  className="text-primary flex cursor-pointer items-center gap-1 text-[11px] font-bold hover:underline"
                 >
                   <span>Apply to All {items.length} Photos</span>
                 </button>
@@ -455,39 +461,42 @@ export function BatchGalleryUploader({
                 onChange={(e) => setCommonCaption(e.target.value)}
                 placeholder="e.g. Mahallah Cemetery Annual Shramadhana"
                 disabled={isPending}
-                className="flex-1 rounded-xl border border-border bg-background px-3.5 py-2 text-xs sm:text-sm text-text focus:border-primary focus:outline-none"
+                className="border-border bg-background text-text focus:border-primary flex-1 rounded-xl border px-3.5 py-2 text-xs focus:outline-none sm:text-sm"
               />
               {items.length > 0 && (
                 <button
                   type="button"
                   onClick={handleApplyCommonTitle}
                   disabled={!commonCaption.trim() || isPending}
-                  className="rounded-xl border border-primary/40 bg-primary/10 hover:bg-primary/20 text-primary px-3.5 py-2 text-xs font-semibold whitespace-nowrap transition-colors disabled:opacity-40 cursor-pointer"
+                  className="border-primary/40 bg-primary/10 hover:bg-primary/20 text-primary cursor-pointer rounded-xl border px-3.5 py-2 text-xs font-semibold whitespace-nowrap transition-colors disabled:opacity-40"
                 >
                   Apply to All
                 </button>
               )}
             </div>
-            <p className="text-[11px] text-text-muted">
-              You can type a common title and click &quot;Apply to All&quot;, or customize individual titles for each photo below.
+            <p className="text-text-muted text-[11px]">
+              You can type a common title and click &quot;Apply to All&quot;, or
+              customize individual titles for each photo below.
             </p>
           </div>
 
           {/* Selected Photos List with Individual Titles */}
           {items.length > 0 && (
             <div className="space-y-3">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-border pb-2">
-                <div className="flex flex-wrap items-center gap-2 text-xs font-bold text-text">
-                  <FileImage className="h-4 w-4 text-primary" />
+              <div className="border-border flex flex-col gap-2 border-b pb-2 sm:flex-row sm:items-center sm:justify-between">
+                <div className="text-text flex flex-wrap items-center gap-2 text-xs font-bold">
+                  <FileImage className="text-primary h-4 w-4" />
                   <span>
-                    {items.length} {items.length === 1 ? "Photo" : "Photos"} Selected
+                    {items.length} {items.length === 1 ? "Photo" : "Photos"}{" "}
+                    Selected
                   </span>
                   <span className="text-text-muted font-normal">
                     ({formatBytes(totalCompressedSize)})
                   </span>
                   {percentSaved > 0 && (
-                    <span className="rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 px-2 py-0.5 text-[10px] font-bold">
-                      Saved {percentSaved}% ({formatBytes(totalOriginalSize)} → {formatBytes(totalCompressedSize)})
+                    <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800 dark:bg-emerald-950">
+                      Saved {percentSaved}% ({formatBytes(totalOriginalSize)} →{" "}
+                      {formatBytes(totalCompressedSize)})
                     </span>
                   )}
                 </div>
@@ -496,7 +505,7 @@ export function BatchGalleryUploader({
                   type="button"
                   onClick={handleClearAll}
                   disabled={isPending}
-                  className="inline-flex items-center gap-1 text-xs font-semibold text-rose-600 hover:text-rose-700 transition-colors self-start sm:self-auto cursor-pointer"
+                  className="inline-flex cursor-pointer items-center gap-1 self-start text-xs font-semibold text-rose-600 transition-colors hover:text-rose-700 sm:self-auto"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                   <span>Clear All</span>
@@ -504,32 +513,32 @@ export function BatchGalleryUploader({
               </div>
 
               {/* Photos with individual caption inputs */}
-              <div className="max-h-72 overflow-y-auto space-y-2.5 p-2 rounded-2xl bg-background border border-border">
+              <div className="bg-background border-border max-h-72 space-y-2.5 overflow-y-auto rounded-2xl border p-2">
                 {items.map((item, idx) => (
                   <div
                     key={item.id}
-                    className="flex items-center gap-3 p-2.5 rounded-xl bg-surface border border-border hover:border-primary/40 transition-colors"
+                    className="bg-surface border-border hover:border-primary/40 flex items-center gap-3 rounded-xl border p-2.5 transition-colors"
                   >
                     {/* Thumbnail */}
-                    <div className="relative h-14 w-18 shrink-0 rounded-lg overflow-hidden border border-border bg-black/5">
+                    <div className="border-border relative h-14 w-18 shrink-0 overflow-hidden rounded-lg border bg-black/5">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={item.previewUrl}
                         alt={item.caption || item.name}
                         className="h-full w-full object-cover"
                       />
-                      <span className="absolute top-1 left-1 rounded bg-black/75 px-1 py-0.2 text-[9px] font-bold text-white">
+                      <span className="py-0.2 absolute top-1 left-1 rounded bg-black/75 px-1 text-[9px] font-bold text-white">
                         #{idx + 1}
                       </span>
                     </div>
 
                     {/* Caption Input & File Info */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-2 mb-1">
-                        <label className="text-[10px] font-bold uppercase tracking-wider text-text-muted truncate">
+                    <div className="min-w-0 flex-1">
+                      <div className="mb-1 flex items-center justify-between gap-2">
+                        <label className="text-text-muted truncate text-[10px] font-bold tracking-wider uppercase">
                           Photo #{idx + 1} Event Title / Caption *
                         </label>
-                        <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 shrink-0">
+                        <span className="shrink-0 font-mono text-[10px] text-emerald-600 dark:text-emerald-400">
                           {formatBytes(item.compressedSize)}
                         </span>
                       </div>
@@ -542,7 +551,7 @@ export function BatchGalleryUploader({
                         placeholder="Enter specific event title for this photo..."
                         required
                         disabled={isPending}
-                        className="w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-text placeholder:text-text-muted/60 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                        className="border-border bg-background text-text placeholder:text-text-muted/60 focus:border-primary focus:ring-primary w-full rounded-lg border px-3 py-1.5 text-xs focus:ring-1 focus:outline-none"
                       />
                     </div>
 
@@ -551,7 +560,7 @@ export function BatchGalleryUploader({
                       type="button"
                       onClick={() => handleRemoveItem(item.id)}
                       disabled={isPending}
-                      className="rounded-lg p-2 text-text-muted hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors shrink-0 cursor-pointer"
+                      className="text-text-muted shrink-0 cursor-pointer rounded-lg p-2 transition-colors hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-950/40"
                       title="Remove photo"
                     >
                       <X className="h-4 w-4" />
@@ -566,13 +575,13 @@ export function BatchGalleryUploader({
           <form
             id="batch-upload-form"
             onSubmit={handleSubmit}
-            className="space-y-4 pt-2 border-t border-border"
+            className="border-border space-y-4 border-t pt-2"
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {/* Category */}
               <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted">
+                <div className="mb-1.5 flex items-center justify-between">
+                  <label className="text-text-muted block text-xs font-bold tracking-wider uppercase">
                     Album Category *
                   </label>
                   {existingCategories.length > 0 && (
@@ -582,7 +591,7 @@ export function BatchGalleryUploader({
                         setIsCustomCategory(!isCustomCategory);
                         setCustomCategoryInput("");
                       }}
-                      className="text-[11px] font-semibold text-primary hover:underline cursor-pointer"
+                      className="text-primary cursor-pointer text-[11px] font-semibold hover:underline"
                     >
                       {isCustomCategory ? "Choose Existing" : "+ New Category"}
                     </button>
@@ -596,14 +605,16 @@ export function BatchGalleryUploader({
                     placeholder="e.g. Ramadan Relief 2026"
                     required
                     disabled={isPending}
-                    className="w-full rounded-xl border border-primary bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
+                    className="border-primary bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 text-xs focus:outline-none"
                   />
                 ) : (
                   <select
                     value={category}
-                    onChange={(e) => setCategory(e.target.value as GalleryCategory)}
+                    onChange={(e) =>
+                      setCategory(e.target.value as GalleryCategory)
+                    }
                     disabled={isPending}
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
+                    className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 text-xs focus:outline-none"
                   >
                     {existingCategories.map((cat) => (
                       <option key={cat.key} value={cat.key}>
@@ -616,7 +627,7 @@ export function BatchGalleryUploader({
 
               {/* Location */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1.5">
+                <label className="text-text-muted mb-1.5 block text-xs font-bold tracking-wider uppercase">
                   Location *
                 </label>
                 <input
@@ -625,7 +636,7 @@ export function BatchGalleryUploader({
                   onChange={(e) => setLocation(e.target.value)}
                   disabled={isPending}
                   required
-                  className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
+                  className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 text-xs focus:outline-none"
                 />
               </div>
             </div>
@@ -638,22 +649,24 @@ export function BatchGalleryUploader({
                 checked={approved}
                 onChange={(e) => setApproved(e.target.checked)}
                 disabled={isPending}
-                className="h-4 w-4 rounded border-border text-primary focus:ring-primary cursor-pointer"
+                className="border-border text-primary focus:ring-primary h-4 w-4 cursor-pointer rounded"
               />
               <label
                 htmlFor="batch-approved"
-                className="text-xs font-semibold text-text cursor-pointer flex items-center gap-1.5"
+                className="text-text flex cursor-pointer items-center gap-1.5 text-xs font-semibold"
               >
                 <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                <span>Approve all photos for immediate public display on website</span>
+                <span>
+                  Approve all photos for immediate public display on website
+                </span>
               </label>
             </div>
           </form>
         </div>
 
         {/* Modal Footer Controls */}
-        <div className="flex items-center justify-between border-t border-border pt-4 shrink-0">
-          <div className="text-xs text-text-muted">
+        <div className="border-border flex shrink-0 items-center justify-between border-t pt-4">
+          <div className="text-text-muted text-xs">
             {items.length > 0 ? (
               <span>
                 Ready to upload {items.length}{" "}
@@ -669,7 +682,7 @@ export function BatchGalleryUploader({
               type="button"
               onClick={onClose}
               disabled={isPending}
-              className="rounded-xl border border-border px-4 py-2 text-xs font-semibold text-text hover:bg-background transition-colors disabled:opacity-50 cursor-pointer"
+              className="border-border text-text hover:bg-background cursor-pointer rounded-xl border px-4 py-2 text-xs font-semibold transition-colors disabled:opacity-50"
             >
               Cancel
             </button>
@@ -677,7 +690,7 @@ export function BatchGalleryUploader({
               type="submit"
               form="batch-upload-form"
               disabled={isPending || items.length === 0}
-              className="inline-flex items-center gap-2 rounded-xl bg-[#0b2e1e] hover:bg-[#124d34] px-5 py-2.5 text-xs font-bold text-white shadow-sm transition-all disabled:opacity-50 cursor-pointer"
+              className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[#0b2e1e] px-5 py-2.5 text-xs font-bold text-white shadow-sm transition-all hover:bg-[#124d34] disabled:opacity-50"
             >
               {isPending ? (
                 <>
@@ -688,7 +701,8 @@ export function BatchGalleryUploader({
                 <>
                   <UploadCloud className="h-4 w-4 text-[#d4af37]" />
                   <span>
-                    Upload {items.length > 0 ? `${items.length} Photos` : "Photos"}
+                    Upload{" "}
+                    {items.length > 0 ? `${items.length} Photos` : "Photos"}
                   </span>
                 </>
               )}

@@ -52,7 +52,7 @@ export function BankAccountCopy({
         <button
           type="button"
           onClick={handleCopyAcc}
-          className="inline-flex items-center gap-1.5 rounded-xl bg-[#c99a45] hover:bg-[#b58837] text-[#072115] px-4 py-2 text-xs font-bold shadow-xs transition-colors cursor-pointer"
+          className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl bg-[#c99a45] px-4 py-2 text-xs font-bold text-[#072115] shadow-xs transition-colors hover:bg-[#b58837]"
         >
           {copiedAcc ? (
             <>
@@ -70,7 +70,7 @@ export function BankAccountCopy({
         <button
           type="button"
           onClick={handleCopyAll}
-          className="inline-flex items-center gap-1.5 rounded-xl bg-white/15 hover:bg-white/25 text-white border border-white/20 px-3.5 py-2 text-xs font-semibold transition-colors cursor-pointer"
+          className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-white/20 bg-white/15 px-3.5 py-2 text-xs font-semibold text-white transition-colors hover:bg-white/25"
         >
           {copiedAll ? (
             <>
@@ -88,4 +88,3 @@ export function BankAccountCopy({
     </div>
   );
 }
-

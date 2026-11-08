@@ -18,7 +18,8 @@ export interface RichArticleContentProps {
  */
 export function formatInlineText(text: string): React.ReactNode {
   // Regex to match markdown links, bold, italic, underline, and basic HTML tags
-  const tokenRegex = /(\[[^\]]+\]\([^)]+\)|\*\*[^*]+\*\*|\*[^*]+\*|<u>.*?<\/u>|<b>.*?<\/b>|<i>.*?<\/i>|<strong>.*?<\/strong>|<em>.*?<\/em>)/g;
+  const tokenRegex =
+    /(\[[^\]]+\]\([^)]+\)|\*\*[^*]+\*\*|\*[^*]+\*|<u>.*?<\/u>|<b>.*?<\/b>|<i>.*?<\/i>|<strong>.*?<\/strong>|<em>.*?<\/em>)/g;
 
   const parts = text.split(tokenRegex);
 
@@ -36,10 +37,12 @@ export function formatInlineText(text: string): React.ReactNode {
           href={url}
           target={isExternal ? "_blank" : undefined}
           rel={isExternal ? "noopener noreferrer" : undefined}
-          className="text-[#124d34] underline decoration-[#c99a45] decoration-2 underline-offset-4 hover:text-[#0b2e1e] font-semibold transition-colors inline-flex items-center gap-0.5"
+          className="inline-flex items-center gap-0.5 font-semibold text-[#124d34] underline decoration-[#c99a45] decoration-2 underline-offset-4 transition-colors hover:text-[#0b2e1e]"
         >
           <span>{label}</span>
-          {isExternal && <ExternalLink className="h-3 w-3 inline ml-0.5 opacity-70" />}
+          {isExternal && (
+            <ExternalLink className="ml-0.5 inline h-3 w-3 opacity-70" />
+          )}
         </a>
       );
     }
@@ -54,7 +57,9 @@ export function formatInlineText(text: string): React.ReactNode {
     }
 
     // Bold HTML: <b>...</b> or <strong>...</strong>
-    const bMatch = part.match(/^<b>(.*?)<\/b>$/i) || part.match(/^<strong>(.*?)<\/strong>$/i);
+    const bMatch =
+      part.match(/^<b>(.*?)<\/b>$/i) ||
+      part.match(/^<strong>(.*?)<\/strong>$/i);
     if (bMatch) {
       return (
         <strong key={i} className="font-bold text-[#0b2e1e]">
@@ -83,7 +88,8 @@ export function formatInlineText(text: string): React.ReactNode {
     }
 
     // Italic HTML: <i>...</i> or <em>...</em>
-    const iMatch = part.match(/^<i>(.*?)<\/i>$/i) || part.match(/^<em>(.*?)<\/em>$/i);
+    const iMatch =
+      part.match(/^<i>(.*?)<\/i>$/i) || part.match(/^<em>(.*?)<\/em>$/i);
     if (iMatch) {
       return (
         <em key={i} className="italic">
@@ -106,19 +112,16 @@ export function RichArticleContent({
   const blocks = content.split(/\n\s*\n/);
 
   return (
-    <div className={`space-y-5 text-sm sm:text-base text-text leading-relaxed font-sans ${className}`}>
+    <div
+      className={`text-text space-y-5 font-sans text-sm leading-relaxed sm:text-base ${className}`}
+    >
       {blocks.map((block, idx) => {
         const trimmed = block.trim();
         if (!trimmed) return null;
 
         // 1. Horizontal divider
         if (trimmed === "---" || trimmed === "***") {
-          return (
-            <hr
-              key={idx}
-              className="my-8 border-t border-[#e6e4dc]"
-            />
-          );
+          return <hr key={idx} className="my-8 border-t border-[#e6e4dc]" />;
         }
 
         // 2. Markdown Image: ![alt](url)
@@ -140,7 +143,7 @@ export function RichArticleContent({
           return (
             <h2
               key={idx}
-              className="font-display text-xl sm:text-2xl font-bold text-[#0b2e1e] pt-6 tracking-tight border-b border-[#f0eee6] pb-2"
+              className="font-display border-b border-[#f0eee6] pt-6 pb-2 text-xl font-bold tracking-tight text-[#0b2e1e] sm:text-2xl"
             >
               {formatInlineText(trimmed.replace(/^##\s+/, ""))}
             </h2>
@@ -152,7 +155,7 @@ export function RichArticleContent({
           return (
             <h3
               key={idx}
-              className="font-display text-lg sm:text-xl font-bold text-[#0b2e1e] pt-4 tracking-tight"
+              className="font-display pt-4 text-lg font-bold tracking-tight text-[#0b2e1e] sm:text-xl"
             >
               {formatInlineText(trimmed.replace(/^###\s+/, ""))}
             </h3>
@@ -161,15 +164,17 @@ export function RichArticleContent({
 
         // 5. Blockquote (> Quote)
         if (trimmed.startsWith("> ")) {
-          const quoteLines = trimmed.split("\n").map((l) => l.replace(/^>\s*/, ""));
+          const quoteLines = trimmed
+            .split("\n")
+            .map((l) => l.replace(/^>\s*/, ""));
           return (
             <blockquote
               key={idx}
-              className="my-5 rounded-2xl border-l-4 border-[#c99a45] bg-[#fbfaf6] p-4 sm:p-5 italic text-[#0b2e1e] shadow-xs"
+              className="my-5 rounded-2xl border-l-4 border-[#c99a45] bg-[#fbfaf6] p-4 text-[#0b2e1e] italic shadow-xs sm:p-5"
             >
               <div className="flex items-start gap-3">
-                <Quote className="h-5 w-5 text-[#c99a45] shrink-0 mt-0.5 opacity-80" />
-                <div className="space-y-1 text-sm sm:text-base leading-relaxed">
+                <Quote className="mt-0.5 h-5 w-5 shrink-0 text-[#c99a45] opacity-80" />
+                <div className="space-y-1 text-sm leading-relaxed sm:text-base">
                   {quoteLines.map((line, lIdx) => (
                     <p key={lIdx}>{formatInlineText(line)}</p>
                   ))}
@@ -200,16 +205,18 @@ export function RichArticleContent({
                 return (
                   <li
                     key={lIdx}
-                    className="flex items-start gap-2.5 text-xs sm:text-sm text-text leading-relaxed"
+                    className="text-text flex items-start gap-2.5 text-xs leading-relaxed sm:text-sm"
                   >
                     {isOrdered ? (
-                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#c99a45]/20 text-[#072015] font-bold text-[10px] mt-0.5">
+                      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#c99a45]/20 text-[10px] font-bold text-[#072015]">
                         {lIdx + 1}
                       </span>
                     ) : (
-                      <CheckCircle2 className="h-4 w-4 shrink-0 text-[#c99a45] mt-0.5" />
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#c99a45]" />
                     )}
-                    <span className="flex-1">{formatInlineText(cleanLine)}</span>
+                    <span className="flex-1">
+                      {formatInlineText(cleanLine)}
+                    </span>
                   </li>
                 );
               })}

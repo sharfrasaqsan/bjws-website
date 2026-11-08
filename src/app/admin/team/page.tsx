@@ -87,7 +87,10 @@ export default async function AdminTeamPage() {
               (raw.verification_status as TeamMember["verificationStatus"]) ||
               (d.is_inactive ? "suspended" : "verified"),
             issueDate: (raw.issue_date as string) || "2026-01-01",
-            expiryDate: calculateExpiryDate((raw.issue_date as string) || "2026-01-01", 3),
+            expiryDate: calculateExpiryDate(
+              (raw.issue_date as string) || "2026-01-01",
+              3
+            ),
           };
         });
       }

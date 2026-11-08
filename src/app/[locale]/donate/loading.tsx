@@ -2,31 +2,31 @@ import { Skeleton, SkeletonHero } from "@/components/ui/skeleton";
 
 export default function DonateLoading() {
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="bg-background min-h-screen pb-20">
       <SkeletonHero
         titleWidth="w-72 sm:w-80"
         descriptionWidth="w-full max-w-xl"
       />
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 max-w-5xl mx-auto">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-10 lg:grid-cols-2">
           {/* Bank Accounts Card */}
-          <div className="rounded-2xl border border-border bg-surface p-8 space-y-6">
+          <div className="border-border bg-surface space-y-6 rounded-2xl border p-8">
             <div className="flex items-center gap-3">
               <Skeleton className="h-10 w-10 rounded-xl" />
               <div>
-                <Skeleton className="h-6 w-44 mb-1" />
+                <Skeleton className="mb-1 h-6 w-44" />
                 <Skeleton className="h-3.5 w-32" />
               </div>
             </div>
 
             <div className="space-y-4 pt-2">
-              <div className="rounded-xl border border-border/80 bg-muted/40 p-4 space-y-2">
+              <div className="border-border/80 bg-muted/40 space-y-2 rounded-xl border p-4">
                 <Skeleton className="h-4 w-32" />
                 <Skeleton className="h-6 w-52" />
                 <Skeleton className="h-4 w-40" />
               </div>
-              <div className="rounded-xl border border-border/80 bg-muted/40 p-4 space-y-2">
+              <div className="border-border/80 bg-muted/40 space-y-2 rounded-xl border p-4">
                 <Skeleton className="h-4 w-32" />
                 <Skeleton className="h-6 w-52" />
                 <Skeleton className="h-4 w-40" />
@@ -35,7 +35,7 @@ export default function DonateLoading() {
           </div>
 
           {/* Donation Form / Slip Upload Card */}
-          <div className="rounded-2xl border border-border bg-surface p-8 space-y-5">
+          <div className="border-border bg-surface space-y-5 rounded-2xl border p-8">
             <Skeleton className="h-6 w-52" />
             <Skeleton className="h-4 w-72 max-w-full" />
 
@@ -60,4 +60,3 @@ export default function DonateLoading() {
     </div>
   );
 }
-

@@ -10,7 +10,13 @@ import {
 import { NoticesSection } from "@/components/sections/notices-section";
 import { buildPageMetadata } from "@/lib/seo";
 import { JsonLd, getBreadcrumbJsonLd } from "@/components/seo/json-ld";
-import { FileText, Download, ShieldCheck, FileCheck, PhoneCall } from "lucide-react";
+import {
+  FileText,
+  Download,
+  ShieldCheck,
+  FileCheck,
+  PhoneCall,
+} from "lucide-react";
 import { getSiteAssets } from "@/content/site-assets";
 
 // Live Dynamic Data - Direct sync with Supabase
@@ -109,16 +115,19 @@ export default async function ReportsPage({
       <div className="bg-[#fbfaf6] py-16 sm:py-24">
         <Container size="xl">
           {/* Financial Transparency Declaration */}
-          <ScrollReveal variant="fade-up" className="mb-16 rounded-3xl border border-[#0b2e1e]/15 bg-white p-8 shadow-sm sm:p-10">
+          <ScrollReveal
+            variant="fade-up"
+            className="mb-16 rounded-3xl border border-[#0b2e1e]/15 bg-white p-8 shadow-sm sm:p-10"
+          >
             <div className="flex items-start gap-4">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#e8f3ee] text-[#0b2e1e]">
                 <ShieldCheck className="h-6 w-6" strokeWidth={2} />
               </div>
               <div>
-                <span className="font-sans text-xs font-bold uppercase tracking-wider text-[#b8952b]">
+                <span className="font-sans text-xs font-bold tracking-wider text-[#b8952b] uppercase">
                   Accountability Declaration
                 </span>
-                <h2 className="mt-1 font-display text-2xl font-bold text-[#0b2e1e] sm:text-3xl">
+                <h2 className="font-display mt-1 text-2xl font-bold text-[#0b2e1e] sm:text-3xl">
                   {t("transparencyTitle")}
                 </h2>
                 <p className="mt-3 text-base leading-relaxed text-[#4b5563]">
@@ -136,36 +145,40 @@ export default async function ReportsPage({
           {/* Published Reports List */}
           <div className="mb-20">
             <ScrollReveal className="mb-8 border-b border-[#0b2e1e]/10 pb-4">
-              <span className="font-sans text-xs font-bold uppercase tracking-wider text-[#b8952b]">
+              <span className="font-sans text-xs font-bold tracking-wider text-[#b8952b] uppercase">
                 Public Records
               </span>
-              <h2 className="mt-1 font-display text-2xl font-bold tracking-tight text-[#0b2e1e] sm:text-3xl">
+              <h2 className="font-display mt-1 text-2xl font-bold tracking-tight text-[#0b2e1e] sm:text-3xl">
                 {t("reportsListTitle")}
               </h2>
             </ScrollReveal>
 
             {reports.length === 0 ? (
-              <div className="rounded-3xl border border-[#0b2e1e]/10 bg-white p-8 text-center sm:p-12 shadow-xs">
+              <div className="rounded-3xl border border-[#0b2e1e]/10 bg-white p-8 text-center shadow-xs sm:p-12">
                 <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[#f4efe6] text-[#0b2e1e]">
                   <FileText className="h-6 w-6 text-[#b8952b]" />
                 </div>
-                <h3 className="mt-4 font-display text-lg font-bold text-[#0b2e1e]">
+                <h3 className="font-display mt-4 text-lg font-bold text-[#0b2e1e]">
                   No Official Reports Published Yet
                 </h3>
-                <p className="mt-2 text-sm text-[#6b7280] max-w-md mx-auto">
-                  Audited annual reports and administrative statements will be published here upon executive approval.
+                <p className="mx-auto mt-2 max-w-md text-sm text-[#6b7280]">
+                  Audited annual reports and administrative statements will be
+                  published here upon executive approval.
                 </p>
               </div>
             ) : (
-              <ScrollRevealGroup staggerMs={80} className="grid grid-cols-1 gap-6 md:grid-cols-2 items-stretch">
+              <ScrollRevealGroup
+                staggerMs={80}
+                className="grid grid-cols-1 items-stretch gap-6 md:grid-cols-2"
+              >
                 {reports.map((report) => (
                   <div
                     key={report.id}
-                    className="flex h-full flex-1 flex-col justify-between rounded-3xl border border-[#0b2e1e]/10 bg-white p-6 sm:p-8 shadow-xs transition-all hover:border-[#0b2e1e]/25 hover:shadow-md"
+                    className="flex h-full flex-1 flex-col justify-between rounded-3xl border border-[#0b2e1e]/10 bg-white p-6 shadow-xs transition-all hover:border-[#0b2e1e]/25 hover:shadow-md sm:p-8"
                   >
-                    <div className="flex flex-col flex-1">
+                    <div className="flex flex-1 flex-col">
                       <div className="mb-4 flex items-center justify-between gap-3">
-                        <span className="rounded-full bg-[#0b2e1e] px-3 py-1 font-display text-xs font-bold text-[#d4af37]">
+                        <span className="font-display rounded-full bg-[#0b2e1e] px-3 py-1 text-xs font-bold text-[#d4af37]">
                           {report.year} Annual Report
                         </span>
                         {report.file_size && (
@@ -174,16 +187,17 @@ export default async function ReportsPage({
                           </span>
                         )}
                       </div>
-                      <div className="flex items-start gap-3 flex-1">
+                      <div className="flex flex-1 items-start gap-3">
                         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#f4efe6] text-[#0b2e1e]">
                           <FileText className="h-5 w-5" />
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-display text-lg font-bold text-[#0b2e1e] min-h-[3rem] line-clamp-2 flex items-center">
+                          <h3 className="font-display line-clamp-2 flex min-h-[3rem] items-center text-lg font-bold text-[#0b2e1e]">
                             {report.title}
                           </h3>
                           <p className="mt-1 text-xs text-[#6b7280]">
-                            Audited by community-nominated treasurer & approved by the executive committee.
+                            Audited by community-nominated treasurer & approved
+                            by the executive committee.
                           </p>
                         </div>
                       </div>

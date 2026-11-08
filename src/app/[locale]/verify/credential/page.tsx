@@ -7,7 +7,10 @@ import {
   calculateExpiryDate,
   type TeamMember,
 } from "@/content/team";
-import { createPublicClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import {
+  createPublicClient,
+  isSupabaseConfigured,
+} from "@/lib/supabase/server";
 import {
   ShieldCheck,
   ShieldAlert,
@@ -56,7 +59,9 @@ export default async function CredentialVerificationPage({
       const { data, error } = await supabase
         .from("team_members")
         .select("*")
-        .or(`member_id.ilike.${memberCode},id.ilike.${memberCode.toLowerCase()}`)
+        .or(
+          `member_id.ilike.${memberCode},id.ilike.${memberCode.toLowerCase()}`
+        )
         .maybeSingle();
 
       if (!error && data) {
@@ -112,19 +117,19 @@ export default async function CredentialVerificationPage({
   }
 
   const isValid =
-    member &&
-    !member.isInactive &&
-    member.verificationStatus !== "suspended";
+    member && !member.isInactive && member.verificationStatus !== "suspended";
 
-  const memberPhoto = member?.photo ? resolveMemberPhoto(member.photo) : undefined;
+  const memberPhoto = member?.photo
+    ? resolveMemberPhoto(member.photo)
+    : undefined;
   const issueDate = member?.issueDate || "2026-01-01";
   const expiryDate = member?.expiryDate || calculateExpiryDate(issueDate, 3);
 
   return (
-    <div className="min-h-screen bg-[#f8faf8] dark:bg-[#06180e] py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
+    <div className="flex min-h-screen items-center justify-center bg-[#f8faf8] px-4 py-12 sm:px-6 lg:px-8 dark:bg-[#06180e]">
       <div className="w-full max-w-lg space-y-6">
         {/* Verification Status Card */}
-        <div className="overflow-hidden rounded-3xl border border-[#c99a45]/40 bg-white dark:bg-[#0b2416] shadow-xl">
+        <div className="overflow-hidden rounded-3xl border border-[#c99a45]/40 bg-white shadow-xl dark:bg-[#0b2416]">
           {/* Header Banner */}
           <div
             className={`p-6 text-center text-white ${
@@ -133,7 +138,7 @@ export default async function CredentialVerificationPage({
                 : "bg-gradient-to-br from-red-900 to-amber-950"
             }`}
           >
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 ring-1 ring-white/20 mb-4 backdrop-blur-xs">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 ring-1 ring-white/20 backdrop-blur-xs">
               {isValid ? (
                 <ShieldCheck className="h-10 w-10 text-[#f5d78e]" />
               ) : (
@@ -141,33 +146,37 @@ export default async function CredentialVerificationPage({
               )}
             </div>
 
-            <div className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider mb-2 bg-white/15 backdrop-blur-xs">
+            <div className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-bold tracking-wider uppercase backdrop-blur-xs">
               {isValid ? (
                 <>
                   <CheckCircle2 className="h-3.5 w-3.5 text-emerald-300" />
-                  <span className="text-emerald-200">Verified Official Credential</span>
+                  <span className="text-emerald-200">
+                    Verified Official Credential
+                  </span>
                 </>
               ) : (
                 <>
                   <ShieldAlert className="h-3.5 w-3.5 text-red-300" />
-                  <span className="text-red-200">Credential Invalid or Revoked</span>
+                  <span className="text-red-200">
+                    Credential Invalid or Revoked
+                  </span>
                 </>
               )}
             </div>
 
-            <h1 className="font-serif text-xl sm:text-2xl font-bold text-white tracking-wide">
+            <h1 className="font-serif text-xl font-bold tracking-wide text-white sm:text-2xl">
               Buhary Janaza Welfare Society
             </h1>
-            <p className="text-xs text-white/70 mt-1">
+            <p className="mt-1 text-xs text-white/70">
               Mullipothana, Sri Lanka &bull; Reg No: DS/TH/SS/VSSO/2023/01
             </p>
           </div>
 
           {/* Member Details */}
           {member && isValid ? (
-            <div className="p-6 sm:p-7 space-y-6">
+            <div className="space-y-6 p-6 sm:p-7">
               {/* Profile Overview */}
-              <div className="flex items-center gap-4 border-b border-border/60 pb-5">
+              <div className="border-border/60 flex items-center gap-4 border-b pb-5">
                 <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl border-2 border-[#c99a45] bg-[#0c2e1e] shadow-md">
                   {memberPhoto ? (
                     <Image
@@ -185,99 +194,104 @@ export default async function CredentialVerificationPage({
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs font-bold text-[#c99a45] bg-[#0b2e1e] px-2 py-0.5 rounded border border-[#c99a45]/30">
+                    <span className="rounded border border-[#c99a45]/30 bg-[#0b2e1e] px-2 py-0.5 font-mono text-xs font-bold text-[#c99a45]">
                       {member.memberId || memberCode}
                     </span>
-                    <span className="text-[11px] font-bold uppercase text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full">
+                    <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[11px] font-bold text-emerald-600 uppercase dark:text-emerald-400">
                       Active Officer
                     </span>
                   </div>
-                  <h2 className="text-lg font-bold text-text mt-1">{member.name}</h2>
-                  <p className="text-xs font-semibold text-primary">
+                  <h2 className="text-text mt-1 text-lg font-bold">
+                    {member.name}
+                  </h2>
+                  <p className="text-primary text-xs font-semibold">
                     {member.role[validLocale] || member.role.en}
                   </p>
                 </div>
               </div>
 
               {/* Credential Attributes */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
+              <div className="grid grid-cols-1 gap-3.5 text-xs sm:grid-cols-2">
                 {member.nic && (
-                  <div className="p-3 rounded-xl bg-muted/40 border border-border/60">
-                    <span className="text-text-muted text-[11px] font-bold uppercase tracking-wider block">
+                  <div className="bg-muted/40 border-border/60 rounded-xl border p-3">
+                    <span className="text-text-muted block text-[11px] font-bold tracking-wider uppercase">
                       National Identity Card (NIC)
                     </span>
-                    <span className="font-mono font-bold text-text text-sm">
+                    <span className="text-text font-mono text-sm font-bold">
                       {member.nic}
                     </span>
                   </div>
                 )}
 
-                <div className="p-3 rounded-xl bg-muted/40 border border-border/60">
-                  <span className="text-text-muted text-[11px] font-bold uppercase tracking-wider block">
+                <div className="bg-muted/40 border-border/60 rounded-xl border p-3">
+                  <span className="text-text-muted block text-[11px] font-bold tracking-wider uppercase">
                     Contact Hotline
                   </span>
                   <a
                     href={`tel:${member.phone}`}
-                    className="font-mono font-bold text-primary text-sm hover:underline"
+                    className="text-primary font-mono text-sm font-bold hover:underline"
                   >
                     {member.phone}
                   </a>
                 </div>
 
-                <div className="p-3 rounded-xl bg-muted/40 border border-border/60">
-                  <span className="text-text-muted text-[11px] font-bold uppercase tracking-wider block">
+                <div className="bg-muted/40 border-border/60 rounded-xl border p-3">
+                  <span className="text-text-muted block text-[11px] font-bold tracking-wider uppercase">
                     Issue Date
                   </span>
-                  <span className="font-mono font-bold text-text text-sm">
+                  <span className="text-text font-mono text-sm font-bold">
                     {issueDate}
                   </span>
                 </div>
 
-                <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30">
-                  <span className="text-emerald-700 dark:text-emerald-400 text-[11px] font-bold uppercase tracking-wider block">
+                <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3">
+                  <span className="block text-[11px] font-bold tracking-wider text-emerald-700 uppercase dark:text-emerald-400">
                     Valid Thru (3 Years)
                   </span>
-                  <span className="font-mono font-bold text-emerald-800 dark:text-emerald-200 text-sm">
+                  <span className="font-mono text-sm font-bold text-emerald-800 dark:text-emerald-200">
                     {expiryDate}
                   </span>
                 </div>
               </div>
 
               {/* Address & Authority Details */}
-              <div className="p-3.5 rounded-xl bg-muted/30 border border-border/60 space-y-1.5 text-xs">
-                <div className="flex items-start gap-2 text-text-muted">
-                  <MapPin className="h-4 w-4 shrink-0 text-primary mt-0.5" />
+              <div className="bg-muted/30 border-border/60 space-y-1.5 rounded-xl border p-3.5 text-xs">
+                <div className="text-text-muted flex items-start gap-2">
+                  <MapPin className="text-primary mt-0.5 h-4 w-4 shrink-0" />
                   <span>
-                    <strong className="text-text">Registered Address:</strong> {member.address}
+                    <strong className="text-text">Registered Address:</strong>{" "}
+                    {member.address}
                   </span>
                 </div>
-                <div className="flex items-start gap-2 text-text-muted">
-                  <Building2 className="h-4 w-4 shrink-0 text-primary mt-0.5" />
+                <div className="text-text-muted flex items-start gap-2">
+                  <Building2 className="text-primary mt-0.5 h-4 w-4 shrink-0" />
                   <span>
-                    <strong className="text-text">Authority:</strong> Authorized for 24/7 emergency
-                    funeral rites, logistics &amp; cemetery welfare coordination.
+                    <strong className="text-text">Authority:</strong> Authorized
+                    for 24/7 emergency funeral rites, logistics &amp; cemetery
+                    welfare coordination.
                   </span>
                 </div>
               </div>
             </div>
           ) : (
-            <div className="p-6 sm:p-7 text-center space-y-4">
-              <p className="text-sm text-text-muted">
-                The credential ID <strong>{memberCode || "UNKNOWN"}</strong> could not be verified
-                against the official BJWS registry or has been suspended.
+            <div className="space-y-4 p-6 text-center sm:p-7">
+              <p className="text-text-muted text-sm">
+                The credential ID <strong>{memberCode || "UNKNOWN"}</strong>{" "}
+                could not be verified against the official BJWS registry or has
+                been suspended.
               </p>
-              <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-800 dark:text-amber-200">
-                Please contact the BJWS Secretariat immediately if you suspect an unauthorized or
-                counterfeit credential.
+              <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-xs text-amber-800 dark:text-amber-200">
+                Please contact the BJWS Secretariat immediately if you suspect
+                an unauthorized or counterfeit credential.
               </div>
             </div>
           )}
 
           {/* Footer Controls */}
-          <div className="border-t border-border/60 bg-muted/30 p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+          <div className="border-border/60 bg-muted/30 flex flex-col items-center justify-between gap-3 border-t p-4 text-xs sm:flex-row sm:p-5">
             <Link
               href={`/${validLocale}`}
-              className="inline-flex items-center gap-1.5 font-bold text-primary hover:underline"
+              className="text-primary inline-flex items-center gap-1.5 font-bold hover:underline"
             >
               <span>Visit Official Website</span>
               <ExternalLink className="h-3.5 w-3.5" />
@@ -285,7 +299,7 @@ export default async function CredentialVerificationPage({
 
             <a
               href="tel:0776227323"
-              className="rounded-full bg-[#0b2e1e] hover:bg-[#124d34] text-[#f5d78e] px-4 py-2 font-bold flex items-center gap-2 shadow-xs transition-colors"
+              className="flex items-center gap-2 rounded-full bg-[#0b2e1e] px-4 py-2 font-bold text-[#f5d78e] shadow-xs transition-colors hover:bg-[#124d34]"
             >
               <Phone className="h-3.5 w-3.5" />
               <span>Emergency: 077 622 7323</span>

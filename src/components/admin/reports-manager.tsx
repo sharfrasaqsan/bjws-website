@@ -120,7 +120,11 @@ export function ReportsManager({ initialReports }: ReportsManagerProps) {
         {/* Filter Pills */}
         <div className="flex items-center gap-1.5">
           {[
-            { key: "all" as const, label: "All Reports", count: reports.length },
+            {
+              key: "all" as const,
+              label: "All Reports",
+              count: reports.length,
+            },
             {
               key: "published" as const,
               label: "Live Published",
@@ -145,7 +149,7 @@ export function ReportsManager({ initialReports }: ReportsManagerProps) {
               >
                 <span>{tab.label}</span>
                 <span
-                  className={`rounded-full px-1.5 py-0.2 text-[10px] font-bold ${
+                  className={`py-0.2 rounded-full px-1.5 text-[10px] font-bold ${
                     isSelected
                       ? "bg-white/20 text-white"
                       : "bg-[#e6e4dc] text-[#6b7280]"
@@ -183,13 +187,14 @@ export function ReportsManager({ initialReports }: ReportsManagerProps) {
 
       {/* Upload Form Card */}
       {showUpload && (
-        <div className="overflow-hidden rounded-2xl border border-[#e6e4dc] border-t-4 border-t-[#c99a45] bg-white p-6 shadow-sm sm:p-8">
+        <div className="overflow-hidden rounded-2xl border border-t-4 border-[#e6e4dc] border-t-[#c99a45] bg-white p-6 shadow-sm sm:p-8">
           <div className="mb-6 border-b border-[#e6e4dc] pb-4">
             <h2 className="font-serif text-lg font-bold text-[#0b2e1e]">
               Upload Audited Financial Report (PDF)
             </h2>
             <p className="mt-1 text-xs text-[#6b7280]">
-              Files are securely uploaded directly to Supabase Storage and made accessible on the public transparency page.
+              Files are securely uploaded directly to Supabase Storage and made
+              accessible on the public transparency page.
             </p>
           </div>
 
@@ -248,7 +253,8 @@ export function ReportsManager({ initialReports }: ReportsManagerProps) {
                 htmlFor="file"
                 className="mb-1 block text-xs font-semibold text-[#1c2420]"
               >
-                Audited Document (.pdf only, max 20MB) <span className="text-red-500">*</span>
+                Audited Document (.pdf only, max 20MB){" "}
+                <span className="text-red-500">*</span>
               </label>
               <div className="rounded-xl border border-dashed border-[#cbd5e1] bg-[#fbfaf6] p-4 text-center">
                 <Upload className="mx-auto h-8 w-8 text-[#9ca3af]" />
@@ -302,7 +308,9 @@ export function ReportsManager({ initialReports }: ReportsManagerProps) {
               >
                 <CheckCircle2 className="h-3.5 w-3.5 text-[#c99a45]" />
                 <span>
-                  {isUploading ? "Uploading to Storage..." : "Upload & Register Report"}
+                  {isUploading
+                    ? "Uploading to Storage..."
+                    : "Upload & Register Report"}
                 </span>
               </button>
             </div>
@@ -317,7 +325,8 @@ export function ReportsManager({ initialReports }: ReportsManagerProps) {
             No reports registered
           </p>
           <p className="mt-1 text-xs text-[#6b7280]">
-            No audited financial records are currently filed under &ldquo;{filter}&rdquo;.
+            No audited financial records are currently filed under &ldquo;
+            {filter}&rdquo;.
           </p>
         </div>
       ) : (

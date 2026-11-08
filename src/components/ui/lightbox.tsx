@@ -102,7 +102,11 @@ export function Lightbox({
       } else if (e.key === "ArrowLeft") {
         e.preventDefault();
         handlePrev();
-      } else if (e.key === "+" || e.key === "=" || e.key.toLowerCase() === "z") {
+      } else if (
+        e.key === "+" ||
+        e.key === "=" ||
+        e.key.toLowerCase() === "z"
+      ) {
         e.preventDefault();
         toggleZoom();
       } else if (e.key === "-") {
@@ -180,16 +184,16 @@ export function Lightbox({
       role="dialog"
       aria-modal="true"
       aria-label="Image Preview Lightbox"
-      className="fixed inset-0 z-50 flex flex-col bg-black/95 backdrop-blur-md select-none animate-in fade-in duration-200"
+      className="animate-in fade-in fixed inset-0 z-50 flex flex-col bg-black/95 backdrop-blur-md duration-200 select-none"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
       {/* TOP HEADER CONTROLS BAR */}
-      <header className="relative z-20 flex items-center justify-between px-4 py-3 sm:px-6 sm:py-4 border-b border-white/10 bg-black/40 backdrop-blur-md text-white">
+      <header className="relative z-20 flex items-center justify-between border-b border-white/10 bg-black/40 px-4 py-3 text-white backdrop-blur-md sm:px-6 sm:py-4">
         {/* Category Badge & Image Counter */}
         <div className="flex items-center gap-3">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#124d34] text-[#d4af37] px-3 py-1 font-serif text-xs font-bold border border-[#c99a45]/30 shadow-xs">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-[#c99a45]/30 bg-[#124d34] px-3 py-1 font-serif text-xs font-bold text-[#d4af37] shadow-xs">
             <Tag className="h-3 w-3" />
             <span>{categoryTitle}</span>
           </span>
@@ -206,8 +210,10 @@ export function Lightbox({
             type="button"
             onClick={toggleZoom}
             aria-label={zoomLevel > 1 ? "Zoom Out" : "Zoom In"}
-            title={zoomLevel > 1 ? "Zoom Out (or press -)" : "Zoom In (or press +)"}
-            className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all cursor-pointer"
+            title={
+              zoomLevel > 1 ? "Zoom Out (or press -)" : "Zoom In (or press +)"
+            }
+            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl bg-white/10 text-white transition-all hover:bg-white/20"
           >
             {zoomLevel > 1 ? (
               <ZoomOut className="h-4 w-4" />
@@ -222,7 +228,7 @@ export function Lightbox({
             onClick={toggleFullscreen}
             aria-label={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
             title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
-            className="hidden sm:flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all cursor-pointer"
+            className="hidden h-9 w-9 cursor-pointer items-center justify-center rounded-xl bg-white/10 text-white transition-all hover:bg-white/20 sm:flex"
           >
             {isFullscreen ? (
               <Minimize2 className="h-4 w-4" />
@@ -237,7 +243,7 @@ export function Lightbox({
             onClick={handleCopyLink}
             aria-label="Copy image link"
             title="Copy image link"
-            className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all cursor-pointer"
+            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl bg-white/10 text-white transition-all hover:bg-white/20"
           >
             {copied ? (
               <Check className="h-4 w-4 text-emerald-400" />
@@ -252,7 +258,7 @@ export function Lightbox({
             onClick={onClose}
             aria-label="Close Lightbox"
             title="Close (Esc)"
-            className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/15 hover:bg-red-600/80 text-white transition-all ml-1 cursor-pointer"
+            className="ml-1 flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl bg-white/15 text-white transition-all hover:bg-red-600/80"
           >
             <X className="h-4 w-4" />
           </button>
@@ -261,7 +267,7 @@ export function Lightbox({
 
       {/* MAIN VIEWPORT DISPLAY AREA */}
       <main
-        className="relative flex-1 flex items-center justify-center overflow-hidden p-2 sm:p-6"
+        className="relative flex flex-1 items-center justify-center overflow-hidden p-2 sm:p-6"
         onClick={() => {
           if (zoomLevel > 1) setZoomLevel(1);
         }}
@@ -276,7 +282,7 @@ export function Lightbox({
             }}
             aria-label="Previous Image"
             title="Previous (Left Arrow)"
-            className="absolute left-2 sm:left-6 z-20 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-black/60 hover:bg-[#124d34] text-white backdrop-blur-md border border-white/15 shadow-xl transition-all hover:scale-105 active:scale-95 cursor-pointer"
+            className="absolute left-2 z-20 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-black/60 text-white shadow-xl backdrop-blur-md transition-all hover:scale-105 hover:bg-[#124d34] active:scale-95 sm:left-6 sm:h-12 sm:w-12"
           >
             <ChevronLeft className="h-6 w-6" />
           </button>
@@ -284,7 +290,7 @@ export function Lightbox({
 
         {/* Central High-Res Photo Container */}
         <div
-          className="relative max-h-[72vh] sm:max-h-[78vh] w-full h-full flex items-center justify-center transition-transform duration-300 ease-out cursor-zoom-in"
+          className="relative flex h-full max-h-[72vh] w-full cursor-zoom-in items-center justify-center transition-transform duration-300 ease-out sm:max-h-[78vh]"
           style={{
             transform: `scale(${zoomLevel})`,
             cursor: zoomLevel > 1 ? "zoom-out" : "zoom-in",
@@ -314,7 +320,7 @@ export function Lightbox({
             }}
             aria-label="Next Image"
             title="Next (Right Arrow)"
-            className="absolute right-2 sm:right-6 z-20 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-black/60 hover:bg-[#124d34] text-white backdrop-blur-md border border-white/15 shadow-xl transition-all hover:scale-105 active:scale-95 cursor-pointer"
+            className="absolute right-2 z-20 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-black/60 text-white shadow-xl backdrop-blur-md transition-all hover:scale-105 hover:bg-[#124d34] active:scale-95 sm:right-6 sm:h-12 sm:w-12"
           >
             <ChevronRight className="h-6 w-6" />
           </button>
@@ -322,13 +328,13 @@ export function Lightbox({
       </main>
 
       {/* BOTTOM CAPTION BAR */}
-      <footer className="relative z-20 px-4 py-3 sm:px-6 bg-black/50 backdrop-blur-md border-t border-white/10 space-y-2">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 max-w-5xl mx-auto">
+      <footer className="relative z-20 space-y-2 border-t border-white/10 bg-black/50 px-4 py-3 backdrop-blur-md sm:px-6">
+        <div className="mx-auto flex max-w-5xl flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-0.5">
-            <h3 className="font-serif text-sm sm:text-base font-semibold text-white drop-shadow-sm line-clamp-2">
+            <h3 className="line-clamp-2 font-serif text-sm font-semibold text-white drop-shadow-sm sm:text-base">
               {caption}
             </h3>
-            <p className="text-xs text-[#d4af37] font-medium flex items-center gap-1.5">
+            <p className="flex items-center gap-1.5 text-xs font-medium text-[#d4af37]">
               <Sparkles className="h-3 w-3" />
               <span>Buhary Janaza Welfare Society Official Archive</span>
             </p>
@@ -338,7 +344,7 @@ export function Lightbox({
             <button
               type="button"
               onClick={() => setShowThumbnails((p) => !p)}
-              className="self-start sm:self-auto text-[11px] font-semibold text-white/70 hover:text-white underline underline-offset-2 cursor-pointer transition-colors"
+              className="cursor-pointer self-start text-[11px] font-semibold text-white/70 underline underline-offset-2 transition-colors hover:text-white sm:self-auto"
             >
               {showThumbnails ? "Hide Thumbnails" : "Show Thumbnails"}
             </button>
@@ -347,8 +353,8 @@ export function Lightbox({
 
         {/* BOTTOM THUMBNAIL CAROUSEL STRIP */}
         {showThumbnails && images.length > 1 && (
-          <div className="max-w-5xl mx-auto pt-1 pb-1">
-            <div className="flex items-center gap-2 overflow-x-auto py-1 scrollbar-thin scrollbar-thumb-white/20">
+          <div className="mx-auto max-w-5xl pt-1 pb-1">
+            <div className="flex scrollbar-thin scrollbar-thumb-white/20 items-center gap-2 overflow-x-auto py-1">
               {images.map((img, idx) => {
                 const isSelected = idx === currentIndex;
                 const thumbUrl = img.src;
@@ -362,10 +368,10 @@ export function Lightbox({
                       onNavigate(idx);
                     }}
                     aria-label={`Jump to photo ${idx + 1}`}
-                    className={`relative h-12 w-16 sm:h-14 sm:w-20 shrink-0 rounded-lg overflow-hidden transition-all duration-200 cursor-pointer ${
+                    className={`relative h-12 w-16 shrink-0 cursor-pointer overflow-hidden rounded-lg transition-all duration-200 sm:h-14 sm:w-20 ${
                       isSelected
-                        ? "ring-2 ring-[#c99a45] scale-105 opacity-100 shadow-md"
-                        : "opacity-40 hover:opacity-85 border border-white/20"
+                        ? "scale-105 opacity-100 shadow-md ring-2 ring-[#c99a45]"
+                        : "border border-white/20 opacity-40 hover:opacity-85"
                     }`}
                   >
                     <Image

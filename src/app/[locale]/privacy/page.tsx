@@ -104,7 +104,7 @@ export default async function PrivacyPage({
                       <span className="font-display text-sm font-bold text-[#d4af37]">
                         Section {sec.number}
                       </span>
-                      <h2 className="mt-1 font-display text-xl font-bold text-[#0b2e1e] sm:text-2xl">
+                      <h2 className="font-display mt-1 text-xl font-bold text-[#0b2e1e] sm:text-2xl">
                         {sec.title}
                       </h2>
                       <p className="mt-4 text-base leading-relaxed text-[#4b5563]">

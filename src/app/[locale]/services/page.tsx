@@ -82,7 +82,9 @@ export default async function ServicesPage({
       title: t("service2Title"),
       desc: t("service2Desc"),
       icon: Sparkles,
-      image: assets.serviceCemeteryMaintenance || "/images/gallery/shramadana-02.webp",
+      image:
+        assets.serviceCemeteryMaintenance ||
+        "/images/gallery/shramadana-02.webp",
       imageAlt: "Mahallah Cemetery Shramadhana Clean-Up",
       imageBadge: "1.5 Acres Under Care",
       reverse: true,
@@ -139,7 +141,8 @@ export default async function ServicesPage({
       desc: t("service5Desc"),
       icon: Users,
       image: assets.serviceShramadanaCampaigns,
-      imageAlt: "BJWS Community Shramadana and Environmental Cleanliness Campaign",
+      imageAlt:
+        "BJWS Community Shramadana and Environmental Cleanliness Campaign",
       imageBadge: "Community Shramadana",
       reverse: false,
       isEmergency: false,
@@ -226,7 +229,7 @@ export default async function ServicesPage({
                   id={svc.id}
                   as="article"
                   variant={svc.reverse ? "left" : "right"}
-                  className={`scroll-mt-24 rounded-3xl border border-[#0b2e1e]/10 bg-white p-6 sm:p-10 lg:p-12 shadow-sm transition-all duration-300 hover:shadow-md ${
+                  className={`scroll-mt-24 rounded-3xl border border-[#0b2e1e]/10 bg-white p-6 shadow-sm transition-all duration-300 hover:shadow-md sm:p-10 lg:p-12 ${
                     svc.isEmergency ? "ring-2 ring-[#0b2e1e]/15" : ""
                   }`}
                 >
@@ -248,7 +251,7 @@ export default async function ServicesPage({
                         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
 
                         {/* Floating Status / Key Stat Badge */}
-                        <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
+                        <div className="absolute right-4 bottom-4 left-4 flex items-center justify-between">
                           <span className="inline-flex items-center gap-1.5 rounded-full bg-[#0b2e1e]/90 px-3.5 py-1.5 text-xs font-semibold text-[#fbfaf6] shadow-md backdrop-blur-xs">
                             <span className="h-2 w-2 rounded-full bg-[#d4af37]" />
                             {svc.imageBadge}
@@ -265,7 +268,10 @@ export default async function ServicesPage({
                       {/* Eyebrow & Category */}
                       <div className="mb-3 flex flex-wrap items-center gap-2.5">
                         <span className="inline-flex items-center gap-1.5 rounded-full bg-[#e8f3ee] px-3 py-1 text-xs font-semibold text-[#0b2e1e]">
-                          <Icon className="h-3.5 w-3.5 text-[#0b2e1e]" strokeWidth={2} />
+                          <Icon
+                            className="h-3.5 w-3.5 text-[#0b2e1e]"
+                            strokeWidth={2}
+                          />
                           {svc.badge}
                         </span>
                         {svc.isEmergency && (
@@ -289,8 +295,11 @@ export default async function ServicesPage({
                       {/* Operational Checklist Box */}
                       <div className="mt-6 rounded-2xl border border-[#0b2e1e]/10 bg-[#fbfaf6] p-5 sm:p-6">
                         <div className="mb-3.5 flex items-center gap-2">
-                          <ShieldCheck className="h-4 w-4 text-[#0b2e1e]" strokeWidth={2} />
-                          <h3 className="font-sans text-xs font-bold uppercase tracking-wider text-[#0b2e1e]">
+                          <ShieldCheck
+                            className="h-4 w-4 text-[#0b2e1e]"
+                            strokeWidth={2}
+                          />
+                          <h3 className="font-sans text-xs font-bold tracking-wider text-[#0b2e1e] uppercase">
                             {t("operationalScope")}
                           </h3>
                         </div>
@@ -336,7 +345,10 @@ export default async function ServicesPage({
           </div>
 
           {/* Emergency Callout Card Banner */}
-          <ScrollReveal variant="scale" className="relative mt-20 overflow-hidden rounded-3xl bg-[#0b2e1e] p-8 text-white shadow-xl sm:p-12 lg:p-14">
+          <ScrollReveal
+            variant="scale"
+            className="relative mt-20 overflow-hidden rounded-3xl bg-[#0b2e1e] p-8 text-white shadow-xl sm:p-12 lg:p-14"
+          >
             <IslamicPattern
               className="pointer-events-none absolute inset-0 text-white"
               opacity={0.04}

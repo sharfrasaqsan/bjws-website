@@ -11,4 +11,3 @@ export default async function VerifyRootRedirectPage({
 
   redirect(`/en/verify/credential?id=${qId}&token=${qToken}`);
 }
-

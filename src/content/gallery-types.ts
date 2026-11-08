@@ -71,4 +71,3 @@ export interface GalleryImage {
 // Universal compact blur placeholder for fast LQIP
 export const DEFAULT_BLUR =
   "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAAAwAQCdASoQAAoAAkA4JaQAA3AE/u8AAA==";
-

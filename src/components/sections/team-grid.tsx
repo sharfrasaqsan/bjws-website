@@ -44,27 +44,29 @@ export function TeamGrid({ members, locale, translations }: TeamGridProps) {
   return (
     <div className="space-y-8">
       {/* Controls Strip: Member Count and Search */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-[#e6e4dc] pb-6">
-        <div className="text-xs sm:text-sm font-semibold text-text-muted">
-          <span>{translations.filterAll} ({filteredMembers.length})</span>
+      <div className="flex flex-col gap-3 border-b border-[#e6e4dc] pb-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="text-text-muted text-xs font-semibold sm:text-sm">
+          <span>
+            {translations.filterAll} ({filteredMembers.length})
+          </span>
         </div>
 
         {/* Search Input */}
-        <div className="relative w-full sm:w-72 shrink-0">
-          <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
+        <div className="relative w-full shrink-0 sm:w-72">
+          <Search className="text-text-muted absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2" />
           <input
             type="search"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={translations.searchPlaceholder}
-            className="w-full rounded-full border border-border bg-surface pl-10 pr-4 py-2 text-xs sm:text-sm text-text placeholder:text-text-muted/70 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary shadow-2xs"
+            className="border-border bg-surface text-text placeholder:text-text-muted/70 focus:border-primary focus:ring-primary w-full rounded-full border py-2 pr-4 pl-10 text-xs shadow-2xs focus:ring-1 focus:outline-none sm:text-sm"
           />
         </div>
       </div>
 
       {/* Empty State */}
       {filteredMembers.length === 0 && (
-        <div className="rounded-2xl border border-dashed border-border p-12 text-center text-text-muted">
+        <div className="border-border text-text-muted rounded-2xl border border-dashed p-12 text-center">
           <p className="text-sm font-medium">{translations.noResults}</p>
         </div>
       )}
@@ -72,7 +74,7 @@ export function TeamGrid({ members, locale, translations }: TeamGridProps) {
       {/* Team Cards Grid: Responsive 4-Column Directory */}
       <ScrollRevealGroup
         staggerMs={40}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6"
+        className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4"
       >
         {filteredMembers.map((member) => {
           const roleLabel = member.role[locale] || member.role.en;
@@ -81,22 +83,22 @@ export function TeamGrid({ members, locale, translations }: TeamGridProps) {
             (locale === "ta"
               ? "தற்காலிக இடைநிறுத்தம்"
               : locale === "si"
-              ? "තාවකාලිකව අක්‍රියයි"
-              : "Temporary Inactive");
+                ? "තාවකාලිකව අක්‍රියයි"
+                : "Temporary Inactive");
 
           return (
             <article
               key={member.id}
-              className={`group relative flex flex-col justify-between overflow-hidden rounded-2xl sm:rounded-3xl border bg-surface shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-lg h-full ${
+              className={`group bg-surface relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:rounded-3xl ${
                 member.isInactive
                   ? "border-amber-500/35 hover:border-amber-500/60"
-                  : "border-[#e6e4dc] hover:border-primary/40"
+                  : "hover:border-primary/40 border-[#e6e4dc]"
               }`}
             >
               {/* Card Header & Photo (Refined Portrait 4:5 with Balanced Height) */}
               <div className="relative">
                 {/* Photo container */}
-                <div className="relative aspect-[3/4] max-h-[360px] sm:max-h-[380px] w-full overflow-hidden bg-[#0c2e1e]">
+                <div className="relative aspect-[3/4] max-h-[360px] w-full overflow-hidden bg-[#0c2e1e] sm:max-h-[380px]">
                   {member.photo ? (
                     <Image
                       src={resolveMemberPhoto(member.photo) || ""}
@@ -107,7 +109,7 @@ export function TeamGrid({ members, locale, translations }: TeamGridProps) {
                     />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#0c2e1e] via-[#082015] to-[#04120c]">
-                      <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-[#c99a45]/15 border border-[#c99a45]/30 text-[#f5eedf] font-display text-2xl font-bold tracking-wider">
+                      <div className="font-display flex h-20 w-20 items-center justify-center rounded-2xl border border-[#c99a45]/30 bg-[#c99a45]/15 text-2xl font-bold tracking-wider text-[#f5eedf]">
                         {member.initials}
                       </div>
                     </div>
@@ -119,9 +121,9 @@ export function TeamGrid({ members, locale, translations }: TeamGridProps) {
                   />
 
                   {/* Status Badge on Photo (Active vs Temporary Inactive) */}
-                  <div className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 flex items-center">
+                  <div className="absolute top-2.5 right-2.5 flex items-center sm:top-3 sm:right-3">
                     {member.isInactive ? (
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-950/90 px-2.5 py-0.5 text-[10px] font-bold text-amber-200 ring-1 ring-amber-500/50 backdrop-blur-xs shadow-xs">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-950/90 px-2.5 py-0.5 text-[10px] font-bold text-amber-200 shadow-xs ring-1 ring-amber-500/50 backdrop-blur-xs">
                         <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
                         <span>{inactiveLabel}</span>
                       </span>
@@ -134,15 +136,15 @@ export function TeamGrid({ members, locale, translations }: TeamGridProps) {
                   </div>
 
                   {/* Bottom Avatar Monogram & Name Overlay */}
-                  <div className="absolute bottom-2.5 left-3 right-3 sm:bottom-3 sm:left-3.5 sm:right-3.5 flex items-end gap-2.5">
-                    <div className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#124d34] to-[#041a10] font-display text-xs sm:text-sm font-bold text-[#f5eedf] shadow-md ring-1.5 ring-[#c99a45]/60">
+                  <div className="absolute right-3 bottom-2.5 left-3 flex items-end gap-2.5 sm:right-3.5 sm:bottom-3 sm:left-3.5">
+                    <div className="font-display ring-1.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#124d34] to-[#041a10] text-xs font-bold text-[#f5eedf] shadow-md ring-[#c99a45]/60 sm:h-11 sm:w-11 sm:rounded-2xl sm:text-sm">
                       {member.initials}
                     </div>
                     <div className="min-w-0 flex-1 text-white">
-                      <span className="inline-block text-[10px] sm:text-[11px] font-medium text-[#d4a359] uppercase tracking-wider truncate max-w-full block">
+                      <span className="block inline-block max-w-full truncate text-[10px] font-medium tracking-wider text-[#d4a359] uppercase sm:text-[11px]">
                         {roleLabel}
                       </span>
-                      <h3 className="truncate font-display text-base sm:text-lg font-bold tracking-tight text-white leading-tight">
+                      <h3 className="font-display truncate text-base leading-tight font-bold tracking-tight text-white sm:text-lg">
                         {member.name}
                       </h3>
                     </div>
@@ -151,22 +153,24 @@ export function TeamGrid({ members, locale, translations }: TeamGridProps) {
               </div>
 
               {/* Card Body */}
-              <div className="flex flex-1 flex-col justify-between p-4 sm:p-5 gap-3.5">
+              <div className="flex flex-1 flex-col justify-between gap-3.5 p-4 sm:p-5">
                 {/* Meta details */}
-                <div className="space-y-2 flex-1">
+                <div className="flex-1 space-y-2">
                   {/* Address */}
-                  <div className="flex items-start gap-2 text-xs text-text-muted">
-                    <MapPin className="h-3.5 w-3.5 shrink-0 text-[#c99a45] mt-0.5" />
-                    <span className="leading-relaxed line-clamp-2">{member.address}</span>
+                  <div className="text-text-muted flex items-start gap-2 text-xs">
+                    <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#c99a45]" />
+                    <span className="line-clamp-2 leading-relaxed">
+                      {member.address}
+                    </span>
                   </div>
 
                   {/* Email contact if available */}
                   {member.email ? (
-                    <div className="flex items-center gap-2 text-xs text-text-muted">
+                    <div className="text-text-muted flex items-center gap-2 text-xs">
                       <Mail className="h-3.5 w-3.5 shrink-0 text-[#c99a45]" />
                       <a
                         href={`mailto:${member.email}`}
-                        className="truncate hover:text-primary transition-colors font-medium text-[11px]"
+                        className="hover:text-primary truncate text-[11px] font-medium transition-colors"
                         title={member.email}
                       >
                         {member.email}
@@ -176,7 +180,7 @@ export function TeamGrid({ members, locale, translations }: TeamGridProps) {
                 </div>
 
                 {/* Direct Action Buttons */}
-                <div className="border-t border-border pt-3 mt-auto">
+                <div className="border-border mt-auto border-t pt-3">
                   <div className="flex flex-wrap items-center gap-2">
                     {/* Call Direct or Inactive Notice */}
                     {member.isInactive ? (
@@ -187,7 +191,7 @@ export function TeamGrid({ members, locale, translations }: TeamGridProps) {
                     ) : (
                       <a
                         href={`tel:${member.phone.replace(/\s+/g, "")}`}
-                        className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-[#124d34] hover:bg-[#0b2e1e] text-white px-2.5 py-1.5 text-xs font-semibold shadow-2xs transition-colors"
+                        className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-[#124d34] px-2.5 py-1.5 text-xs font-semibold text-white shadow-2xs transition-colors hover:bg-[#0b2e1e]"
                         title={`${translations.callButton} ${member.name}`}
                       >
                         <Phone className="h-3 w-3 text-[#d4af37]" />
@@ -203,7 +207,7 @@ export function TeamGrid({ members, locale, translations }: TeamGridProps) {
                         )}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-emerald-600/30 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 text-emerald-800 dark:text-emerald-300 px-2.5 py-1.5 text-xs font-semibold transition-colors"
+                        className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-emerald-600/30 bg-emerald-50 px-2.5 py-1.5 text-xs font-semibold text-emerald-800 transition-colors hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-300"
                         title="WhatsApp"
                       >
                         <MessageCircle className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
@@ -217,7 +221,7 @@ export function TeamGrid({ members, locale, translations }: TeamGridProps) {
                         href={`mailto:${member.email}?subject=Inquiry to ${encodeURIComponent(
                           member.name
                         )} - BJWS`}
-                        className="inline-flex items-center justify-center rounded-lg border border-border bg-surface hover:bg-muted text-text-muted hover:text-text p-1.5 transition-colors"
+                        className="border-border bg-surface hover:bg-muted text-text-muted hover:text-text inline-flex items-center justify-center rounded-lg border p-1.5 transition-colors"
                         title={member.email}
                       >
                         <Mail className="h-3.5 w-3.5" />
@@ -233,4 +237,3 @@ export function TeamGrid({ members, locale, translations }: TeamGridProps) {
     </div>
   );
 }
-

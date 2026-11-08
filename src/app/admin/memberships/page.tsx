@@ -58,7 +58,8 @@ export default async function AdminMembershipsPage() {
                   Membership Applications & Ledger
                 </h1>
                 <p className="text-xs text-[#6b7280] sm:text-sm">
-                  Review applicant profiles, verify local Mahallah residency, and approve subscriptions.
+                  Review applicant profiles, verify local Mahallah residency,
+                  and approve subscriptions.
                 </p>
               </div>
             </div>

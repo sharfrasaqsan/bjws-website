@@ -53,11 +53,7 @@ export default async function ContactPage({
   const contacts = [
     {
       role:
-        locale === "ta"
-          ? "தலைவர்"
-          : locale === "si"
-          ? "සභාපති"
-          : "President",
+        locale === "ta" ? "தலைவர்" : locale === "si" ? "සභාපති" : "President",
       name: "A.M. Sahibullah",
       phone: "072 440 9574",
       tel: "0724409574",
@@ -68,8 +64,8 @@ export default async function ContactPage({
         locale === "ta"
           ? "உப தலைவர்"
           : locale === "si"
-          ? "උප සභාපති"
-          : "Vice President",
+            ? "උප සභාපති"
+            : "Vice President",
       name: "A.M.A. Gafoor",
       phone: "075 343 2627",
       tel: "0753432627",
@@ -77,11 +73,7 @@ export default async function ContactPage({
     },
     {
       role:
-        locale === "ta"
-          ? "செயலாளர்"
-          : locale === "si"
-          ? "ලේකම්"
-          : "Secretary",
+        locale === "ta" ? "செயலாளர்" : locale === "si" ? "ලේකම්" : "Secretary",
       name: "A.L.M. Siyam",
       phone: "077 278 2829",
       tel: "0772782829",
@@ -92,8 +84,8 @@ export default async function ContactPage({
         locale === "ta"
           ? "உப செயலாளர்"
           : locale === "si"
-          ? "උප ලේකම්"
-          : "Vice Secretary",
+            ? "උප ලේකම්"
+            : "Vice Secretary",
       name: "M.S. Riyas",
       phone: "072 440 9574",
       tel: "0724409574",
@@ -104,8 +96,8 @@ export default async function ContactPage({
         locale === "ta"
           ? "பொருளாளர்"
           : locale === "si"
-          ? "භාණ්ඩාගාරික"
-          : "Treasurer",
+            ? "භාණ්ඩාගාරික"
+            : "Treasurer",
       name: "M.S. Faizarkhan",
       phone: "075 651 0050",
       tel: "0756510050",
@@ -116,8 +108,8 @@ export default async function ContactPage({
         locale === "ta"
           ? "ஒருங்கிணைப்பாளர் & களப் பணிகள்"
           : locale === "si"
-          ? "සංවිධායක සහ ක්ෂේත්‍ර මෙහෙයුම්"
-          : "Organizer & Field Ops",
+            ? "සංවිධායක සහ ක්ෂේත්‍ර මෙහෙයුම්"
+            : "Organizer & Field Ops",
       name: "A. Abuhuraira",
       phone: "077 622 7323",
       tel: "0776227323",
@@ -128,8 +120,8 @@ export default async function ContactPage({
         locale === "ta"
           ? "ஆங்கில தொடர்பாளர்"
           : locale === "si"
-          ? "ඉංග්‍රීසි සන්නිවේදන"
-          : "English Communications",
+            ? "ඉංග්‍රීසි සන්නිවේදන"
+            : "English Communications",
       name: "N.M. Shamed Nashraff",
       phone: "077 227 1248",
       tel: "0772271248",
@@ -183,7 +175,9 @@ export default async function ContactPage({
         title={t("pageTitle")}
         subtitle={t("subtitle")}
         eyebrow={tCommon("emergencyBadge")}
-        imageSrc={assets.headerContact || "/images/gallery/cemetery-road-01.webp"}
+        imageSrc={
+          assets.headerContact || "/images/gallery/cemetery-road-01.webp"
+        }
         imageAlt="BJWS Office and Contact Location in Mullipothana"
         breadcrumbs={[
           { label: tCommon("home"), href: "/" },
@@ -197,11 +191,11 @@ export default async function ContactPage({
             {/* Left Column: Office Details, Officers, and Location */}
             <ScrollReveal variant="fade-up" className="space-y-8 lg:col-span-5">
               {/* Office Headquarters Card */}
-              <div className="rounded-3xl border border-[#0b2e1e]/10 bg-white p-6 sm:p-8 shadow-sm">
-                <span className="font-sans text-xs font-bold uppercase tracking-wider text-[#b8952b]">
+              <div className="rounded-3xl border border-[#0b2e1e]/10 bg-white p-6 shadow-sm sm:p-8">
+                <span className="font-sans text-xs font-bold tracking-wider text-[#b8952b] uppercase">
                   Official Society Office
                 </span>
-                <h2 className="mt-1 font-display text-2xl font-bold text-[#0b2e1e]">
+                <h2 className="font-display mt-1 text-2xl font-bold text-[#0b2e1e]">
                   {t("officeDetailsTitle")}
                 </h2>
 
@@ -212,10 +206,10 @@ export default async function ContactPage({
                       <MapPin className="h-4 w-4" />
                     </div>
                     <div>
-                      <div className="text-xs font-semibold uppercase tracking-wider text-[#6b7280]">
+                      <div className="text-xs font-semibold tracking-wider text-[#6b7280] uppercase">
                         {t("addressLabel")}
                       </div>
-                      <p className="mt-0.5 font-medium leading-relaxed text-[#2d3748]">
+                      <p className="mt-0.5 leading-relaxed font-medium text-[#2d3748]">
                         {t("addressValue")}
                       </p>
                     </div>
@@ -227,7 +221,7 @@ export default async function ContactPage({
                       <Mail className="h-4 w-4" />
                     </div>
                     <div>
-                      <div className="text-xs font-semibold uppercase tracking-wider text-[#6b7280]">
+                      <div className="text-xs font-semibold tracking-wider text-[#6b7280] uppercase">
                         {t("emailLabel")}
                       </div>
                       <a
@@ -245,7 +239,7 @@ export default async function ContactPage({
                       <Clock className="h-4 w-4" />
                     </div>
                     <div>
-                      <div className="text-xs font-semibold uppercase tracking-wider text-[#6b7280]">
+                      <div className="text-xs font-semibold tracking-wider text-[#6b7280] uppercase">
                         {t("hoursLabel")}
                       </div>
                       <p className="mt-0.5 flex items-center gap-2 font-medium text-[#2d3748]">
@@ -258,10 +252,10 @@ export default async function ContactPage({
               </div>
 
               {/* Officer Direct Lines */}
-              <div className="rounded-3xl border border-[#0b2e1e]/10 bg-white p-6 sm:p-8 shadow-sm">
+              <div className="rounded-3xl border border-[#0b2e1e]/10 bg-white p-6 shadow-sm sm:p-8">
                 <div className="mb-4 flex items-center justify-between border-b border-[#0b2e1e]/10 pb-3">
                   <div>
-                    <span className="font-sans text-xs font-bold uppercase tracking-wider text-[#b8952b]">
+                    <span className="font-sans text-xs font-bold tracking-wider text-[#b8952b] uppercase">
                       Direct Telephone Lines
                     </span>
                     <h3 className="font-display text-lg font-bold text-[#0b2e1e]">
@@ -277,10 +271,10 @@ export default async function ContactPage({
                   {contacts.map((c, idx) => (
                     <div
                       key={idx}
-                      className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 sm:gap-3 py-3.5"
+                      className="flex flex-col items-start justify-between gap-2.5 py-3.5 sm:flex-row sm:items-center sm:gap-3"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#0b2e1e] font-display text-[10px] font-bold text-[#d4af37]">
+                        <span className="font-display flex h-8 w-8 items-center justify-center rounded-lg bg-[#0b2e1e] text-[10px] font-bold text-[#d4af37]">
                           {c.initials}
                         </span>
                         <div>
@@ -294,7 +288,7 @@ export default async function ContactPage({
                       </div>
                       <a
                         href={`tel:${c.tel}`}
-                        className="inline-flex w-full sm:w-auto items-center justify-center gap-1.5 rounded-lg bg-[#e8f3ee] px-3 py-1.5 text-xs font-bold text-[#0b2e1e] transition-colors hover:bg-[#0b2e1e] hover:text-white"
+                        className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-[#e8f3ee] px-3 py-1.5 text-xs font-bold text-[#0b2e1e] transition-colors hover:bg-[#0b2e1e] hover:text-white sm:w-auto"
                       >
                         <PhoneCall className="h-3 w-3" />
                         {c.phone}
@@ -336,7 +330,7 @@ export default async function ContactPage({
 
             {/* Right Column: Contact Inquiry Form */}
             <ScrollReveal variant="fade-up" delay={2} className="lg:col-span-7">
-              <div className="rounded-3xl border border-[#0b2e1e]/10 bg-white p-8 sm:p-10 lg:p-12 shadow-sm">
+              <div className="rounded-3xl border border-[#0b2e1e]/10 bg-white p-8 shadow-sm sm:p-10 lg:p-12">
                 <div className="mb-8 border-b border-[#0b2e1e]/10 pb-6">
                   <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-[#e8f3ee] px-3 py-1 text-xs font-semibold text-[#0b2e1e]">
                     <MessageSquare className="h-3.5 w-3.5 text-[#0b2e1e]" />
@@ -354,7 +348,10 @@ export default async function ContactPage({
 
                 <div className="mt-8 flex items-center gap-2 border-t border-[#0b2e1e]/10 pt-4 text-xs text-[#6b7280]">
                   <ShieldCheck className="h-4 w-4 text-[#0b2e1e]" />
-                  <span>All communications are treated with strict confidentiality and community respect.</span>
+                  <span>
+                    All communications are treated with strict confidentiality
+                    and community respect.
+                  </span>
                 </div>
               </div>
             </ScrollReveal>

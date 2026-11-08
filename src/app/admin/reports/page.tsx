@@ -64,7 +64,8 @@ export default async function AdminReportsPage() {
                   Audited Reports &amp; Storage
                 </h1>
                 <p className="text-xs text-[#6b7280] sm:text-sm">
-                  Upload annual financial reports and official documentation directly to Supabase Storage for community transparency.
+                  Upload annual financial reports and official documentation
+                  directly to Supabase Storage for community transparency.
                 </p>
               </div>
             </div>

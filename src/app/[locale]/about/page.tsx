@@ -22,8 +22,15 @@ import {
   Award,
 } from "lucide-react";
 import { getSiteAssets } from "@/content/site-assets";
-import { getTeamMembers, type TeamMember, resolveMemberPhoto } from "@/content/team";
-import { createPublicClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import {
+  getTeamMembers,
+  type TeamMember,
+  resolveMemberPhoto,
+} from "@/content/team";
+import {
+  createPublicClient,
+  isSupabaseConfigured,
+} from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -80,8 +87,8 @@ export default async function AboutPage({
         locale === "ta"
           ? "சங்கத் தலைமைத்துவம் & பொதுக்கூட்டத் தலைமை"
           : locale === "si"
-          ? "සමිතියේ නායකත්වය සහ මහා සභා මුලසුන"
-          : "Society Leadership & Assembly Chair",
+            ? "සමිතියේ නායකත්වය සහ මහා සභා මුලසුන"
+            : "Society Leadership & Assembly Chair",
     },
     {
       title: t("roleVicePresident"),
@@ -90,8 +97,8 @@ export default async function AboutPage({
         locale === "ta"
           ? "நிர்வாக ஆதரவு & உதவித் தலைமை"
           : locale === "si"
-          ? "විධායක සහාය සහ අනුප්‍රාප්තිකත්වය"
-          : "Executive Support & Deputization",
+            ? "විධායක සහාය සහ අනුප්‍රාප්තිකත්වය"
+            : "Executive Support & Deputization",
     },
     {
       title: t("roleSecretary"),
@@ -100,8 +107,8 @@ export default async function AboutPage({
         locale === "ta"
           ? "செயலகப் பணிகள், கூட்டக்குறிப்புகள் & பதிவேடுகள்"
           : locale === "si"
-          ? "ලේකම් කාර්යාලය, වාර්තා සහ ලේඛන"
-          : "Secretariat, Minutes & Registry",
+            ? "ලේකම් කාර්යාලය, වාර්තා සහ ලේඛන"
+            : "Secretariat, Minutes & Registry",
     },
     {
       title: t("roleViceSecretary"),
@@ -110,8 +117,8 @@ export default async function AboutPage({
         locale === "ta"
           ? "செயலக உதவி & ஆவணப்படுத்தல்"
           : locale === "si"
-          ? "ලේකම් සහාය සහ ලේඛනගත කිරීම"
-          : "Secretarial Support & Documentation",
+            ? "ලේකම් සහාය සහ ලේඛනගත කිරීම"
+            : "Secretarial Support & Documentation",
     },
     {
       title: t("roleTreasurer"),
@@ -120,8 +127,8 @@ export default async function AboutPage({
         locale === "ta"
           ? "கணக்குகள், தணிக்கை & சந்தா சேகரிப்பு"
           : locale === "si"
-          ? "ගිණුම්, විගණන සහ දායකත්ව මුදල්"
-          : "Accounts, Audits & Contributions",
+            ? "ගිණුම්, විගණන සහ දායකත්ව මුදල්"
+            : "Accounts, Audits & Contributions",
     },
     {
       title: t("roleCommittee"),
@@ -130,8 +137,8 @@ export default async function AboutPage({
         locale === "ta"
           ? "சமூக ஆலோசனைகள் & ஷூரா சபை"
           : locale === "si"
-          ? "ප්‍රජා උපදේශනය සහ ෂුරා සභාව"
-          : "Community Consultation & Shura",
+            ? "ප්‍රජා උපදේශනය සහ ෂුරා සභාව"
+            : "Community Consultation & Shura",
     },
     {
       title: t("roleVolunteers"),
@@ -140,8 +147,8 @@ export default async function AboutPage({
         locale === "ta"
           ? "ஜனாஸா உதவி & மையவாடி பராமரிப்பு"
           : locale === "si"
-          ? "அවමංගල්‍ය සහාය සහ සුසාන භූමි නඩත්තුව"
-          : "Funeral Support & Cemetery Upkeep",
+            ? "அවමංගල්‍ය සහාය සහ සුසාන භූමි නඩත්තුව"
+            : "Funeral Support & Cemetery Upkeep",
     },
   ];
 
@@ -189,7 +196,13 @@ export default async function AboutPage({
 
   const getOfficer = (
     id: string,
-    fallback: { name: string; role: string; phone: string; initials: string; photo?: string }
+    fallback: {
+      name: string;
+      role: string;
+      phone: string;
+      initials: string;
+      photo?: string;
+    }
   ) => {
     const member = allTeam.find((m) => m.id === id);
     if (!member) return fallback;
@@ -231,8 +244,8 @@ export default async function AboutPage({
         locale === "ta"
           ? "ஒருங்கிணைப்பாளர் & களச் செயற்பாடுகள்"
           : locale === "si"
-          ? "මෙහෙයුම් සම්බන්ධීකාරක"
-          : "Organizer & Field Operations",
+            ? "මෙහෙයුම් සම්බන්ධීකාරක"
+            : "Organizer & Field Operations",
       phone: "077 622 7323",
       initials: "AA",
       photo: "/images/team/abuhuraira_new.webp",
@@ -278,21 +291,19 @@ export default async function AboutPage({
                   id="about-foreword-pattern"
                 />
                 <div className="relative z-10">
-                  <span className="font-sans text-xs font-bold uppercase tracking-wider text-[#d4af37]">
+                  <span className="font-sans text-xs font-bold tracking-wider text-[#d4af37] uppercase">
                     {t("forewordEyebrow")}
                   </span>
-                  <h2 className="mt-2 font-display text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-4xl">
+                  <h2 className="font-display mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-4xl">
                     {t("forewordTitle")}
                   </h2>
                   <div className="mt-5 space-y-4 text-base leading-relaxed text-[#fbfaf6]/90 sm:text-lg">
-                    <p className="italic">
-                      &ldquo;{t("forewordText")}&rdquo;
-                    </p>
+                    <p className="italic">&ldquo;{t("forewordText")}&rdquo;</p>
                   </div>
                   <div className="mt-8 flex flex-wrap items-center gap-4 border-t border-white/15 pt-6">
                     <div className="flex items-center gap-2">
                       <Award className="h-5 w-5 text-[#d4af37]" />
-                      <span className="text-xs font-semibold uppercase tracking-wider text-white/80">
+                      <span className="text-xs font-semibold tracking-wider text-white/80 uppercase">
                         DS/TH/SS/VSSO/2023/01
                       </span>
                     </div>
@@ -306,8 +317,8 @@ export default async function AboutPage({
 
               {/* Right: Real Photo & Stats Card */}
               <div className="space-y-6 lg:col-span-5">
-                <div className="relative aspect-[1280/785] w-full overflow-hidden rounded-2xl sm:rounded-3xl border border-[#0b2e1e]/15 bg-white shadow-md p-1.5 sm:p-2">
-                  <div className="relative h-full w-full overflow-hidden rounded-xl sm:rounded-2xl bg-white">
+                <div className="relative aspect-[1280/785] w-full overflow-hidden rounded-2xl border border-[#0b2e1e]/15 bg-white p-1.5 shadow-md sm:rounded-3xl sm:p-2">
+                  <div className="relative h-full w-full overflow-hidden rounded-xl bg-white sm:rounded-2xl">
                     <Image
                       src={assets.aboutCommunity}
                       alt="Buhary Janaza Welfare Society Official Registered Signboard Banner"
@@ -320,9 +331,9 @@ export default async function AboutPage({
                 </div>
 
                 {/* Information Pill */}
-                <div className="rounded-2xl border border-[#0b2e1e]/10 bg-white p-3 shadow-xs flex flex-wrap items-center justify-between gap-2">
+                <div className="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-[#0b2e1e]/10 bg-white p-3 shadow-xs">
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-[#0b2e1e] px-3 py-1 text-xs font-bold text-[#d4af37]">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#d4af37] animate-pulse" />
+                    <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#d4af37]" />
                     Serving Since 2023
                   </span>
                   <span className="text-xs font-semibold text-[#0b2e1e]">
@@ -333,16 +344,28 @@ export default async function AboutPage({
                 {/* Stat Highlights Bar */}
                 <div className="grid grid-cols-3 gap-3 rounded-2xl border border-[#0b2e1e]/10 bg-white p-4 text-center shadow-xs">
                   <div>
-                    <div className="font-display text-2xl font-bold text-[#0b2e1e]">20+</div>
-                    <div className="text-[11px] font-semibold text-[#6b7280] uppercase">Members</div>
+                    <div className="font-display text-2xl font-bold text-[#0b2e1e]">
+                      20+
+                    </div>
+                    <div className="text-[11px] font-semibold text-[#6b7280] uppercase">
+                      Members
+                    </div>
                   </div>
                   <div className="border-x border-[#0b2e1e]/10">
-                    <div className="font-display text-2xl font-bold text-[#0b2e1e]">100+</div>
-                    <div className="text-[11px] font-semibold text-[#6b7280] uppercase">Janazas</div>
+                    <div className="font-display text-2xl font-bold text-[#0b2e1e]">
+                      100+
+                    </div>
+                    <div className="text-[11px] font-semibold text-[#6b7280] uppercase">
+                      Janazas
+                    </div>
                   </div>
                   <div>
-                    <div className="font-display text-2xl font-bold text-[#0b2e1e]">Ongoing</div>
-                    <div className="text-[11px] font-semibold text-[#6b7280] uppercase">Welfare Aid</div>
+                    <div className="font-display text-2xl font-bold text-[#0b2e1e]">
+                      Ongoing
+                    </div>
+                    <div className="text-[11px] font-semibold text-[#6b7280] uppercase">
+                      Welfare Aid
+                    </div>
                   </div>
                 </div>
               </div>
@@ -357,13 +380,13 @@ export default async function AboutPage({
                 <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#0b2e1e] text-[#d4af37] shadow-sm">
                   <Compass className="h-6 w-6" strokeWidth={2} />
                 </div>
-                <span className="block font-sans text-xs font-bold uppercase tracking-wider text-[#b8952b]">
+                <span className="block font-sans text-xs font-bold tracking-wider text-[#b8952b] uppercase">
                   {t("visionEyebrow")}
                 </span>
-                <h2 className="mt-1 font-display text-2xl font-bold text-[#0b2e1e] sm:text-3xl">
+                <h2 className="font-display mt-1 text-2xl font-bold text-[#0b2e1e] sm:text-3xl">
                   {t("visionTitle")}
                 </h2>
-                <blockquote className="mt-6 border-l-3 border-[#0b2e1e] pl-4 font-display text-lg font-medium italic leading-relaxed text-[#0b2e1e] sm:text-xl">
+                <blockquote className="font-display mt-6 border-l-3 border-[#0b2e1e] pl-4 text-lg leading-relaxed font-medium text-[#0b2e1e] italic sm:text-xl">
                   &ldquo;{t("visionText")}&rdquo;
                 </blockquote>
               </div>
@@ -373,10 +396,10 @@ export default async function AboutPage({
                 <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#e8f3ee] text-[#0b2e1e]">
                   <Target className="h-6 w-6" strokeWidth={2} />
                 </div>
-                <span className="block font-sans text-xs font-bold uppercase tracking-wider text-[#0b2e1e]">
+                <span className="block font-sans text-xs font-bold tracking-wider text-[#0b2e1e] uppercase">
                   {tCommon("societyShort")} Strategic Focus
                 </span>
-                <h2 className="mt-1 font-display text-2xl font-bold text-[#0b2e1e] sm:text-3xl">
+                <h2 className="font-display mt-1 text-2xl font-bold text-[#0b2e1e] sm:text-3xl">
                   {t("missionTitle")}
                 </h2>
                 <ul className="mt-6 space-y-3.5">
@@ -385,7 +408,7 @@ export default async function AboutPage({
                       <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#0b2e1e] text-[10px] font-bold text-[#d4af37]">
                         <Check className="h-3 w-3" strokeWidth={2.5} />
                       </span>
-                      <span className="text-sm font-medium leading-relaxed text-[#2d3748] sm:text-base">
+                      <span className="text-sm leading-relaxed font-medium text-[#2d3748] sm:text-base">
                         {item}
                       </span>
                     </li>
@@ -398,31 +421,35 @@ export default async function AboutPage({
           {/* Section 3: Core Values (Numbered Monogram Grid) */}
           <div className="mb-20">
             <ScrollReveal variant="fade-up" className="mb-10 text-center">
-              <span className="font-sans text-xs font-bold uppercase tracking-wider text-[#b8952b]">
+              <span className="font-sans text-xs font-bold tracking-wider text-[#b8952b] uppercase">
                 {t("valuesEyebrow")}
               </span>
-              <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-[#0b2e1e] sm:text-4xl">
+              <h2 className="font-display mt-2 text-3xl font-bold tracking-tight text-[#0b2e1e] sm:text-4xl">
                 {t("valuesTitle")}
               </h2>
               <p className="mx-auto mt-3 max-w-2xl text-base text-[#4b5563]">
-                Five guiding Islamic principles that govern every action, interaction, and expenditure of our society.
+                Five guiding Islamic principles that govern every action,
+                interaction, and expenditure of our society.
               </p>
             </ScrollReveal>
 
-            <ScrollRevealGroup staggerMs={60} className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5 items-stretch">
+            <ScrollRevealGroup
+              staggerMs={60}
+              className="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-5"
+            >
               {coreValues.map((val) => (
                 <div
                   key={val.number}
                   className="group relative flex h-full min-h-[14rem] flex-1 flex-col justify-between rounded-2xl border border-[#0b2e1e]/10 bg-white p-6 shadow-xs transition-all duration-300 hover:-translate-y-1.5 hover:border-[#0b2e1e]/30 hover:shadow-md"
                 >
-                  <div className="flex flex-col flex-1">
+                  <div className="flex flex-1 flex-col">
                     <span className="font-display text-3xl font-bold text-[#d4af37] opacity-80 group-hover:opacity-100">
                       {val.number}
                     </span>
-                    <h3 className="mt-3 font-display text-lg font-bold text-[#0b2e1e] min-h-[1.75rem] leading-snug flex items-center">
+                    <h3 className="font-display mt-3 flex min-h-[1.75rem] items-center text-lg leading-snug font-bold text-[#0b2e1e]">
                       {val.title}
                     </h3>
-                    <p className="mt-2 text-xs leading-relaxed text-[#6b7280] min-h-[2.5rem] flex items-start">
+                    <p className="mt-2 flex min-h-[2.5rem] items-start text-xs leading-relaxed text-[#6b7280]">
                       {val.desc}
                     </p>
                   </div>
@@ -439,7 +466,7 @@ export default async function AboutPage({
             <div className="mb-20 rounded-3xl border border-[#0b2e1e]/10 bg-white p-8 shadow-sm sm:p-12 lg:p-14">
               <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12">
                 <div className="space-y-4 lg:col-span-7">
-                  <span className="font-sans text-xs font-bold uppercase tracking-wider text-[#b8952b]">
+                  <span className="font-sans text-xs font-bold tracking-wider text-[#b8952b] uppercase">
                     {t("historyEyebrow")}
                   </span>
                   <h2 className="font-display text-2xl font-bold tracking-tight text-[#0b2e1e] sm:text-3xl lg:text-4xl">
@@ -455,7 +482,7 @@ export default async function AboutPage({
 
                 {/* Documentary Frame */}
                 <div className="lg:col-span-5">
-                  <div className="relative aspect-[3/2] w-full overflow-hidden rounded-2xl border border-[#0b2e1e]/15 shadow-sm bg-[#0b2e1e]/5">
+                  <div className="relative aspect-[3/2] w-full overflow-hidden rounded-2xl border border-[#0b2e1e]/15 bg-[#0b2e1e]/5 shadow-sm">
                     <Image
                       src={assets.aboutHistoryWater}
                       alt="Historic Buhary Jummah Mosque, 95th Mile Post, Mullipothana"
@@ -464,7 +491,7 @@ export default async function AboutPage({
                       className="object-cover object-center"
                     />
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                    <div className="absolute bottom-3 left-4 right-4">
+                    <div className="absolute right-4 bottom-3 left-4">
                       <span className="text-xs font-semibold text-white drop-shadow-xs">
                         Buhary Jummah Mosque Mahallah, Mullipothana
                       </span>
@@ -480,10 +507,10 @@ export default async function AboutPage({
             <div className="mb-20 grid grid-cols-1 gap-10 lg:grid-cols-12">
               {/* Left: Organizational Hierarchy */}
               <div className="rounded-3xl border border-[#0b2e1e]/10 bg-white p-8 shadow-sm sm:p-10 lg:col-span-5">
-                <span className="font-sans text-xs font-bold uppercase tracking-wider text-[#b8952b]">
+                <span className="font-sans text-xs font-bold tracking-wider text-[#b8952b] uppercase">
                   {t("structureEyebrow")}
                 </span>
-                <h2 className="mt-1 font-display text-2xl font-bold text-[#0b2e1e] sm:text-3xl">
+                <h2 className="font-display mt-1 text-2xl font-bold text-[#0b2e1e] sm:text-3xl">
                   {t("structureTitle")}
                 </h2>
                 <p className="mt-2 text-sm text-[#4b5563]">
@@ -492,7 +519,10 @@ export default async function AboutPage({
 
                 <ol className="mt-6 divide-y divide-[#0b2e1e]/10">
                   {structureRoles.map((role, idx) => (
-                    <li key={idx} className="flex items-center justify-between py-3">
+                    <li
+                      key={idx}
+                      className="flex items-center justify-between py-3"
+                    >
                       <div>
                         <div className="text-sm font-semibold text-[#0b2e1e]">
                           {role.title}
@@ -510,27 +540,31 @@ export default async function AboutPage({
               </div>
 
               {/* Right: Executive Committee Officers */}
-              <div id="team" className="rounded-3xl border border-[#0b2e1e]/10 bg-white p-8 shadow-sm sm:p-10 lg:col-span-7">
-                <span className="font-sans text-xs font-bold uppercase tracking-wider text-[#b8952b]">
+              <div
+                id="team"
+                className="rounded-3xl border border-[#0b2e1e]/10 bg-white p-8 shadow-sm sm:p-10 lg:col-span-7"
+              >
+                <span className="font-sans text-xs font-bold tracking-wider text-[#b8952b] uppercase">
                   Elected Leadership
                 </span>
-                <h2 className="mt-1 font-display text-2xl font-bold text-[#0b2e1e] sm:text-3xl">
+                <h2 className="font-display mt-1 text-2xl font-bold text-[#0b2e1e] sm:text-3xl">
                   {t("leadershipTitle")}
                 </h2>
                 <p className="mt-2 text-sm text-[#4b5563]">
-                  Elected committee representatives serving the Buhary Jummah Mosque area under collective shura consultation.
+                  Elected committee representatives serving the Buhary Jummah
+                  Mosque area under collective shura consultation.
                 </p>
 
-                <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 items-stretch">
+                <div className="mt-6 grid grid-cols-1 items-stretch gap-4 sm:grid-cols-2">
                   {executiveOfficers.map((officer, idx) => (
                     <div
                       key={idx}
                       className="flex h-full flex-1 flex-col justify-between rounded-2xl border border-[#0b2e1e]/10 bg-[#fbfaf6] p-5 transition-all hover:border-[#0b2e1e]/25 hover:shadow-xs"
                     >
-                      <div className="flex flex-col flex-1">
+                      <div className="flex flex-1 flex-col">
                         <div className="flex items-center justify-between gap-2">
                           {officer.photo ? (
-                            <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-[#c99a45]/40 shadow-xs bg-[#0b2e1e]">
+                            <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-[#c99a45]/40 bg-[#0b2e1e] shadow-xs">
                               <Image
                                 src={officer.photo}
                                 alt={officer.name}
@@ -540,21 +574,21 @@ export default async function AboutPage({
                               />
                             </div>
                           ) : (
-                            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#0b2e1e] font-display text-xs font-bold text-[#d4af37]">
+                            <span className="font-display flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#0b2e1e] text-xs font-bold text-[#d4af37]">
                               {officer.initials}
                             </span>
                           )}
-                          <span className="rounded-full bg-[#e8f3ee] px-2.5 py-0.5 text-[11px] font-semibold text-[#0b2e1e] text-right truncate">
+                          <span className="truncate rounded-full bg-[#e8f3ee] px-2.5 py-0.5 text-right text-[11px] font-semibold text-[#0b2e1e]">
                             {officer.role}
                           </span>
                         </div>
-                        <h3 className="mt-3 font-display text-base font-bold text-[#0b2e1e] min-h-[2.5rem] flex items-center">
+                        <h3 className="font-display mt-3 flex min-h-[2.5rem] items-center text-base font-bold text-[#0b2e1e]">
                           {officer.name}
                         </h3>
                       </div>
                       <a
                         href={`tel:${officer.phone.replace(/\s+/g, "")}`}
-                        className="mt-auto pt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-[#0b2e1e] hover:text-[#b8952b] border-t border-[#0b2e1e]/10"
+                        className="mt-auto inline-flex items-center gap-1.5 border-t border-[#0b2e1e]/10 pt-4 text-xs font-semibold text-[#0b2e1e] hover:text-[#b8952b]"
                       >
                         <Phone className="h-3.5 w-3.5 text-[#d4af37]" />
                         {officer.phone}

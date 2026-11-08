@@ -23,7 +23,9 @@ export function MobileMenu({ isOpen, onClose, navItems }: MobileMenuProps) {
   const closeButtonRef = React.useRef<HTMLButtonElement>(null);
 
   // Keep track of which dropdown accordions are expanded
-  const [expandedDropdowns, setExpandedDropdowns] = React.useState<Record<string, boolean>>(() => {
+  const [expandedDropdowns, setExpandedDropdowns] = React.useState<
+    Record<string, boolean>
+  >(() => {
     const initial: Record<string, boolean> = { about: true, media: true };
     navItems.forEach((item) => {
       if (item.type === "dropdown") {
@@ -54,15 +56,13 @@ export function MobileMenu({ isOpen, onClose, navItems }: MobileMenuProps) {
       }
 
       if (event.key === "Tab" && menuRef.current) {
-        const focusableElements =
-          menuRef.current.querySelectorAll<HTMLElement>(
-            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-          );
+        const focusableElements = menuRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
         if (focusableElements.length === 0) return;
 
         const firstElement = focusableElements[0];
-        const lastElement =
-          focusableElements[focusableElements.length - 1];
+        const lastElement = focusableElements[focusableElements.length - 1];
 
         if (event.shiftKey) {
           if (document.activeElement === firstElement) {
@@ -132,11 +132,11 @@ export function MobileMenu({ isOpen, onClose, navItems }: MobileMenuProps) {
                 />
               </div>
               <div>
-                <div className="font-display text-sm font-bold text-[#0b2e1e] dark:text-[#f5eedf] leading-tight">
+                <div className="font-display text-sm leading-tight font-bold text-[#0b2e1e] dark:text-[#f5eedf]">
                   {t("common.societyShort")}
                 </div>
                 <div className="text-text-muted flex items-center gap-1 text-[11px]">
-                  <MapPin className="h-3 w-3 text-primary" />
+                  <MapPin className="text-primary h-3 w-3" />
                   <span>{t("common.location")}</span>
                 </div>
               </div>
@@ -147,7 +147,7 @@ export function MobileMenu({ isOpen, onClose, navItems }: MobileMenuProps) {
               type="button"
               onClick={onClose}
               aria-label={t("common.closeMenu")}
-              className="text-text-muted hover:text-text hover:bg-muted focus-visible:ring-ring rounded-md p-2 focus-visible:ring-2 focus-visible:outline-none transition-colors"
+              className="text-text-muted hover:text-text hover:bg-muted focus-visible:ring-ring rounded-md p-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
             >
               <X className="h-5 w-5" />
             </button>
@@ -174,7 +174,7 @@ export function MobileMenu({ isOpen, onClose, navItems }: MobileMenuProps) {
                     className={cn(
                       "rounded-lg px-3.5 py-2.5 text-sm font-medium transition-colors",
                       isActive
-                        ? "bg-[#124d34] text-white font-semibold shadow-2xs"
+                        ? "bg-[#124d34] font-semibold text-white shadow-2xs"
                         : "text-text hover:bg-muted hover:text-primary"
                     )}
                   >
@@ -192,14 +192,14 @@ export function MobileMenu({ isOpen, onClose, navItems }: MobileMenuProps) {
               return (
                 <div
                   key={item.id}
-                  className="rounded-xl border border-border/50 bg-surface-muted/30 overflow-hidden"
+                  className="border-border/50 bg-surface-muted/30 overflow-hidden rounded-xl border"
                 >
                   <button
                     type="button"
                     onClick={() => toggleDropdown(item.id)}
                     aria-expanded={isExpanded}
                     className={cn(
-                      "flex w-full items-center justify-between px-3.5 py-2.5 text-sm font-medium transition-colors cursor-pointer",
+                      "flex w-full cursor-pointer items-center justify-between px-3.5 py-2.5 text-sm font-medium transition-colors",
                       isAnyChildActive
                         ? "text-primary font-semibold"
                         : "text-text hover:text-primary"
@@ -213,14 +213,14 @@ export function MobileMenu({ isOpen, onClose, navItems }: MobileMenuProps) {
                     </span>
                     <ChevronDown
                       className={cn(
-                        "h-4 w-4 text-text-muted transition-transform duration-200",
-                        isExpanded && "rotate-180 text-primary"
+                        "text-text-muted h-4 w-4 transition-transform duration-200",
+                        isExpanded && "text-primary rotate-180"
                       )}
                     />
                   </button>
 
                   {isExpanded && (
-                    <div className="border-t border-border/40 bg-surface/50 p-1.5 space-y-1">
+                    <div className="border-border/40 bg-surface/50 space-y-1 border-t p-1.5">
                       {item.items.map((sub) => {
                         const isSubActive = pathname.startsWith(sub.href);
                         const SubIcon = sub.icon;
@@ -232,7 +232,7 @@ export function MobileMenu({ isOpen, onClose, navItems }: MobileMenuProps) {
                             className={cn(
                               "flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-medium transition-colors",
                               isSubActive
-                                ? "bg-[#124d34] text-white font-semibold shadow-2xs"
+                                ? "bg-[#124d34] font-semibold text-white shadow-2xs"
                                 : "text-text hover:bg-muted hover:text-primary"
                             )}
                           >
@@ -246,11 +246,11 @@ export function MobileMenu({ isOpen, onClose, navItems }: MobileMenuProps) {
                             >
                               <SubIcon className="h-3.5 w-3.5" />
                             </div>
-                            <div className="flex flex-col min-w-0">
+                            <div className="flex min-w-0 flex-col">
                               <span className="leading-tight">{sub.label}</span>
                               <span
                                 className={cn(
-                                  "text-[10px] truncate",
+                                  "truncate text-[10px]",
                                   isSubActive
                                     ? "text-emerald-100/80"
                                     : "text-text-muted"
@@ -273,10 +273,10 @@ export function MobileMenu({ isOpen, onClose, navItems }: MobileMenuProps) {
         {/* Bottom Actions & Contact Info */}
         <div className="border-border space-y-4 border-t pt-5">
           {/* Quick Contact */}
-          <div className="space-y-1.5 text-xs text-text-muted">
+          <div className="text-text-muted space-y-1.5 text-xs">
             <a
               href="tel:+94776227323"
-              className="flex items-center gap-2 text-primary font-medium hover:underline"
+              className="text-primary flex items-center gap-2 font-medium hover:underline"
             >
               <Phone className="h-3.5 w-3.5" />
               <span>077 622 7323 ({t("common.emergencyBadge")})</span>
@@ -285,7 +285,7 @@ export function MobileMenu({ isOpen, onClose, navItems }: MobileMenuProps) {
               href="mailto:bjwsociety@gmail.com"
               className="flex items-center gap-2 hover:underline"
             >
-              <Mail className="h-3.5 w-3.5 text-text-muted" />
+              <Mail className="text-text-muted h-3.5 w-3.5" />
               <span>bjwsociety@gmail.com</span>
             </a>
           </div>
@@ -313,7 +313,7 @@ export function MobileMenu({ isOpen, onClose, navItems }: MobileMenuProps) {
           <Link href="/donate" onClick={onClose} className="block">
             <button
               type="button"
-              className="w-full bg-[#124d34] hover:bg-[#0b2e1e] text-white font-semibold py-3 px-4 rounded-md shadow-sm transition-colors flex items-center justify-center gap-2 text-sm"
+              className="flex w-full items-center justify-center gap-2 rounded-md bg-[#124d34] px-4 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#0b2e1e]"
             >
               <Heart className="h-4 w-4 fill-white/20" />
               <span>{t("nav.donate")}</span>

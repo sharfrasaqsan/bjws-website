@@ -45,7 +45,9 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
   const router = useRouter();
   const [members, setMembers] = useState<TeamMember[]>(initialMembers);
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive">("all");
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | "active" | "inactive"
+  >("all");
   const [isPending, startTransition] = useTransition();
 
   // Drag and drop state
@@ -65,7 +67,9 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
       prev.map((m) => (m.id === id ? { ...m, verificationToken: newToken } : m))
     );
     if (qrMember && qrMember.id === id) {
-      setQrMember((prev) => (prev ? { ...prev, verificationToken: newToken } : null));
+      setQrMember((prev) =>
+        prev ? { ...prev, verificationToken: newToken } : null
+      );
     }
   };
 
@@ -263,27 +267,27 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
   return (
     <div className="space-y-6">
       {/* Top Metrics Strip */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="rounded-2xl border border-border bg-surface p-4 shadow-2xs flex items-center justify-between">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div className="border-border bg-surface flex items-center justify-between rounded-2xl border p-4 shadow-2xs">
           <div>
-            <div className="text-xs font-semibold uppercase tracking-wider text-text-muted">
+            <div className="text-text-muted text-xs font-semibold tracking-wider uppercase">
               Total Enrolled Team
             </div>
-            <div className="mt-1 font-display text-2xl font-bold text-primary">
+            <div className="font-display text-primary mt-1 text-2xl font-bold">
               {totalCount}
             </div>
           </div>
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
-            <Users className="h-5 w-5 text-primary" />
+          <div className="bg-primary/10 text-primary flex h-11 w-11 items-center justify-center rounded-xl">
+            <Users className="text-primary h-5 w-5" />
           </div>
         </div>
 
-        <div className="rounded-2xl border border-border bg-surface p-4 shadow-2xs flex items-center justify-between">
+        <div className="border-border bg-surface flex items-center justify-between rounded-2xl border p-4 shadow-2xs">
           <div>
-            <div className="text-xs font-semibold uppercase tracking-wider text-[#166534]">
+            <div className="text-xs font-semibold tracking-wider text-[#166534] uppercase">
               Active On-Duty Officers
             </div>
-            <div className="mt-1 font-display text-2xl font-bold text-[#166534]">
+            <div className="font-display mt-1 text-2xl font-bold text-[#166534]">
               {activeCount}
             </div>
           </div>
@@ -292,12 +296,12 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-border bg-surface p-4 shadow-2xs flex items-center justify-between">
+        <div className="border-border bg-surface flex items-center justify-between rounded-2xl border p-4 shadow-2xs">
           <div>
-            <div className="text-xs font-semibold uppercase tracking-wider text-[#9f1239]">
+            <div className="text-xs font-semibold tracking-wider text-[#9f1239] uppercase">
               Former / Honorary Alumni
             </div>
-            <div className="mt-1 font-display text-2xl font-bold text-[#9f1239]">
+            <div className="font-display mt-1 text-2xl font-bold text-[#9f1239]">
               {inactiveCount}
             </div>
           </div>
@@ -308,15 +312,17 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
       </div>
 
       {/* Drag & Drop Reordering Instructions & Toast */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-2xl border border-[#c99a45]/30 bg-[#c99a45]/10 px-4 py-3 text-xs text-text shadow-2xs">
+      <div className="text-text flex flex-col items-start justify-between gap-3 rounded-2xl border border-[#c99a45]/30 bg-[#c99a45]/10 px-4 py-3 text-xs shadow-2xs sm:flex-row sm:items-center">
         <div className="flex items-center gap-2.5">
-          <ArrowUpDown className="h-4 w-4 text-[#c99a45] shrink-0" />
+          <ArrowUpDown className="h-4 w-4 shrink-0 text-[#c99a45]" />
           <span className="font-medium">
-            <strong>Drag and Drop Enabled:</strong> Grab any member card by the grip handle to arrange the exact display order on the public website.
+            <strong>Drag and Drop Enabled:</strong> Grab any member card by the
+            grip handle to arrange the exact display order on the public
+            website.
           </span>
         </div>
         {orderToast && (
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-600 px-3 py-1 text-xs font-bold text-white shadow-xs animate-fade-in">
+          <div className="animate-fade-in inline-flex items-center gap-1.5 rounded-full bg-emerald-600 px-3 py-1 text-xs font-bold text-white shadow-xs">
             <Check className="h-3.5 w-3.5 stroke-[3]" />
             <span>{orderToast}</span>
           </div>
@@ -324,23 +330,23 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
       </div>
 
       {/* Filter and Action Bar (Department dropdown removed as requested) */}
-      <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 rounded-2xl border border-border bg-surface p-4 shadow-2xs">
+      <div className="border-border bg-surface flex flex-col items-stretch justify-between gap-4 rounded-2xl border p-4 shadow-2xs md:flex-row md:items-center">
         {/* Search Input */}
-        <div className="relative flex-1 min-w-[220px]">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
+        <div className="relative min-w-[220px] flex-1">
+          <Search className="text-text-muted absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2" />
           <input
             type="search"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by name, role, phone, or address..."
-            className="w-full rounded-xl border border-border bg-background pl-10 pr-4 py-2.5 text-xs sm:text-sm text-text placeholder:text-text-muted/70 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+            className="border-border bg-background text-text placeholder:text-text-muted/70 focus:border-primary focus:ring-primary w-full rounded-xl border py-2.5 pr-4 pl-10 text-xs focus:ring-1 focus:outline-none sm:text-sm"
           />
         </div>
 
         {/* Filter Pills */}
         <div className="flex flex-wrap items-center gap-2.5">
           {/* Status Filter */}
-          <div className="inline-flex rounded-xl bg-background border border-border p-1">
+          <div className="bg-background border-border inline-flex rounded-xl border p-1">
             <button
               type="button"
               onClick={() => setStatusFilter("all")}
@@ -380,7 +386,7 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
           <button
             type="button"
             onClick={openCreateModal}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-[#0b2e1e] hover:bg-[#124d34] px-4 py-2.5 text-xs font-semibold text-white shadow-xs transition-colors shrink-0"
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-[#0b2e1e] px-4 py-2.5 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-[#124d34]"
           >
             <Plus className="h-4 w-4 text-[#c99a45]" />
             <span>Add Member</span>
@@ -426,40 +432,41 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
               }}
               onDrop={(e) => {
                 e.preventDefault();
-                const sourceId = e.dataTransfer.getData("text/plain") || draggedId;
+                const sourceId =
+                  e.dataTransfer.getData("text/plain") || draggedId;
                 if (sourceId && sourceId !== member.id) {
                   handleMove(sourceId, member.id);
                 }
                 setDraggedId(null);
                 setDragOverId(null);
               }}
-              className={`group relative rounded-2xl border bg-surface p-4 sm:p-5 transition-all shadow-2xs hover:shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4 ${
+              className={`group bg-surface relative flex flex-col justify-between gap-4 rounded-2xl border p-4 shadow-2xs transition-all hover:shadow-md sm:p-5 md:flex-row md:items-center ${
                 isDragging
-                  ? "opacity-30 scale-[0.99] border-dashed border-[#c99a45] bg-[#c99a45]/5"
+                  ? "scale-[0.99] border-dashed border-[#c99a45] bg-[#c99a45]/5 opacity-30"
                   : isDragOver
-                  ? "border-[#c99a45] ring-4 ring-[#c99a45]/30 bg-[#c99a45]/15 shadow-md scale-[1.01]"
-                  : isInactive
-                  ? "border-rose-200/80 bg-rose-50/10 dark:border-rose-900/30"
-                  : "border-border hover:border-[#c99a45]/40"
+                    ? "scale-[1.01] border-[#c99a45] bg-[#c99a45]/15 shadow-md ring-4 ring-[#c99a45]/30"
+                    : isInactive
+                      ? "border-rose-200/80 bg-rose-50/10 dark:border-rose-900/30"
+                      : "border-border hover:border-[#c99a45]/40"
               }`}
             >
               {/* Drop Target Indicator Badge */}
               {isDragOver && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-20 rounded-full bg-[#0b2e1e] border border-[#c99a45] px-3 py-0.5 text-[10px] font-bold text-white shadow-md animate-bounce">
+                <div className="absolute -top-3 left-1/2 z-20 -translate-x-1/2 animate-bounce rounded-full border border-[#c99a45] bg-[#0b2e1e] px-3 py-0.5 text-[10px] font-bold text-white shadow-md">
                   Drop here to place at #{index + 1}
                 </div>
               )}
 
               {/* Left Segment: Drag Handle, Order Badge, Portrait, and Details */}
               <div
-                className={`flex items-center gap-3 sm:gap-4 flex-1 min-w-0 ${
+                className={`flex min-w-0 flex-1 items-center gap-3 sm:gap-4 ${
                   draggedId ? "pointer-events-none select-none" : ""
                 }`}
               >
                 {/* Drag Handle & Reorder Controls */}
-                <div className="flex flex-col items-center justify-center gap-1 shrink-0">
+                <div className="flex shrink-0 flex-col items-center justify-center gap-1">
                   <div
-                    className="flex items-center justify-center h-8 w-8 rounded-xl bg-background border border-border text-text-muted group-hover:text-[#c99a45] group-hover:border-[#c99a45]/40 hover:bg-[#c99a45]/10 cursor-grab active:cursor-grabbing shadow-2xs transition-all shrink-0"
+                    className="bg-background border-border text-text-muted flex h-8 w-8 shrink-0 cursor-grab items-center justify-center rounded-xl border shadow-2xs transition-all group-hover:border-[#c99a45]/40 group-hover:text-[#c99a45] hover:bg-[#c99a45]/10 active:cursor-grabbing"
                     title="Click and drag to reorder position"
                   >
                     <GripVertical className="h-5 w-5" />
@@ -469,7 +476,7 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                       type="button"
                       disabled={!canShiftUp}
                       onClick={() => handleShift(member.id, "up")}
-                      className="h-4 w-4 flex items-center justify-center rounded text-text-muted hover:text-text hover:bg-background disabled:opacity-20 disabled:hover:bg-transparent"
+                      className="text-text-muted hover:text-text hover:bg-background flex h-4 w-4 items-center justify-center rounded disabled:opacity-20 disabled:hover:bg-transparent"
                       title="Move up"
                     >
                       <ChevronUp className="h-3.5 w-3.5" />
@@ -478,7 +485,7 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                       type="button"
                       disabled={!canShiftDown}
                       onClick={() => handleShift(member.id, "down")}
-                      className="h-4 w-4 flex items-center justify-center rounded text-text-muted hover:text-text hover:bg-background disabled:opacity-20 disabled:hover:bg-transparent"
+                      className="text-text-muted hover:text-text hover:bg-background flex h-4 w-4 items-center justify-center rounded disabled:opacity-20 disabled:hover:bg-transparent"
                       title="Move down"
                     >
                       <ChevronDown className="h-3.5 w-3.5" />
@@ -487,12 +494,12 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                 </div>
 
                 {/* Numerical Position Badge */}
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-background border border-border text-[11px] font-bold text-text-muted">
+                <div className="bg-background border-border text-text-muted flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border text-[11px] font-bold">
                   #{index + 1}
                 </div>
 
                 {/* Portrait Photo */}
-                <div className="relative h-13 w-13 shrink-0 overflow-hidden rounded-2xl border border-border bg-background ring-1 ring-black/5">
+                <div className="border-border bg-background relative h-13 w-13 shrink-0 overflow-hidden rounded-2xl border ring-1 ring-black/5">
                   {member.photo ? (
                     <Image
                       src={resolveMemberPhoto(member.photo) || member.photo}
@@ -503,19 +510,19 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                       sizes="52px"
                     />
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-primary/10 text-xs font-bold text-primary">
+                    <div className="bg-primary/10 text-primary flex h-full w-full items-center justify-center text-xs font-bold">
                       {member.initials}
                     </div>
                   )}
                 </div>
 
                 {/* Text Details */}
-                <div className="flex-1 min-w-0">
+                <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-mono text-xs font-bold px-2 py-0.5 rounded-md bg-[#0b2e1e] text-[#f5d78e] border border-[#c99a45]/40 shadow-2xs">
+                    <span className="rounded-md border border-[#c99a45]/40 bg-[#0b2e1e] px-2 py-0.5 font-mono text-xs font-bold text-[#f5d78e] shadow-2xs">
                       {member.memberId || "BJWS000"}
                     </span>
-                    <h3 className="font-display text-base font-bold text-text truncate">
+                    <h3 className="font-display text-text truncate text-base font-bold">
                       {member.name}
                     </h3>
                     <span
@@ -536,11 +543,11 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                       )}
                     </span>
                     {member.nic && (
-                      <span className="font-mono text-[11px] text-text-muted bg-muted px-2 py-0.5 rounded border border-border/60">
+                      <span className="text-text-muted bg-muted border-border/60 rounded border px-2 py-0.5 font-mono text-[11px]">
                         NIC: {member.nic}
                       </span>
                     )}
-                    <span className="text-[11px] font-semibold text-text-muted">
+                    <span className="text-text-muted text-[11px] font-semibold">
                       {member.term}
                     </span>
                   </div>
@@ -551,20 +558,21 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                     </span>
                     {(member.role.ta || member.role.si) && (
                       <span className="text-text-muted text-[11px]">
-                        {member.role.ta} {member.role.ta && member.role.si && "•"}{" "}
+                        {member.role.ta}{" "}
+                        {member.role.ta && member.role.si && "•"}{" "}
                         {member.role.si}
                       </span>
                     )}
                   </div>
 
                   {/* Contact Preview inline */}
-                  <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-text-muted">
+                  <div className="text-text-muted mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
                     {member.phone && (
                       <div className="flex items-center gap-1">
-                        <Phone className="h-3 w-3 text-primary shrink-0" />
+                        <Phone className="text-primary h-3 w-3 shrink-0" />
                         <a
                           href={`tel:${member.phone.replace(/\s+/g, "")}`}
-                          className="hover:text-primary transition-colors font-medium"
+                          className="hover:text-primary font-medium transition-colors"
                         >
                           {member.phone}
                         </a>
@@ -572,13 +580,17 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                     )}
                     {member.email && (
                       <div className="flex items-center gap-1">
-                        <Mail className="h-3 w-3 text-text-muted shrink-0" />
-                        <span className="truncate max-w-[200px]">{member.email}</span>
+                        <Mail className="text-text-muted h-3 w-3 shrink-0" />
+                        <span className="max-w-[200px] truncate">
+                          {member.email}
+                        </span>
                       </div>
                     )}
                     <div className="flex items-center gap-1">
-                      <MapPin className="h-3 w-3 text-text-muted shrink-0" />
-                      <span className="truncate max-w-[220px]">{member.address}</span>
+                      <MapPin className="text-text-muted h-3 w-3 shrink-0" />
+                      <span className="max-w-[220px] truncate">
+                        {member.address}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -586,7 +598,7 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
 
               {/* Right Segment: Actions */}
               <div
-                className={`flex items-center justify-end gap-2 border-t md:border-t-0 pt-2 md:pt-0 shrink-0 ${
+                className={`flex shrink-0 items-center justify-end gap-2 border-t pt-2 md:border-t-0 md:pt-0 ${
                   draggedId ? "pointer-events-none select-none" : ""
                 }`}
               >
@@ -595,7 +607,7 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                     href={`https://wa.me/${member.whatsapp.replace(/[^0-9]/g, "")}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-1 rounded-lg border border-emerald-200 bg-emerald-50 px-2.5 py-1.5 text-xs font-semibold text-emerald-700 hover:bg-emerald-100 transition-colors"
+                    className="inline-flex items-center gap-1 rounded-lg border border-emerald-200 bg-emerald-50 px-2.5 py-1.5 text-xs font-semibold text-emerald-700 transition-colors hover:bg-emerald-100"
                     title="Open WhatsApp chat"
                   >
                     <MessageCircle className="h-3.5 w-3.5" />
@@ -613,7 +625,9 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                       ? "bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:text-emerald-300"
                       : "bg-rose-50 text-rose-700 hover:bg-rose-100 dark:bg-rose-950/60 dark:text-rose-300"
                   }`}
-                  title={isInactive ? "Reactivate member" : "Mark as former member"}
+                  title={
+                    isInactive ? "Reactivate member" : "Mark as former member"
+                  }
                 >
                   {isInactive ? (
                     <>
@@ -632,7 +646,7 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                 <button
                   type="button"
                   onClick={() => setQrMember(member)}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-[#c99a45]/50 bg-[#c99a45]/10 px-2.5 py-1.5 text-xs font-semibold text-[#8b651e] hover:bg-[#c99a45] hover:text-white transition-colors cursor-pointer shadow-2xs"
+                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[#c99a45]/50 bg-[#c99a45]/10 px-2.5 py-1.5 text-xs font-semibold text-[#8b651e] shadow-2xs transition-colors hover:bg-[#c99a45] hover:text-white"
                   title="View & Download Member ID Card"
                 >
                   <IdCard className="h-3.5 w-3.5" />
@@ -642,7 +656,7 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                 <button
                   type="button"
                   onClick={() => openEditModal(member)}
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-background text-text-muted hover:border-primary hover:text-primary transition-colors cursor-pointer"
+                  className="border-border bg-background text-text-muted hover:border-primary hover:text-primary inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border transition-colors"
                   title="Edit Member Details"
                 >
                   <Edit2 className="h-3.5 w-3.5" />
@@ -651,7 +665,7 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                 <button
                   type="button"
                   onClick={() => setDeleteConfirmId(member.id)}
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-background text-rose-500 hover:bg-rose-50 hover:border-rose-200 transition-colors"
+                  className="border-border bg-background inline-flex h-8 w-8 items-center justify-center rounded-lg border text-rose-500 transition-colors hover:border-rose-200 hover:bg-rose-50"
                   title="Delete Member"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
@@ -662,12 +676,12 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
         })}
 
         {filteredMembers.length === 0 && (
-          <div className="rounded-2xl border border-dashed border-border p-12 text-center bg-surface">
-            <Users className="mx-auto h-10 w-10 text-text-muted/60" />
-            <h3 className="mt-3 font-display text-base font-bold text-text">
+          <div className="border-border bg-surface rounded-2xl border border-dashed p-12 text-center">
+            <Users className="text-text-muted/60 mx-auto h-10 w-10" />
+            <h3 className="font-display text-text mt-3 text-base font-bold">
               No Team Members Found
             </h3>
-            <p className="mt-1 text-xs text-text-muted">
+            <p className="text-text-muted mt-1 text-xs">
               Try adjusting your search query or status filter.
             </p>
           </div>
@@ -676,32 +690,32 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
 
       {/* CREATE MODAL */}
       {isCreateOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs overflow-y-auto">
-          <div className="relative w-full max-w-2xl rounded-3xl border border-border bg-surface p-6 sm:p-8 shadow-2xl my-8 max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/60 p-4 backdrop-blur-xs">
+          <div className="border-border bg-surface relative my-8 max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl border p-6 shadow-2xl sm:p-8">
             <button
               type="button"
               onClick={closeCreateModal}
-              className="absolute right-5 top-5 rounded-full p-2 text-text-muted hover:bg-background hover:text-text"
+              className="text-text-muted hover:bg-background hover:text-text absolute top-5 right-5 rounded-full p-2"
             >
               <X className="h-5 w-5" />
             </button>
 
-            <div className="flex items-center gap-3 border-b border-border pb-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <div className="border-border flex items-center gap-3 border-b pb-4">
+              <div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-xl">
                 <Plus className="h-5 w-5" />
               </div>
               <div>
-                <h2 className="font-display text-xl font-bold text-text">
+                <h2 className="font-display text-text text-xl font-bold">
                   Add New Team Member
                 </h2>
-                <p className="text-xs text-text-muted">
+                <p className="text-text-muted text-xs">
                   Register a committee officer or dedicated volunteer.
                 </p>
               </div>
             </div>
 
             {formError && (
-              <div className="mt-4 flex items-center gap-2 rounded-xl bg-rose-50 dark:bg-rose-950 p-3 text-xs font-semibold text-rose-700 dark:text-rose-300">
+              <div className="mt-4 flex items-center gap-2 rounded-xl bg-rose-50 p-3 text-xs font-semibold text-rose-700 dark:bg-rose-950 dark:text-rose-300">
                 <ShieldAlert className="h-4 w-4 shrink-0" />
                 <span>{formError}</span>
               </div>
@@ -711,7 +725,7 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
               <input type="hidden" name="category" value="operations" />
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
+                <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
                   Officer Full Name *
                 </label>
                 <input
@@ -719,14 +733,14 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                   name="name"
                   required
                   placeholder="e.g. A.M. Sahibullah"
-                  className="w-full rounded-xl border border-border bg-background px-3.5 py-2.5 text-xs sm:text-sm text-text focus:border-primary focus:outline-none"
+                  className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3.5 py-2.5 text-xs focus:outline-none sm:text-sm"
                 />
               </div>
 
               {/* Member ID (BJWS000) & National ID (NIC) */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 rounded-2xl bg-[#fbfaf6] dark:bg-black/20 border border-[#e6e4dc] dark:border-white/10">
+              <div className="grid grid-cols-1 gap-3 rounded-2xl border border-[#e6e4dc] bg-[#fbfaf6] p-3.5 sm:grid-cols-2 dark:border-white/10 dark:bg-black/20">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1 flex items-center gap-1.5">
+                  <label className="text-text-muted mb-1 block flex items-center gap-1.5 text-xs font-bold tracking-wider uppercase">
                     <Sparkles className="h-3 w-3 text-[#c99a45]" />
                     <span>Member ID (Format: BJWS000)</span>
                   </label>
@@ -734,28 +748,32 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                     type="text"
                     name="memberId"
                     placeholder="e.g. BJWS021"
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs font-mono font-semibold text-text focus:border-primary focus:outline-none"
+                    className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 font-mono text-xs font-semibold focus:outline-none"
                   />
-                  <p className="text-[10px] text-text-muted mt-0.5">Leave blank to auto-generate next sequence</p>
+                  <p className="text-text-muted mt-0.5 text-[10px]">
+                    Leave blank to auto-generate next sequence
+                  </p>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
+                  <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
                     National Identity Card (NIC) *
                   </label>
                   <input
                     type="text"
                     name="nic"
                     placeholder="e.g. 198512345678"
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs font-mono text-text focus:border-primary focus:outline-none"
+                    className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 font-mono text-xs focus:outline-none"
                   />
-                  <p className="text-[10px] text-text-muted mt-0.5">Printed on QR credential verification</p>
+                  <p className="text-text-muted mt-0.5 text-[10px]">
+                    Printed on QR credential verification
+                  </p>
                 </div>
               </div>
 
               {/* ID Card Validity & Issue Date */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 rounded-2xl bg-[#fbfaf6] dark:bg-black/20 border border-[#e6e4dc] dark:border-white/10">
+              <div className="grid grid-cols-1 gap-3 rounded-2xl border border-[#e6e4dc] bg-[#fbfaf6] p-3.5 sm:grid-cols-2 dark:border-white/10 dark:bg-black/20">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1 flex items-center gap-1.5">
+                  <label className="text-text-muted mb-1 block flex items-center gap-1.5 text-xs font-bold tracking-wider uppercase">
                     <Sparkles className="h-3 w-3 text-[#c99a45]" />
                     <span>ID Issue Date</span>
                   </label>
@@ -763,26 +781,32 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                     type="date"
                     name="issueDate"
                     defaultValue={editingMember?.issueDate || "2026-01-01"}
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs font-mono text-text focus:border-primary focus:outline-none"
+                    className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 font-mono text-xs focus:outline-none"
                   />
-                  <p className="text-[10px] text-text-muted mt-0.5">Card issue date (default 2026-01-01)</p>
+                  <p className="text-text-muted mt-0.5 text-[10px]">
+                    Card issue date (default 2026-01-01)
+                  </p>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
+                  <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
                     Card Validity (3 Years)
                   </label>
-                  <div className="w-full rounded-xl border border-border bg-muted/40 px-3 py-2 text-xs font-mono font-bold text-primary flex items-center justify-between">
+                  <div className="border-border bg-muted/40 text-primary flex w-full items-center justify-between rounded-xl border px-3 py-2 font-mono text-xs font-bold">
                     <span>3 Years from Issue</span>
-                    <span className="text-[11px] text-text-muted">Auto-calculated</span>
+                    <span className="text-text-muted text-[11px]">
+                      Auto-calculated
+                    </span>
                   </div>
-                  <p className="text-[10px] text-text-muted mt-0.5">Valid until 3 years after issue date</p>
+                  <p className="text-text-muted mt-0.5 text-[10px]">
+                    Valid until 3 years after issue date
+                  </p>
                 </div>
               </div>
 
               {/* Multilingual Roles */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
+                  <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
                     Role (English) *
                   </label>
                   <input
@@ -790,92 +814,92 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                     name="roleEn"
                     required
                     placeholder="e.g. Vice President"
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
+                    className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 text-xs focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
+                  <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
                     Role (Tamil)
                   </label>
                   <input
                     type="text"
                     name="roleTa"
                     placeholder="உப தலைவர்"
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
+                    className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 text-xs focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
+                  <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
                     Role (Sinhala)
                   </label>
                   <input
                     type="text"
                     name="roleSi"
                     placeholder="උප සභාපති"
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
+                    className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 text-xs focus:outline-none"
                   />
                 </div>
               </div>
 
               {/* Contact info */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
+                  <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
                     Phone Number
                   </label>
                   <input
                     type="text"
                     name="phone"
                     placeholder="077 123 4567"
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
+                    className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 text-xs focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
+                  <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
                     WhatsApp Number
                   </label>
                   <input
                     type="text"
                     name="whatsapp"
                     placeholder="+94771234567"
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
+                    className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 text-xs focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
+                  <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
                     Email Address
                   </label>
                   <input
                     type="email"
                     name="email"
                     placeholder="officer@gmail.com"
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
+                    className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 text-xs focus:outline-none"
                   />
                 </div>
               </div>
 
               {/* Address & Term */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
+                  <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
                     Address
                   </label>
                   <input
                     type="text"
                     name="address"
                     placeholder="No. 101, Eacha Nagar, Mullipothana"
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
+                    className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 text-xs focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
+                  <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
                     Tenure Term
                   </label>
                   <input
                     type="text"
                     name="term"
                     defaultValue="2023 - Present"
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
+                    className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 text-xs focus:outline-none"
                   />
                 </div>
               </div>
@@ -896,29 +920,29 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                   type="checkbox"
                   id="create-inactive"
                   name="isInactive"
-                  className="rounded border-border text-primary focus:ring-primary"
+                  className="border-border text-primary focus:ring-primary rounded"
                 />
                 <label
                   htmlFor="create-inactive"
-                  className="text-xs font-semibold text-text cursor-pointer"
+                  className="text-text cursor-pointer text-xs font-semibold"
                 >
                   Mark as Former / Inactive Committee Alumni
                 </label>
               </div>
 
               {/* Buttons */}
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-border">
+              <div className="border-border flex items-center justify-end gap-3 border-t pt-4">
                 <button
                   type="button"
                   onClick={closeCreateModal}
-                  className="rounded-xl border border-border px-4 py-2 text-xs font-semibold text-text hover:bg-background"
+                  className="border-border text-text hover:bg-background rounded-xl border px-4 py-2 text-xs font-semibold"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="rounded-xl bg-[#0b2e1e] hover:bg-[#124d34] px-5 py-2 text-xs font-semibold text-white shadow-xs transition-colors disabled:opacity-50"
+                  className="rounded-xl bg-[#0b2e1e] px-5 py-2 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-[#124d34] disabled:opacity-50"
                 >
                   {isPending ? "Saving..." : "Add Officer"}
                 </button>
@@ -930,32 +954,33 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
 
       {/* EDIT MODAL */}
       {editingMember && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs overflow-y-auto">
-          <div className="relative w-full max-w-2xl rounded-3xl border border-border bg-surface p-6 sm:p-8 shadow-2xl my-8 max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/60 p-4 backdrop-blur-xs">
+          <div className="border-border bg-surface relative my-8 max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl border p-6 shadow-2xl sm:p-8">
             <button
               type="button"
               onClick={closeEditModal}
-              className="absolute right-5 top-5 rounded-full p-2 text-text-muted hover:bg-background hover:text-text"
+              className="text-text-muted hover:bg-background hover:text-text absolute top-5 right-5 rounded-full p-2"
             >
               <X className="h-5 w-5" />
             </button>
 
-            <div className="flex items-center gap-3 border-b border-border pb-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <div className="border-border flex items-center gap-3 border-b pb-4">
+              <div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-xl">
                 <Edit2 className="h-5 w-5" />
               </div>
               <div>
-                <h2 className="font-display text-xl font-bold text-text">
+                <h2 className="font-display text-text text-xl font-bold">
                   Edit Member: {editingMember.name}
                 </h2>
-                <p className="text-xs text-text-muted">
-                  Update officer details, responsibilities, or contact information.
+                <p className="text-text-muted text-xs">
+                  Update officer details, responsibilities, or contact
+                  information.
                 </p>
               </div>
             </div>
 
             {formError && (
-              <div className="mt-4 flex items-center gap-2 rounded-xl bg-rose-50 dark:bg-rose-950 p-3 text-xs font-semibold text-rose-700 dark:text-rose-300">
+              <div className="mt-4 flex items-center gap-2 rounded-xl bg-rose-50 p-3 text-xs font-semibold text-rose-700 dark:bg-rose-950 dark:text-rose-300">
                 <ShieldAlert className="h-4 w-4 shrink-0" />
                 <span>{formError}</span>
               </div>
@@ -970,7 +995,7 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
               />
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
+                <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
                   Officer Full Name *
                 </label>
                 <input
@@ -978,14 +1003,14 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                   name="name"
                   required
                   defaultValue={editingMember.name}
-                  className="w-full rounded-xl border border-border bg-background px-3.5 py-2.5 text-xs sm:text-sm text-text focus:border-primary focus:outline-none"
+                  className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3.5 py-2.5 text-xs focus:outline-none sm:text-sm"
                 />
               </div>
 
               {/* Member ID (BJWS000) & National ID (NIC) */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 rounded-2xl bg-[#fbfaf6] dark:bg-black/20 border border-[#e6e4dc] dark:border-white/10">
+              <div className="grid grid-cols-1 gap-3 rounded-2xl border border-[#e6e4dc] bg-[#fbfaf6] p-3.5 sm:grid-cols-2 dark:border-white/10 dark:bg-black/20">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1 flex items-center gap-1.5">
+                  <label className="text-text-muted mb-1 block flex items-center gap-1.5 text-xs font-bold tracking-wider uppercase">
                     <Sparkles className="h-3 w-3 text-[#c99a45]" />
                     <span>Member ID (Format: BJWS000)</span>
                   </label>
@@ -994,12 +1019,14 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                     name="memberId"
                     defaultValue={editingMember.memberId || ""}
                     placeholder="e.g. BJWS001"
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs font-mono font-semibold text-text focus:border-primary focus:outline-none"
+                    className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 font-mono text-xs font-semibold focus:outline-none"
                   />
-                  <p className="text-[10px] text-text-muted mt-0.5">Official society membership numbering</p>
+                  <p className="text-text-muted mt-0.5 text-[10px]">
+                    Official society membership numbering
+                  </p>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
+                  <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
                     National Identity Card (NIC) *
                   </label>
                   <input
@@ -1007,16 +1034,18 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                     name="nic"
                     defaultValue={editingMember.nic || ""}
                     placeholder="e.g. 197514302918"
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs font-mono text-text focus:border-primary focus:outline-none"
+                    className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 font-mono text-xs focus:outline-none"
                   />
-                  <p className="text-[10px] text-text-muted mt-0.5">Printed on QR credential verification</p>
+                  <p className="text-text-muted mt-0.5 text-[10px]">
+                    Printed on QR credential verification
+                  </p>
                 </div>
               </div>
 
               {/* ID Card Validity & Issue Date */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 rounded-2xl bg-[#fbfaf6] dark:bg-black/20 border border-[#e6e4dc] dark:border-white/10">
+              <div className="grid grid-cols-1 gap-3 rounded-2xl border border-[#e6e4dc] bg-[#fbfaf6] p-3.5 sm:grid-cols-2 dark:border-white/10 dark:bg-black/20">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1 flex items-center gap-1.5">
+                  <label className="text-text-muted mb-1 block flex items-center gap-1.5 text-xs font-bold tracking-wider uppercase">
                     <Sparkles className="h-3 w-3 text-[#c99a45]" />
                     <span>ID Issue Date</span>
                   </label>
@@ -1024,26 +1053,32 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                     type="date"
                     name="issueDate"
                     defaultValue={editingMember?.issueDate || "2026-01-01"}
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs font-mono text-text focus:border-primary focus:outline-none"
+                    className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 font-mono text-xs focus:outline-none"
                   />
-                  <p className="text-[10px] text-text-muted mt-0.5">Card issue date (default 2026-01-01)</p>
+                  <p className="text-text-muted mt-0.5 text-[10px]">
+                    Card issue date (default 2026-01-01)
+                  </p>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
+                  <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
                     Card Validity (3 Years)
                   </label>
-                  <div className="w-full rounded-xl border border-border bg-muted/40 px-3 py-2 text-xs font-mono font-bold text-primary flex items-center justify-between">
+                  <div className="border-border bg-muted/40 text-primary flex w-full items-center justify-between rounded-xl border px-3 py-2 font-mono text-xs font-bold">
                     <span>3 Years from Issue</span>
-                    <span className="text-[11px] text-text-muted">Auto-calculated</span>
+                    <span className="text-text-muted text-[11px]">
+                      Auto-calculated
+                    </span>
                   </div>
-                  <p className="text-[10px] text-text-muted mt-0.5">Valid until 3 years after issue date</p>
+                  <p className="text-text-muted mt-0.5 text-[10px]">
+                    Valid until 3 years after issue date
+                  </p>
                 </div>
               </div>
 
               {/* Multilingual Roles */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
+                  <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
                     Role (English) *
                   </label>
                   <input
@@ -1051,92 +1086,92 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                     name="roleEn"
                     required
                     defaultValue={editingMember.role.en}
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
+                    className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 text-xs focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
+                  <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
                     Role (Tamil)
                   </label>
                   <input
                     type="text"
                     name="roleTa"
                     defaultValue={editingMember.role.ta || ""}
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
+                    className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 text-xs focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
+                  <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
                     Role (Sinhala)
                   </label>
                   <input
                     type="text"
                     name="roleSi"
                     defaultValue={editingMember.role.si || ""}
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
+                    className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 text-xs focus:outline-none"
                   />
                 </div>
               </div>
 
               {/* Contact info */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
+                  <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
                     Phone Number
                   </label>
                   <input
                     type="text"
                     name="phone"
                     defaultValue={editingMember.phone}
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
+                    className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 text-xs focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
+                  <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
                     WhatsApp Number
                   </label>
                   <input
                     type="text"
                     name="whatsapp"
                     defaultValue={editingMember.whatsapp || ""}
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
+                    className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 text-xs focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
+                  <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
                     Email Address
                   </label>
                   <input
                     type="email"
                     name="email"
                     defaultValue={editingMember.email || ""}
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
+                    className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 text-xs focus:outline-none"
                   />
                 </div>
               </div>
 
               {/* Address & Term */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
+                  <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
                     Address
                   </label>
                   <input
                     type="text"
                     name="address"
                     defaultValue={editingMember.address}
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
+                    className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 text-xs focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
+                  <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
                     Tenure Term
                   </label>
                   <input
                     type="text"
                     name="term"
                     defaultValue={editingMember.term}
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
+                    className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 text-xs focus:outline-none"
                   />
                 </div>
               </div>
@@ -1158,29 +1193,29 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                   id="edit-inactive"
                   name="isInactive"
                   defaultChecked={editingMember.isInactive}
-                  className="rounded border-border text-primary focus:ring-primary"
+                  className="border-border text-primary focus:ring-primary rounded"
                 />
                 <label
                   htmlFor="edit-inactive"
-                  className="text-xs font-semibold text-text cursor-pointer"
+                  className="text-text cursor-pointer text-xs font-semibold"
                 >
                   Mark as Former / Inactive Committee Alumni
                 </label>
               </div>
 
               {/* Buttons */}
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-border">
+              <div className="border-border flex items-center justify-end gap-3 border-t pt-4">
                 <button
                   type="button"
                   onClick={closeEditModal}
-                  className="rounded-xl border border-border px-4 py-2 text-xs font-semibold text-text hover:bg-background"
+                  className="border-border text-text hover:bg-background rounded-xl border px-4 py-2 text-xs font-semibold"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="rounded-xl bg-[#0b2e1e] hover:bg-[#124d34] px-5 py-2 text-xs font-semibold text-white shadow-xs transition-colors disabled:opacity-50"
+                  className="rounded-xl bg-[#0b2e1e] px-5 py-2 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-[#124d34] disabled:opacity-50"
                 >
                   {isPending ? "Saving..." : "Update Member"}
                 </button>
@@ -1193,21 +1228,23 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
       {/* DELETE CONFIRMATION MODAL */}
       {deleteConfirmId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
-          <div className="w-full max-w-md rounded-3xl border border-border bg-surface p-6 shadow-2xl">
+          <div className="border-border bg-surface w-full max-w-md rounded-3xl border p-6 shadow-2xl">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-50 text-rose-600 dark:bg-rose-950">
               <Trash2 className="h-6 w-6" />
             </div>
-            <h3 className="mt-4 font-display text-lg font-bold text-text">
+            <h3 className="font-display text-text mt-4 text-lg font-bold">
               Confirm Member Removal
             </h3>
-            <p className="mt-2 text-xs sm:text-sm text-text-muted leading-relaxed">
-              Are you sure you want to remove this team member from the society registry? This will take immediate effect on the public leadership page.
+            <p className="text-text-muted mt-2 text-xs leading-relaxed sm:text-sm">
+              Are you sure you want to remove this team member from the society
+              registry? This will take immediate effect on the public leadership
+              page.
             </p>
             <div className="mt-6 flex items-center justify-end gap-3">
               <button
                 type="button"
                 onClick={() => setDeleteConfirmId(null)}
-                className="rounded-xl border border-border px-4 py-2 text-xs font-semibold text-text hover:bg-background"
+                className="border-border text-text hover:bg-background rounded-xl border px-4 py-2 text-xs font-semibold"
               >
                 Cancel
               </button>
@@ -1215,7 +1252,7 @@ export function TeamManager({ initialMembers }: TeamManagerProps) {
                 type="button"
                 onClick={() => handleDelete(deleteConfirmId)}
                 disabled={isPending}
-                className="rounded-xl bg-rose-600 hover:bg-rose-700 px-5 py-2 text-xs font-semibold text-white shadow-xs transition-colors disabled:opacity-50"
+                className="rounded-xl bg-rose-600 px-5 py-2 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-rose-700 disabled:opacity-50"
               >
                 {isPending ? "Deleting..." : "Delete Member"}
               </button>

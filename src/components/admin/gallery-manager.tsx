@@ -4,10 +4,7 @@ import * as React from "react";
 import { useState, useTransition } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import {
-  type GalleryImage,
-  formatCategoryLabel,
-} from "@/content/gallery";
+import { type GalleryImage, formatCategoryLabel } from "@/content/gallery";
 import {
   createGalleryImageAction,
   updateGalleryImageAction,
@@ -43,7 +40,9 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
   const [images, setImages] = useState<GalleryImage[]>(initialImages);
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
-  const [approvalFilter, setApprovalFilter] = useState<"all" | "approved" | "unapproved">("all");
+  const [approvalFilter, setApprovalFilter] = useState<
+    "all" | "approved" | "unapproved"
+  >("all");
   const [isPending, startTransition] = useTransition();
 
   // Modals
@@ -59,13 +58,16 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
 
   // Dynamic Category creation state
   const [isCreateCustomCategory, setIsCreateCustomCategory] = useState(false);
-  const [createCustomCategoryInput, setCreateCustomCategoryInput] = useState("");
+  const [createCustomCategoryInput, setCreateCustomCategoryInput] =
+    useState("");
   const [isEditCustomCategory, setIsEditCustomCategory] = useState(false);
   const [editCustomCategoryInput, setEditCustomCategoryInput] = useState("");
 
   // Category Manager Modal state
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
-  const [editingCategoryKey, setEditingCategoryKey] = useState<string | null>(null);
+  const [editingCategoryKey, setEditingCategoryKey] = useState<string | null>(
+    null
+  );
   const [editingCategoryName, setEditingCategoryName] = useState("");
   const [categoryActionMessage, setCategoryActionMessage] = useState<{
     text: string;
@@ -187,7 +189,8 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
     e.preventDefault();
     setFormError(null);
     const formData = new FormData(e.currentTarget);
-    const rawPhoto = editPhotoUrl.trim() || (formData.get("src") as string)?.trim();
+    const rawPhoto =
+      editPhotoUrl.trim() || (formData.get("src") as string)?.trim();
     if (rawPhoto) {
       formData.set("src", rawPhoto);
     }
@@ -227,7 +230,10 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
     }
 
     startTransition(async () => {
-      const res = await renameGalleryCategoryAction(oldCategory, editingCategoryName);
+      const res = await renameGalleryCategoryAction(
+        oldCategory,
+        editingCategoryName
+      );
       if (res?.error) {
         setCategoryActionMessage({ text: res.error, isError: true });
       } else {
@@ -279,27 +285,27 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
   return (
     <div className="space-y-6">
       {/* Top Metrics Strip */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="rounded-2xl border border-border bg-surface p-4 shadow-2xs flex items-center justify-between">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div className="border-border bg-surface flex items-center justify-between rounded-2xl border p-4 shadow-2xs">
           <div>
-            <div className="text-xs font-semibold uppercase tracking-wider text-text-muted">
+            <div className="text-text-muted text-xs font-semibold tracking-wider uppercase">
               Total Cataloged Photos
             </div>
-            <div className="mt-1 font-display text-2xl font-bold text-primary">
+            <div className="font-display text-primary mt-1 text-2xl font-bold">
               {totalCount}
             </div>
           </div>
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
-            <ImageIcon className="h-5 w-5 text-primary" />
+          <div className="bg-primary/10 text-primary flex h-11 w-11 items-center justify-center rounded-xl">
+            <ImageIcon className="text-primary h-5 w-5" />
           </div>
         </div>
 
-        <div className="rounded-2xl border border-border bg-surface p-4 shadow-2xs flex items-center justify-between">
+        <div className="border-border bg-surface flex items-center justify-between rounded-2xl border p-4 shadow-2xs">
           <div>
-            <div className="text-xs font-semibold uppercase tracking-wider text-[#166534]">
+            <div className="text-xs font-semibold tracking-wider text-[#166534] uppercase">
               Approved & Publicly Live
             </div>
-            <div className="mt-1 font-display text-2xl font-bold text-[#166534]">
+            <div className="font-display mt-1 text-2xl font-bold text-[#166534]">
               {approvedCount}
             </div>
           </div>
@@ -308,12 +314,12 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-border bg-surface p-4 shadow-2xs flex items-center justify-between">
+        <div className="border-border bg-surface flex items-center justify-between rounded-2xl border p-4 shadow-2xs">
           <div>
-            <div className="text-xs font-semibold uppercase tracking-wider text-[#9f1239]">
+            <div className="text-xs font-semibold tracking-wider text-[#9f1239] uppercase">
               Pending / Restricted / Hidden
             </div>
-            <div className="mt-1 font-display text-2xl font-bold text-[#9f1239]">
+            <div className="font-display mt-1 text-2xl font-bold text-[#9f1239]">
               {unapprovedCount}
             </div>
           </div>
@@ -324,23 +330,23 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
       </div>
 
       {/* Filter and Action Bar */}
-      <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 rounded-2xl border border-border bg-surface p-4 shadow-2xs">
+      <div className="border-border bg-surface flex flex-col items-stretch justify-between gap-4 rounded-2xl border p-4 shadow-2xs md:flex-row md:items-center">
         {/* Search Input */}
-        <div className="relative flex-1 min-w-[220px]">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
+        <div className="relative min-w-[220px] flex-1">
+          <Search className="text-text-muted absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2" />
           <input
             type="search"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by caption, location, year, or consent notes..."
-            className="w-full rounded-xl border border-border bg-background pl-10 pr-4 py-2.5 text-xs sm:text-sm text-text placeholder:text-text-muted/70 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+            className="border-border bg-background text-text placeholder:text-text-muted/70 focus:border-primary focus:ring-primary w-full rounded-xl border py-2.5 pr-4 pl-10 text-xs focus:ring-1 focus:outline-none sm:text-sm"
           />
         </div>
 
         {/* Filter Pills */}
         <div className="flex flex-wrap items-center gap-2">
           {/* Status Filter */}
-          <div className="inline-flex rounded-xl bg-background border border-border p-1">
+          <div className="bg-background border-border inline-flex rounded-xl border p-1">
             <button
               type="button"
               onClick={() => setApprovalFilter("all")}
@@ -380,7 +386,7 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="rounded-xl border border-border bg-background px-3 py-2 text-xs font-semibold text-text focus:border-primary focus:outline-none"
+            className="border-border bg-background text-text focus:border-primary rounded-xl border px-3 py-2 text-xs font-semibold focus:outline-none"
           >
             <option value="all">All Photo Albums</option>
             {allCategories.map((cat) => (
@@ -398,7 +404,7 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
               setCategoryActionMessage(null);
               setEditingCategoryKey(null);
             }}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-background hover:bg-surface px-4 py-2 text-xs font-semibold text-text shadow-xs transition-colors shrink-0 cursor-pointer"
+            className="border-border bg-background hover:bg-surface text-text inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-xl border px-4 py-2 text-xs font-semibold shadow-xs transition-colors"
           >
             <Tags className="h-4 w-4 text-[#124d34]" />
             <span>Edit Categories ({allCategories.length})</span>
@@ -407,7 +413,7 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
           <button
             type="button"
             onClick={() => setIsBatchOpen(true)}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-[#124d34] hover:bg-[#0b2e1e] text-white px-4 py-2 text-xs font-semibold shadow-xs transition-colors shrink-0 cursor-pointer"
+            className="inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-xl bg-[#124d34] px-4 py-2 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-[#0b2e1e]"
           >
             <UploadCloud className="h-4 w-4 text-[#d4af37]" />
             <span>Batch Upload Photos</span>
@@ -416,23 +422,23 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
           <button
             type="button"
             onClick={openCreateModal}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-background hover:bg-surface px-4 py-2 text-xs font-semibold text-text shadow-xs transition-colors shrink-0 cursor-pointer"
+            className="border-border bg-background hover:bg-surface text-text inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-xl border px-4 py-2 text-xs font-semibold shadow-xs transition-colors"
           >
-            <Plus className="h-4 w-4 text-primary" />
+            <Plus className="text-primary h-4 w-4" />
             <span>Add Single Photo</span>
           </button>
         </div>
       </div>
 
       {/* Gallery Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {filteredImages.map((img) => {
           const isApproved = img.approved;
 
           return (
             <div
               key={img.id}
-              className={`group relative rounded-2xl border bg-surface overflow-hidden transition-all shadow-2xs hover:shadow-md flex flex-col justify-between ${
+              className={`group bg-surface relative flex flex-col justify-between overflow-hidden rounded-2xl border shadow-2xs transition-all hover:shadow-md ${
                 isApproved
                   ? "border-border hover:border-primary/40"
                   : "border-rose-300 bg-rose-50/20 dark:border-rose-900/40"
@@ -440,7 +446,7 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
             >
               <div>
                 {/* Image Banner */}
-                <div className="relative aspect-[16/10] w-full bg-black/5 overflow-hidden">
+                <div className="relative aspect-[16/10] w-full overflow-hidden bg-black/5">
                   <Image
                     src={img.src}
                     alt={img.captionKey}
@@ -481,20 +487,22 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
                 </div>
 
                 {/* Content Details */}
-                <div className="p-4 space-y-2">
-                  <h3 className="font-display text-sm font-bold text-text line-clamp-2">
+                <div className="space-y-2 p-4">
+                  <h3 className="font-display text-text line-clamp-2 text-sm font-bold">
                     {img.captionKey}
                   </h3>
 
-                  <div className="flex items-center gap-1 text-xs text-text-muted">
+                  <div className="text-text-muted flex items-center gap-1 text-xs">
                     <MapPin className="h-3 w-3 shrink-0" />
-                    <span className="truncate max-w-[200px]">{img.location}</span>
+                    <span className="max-w-[200px] truncate">
+                      {img.location}
+                    </span>
                   </div>
                 </div>
               </div>
 
               {/* Action Buttons Footer */}
-              <div className="p-4 pt-0 border-t border-border mt-3 flex items-center justify-between gap-2">
+              <div className="border-border mt-3 flex items-center justify-between gap-2 border-t p-4 pt-0">
                 {/* 1-Click Approval Toggle */}
                 <button
                   type="button"
@@ -505,7 +513,11 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
                       ? "bg-rose-50 text-rose-700 hover:bg-rose-100 dark:bg-rose-950/60 dark:text-rose-300"
                       : "bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:text-emerald-300"
                   }`}
-                  title={isApproved ? "Revoke Approval & Hide" : "Approve Photo for Public Site"}
+                  title={
+                    isApproved
+                      ? "Revoke Approval & Hide"
+                      : "Approve Photo for Public Site"
+                  }
                 >
                   {isApproved ? (
                     <>
@@ -524,7 +536,7 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
                   <button
                     type="button"
                     onClick={() => openEditModal(img)}
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-background text-text-muted hover:border-primary hover:text-primary transition-colors"
+                    className="border-border bg-background text-text-muted hover:border-primary hover:text-primary inline-flex h-8 w-8 items-center justify-center rounded-lg border transition-colors"
                     title="Edit Photo Details"
                   >
                     <Edit2 className="h-3.5 w-3.5" />
@@ -532,7 +544,7 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
                   <button
                     type="button"
                     onClick={() => setDeleteConfirmId(img.id)}
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-background text-rose-500 hover:bg-rose-50 hover:border-rose-200 transition-colors"
+                    className="border-border bg-background inline-flex h-8 w-8 items-center justify-center rounded-lg border text-rose-500 transition-colors hover:border-rose-200 hover:bg-rose-50"
                     title="Delete Photo"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
@@ -544,12 +556,14 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
         })}
 
         {filteredImages.length === 0 && (
-          <div className="col-span-full rounded-2xl border border-dashed border-border p-12 text-center bg-surface">
-            <ImageIcon className="mx-auto h-10 w-10 text-text-muted/60" />
-            <h3 className="mt-3 font-display text-base font-bold text-text">
-              {totalCount === 0 ? "No Photos in Registry Yet" : "No Photos Found"}
+          <div className="border-border bg-surface col-span-full rounded-2xl border border-dashed p-12 text-center">
+            <ImageIcon className="text-text-muted/60 mx-auto h-10 w-10" />
+            <h3 className="font-display text-text mt-3 text-base font-bold">
+              {totalCount === 0
+                ? "No Photos in Registry Yet"
+                : "No Photos Found"}
             </h3>
-            <p className="mt-1 text-xs text-text-muted max-w-md mx-auto">
+            <p className="text-text-muted mx-auto mt-1 max-w-md text-xs">
               {totalCount === 0
                 ? "Your society gallery is currently empty. Start documenting community shramadhana drives, ghusl programs, and welfare activities."
                 : "Try adjusting your search query or album category filter."}
@@ -559,7 +573,7 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
                 <button
                   type="button"
                   onClick={() => setIsBatchOpen(true)}
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#124d34] hover:bg-[#0b2e1e] text-white px-5 py-2.5 text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+                  className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[#124d34] px-5 py-2.5 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-[#0b2e1e]"
                 >
                   <UploadCloud className="h-4 w-4 text-[#d4af37]" />
                   <span>Batch Upload (50+ Photos)</span>
@@ -567,9 +581,9 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
                 <button
                   type="button"
                   onClick={openCreateModal}
-                  className="inline-flex items-center gap-2 rounded-xl border border-border bg-background hover:bg-surface px-5 py-2.5 text-xs font-semibold text-text shadow-xs transition-colors cursor-pointer"
+                  className="border-border bg-background hover:bg-surface text-text inline-flex cursor-pointer items-center gap-2 rounded-xl border px-5 py-2.5 text-xs font-semibold shadow-xs transition-colors"
                 >
-                  <Plus className="h-4 w-4 text-primary" />
+                  <Plus className="text-primary h-4 w-4" />
                   <span>Add Single Photo</span>
                 </button>
               </div>
@@ -580,32 +594,33 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
 
       {/* CREATE PHOTO MODAL */}
       {isCreateOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs overflow-y-auto">
-          <div className="relative w-full max-w-2xl rounded-3xl border border-border bg-surface p-6 sm:p-8 shadow-2xl my-8 max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/60 p-4 backdrop-blur-xs">
+          <div className="border-border bg-surface relative my-8 max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl border p-6 shadow-2xl sm:p-8">
             <button
               type="button"
               onClick={closeCreateModal}
-              className="absolute right-5 top-5 rounded-full p-2 text-text-muted hover:bg-background hover:text-text"
+              className="text-text-muted hover:bg-background hover:text-text absolute top-5 right-5 rounded-full p-2"
             >
               <X className="h-5 w-5" />
             </button>
 
-            <div className="flex items-center gap-3 border-b border-border pb-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <div className="border-border flex items-center gap-3 border-b pb-4">
+              <div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-xl">
                 <Plus className="h-5 w-5" />
               </div>
               <div>
-                <h2 className="font-display text-xl font-bold text-text">
+                <h2 className="font-display text-text text-xl font-bold">
                   Add New Gallery Photo
                 </h2>
-                <p className="text-xs text-text-muted">
-                  Upload or link a verified society event photo with privacy consent.
+                <p className="text-text-muted text-xs">
+                  Upload or link a verified society event photo with privacy
+                  consent.
                 </p>
               </div>
             </div>
 
             {formError && (
-              <div className="mt-4 flex items-center gap-2 rounded-xl bg-rose-50 dark:bg-rose-950 p-3 text-xs font-semibold text-rose-700 dark:text-rose-300">
+              <div className="mt-4 flex items-center gap-2 rounded-xl bg-rose-50 p-3 text-xs font-semibold text-rose-700 dark:bg-rose-950 dark:text-rose-300">
                 <ShieldAlert className="h-4 w-4 shrink-0" />
                 <span>{formError}</span>
               </div>
@@ -624,7 +639,7 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
 
               {/* Caption */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
+                <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
                   Photo Caption / Description *
                 </label>
                 <input
@@ -632,15 +647,15 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
                   name="caption"
                   required
                   placeholder="e.g. Mahallah Cemetery Shramadana volunteer restoration drive"
-                  className="w-full rounded-xl border border-border bg-background px-3.5 py-2.5 text-xs sm:text-sm text-text focus:border-primary focus:outline-none"
+                  className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3.5 py-2.5 text-xs focus:outline-none sm:text-sm"
                 />
               </div>
 
               {/* Category & Location */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <label className="block text-xs font-bold uppercase tracking-wider text-text-muted">
+                  <div className="mb-1 flex items-center justify-between">
+                    <label className="text-text-muted block text-xs font-bold tracking-wider uppercase">
                       Album Category *
                     </label>
                     {allCategories.length > 0 && (
@@ -650,9 +665,11 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
                           setIsCreateCustomCategory(!isCreateCustomCategory);
                           setCreateCustomCategoryInput("");
                         }}
-                        className="text-[11px] font-semibold text-primary hover:underline cursor-pointer"
+                        className="text-primary cursor-pointer text-[11px] font-semibold hover:underline"
                       >
-                        {isCreateCustomCategory ? "Choose Existing" : "+ New Category"}
+                        {isCreateCustomCategory
+                          ? "Choose Existing"
+                          : "+ New Category"}
                       </button>
                     )}
                   </div>
@@ -660,16 +677,18 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
                     <input
                       type="text"
                       value={createCustomCategoryInput}
-                      onChange={(e) => setCreateCustomCategoryInput(e.target.value)}
+                      onChange={(e) =>
+                        setCreateCustomCategoryInput(e.target.value)
+                      }
                       placeholder="e.g. Ramadan Relief 2026"
                       required
-                      className="w-full rounded-xl border border-primary bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
+                      className="border-primary bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 text-xs focus:outline-none"
                     />
                   ) : (
                     <select
                       name="category"
                       required
-                      className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
+                      className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 text-xs focus:outline-none"
                     >
                       {allCategories.map((cat) => (
                         <option key={cat.key} value={cat.key}>
@@ -681,7 +700,7 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
+                  <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
                     Location *
                   </label>
                   <input
@@ -689,47 +708,48 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
                     name="location"
                     required
                     defaultValue="Mullipothana"
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
+                    className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 text-xs focus:outline-none"
                   />
                 </div>
               </div>
 
               {/* Compliance & Approval Checkbox */}
-              <div className="space-y-2 pt-2 border-t border-border">
+              <div className="border-border space-y-2 border-t pt-2">
                 <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
                     id="create-approved"
                     name="approved"
                     defaultChecked
-                    className="rounded border-border text-primary focus:ring-primary"
+                    className="border-border text-primary focus:ring-primary rounded"
                   />
                   <label
                     htmlFor="create-approved"
-                    className="text-xs font-semibold text-text cursor-pointer flex items-center gap-1.5"
+                    className="text-text flex cursor-pointer items-center gap-1.5 text-xs font-semibold"
                   >
                     <CheckCircle2 className="h-4 w-4 text-emerald-600" />
                     <span>Approve for immediate public display on website</span>
                   </label>
                 </div>
-                <p className="text-[11px] text-text-muted pl-6">
-                  Uncheck this if the photo is awaiting consent verification or should remain restricted to administrative archives.
+                <p className="text-text-muted pl-6 text-[11px]">
+                  Uncheck this if the photo is awaiting consent verification or
+                  should remain restricted to administrative archives.
                 </p>
               </div>
 
               {/* Buttons */}
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-border">
+              <div className="border-border flex items-center justify-end gap-3 border-t pt-4">
                 <button
                   type="button"
                   onClick={closeCreateModal}
-                  className="rounded-xl border border-border px-4 py-2 text-xs font-semibold text-text hover:bg-background"
+                  className="border-border text-text hover:bg-background rounded-xl border px-4 py-2 text-xs font-semibold"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="rounded-xl bg-[#0b2e1e] hover:bg-[#124d34] px-5 py-2 text-xs font-semibold text-white shadow-xs transition-colors disabled:opacity-50"
+                  className="rounded-xl bg-[#0b2e1e] px-5 py-2 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-[#124d34] disabled:opacity-50"
                 >
                   {isPending ? "Saving..." : "Add to Gallery"}
                 </button>
@@ -741,32 +761,32 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
 
       {/* EDIT PHOTO MODAL */}
       {editingImage && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs overflow-y-auto">
-          <div className="relative w-full max-w-2xl rounded-3xl border border-border bg-surface p-6 sm:p-8 shadow-2xl my-8 max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/60 p-4 backdrop-blur-xs">
+          <div className="border-border bg-surface relative my-8 max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl border p-6 shadow-2xl sm:p-8">
             <button
               type="button"
               onClick={closeEditModal}
-              className="absolute right-5 top-5 rounded-full p-2 text-text-muted hover:bg-background hover:text-text"
+              className="text-text-muted hover:bg-background hover:text-text absolute top-5 right-5 rounded-full p-2"
             >
               <X className="h-5 w-5" />
             </button>
 
-            <div className="flex items-center gap-3 border-b border-border pb-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <div className="border-border flex items-center gap-3 border-b pb-4">
+              <div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-xl">
                 <Edit2 className="h-5 w-5" />
               </div>
               <div>
-                <h2 className="font-display text-xl font-bold text-text">
+                <h2 className="font-display text-text text-xl font-bold">
                   Edit Gallery Photo Details
                 </h2>
-                <p className="text-xs text-text-muted">
+                <p className="text-text-muted text-xs">
                   Update caption, category, consent notes, or approval status.
                 </p>
               </div>
             </div>
 
             {formError && (
-              <div className="mt-4 flex items-center gap-2 rounded-xl bg-rose-50 dark:bg-rose-950 p-3 text-xs font-semibold text-rose-700 dark:text-rose-300">
+              <div className="mt-4 flex items-center gap-2 rounded-xl bg-rose-50 p-3 text-xs font-semibold text-rose-700 dark:bg-rose-950 dark:text-rose-300">
                 <ShieldAlert className="h-4 w-4 shrink-0" />
                 <span>{formError}</span>
               </div>
@@ -789,7 +809,7 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
 
               {/* Caption */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
+                <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
                   Photo Caption / Description *
                 </label>
                 <input
@@ -797,15 +817,15 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
                   name="caption"
                   required
                   defaultValue={editingImage.captionKey}
-                  className="w-full rounded-xl border border-border bg-background px-3.5 py-2.5 text-xs sm:text-sm text-text focus:border-primary focus:outline-none"
+                  className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3.5 py-2.5 text-xs focus:outline-none sm:text-sm"
                 />
               </div>
 
               {/* Category & Location */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <label className="block text-xs font-bold uppercase tracking-wider text-text-muted">
+                  <div className="mb-1 flex items-center justify-between">
+                    <label className="text-text-muted block text-xs font-bold tracking-wider uppercase">
                       Album Category *
                     </label>
                     {allCategories.length > 0 && (
@@ -822,9 +842,11 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
                               : ""
                           );
                         }}
-                        className="text-[11px] font-semibold text-primary hover:underline cursor-pointer"
+                        className="text-primary cursor-pointer text-[11px] font-semibold hover:underline"
                       >
-                        {isEditCustomCategory ? "Choose From List" : "+ New / Custom Category"}
+                        {isEditCustomCategory
+                          ? "Choose From List"
+                          : "+ New / Custom Category"}
                       </button>
                     )}
                   </div>
@@ -833,17 +855,19 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
                       type="text"
                       name="category"
                       value={editCustomCategoryInput}
-                      onChange={(e) => setEditCustomCategoryInput(e.target.value)}
+                      onChange={(e) =>
+                        setEditCustomCategoryInput(e.target.value)
+                      }
                       placeholder="e.g. Ramadan Relief 2026"
                       required
-                      className="w-full rounded-xl border border-primary bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
+                      className="border-primary bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 text-xs focus:outline-none"
                     />
                   ) : (
                     <select
                       name="category"
                       required
                       defaultValue={editingImage.category}
-                      className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
+                      className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 text-xs focus:outline-none"
                     >
                       {allCategories.map((cat) => (
                         <option key={cat.key} value={cat.key}>
@@ -855,7 +879,7 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
+                  <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
                     Location *
                   </label>
                   <input
@@ -863,44 +887,46 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
                     name="location"
                     required
                     defaultValue={editingImage.location}
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
+                    className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2 text-xs focus:outline-none"
                   />
                 </div>
               </div>
 
               {/* Compliance & Approval Checkbox */}
-              <div className="space-y-2 pt-2 border-t border-border">
+              <div className="border-border space-y-2 border-t pt-2">
                 <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
                     id="edit-approved"
                     name="approved"
                     defaultChecked={editingImage.approved}
-                    className="rounded border-border text-primary focus:ring-primary"
+                    className="border-border text-primary focus:ring-primary rounded"
                   />
                   <label
                     htmlFor="edit-approved"
-                    className="text-xs font-semibold text-text cursor-pointer flex items-center gap-1.5"
+                    className="text-text flex cursor-pointer items-center gap-1.5 text-xs font-semibold"
                   >
                     <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                    <span>Approved for immediate public display on website</span>
+                    <span>
+                      Approved for immediate public display on website
+                    </span>
                   </label>
                 </div>
               </div>
 
               {/* Buttons */}
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-border">
+              <div className="border-border flex items-center justify-end gap-3 border-t pt-4">
                 <button
                   type="button"
                   onClick={closeEditModal}
-                  className="rounded-xl border border-border px-4 py-2 text-xs font-semibold text-text hover:bg-background"
+                  className="border-border text-text hover:bg-background rounded-xl border px-4 py-2 text-xs font-semibold"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="rounded-xl bg-[#0b2e1e] hover:bg-[#124d34] px-5 py-2 text-xs font-semibold text-white shadow-xs transition-colors disabled:opacity-50"
+                  className="rounded-xl bg-[#0b2e1e] px-5 py-2 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-[#124d34] disabled:opacity-50"
                 >
                   {isPending ? "Saving..." : "Update Photo"}
                 </button>
@@ -913,21 +939,22 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
       {/* DELETE CONFIRMATION MODAL */}
       {deleteConfirmId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
-          <div className="w-full max-w-md rounded-3xl border border-border bg-surface p-6 shadow-2xl">
+          <div className="border-border bg-surface w-full max-w-md rounded-3xl border p-6 shadow-2xl">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-50 text-rose-600 dark:bg-rose-950">
               <Trash2 className="h-6 w-6" />
             </div>
-            <h3 className="mt-4 font-display text-lg font-bold text-text">
+            <h3 className="font-display text-text mt-4 text-lg font-bold">
               Confirm Photo Deletion
             </h3>
-            <p className="mt-2 text-xs sm:text-sm text-text-muted leading-relaxed">
-              Are you sure you want to permanently remove this image from the society gallery registry?
+            <p className="text-text-muted mt-2 text-xs leading-relaxed sm:text-sm">
+              Are you sure you want to permanently remove this image from the
+              society gallery registry?
             </p>
             <div className="mt-6 flex items-center justify-end gap-3">
               <button
                 type="button"
                 onClick={() => setDeleteConfirmId(null)}
-                className="rounded-xl border border-border px-4 py-2 text-xs font-semibold text-text hover:bg-background"
+                className="border-border text-text hover:bg-background rounded-xl border px-4 py-2 text-xs font-semibold"
               >
                 Cancel
               </button>
@@ -935,7 +962,7 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
                 type="button"
                 onClick={() => handleDelete(deleteConfirmId)}
                 disabled={isPending}
-                className="rounded-xl bg-rose-600 hover:bg-rose-700 px-5 py-2 text-xs font-semibold text-white shadow-xs transition-colors disabled:opacity-50"
+                className="rounded-xl bg-rose-600 px-5 py-2 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-rose-700 disabled:opacity-50"
               >
                 {isPending ? "Deleting..." : "Delete Photo"}
               </button>
@@ -946,8 +973,8 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
 
       {/* MANAGE / EDIT ALBUM CATEGORIES MODAL */}
       {isCategoryModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs overflow-y-auto">
-          <div className="relative w-full max-w-2xl rounded-3xl border border-border bg-surface p-6 sm:p-8 shadow-2xl my-8 max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/60 p-4 backdrop-blur-xs">
+          <div className="border-border bg-surface relative my-8 max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl border p-6 shadow-2xl sm:p-8">
             <button
               type="button"
               onClick={() => {
@@ -955,21 +982,22 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
                 setEditingCategoryKey(null);
                 setCategoryActionMessage(null);
               }}
-              className="absolute right-5 top-5 rounded-full p-2 text-text-muted hover:bg-background hover:text-text cursor-pointer"
+              className="text-text-muted hover:bg-background hover:text-text absolute top-5 right-5 cursor-pointer rounded-full p-2"
             >
               <X className="h-5 w-5" />
             </button>
 
-            <div className="flex items-center gap-3 border-b border-border pb-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <div className="border-border flex items-center gap-3 border-b pb-4">
+              <div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-xl">
                 <Tags className="h-5 w-5" />
               </div>
               <div>
-                <h2 className="font-display text-xl font-bold text-text">
+                <h2 className="font-display text-text text-xl font-bold">
                   Edit Album Categories
                 </h2>
-                <p className="text-xs text-text-muted">
-                  View all photo albums, check photo counts, and rename categories across all photos in one click.
+                <p className="text-text-muted text-xs">
+                  View all photo albums, check photo counts, and rename
+                  categories across all photos in one click.
                 </p>
               </div>
             </div>
@@ -993,7 +1021,7 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
 
             <div className="mt-6 space-y-3">
               {allCategories.length === 0 ? (
-                <div className="text-center py-8 text-xs text-text-muted">
+                <div className="text-text-muted py-8 text-center text-xs">
                   No categories found. Upload photos to generate albums.
                 </div>
               ) : (
@@ -1003,24 +1031,28 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
                   return (
                     <div
                       key={cat.key}
-                      className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-2xl border border-border bg-background transition-colors hover:border-primary/30"
+                      className="border-border bg-background hover:border-primary/30 flex flex-col justify-between gap-3 rounded-2xl border p-3.5 transition-colors sm:flex-row sm:items-center"
                     >
                       {isEditingThis ? (
-                        <div className="flex-1 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                        <div className="flex flex-1 flex-col items-stretch gap-2 sm:flex-row sm:items-center">
                           <input
                             type="text"
                             value={editingCategoryName}
-                            onChange={(e) => setEditingCategoryName(e.target.value)}
+                            onChange={(e) =>
+                              setEditingCategoryName(e.target.value)
+                            }
                             placeholder="New category name..."
                             autoFocus
-                            className="flex-1 rounded-xl border border-primary bg-surface px-3 py-1.5 text-xs text-text focus:outline-none"
+                            className="border-primary bg-surface text-text flex-1 rounded-xl border px-3 py-1.5 text-xs focus:outline-none"
                           />
                           <div className="flex items-center gap-2">
                             <button
                               type="button"
-                              disabled={isPending || !editingCategoryName.trim()}
+                              disabled={
+                                isPending || !editingCategoryName.trim()
+                              }
                               onClick={() => handleSaveCategoryRename(cat.key)}
-                              className="rounded-xl bg-[#0b2e1e] hover:bg-[#124d34] px-3.5 py-1.5 text-xs font-semibold text-white transition-colors disabled:opacity-50 cursor-pointer"
+                              className="cursor-pointer rounded-xl bg-[#0b2e1e] px-3.5 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-[#124d34] disabled:opacity-50"
                             >
                               {isPending ? "Saving..." : "Save"}
                             </button>
@@ -1030,7 +1062,7 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
                                 setEditingCategoryKey(null);
                                 setEditingCategoryName("");
                               }}
-                              className="rounded-xl border border-border bg-surface px-3 py-1.5 text-xs font-medium text-text hover:bg-background cursor-pointer"
+                              className="border-border bg-surface text-text hover:bg-background cursor-pointer rounded-xl border px-3 py-1.5 text-xs font-medium"
                             >
                               Cancel
                             </button>
@@ -1039,21 +1071,21 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
                       ) : (
                         <>
                           <div className="flex items-center gap-3">
-                            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary font-bold text-xs">
+                            <span className="bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-lg text-xs font-bold">
                               <Tags className="h-4 w-4" />
                             </span>
                             <div>
-                              <div className="text-xs sm:text-sm font-bold text-text">
+                              <div className="text-text text-xs font-bold sm:text-sm">
                                 {cat.label}
                               </div>
-                              <div className="text-[11px] font-mono text-text-muted">
+                              <div className="text-text-muted font-mono text-[11px]">
                                 slug: {cat.key}
                               </div>
                             </div>
                           </div>
 
                           <div className="flex items-center gap-3">
-                            <span className="rounded-full bg-surface border border-border px-2.5 py-1 text-[11px] font-semibold text-text-muted">
+                            <span className="bg-surface border-border text-text-muted rounded-full border px-2.5 py-1 text-[11px] font-semibold">
                               {cat.count} {cat.count === 1 ? "photo" : "photos"}
                             </span>
                             <button
@@ -1063,9 +1095,9 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
                                 setEditingCategoryName(cat.label);
                                 setCategoryActionMessage(null);
                               }}
-                              className="inline-flex items-center gap-1 rounded-lg border border-border bg-surface hover:bg-background px-2.5 py-1 text-xs font-semibold text-text transition-colors cursor-pointer"
+                              className="border-border bg-surface hover:bg-background text-text inline-flex cursor-pointer items-center gap-1 rounded-lg border px-2.5 py-1 text-xs font-semibold transition-colors"
                             >
-                              <Edit2 className="h-3.5 w-3.5 text-primary" />
+                              <Edit2 className="text-primary h-3.5 w-3.5" />
                               <span>Rename</span>
                             </button>
                           </div>
@@ -1077,14 +1109,14 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
               )}
             </div>
 
-            <div className="mt-6 pt-4 border-t border-border flex justify-end">
+            <div className="border-border mt-6 flex justify-end border-t pt-4">
               <button
                 type="button"
                 onClick={() => {
                   setIsCategoryModalOpen(false);
                   setEditingCategoryKey(null);
                 }}
-                className="rounded-xl bg-[#0b2e1e] hover:bg-[#124d34] text-white px-5 py-2 text-xs font-semibold transition-colors cursor-pointer"
+                className="cursor-pointer rounded-xl bg-[#0b2e1e] px-5 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#124d34]"
               >
                 Done
               </button>

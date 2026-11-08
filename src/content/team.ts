@@ -625,7 +625,13 @@ export const KNOWN_OFFICIAL_MEMBERS: OfficialMemberRegistryItem[] = [
   {
     key: "jawffar",
     name: "A.H. Jawffar",
-    nameKeywords: ["jawffar", "jauffar", "jaffar", "a.h. jawffar", "a . h. jawffar"],
+    nameKeywords: [
+      "jawffar",
+      "jauffar",
+      "jaffar",
+      "a.h. jawffar",
+      "a . h. jawffar",
+    ],
     memberId: "BJWS018",
     token: "vtok_jawffar_bjws018",
     nic: "196614203912",
@@ -641,7 +647,12 @@ export const KNOWN_OFFICIAL_MEMBERS: OfficialMemberRegistryItem[] = [
   {
     key: "aqsan",
     name: "A.M. Sharfras Aqsan",
-    nameKeywords: ["aqsan", "sharfras", "sharfras aqsan", "a.m. sharfras aqsan"],
+    nameKeywords: [
+      "aqsan",
+      "sharfras",
+      "sharfras aqsan",
+      "a.m. sharfras aqsan",
+    ],
     memberId: "BJWS020",
     token: "vtok_aqsan_bjws020",
     nic: "199720401928",
@@ -655,7 +666,11 @@ export function findKnownMember(query: {
 }): OfficialMemberRegistryItem | undefined {
   const normId = query.id?.trim().toLowerCase() || "";
   const normMemberId = query.memberId?.trim().toUpperCase() || "";
-  const normName = query.name?.trim().toLowerCase().replace(/[^a-z0-9]/g, "") || "";
+  const normName =
+    query.name
+      ?.trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, "") || "";
 
   return KNOWN_OFFICIAL_MEMBERS.find((km) => {
     // 1. Direct match on official ID (e.g. "BJWS004")
@@ -681,15 +696,17 @@ export const ASSIGNED_MEMBER_IDS: Record<string, string> = Object.fromEntries(
   KNOWN_OFFICIAL_MEMBERS.map((m) => [m.key, m.memberId])
 );
 
-export const ASSIGNED_VERIFICATION_TOKENS: Record<string, string> = Object.fromEntries(
-  KNOWN_OFFICIAL_MEMBERS.map((m) => [m.key, m.token])
-);
+export const ASSIGNED_VERIFICATION_TOKENS: Record<string, string> =
+  Object.fromEntries(KNOWN_OFFICIAL_MEMBERS.map((m) => [m.key, m.token]));
 
 export const ASSIGNED_NIC_NUMBERS: Record<string, string> = Object.fromEntries(
   KNOWN_OFFICIAL_MEMBERS.map((m) => [m.key, m.nic])
 );
 
-export function calculateExpiryDate(issueDateStr: string = "2026-01-01", years = 3): string {
+export function calculateExpiryDate(
+  issueDateStr: string = "2026-01-01",
+  years = 3
+): string {
   try {
     const parts = issueDateStr.trim().split("-");
     if (parts.length === 3) {
@@ -713,7 +730,10 @@ export function resolveMemberPhoto(photo?: string): string | undefined {
   return p;
 }
 
-export function initializeTeamMemberDefaults(member: TeamMember, index: number): TeamMember {
+export function initializeTeamMemberDefaults(
+  member: TeamMember,
+  index: number
+): TeamMember {
   const known = findKnownMember({
     id: member.id,
     name: member.name,
@@ -830,7 +850,9 @@ export function getMemberByVerification(
   return null;
 }
 
-export function regenerateMemberVerificationTokenStore(id: string): string | null {
+export function regenerateMemberVerificationTokenStore(
+  id: string
+): string | null {
   const member = liveTeamStore.find((m) => m.id === id || m.memberId === id);
   if (!member) return null;
   const newToken =
@@ -852,10 +874,11 @@ export function addTeamMemberStore(member: TeamMember): void {
     verificationToken:
       member.verificationToken ||
       "vtok_" +
-      Math.random().toString(36).substring(2, 9) +
-      Math.random().toString(36).substring(2, 9),
+        Math.random().toString(36).substring(2, 9) +
+        Math.random().toString(36).substring(2, 9),
     verificationStatus:
-      member.verificationStatus || (member.isInactive ? "suspended" : "verified"),
+      member.verificationStatus ||
+      (member.isInactive ? "suspended" : "verified"),
     issueDate,
     expiryDate: member.expiryDate || calculateExpiryDate(issueDate, 3),
   };
@@ -873,15 +896,27 @@ export function updateTeamMemberStore(
   id: string,
   updates: Partial<TeamMember>
 ): boolean {
-  const index = liveTeamStore.findIndex((m) => m.id === id || m.memberId === id);
+  const index = liveTeamStore.findIndex(
+    (m) => m.id === id || m.memberId === id
+  );
   if (index === -1) return false;
 
   const current = liveTeamStore[index];
-  const photo = updates.photo !== undefined ? resolveMemberPhoto(updates.photo) : current.photo;
+  const photo =
+    updates.photo !== undefined
+      ? resolveMemberPhoto(updates.photo)
+      : current.photo;
   const issueDate = updates.issueDate || current.issueDate || "2026-01-01";
-  const expiryDate = updates.expiryDate || current.expiryDate || calculateExpiryDate(issueDate, 3);
-  const nic = updates.nic !== undefined && updates.nic !== "" ? updates.nic : current.nic;
-  const memberId = updates.memberId !== undefined && updates.memberId !== "" ? updates.memberId : current.memberId;
+  const expiryDate =
+    updates.expiryDate ||
+    current.expiryDate ||
+    calculateExpiryDate(issueDate, 3);
+  const nic =
+    updates.nic !== undefined && updates.nic !== "" ? updates.nic : current.nic;
+  const memberId =
+    updates.memberId !== undefined && updates.memberId !== ""
+      ? updates.memberId
+      : current.memberId;
 
   liveTeamStore[index] = {
     ...current,
@@ -939,5 +974,3 @@ export function reorderTeamMembersStore(orderedIds: string[]): void {
   liveTeamStore = reordered;
   globalThis.__liveTeamStore = liveTeamStore;
 }
-
-

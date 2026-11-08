@@ -28,7 +28,8 @@ export function LanguageSwitcher({
   const [pendingLocale, setPendingLocale] = React.useState<Locale | null>(null);
 
   // Derive active transition state without triggering cascading renders in effects
-  const isSwitching = isPending && pendingLocale !== null && pendingLocale !== currentLocale;
+  const isSwitching =
+    isPending && pendingLocale !== null && pendingLocale !== currentLocale;
   const activePendingLocale = isSwitching ? pendingLocale : null;
 
   // Aggressively prefetch other locales on idle so language switching is near-instant
@@ -68,8 +69,8 @@ export function LanguageSwitcher({
     activePendingLocale === "ta"
       ? "மாற்றப்படுகிறது..."
       : activePendingLocale === "si"
-      ? "මාරු වෙමින් පවතී..."
-      : "Switching...";
+        ? "මාරු වෙමින් පවතී..."
+        : "Switching...";
 
   return (
     <>
@@ -78,9 +79,9 @@ export function LanguageSwitcher({
         <div
           role="status"
           aria-live="polite"
-          className="fixed top-0 left-0 right-0 z-[9999] pointer-events-none"
+          className="pointer-events-none fixed top-0 right-0 left-0 z-[9999]"
         >
-          <div className="h-1 bg-gradient-to-r from-[#c99a45] via-emerald-400 to-[#c99a45] animate-pulse shadow-md" />
+          <div className="h-1 animate-pulse bg-gradient-to-r from-[#c99a45] via-emerald-400 to-[#c99a45] shadow-md" />
         </div>
       )}
 
@@ -88,7 +89,10 @@ export function LanguageSwitcher({
         <div
           role="group"
           aria-label="Language selector"
-          className={cn("inline-flex items-center gap-1 sm:gap-2 text-xs", className)}
+          className={cn(
+            "inline-flex items-center gap-1 text-xs sm:gap-2",
+            className
+          )}
         >
           <div className="flex items-center gap-1.5 text-emerald-200/80">
             {isSwitching ? (
@@ -102,7 +106,7 @@ export function LanguageSwitcher({
             <span className="sr-only">Select Language:</span>
           </div>
 
-          <div className="flex items-center rounded-sm bg-black/25 p-0.5 border border-emerald-800/40 text-xs">
+          <div className="flex items-center rounded-sm border border-emerald-800/40 bg-black/25 p-0.5 text-xs">
             {languages.map((lang) => {
               const isActive = currentLocale === lang.code;
               const isTarget = isSwitching && activePendingLocale === lang.code;
@@ -118,18 +122,21 @@ export function LanguageSwitcher({
                   aria-pressed={isActive}
                   aria-busy={isTarget}
                   className={cn(
-                    "relative px-1.5 sm:px-2 py-0.5 rounded-xs transition-all font-medium text-[10px] sm:text-xs inline-flex items-center gap-1",
-                    "focus-visible:ring-1 focus-visible:ring-amber-300 focus-visible:outline-none cursor-pointer",
+                    "relative inline-flex items-center gap-1 rounded-xs px-1.5 py-0.5 text-[10px] font-medium transition-all sm:px-2 sm:text-xs",
+                    "cursor-pointer focus-visible:ring-1 focus-visible:ring-amber-300 focus-visible:outline-none",
                     isActive
-                      ? "bg-[#124d34] text-white font-semibold shadow-2xs"
+                      ? "bg-[#124d34] font-semibold text-white shadow-2xs"
                       : isTarget
-                      ? "bg-[#124d34]/90 text-amber-200 ring-1 ring-amber-400/60 font-semibold"
-                      : "text-emerald-100/75 hover:text-white hover:bg-white/10",
-                    isSwitching && !isTarget && !isActive && "opacity-50 cursor-not-allowed"
+                        ? "bg-[#124d34]/90 font-semibold text-amber-200 ring-1 ring-amber-400/60"
+                        : "text-emerald-100/75 hover:bg-white/10 hover:text-white",
+                    isSwitching &&
+                      !isTarget &&
+                      !isActive &&
+                      "cursor-not-allowed opacity-50"
                   )}
                 >
                   {isTarget && (
-                    <Loader2 className="h-2.5 w-2.5 animate-spin text-[#d4af37] shrink-0" />
+                    <Loader2 className="h-2.5 w-2.5 shrink-0 animate-spin text-[#d4af37]" />
                   )}
                   <span className="sm:hidden">{lang.code.toUpperCase()}</span>
                   <span className="hidden sm:inline">{lang.nativeName}</span>
@@ -140,7 +147,7 @@ export function LanguageSwitcher({
 
           {/* Quick confirmation text */}
           {isSwitching && (
-            <span className="hidden md:inline-flex items-center gap-1 text-[10px] font-semibold text-[#d4af37] animate-pulse">
+            <span className="hidden animate-pulse items-center gap-1 text-[10px] font-semibold text-[#d4af37] md:inline-flex">
               <span>{switchingText}</span>
             </span>
           )}
@@ -148,12 +155,12 @@ export function LanguageSwitcher({
       )}
 
       {variant === "pills" && (
-        <div className="space-y-1.5 w-full">
+        <div className="w-full space-y-1.5">
           <div
             role="group"
             aria-label="Language selector"
             className={cn(
-              "border-border bg-surface grid grid-cols-3 gap-1 rounded-lg border p-1 shadow-2xs w-full",
+              "border-border bg-surface grid w-full grid-cols-3 gap-1 rounded-lg border p-1 shadow-2xs",
               className
             )}
           >
@@ -172,18 +179,21 @@ export function LanguageSwitcher({
                   aria-pressed={isActive}
                   aria-busy={isTarget}
                   className={cn(
-                    "rounded-md px-1 py-1.5 text-center text-xs font-medium transition-colors sm:text-sm inline-flex items-center justify-center gap-1.5 cursor-pointer",
+                    "inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-md px-1 py-1.5 text-center text-xs font-medium transition-colors sm:text-sm",
                     "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none",
                     isActive
                       ? "bg-primary text-primary-foreground font-semibold shadow-2xs"
                       : isTarget
-                      ? "bg-primary/80 text-primary-foreground ring-1 ring-[#c99a45] font-semibold"
-                      : "text-text-muted hover:text-text hover:bg-muted",
-                    isSwitching && !isTarget && !isActive && "opacity-50 cursor-not-allowed"
+                        ? "bg-primary/80 text-primary-foreground font-semibold ring-1 ring-[#c99a45]"
+                        : "text-text-muted hover:text-text hover:bg-muted",
+                    isSwitching &&
+                      !isTarget &&
+                      !isActive &&
+                      "cursor-not-allowed opacity-50"
                   )}
                 >
                   {isTarget && (
-                    <Loader2 className="h-3 w-3 animate-spin text-amber-200 shrink-0" />
+                    <Loader2 className="h-3 w-3 shrink-0 animate-spin text-amber-200" />
                   )}
                   <span>{lang.nativeName}</span>
                 </button>
@@ -192,7 +202,7 @@ export function LanguageSwitcher({
           </div>
 
           {isSwitching && (
-            <div className="flex items-center justify-center gap-1.5 text-[11px] font-semibold text-primary animate-pulse py-0.5">
+            <div className="text-primary flex animate-pulse items-center justify-center gap-1.5 py-0.5 text-[11px] font-semibold">
               <Loader2 className="h-3 w-3 animate-spin text-[#c99a45]" />
               <span>{switchingText}</span>
             </div>
@@ -209,7 +219,11 @@ export function LanguageSwitcher({
             <select
               id="language-select"
               disabled={isSwitching}
-              value={isSwitching && activePendingLocale ? activePendingLocale : currentLocale}
+              value={
+                isSwitching && activePendingLocale
+                  ? activePendingLocale
+                  : currentLocale
+              }
               onChange={(e) => handleLocaleChange(e.target.value as Locale)}
               className={cn(
                 "border-border bg-surface text-text h-9 cursor-pointer appearance-none rounded-md border py-1 pr-7 pl-8 text-xs font-medium shadow-2xs sm:text-sm",

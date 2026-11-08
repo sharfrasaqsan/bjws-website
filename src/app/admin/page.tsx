@@ -157,18 +157,18 @@ export default async function AdminDashboardPage() {
 
   return (
     <div className="py-6 sm:py-8">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
+      <div className="mx-auto max-w-7xl space-y-6 px-4 sm:space-y-8 sm:px-6 lg:px-8">
         {/* Executive Header Bar */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-[#e6e4dc] dark:border-[#1a432f] pb-6">
+        <div className="flex flex-col gap-4 border-b border-[#e6e4dc] pb-6 sm:flex-row sm:items-center sm:justify-between dark:border-[#1a432f]">
           <div>
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#124d34] dark:text-[#a7c5b6]">
+            <div className="flex items-center gap-2 text-xs font-semibold tracking-wider text-[#124d34] uppercase dark:text-[#a7c5b6]">
               <span>Executive Overview</span>
               <span className="text-[#c99a45]">•</span>
-              <span className="font-normal normal-case text-[#6b7280] dark:text-[#9ca3af]">
+              <span className="font-normal text-[#6b7280] normal-case dark:text-[#9ca3af]">
                 Buhary Janaza Welfare Society
               </span>
             </div>
-            <h1 className="mt-1 font-serif text-2xl font-bold tracking-tight text-[#0b2e1e] dark:text-white sm:text-3xl">
+            <h1 className="mt-1 font-serif text-2xl font-bold tracking-tight text-[#0b2e1e] sm:text-3xl dark:text-white">
               Administrative Console
             </h1>
           </div>
@@ -176,13 +176,13 @@ export default async function AdminDashboardPage() {
           {/* Quick Actions & DB Status */}
           <div className="flex flex-wrap items-center gap-2.5">
             <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-800 dark:text-emerald-300">
-              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
               <span>{isConfigured ? "Supabase Live" : "Demo Mode"}</span>
             </div>
 
             <Link
               href="/admin/notices"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-[#e6e4dc] dark:border-[#1a432f] bg-white dark:bg-[#0c2419] px-3.5 py-2 text-xs font-semibold text-[#1c2420] dark:text-[#e2f0e8] shadow-2xs transition-all hover:border-[#124d34] hover:bg-[#fbfaf6] dark:hover:bg-[#123624]"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[#e6e4dc] bg-white px-3.5 py-2 text-xs font-semibold text-[#1c2420] shadow-2xs transition-all hover:border-[#124d34] hover:bg-[#fbfaf6] dark:border-[#1a432f] dark:bg-[#0c2419] dark:text-[#e2f0e8] dark:hover:bg-[#123624]"
             >
               <Plus className="h-3.5 w-3.5 text-[#124d34] dark:text-[#c99a45]" />
               <span>Post Notice</span>
@@ -190,7 +190,7 @@ export default async function AdminDashboardPage() {
 
             <Link
               href="/admin/news"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-[#e6e4dc] dark:border-[#1a432f] bg-white dark:bg-[#0c2419] px-3.5 py-2 text-xs font-semibold text-[#1c2420] dark:text-[#e2f0e8] shadow-2xs transition-all hover:border-[#124d34] hover:bg-[#fbfaf6] dark:hover:bg-[#123624]"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[#e6e4dc] bg-white px-3.5 py-2 text-xs font-semibold text-[#1c2420] shadow-2xs transition-all hover:border-[#124d34] hover:bg-[#fbfaf6] dark:border-[#1a432f] dark:bg-[#0c2419] dark:text-[#e2f0e8] dark:hover:bg-[#123624]"
             >
               <Plus className="h-3.5 w-3.5 text-[#124d34] dark:text-[#c99a45]" />
               <span>New Article</span>
@@ -213,19 +213,19 @@ export default async function AdminDashboardPage() {
           {/* Card 1: Contact Inquiries */}
           <Link
             href="/admin/messages"
-            className="group relative overflow-hidden rounded-2xl border border-[#e6e4dc] dark:border-[#1a432f] bg-white dark:bg-[#0c2419] p-6 shadow-xs transition-all hover:border-[#124d34] dark:hover:border-[#c99a45] hover:shadow-md"
+            className="group relative overflow-hidden rounded-2xl border border-[#e6e4dc] bg-white p-6 shadow-xs transition-all hover:border-[#124d34] hover:shadow-md dark:border-[#1a432f] dark:bg-[#0c2419] dark:hover:border-[#c99a45]"
           >
             <div className="flex items-start justify-between">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#e8f3ee] dark:bg-[#14553a]/50 text-[#124d34] dark:text-[#a7c5b6] transition-colors group-hover:bg-[#124d34] group-hover:text-white">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#e8f3ee] text-[#124d34] transition-colors group-hover:bg-[#124d34] group-hover:text-white dark:bg-[#14553a]/50 dark:text-[#a7c5b6]">
                 <MessageSquare className="h-6 w-6" />
               </div>
               {messageStats.new > 0 ? (
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-100 dark:bg-rose-950/60 border border-rose-300 dark:border-rose-800 px-3 py-1 text-xs font-bold text-rose-800 dark:text-rose-300">
-                  <span className="h-2 w-2 rounded-full bg-rose-600 animate-ping" />
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-rose-300 bg-rose-100 px-3 py-1 text-xs font-bold text-rose-800 dark:border-rose-800 dark:bg-rose-950/60 dark:text-rose-300">
+                  <span className="h-2 w-2 animate-ping rounded-full bg-rose-600" />
                   {messageStats.new} Action Needed
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 px-3 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-300">
+                <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300">
                   <CheckCircle2 className="h-3.5 w-3.5" />
                   All Handled
                 </span>
@@ -233,10 +233,10 @@ export default async function AdminDashboardPage() {
             </div>
 
             <div className="mt-5">
-              <div className="font-serif text-3xl sm:text-4xl font-extrabold text-[#0b2e1e] dark:text-white">
+              <div className="font-serif text-3xl font-extrabold text-[#0b2e1e] sm:text-4xl dark:text-white">
                 {messageStats.total}
               </div>
-              <h3 className="mt-1 font-semibold text-sm text-[#1c2420] dark:text-[#e2f0e8]">
+              <h3 className="mt-1 text-sm font-semibold text-[#1c2420] dark:text-[#e2f0e8]">
                 Contact Inquiries
               </h3>
               <p className="mt-0.5 text-xs text-[#6b7280] dark:text-[#9ca3af]">
@@ -244,7 +244,7 @@ export default async function AdminDashboardPage() {
               </p>
             </div>
 
-            <div className="mt-5 flex items-center justify-between border-t border-[#f3f1ea] dark:border-[#1a432f] pt-4 text-xs font-semibold text-[#124d34] dark:text-[#c99a45]">
+            <div className="mt-5 flex items-center justify-between border-t border-[#f3f1ea] pt-4 text-xs font-semibold text-[#124d34] dark:border-[#1a432f] dark:text-[#c99a45]">
               <span>Open Inquiries Inbox</span>
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </div>
@@ -253,19 +253,19 @@ export default async function AdminDashboardPage() {
           {/* Card 2: Membership Applications */}
           <Link
             href="/admin/memberships"
-            className="group relative overflow-hidden rounded-2xl border border-[#e6e4dc] dark:border-[#1a432f] bg-white dark:bg-[#0c2419] p-6 shadow-xs transition-all hover:border-[#124d34] dark:hover:border-[#c99a45] hover:shadow-md"
+            className="group relative overflow-hidden rounded-2xl border border-[#e6e4dc] bg-white p-6 shadow-xs transition-all hover:border-[#124d34] hover:shadow-md dark:border-[#1a432f] dark:bg-[#0c2419] dark:hover:border-[#c99a45]"
           >
             <div className="flex items-start justify-between">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#f5eedf] dark:bg-[#2a2416] text-[#8b651e] dark:text-[#f5d78e] transition-colors group-hover:bg-[#c99a45] group-hover:text-white">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#f5eedf] text-[#8b651e] transition-colors group-hover:bg-[#c99a45] group-hover:text-white dark:bg-[#2a2416] dark:text-[#f5d78e]">
                 <Users className="h-6 w-6" />
               </div>
               {membershipStats.pending > 0 ? (
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-800 px-3 py-1 text-xs font-bold text-amber-900 dark:text-amber-300">
-                  <span className="h-2 w-2 rounded-full bg-amber-600 animate-pulse" />
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-300 bg-amber-100 px-3 py-1 text-xs font-bold text-amber-900 dark:border-amber-800 dark:bg-amber-950/60 dark:text-amber-300">
+                  <span className="h-2 w-2 animate-pulse rounded-full bg-amber-600" />
                   {membershipStats.pending} Awaiting Review
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 px-3 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-300">
+                <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300">
                   <CheckCircle2 className="h-3.5 w-3.5" />
                   Up to Date
                 </span>
@@ -273,10 +273,10 @@ export default async function AdminDashboardPage() {
             </div>
 
             <div className="mt-5">
-              <div className="font-serif text-3xl sm:text-4xl font-extrabold text-[#0b2e1e] dark:text-white">
+              <div className="font-serif text-3xl font-extrabold text-[#0b2e1e] sm:text-4xl dark:text-white">
                 {membershipStats.total}
               </div>
-              <h3 className="mt-1 font-semibold text-sm text-[#1c2420] dark:text-[#e2f0e8]">
+              <h3 className="mt-1 text-sm font-semibold text-[#1c2420] dark:text-[#e2f0e8]">
                 Membership Applications
               </h3>
               <p className="mt-0.5 text-xs text-[#6b7280] dark:text-[#9ca3af]">
@@ -284,7 +284,7 @@ export default async function AdminDashboardPage() {
               </p>
             </div>
 
-            <div className="mt-5 flex items-center justify-between border-t border-[#f3f1ea] dark:border-[#1a432f] pt-4 text-xs font-semibold text-[#124d34] dark:text-[#c99a45]">
+            <div className="mt-5 flex items-center justify-between border-t border-[#f3f1ea] pt-4 text-xs font-semibold text-[#124d34] dark:border-[#1a432f] dark:text-[#c99a45]">
               <span>Review Applications</span>
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </div>
@@ -293,20 +293,20 @@ export default async function AdminDashboardPage() {
 
         {/* Content & Governance Directory (4 Cards Grid) */}
         <div>
-          <h2 className="mb-3.5 text-xs font-bold uppercase tracking-wider text-[#6b7280] dark:text-[#9ca3af]">
+          <h2 className="mb-3.5 text-xs font-bold tracking-wider text-[#6b7280] uppercase dark:text-[#9ca3af]">
             Content & Governance Directory
           </h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {/* Team Directory */}
             <Link
               href="/admin/team"
-              className="group rounded-2xl border border-[#e6e4dc] dark:border-[#1a432f] bg-white dark:bg-[#0c2419] p-5 shadow-2xs transition-all hover:border-[#124d34] dark:hover:border-[#c99a45] hover:shadow-xs"
+              className="group rounded-2xl border border-[#e6e4dc] bg-white p-5 shadow-2xs transition-all hover:border-[#124d34] hover:shadow-xs dark:border-[#1a432f] dark:bg-[#0c2419] dark:hover:border-[#c99a45]"
             >
               <div className="flex items-center justify-between">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#e8f3ee] dark:bg-[#14553a]/40 text-[#124d34] dark:text-[#a7c5b6]">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#e8f3ee] text-[#124d34] dark:bg-[#14553a]/40 dark:text-[#a7c5b6]">
                   <UserCheck className="h-4.5 w-4.5" />
                 </div>
-                <span className="rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 px-2 py-0.5 text-[11px] font-bold text-emerald-800 dark:text-emerald-300">
+                <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-bold text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300">
                   {teamStats.active} Active
                 </span>
               </div>
@@ -318,7 +318,7 @@ export default async function AdminDashboardPage() {
                   Officers & Council
                 </div>
               </div>
-              <div className="mt-3 flex items-center justify-between border-t border-[#f3f1ea] dark:border-[#1a432f] pt-2.5 text-[11px] font-semibold text-[#124d34] dark:text-[#c99a45]">
+              <div className="mt-3 flex items-center justify-between border-t border-[#f3f1ea] pt-2.5 text-[11px] font-semibold text-[#124d34] dark:border-[#1a432f] dark:text-[#c99a45]">
                 <span>Manage Team</span>
                 <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
               </div>
@@ -327,13 +327,13 @@ export default async function AdminDashboardPage() {
             {/* News & Updates */}
             <Link
               href="/admin/news"
-              className="group rounded-2xl border border-[#e6e4dc] dark:border-[#1a432f] bg-white dark:bg-[#0c2419] p-5 shadow-2xs transition-all hover:border-[#124d34] dark:hover:border-[#c99a45] hover:shadow-xs"
+              className="group rounded-2xl border border-[#e6e4dc] bg-white p-5 shadow-2xs transition-all hover:border-[#124d34] hover:shadow-xs dark:border-[#1a432f] dark:bg-[#0c2419] dark:hover:border-[#c99a45]"
             >
               <div className="flex items-center justify-between">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#e8f3ee] dark:bg-[#14553a]/40 text-[#124d34] dark:text-[#a7c5b6]">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#e8f3ee] text-[#124d34] dark:bg-[#14553a]/40 dark:text-[#a7c5b6]">
                   <Newspaper className="h-4.5 w-4.5" />
                 </div>
-                <span className="rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 px-2 py-0.5 text-[11px] font-bold text-emerald-800 dark:text-emerald-300">
+                <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-bold text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300">
                   {newsStats.published} Live
                 </span>
               </div>
@@ -345,7 +345,7 @@ export default async function AdminDashboardPage() {
                   Articles & Blogs
                 </div>
               </div>
-              <div className="mt-3 flex items-center justify-between border-t border-[#f3f1ea] dark:border-[#1a432f] pt-2.5 text-[11px] font-semibold text-[#124d34] dark:text-[#c99a45]">
+              <div className="mt-3 flex items-center justify-between border-t border-[#f3f1ea] pt-2.5 text-[11px] font-semibold text-[#124d34] dark:border-[#1a432f] dark:text-[#c99a45]">
                 <span>Manage News</span>
                 <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
               </div>
@@ -354,13 +354,13 @@ export default async function AdminDashboardPage() {
             {/* Media Gallery */}
             <Link
               href="/admin/gallery"
-              className="group rounded-2xl border border-[#e6e4dc] dark:border-[#1a432f] bg-white dark:bg-[#0c2419] p-5 shadow-2xs transition-all hover:border-[#124d34] dark:hover:border-[#c99a45] hover:shadow-xs"
+              className="group rounded-2xl border border-[#e6e4dc] bg-white p-5 shadow-2xs transition-all hover:border-[#124d34] hover:shadow-xs dark:border-[#1a432f] dark:bg-[#0c2419] dark:hover:border-[#c99a45]"
             >
               <div className="flex items-center justify-between">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#f5eedf] dark:bg-[#2a2416] text-[#8b651e] dark:text-[#f5d78e]">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#f5eedf] text-[#8b651e] dark:bg-[#2a2416] dark:text-[#f5d78e]">
                   <ImageIcon className="h-4.5 w-4.5" />
                 </div>
-                <span className="rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 px-2 py-0.5 text-[11px] font-bold text-emerald-800 dark:text-emerald-300">
+                <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-bold text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300">
                   {galleryStats.approved} Live
                 </span>
               </div>
@@ -372,19 +372,19 @@ export default async function AdminDashboardPage() {
                   Photo Gallery Assets
                 </div>
               </div>
-              <div className="mt-3 flex items-center justify-between border-t border-[#f3f1ea] dark:border-[#1a432f] pt-2.5 text-[11px] font-semibold text-[#124d34] dark:text-[#c99a45]">
+              <div className="mt-3 flex items-center justify-between border-t border-[#f3f1ea] pt-2.5 text-[11px] font-semibold text-[#124d34] dark:border-[#1a432f] dark:text-[#c99a45]">
                 <span>Manage Gallery</span>
                 <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
               </div>
             </Link>
 
             {/* Notices & Reports */}
-            <div className="group rounded-2xl border border-[#e6e4dc] dark:border-[#1a432f] bg-white dark:bg-[#0c2419] p-5 shadow-2xs transition-all hover:border-[#124d34] dark:hover:border-[#c99a45] hover:shadow-xs">
+            <div className="group rounded-2xl border border-[#e6e4dc] bg-white p-5 shadow-2xs transition-all hover:border-[#124d34] hover:shadow-xs dark:border-[#1a432f] dark:bg-[#0c2419] dark:hover:border-[#c99a45]">
               <div className="flex items-center justify-between">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#f5eedf] dark:bg-[#2a2416] text-[#8b651e] dark:text-[#f5d78e]">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#f5eedf] text-[#8b651e] dark:bg-[#2a2416] dark:text-[#f5d78e]">
                   <FileText className="h-4.5 w-4.5" />
                 </div>
-                <span className="rounded-full bg-[#f5eedf] dark:bg-[#2a2416] border border-[#c99a45]/30 px-2 py-0.5 text-[11px] font-bold text-[#8b651e] dark:text-[#f5d78e]">
+                <span className="rounded-full border border-[#c99a45]/30 bg-[#f5eedf] px-2 py-0.5 text-[11px] font-bold text-[#8b651e] dark:bg-[#2a2416] dark:text-[#f5d78e]">
                   {noticeStats.published + reportStats.published} Active
                 </span>
               </div>
@@ -396,7 +396,7 @@ export default async function AdminDashboardPage() {
                   Notices & Reports
                 </div>
               </div>
-              <div className="mt-3 flex items-center justify-between border-t border-[#f3f1ea] dark:border-[#1a432f] pt-2.5 text-[11px] font-semibold text-[#124d34] dark:text-[#c99a45]">
+              <div className="mt-3 flex items-center justify-between border-t border-[#f3f1ea] pt-2.5 text-[11px] font-semibold text-[#124d34] dark:border-[#1a432f] dark:text-[#c99a45]">
                 <Link href="/admin/notices" className="hover:underline">
                   Notices ({noticeStats.total})
                 </Link>
@@ -412,8 +412,8 @@ export default async function AdminDashboardPage() {
         {/* Recent Inquiries & Memberships Activity */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           {/* Recent Inquiries */}
-          <div className="overflow-hidden rounded-2xl border border-[#e6e4dc] dark:border-[#1a432f] bg-white dark:bg-[#0c2419] shadow-xs">
-            <div className="flex items-center justify-between border-b border-[#e6e4dc] dark:border-[#1a432f] bg-[#fbfaf6] dark:bg-[#081e14] px-5 py-3.5">
+          <div className="overflow-hidden rounded-2xl border border-[#e6e4dc] bg-white shadow-xs dark:border-[#1a432f] dark:bg-[#0c2419]">
+            <div className="flex items-center justify-between border-b border-[#e6e4dc] bg-[#fbfaf6] px-5 py-3.5 dark:border-[#1a432f] dark:bg-[#081e14]">
               <div className="flex items-center gap-2">
                 <MessageSquare className="h-4 w-4 text-[#124d34] dark:text-[#c99a45]" />
                 <h3 className="font-serif text-sm font-bold text-[#0b2e1e] dark:text-white">
@@ -422,17 +422,17 @@ export default async function AdminDashboardPage() {
               </div>
               <Link
                 href="/admin/messages"
-                className="inline-flex items-center gap-1 text-xs font-semibold text-[#124d34] dark:text-[#c99a45] hover:underline"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-[#124d34] hover:underline dark:text-[#c99a45]"
               >
                 <span>All Messages</span>
                 <ArrowRight className="h-3 w-3" />
               </Link>
             </div>
 
-            <div className="divide-y divide-[#f3f1ea] dark:divide-[#1a432f]/60 px-5">
+            <div className="divide-y divide-[#f3f1ea] px-5 dark:divide-[#1a432f]/60">
               {recentMessages.length === 0 ? (
                 <div className="py-10 text-center">
-                  <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 dark:bg-white/5 text-gray-400">
+                  <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-gray-400 dark:bg-white/5">
                     <Inbox className="h-5 w-5" />
                   </div>
                   <p className="mt-2 text-xs text-[#6b7280] dark:text-[#9ca3af]">
@@ -447,14 +447,14 @@ export default async function AdminDashboardPage() {
                   >
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="truncate font-semibold text-xs sm:text-sm text-[#1c2420] dark:text-[#e2f0e8]">
+                        <span className="truncate text-xs font-semibold text-[#1c2420] sm:text-sm dark:text-[#e2f0e8]">
                           {msg.name}
                         </span>
                         <span
-                          className={`rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider ${
+                          className={`rounded px-1.5 py-0.5 text-[9px] font-bold tracking-wider uppercase ${
                             msg.status === "new"
-                              ? "bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 border border-rose-200 dark:border-rose-900"
-                              : "bg-gray-100 dark:bg-white/5 text-gray-700 dark:text-gray-300"
+                              ? "border border-rose-200 bg-rose-100 text-rose-800 dark:border-rose-900 dark:bg-rose-950/60 dark:text-rose-300"
+                              : "bg-gray-100 text-gray-700 dark:bg-white/5 dark:text-gray-300"
                           }`}
                         >
                           {msg.status}
@@ -463,7 +463,7 @@ export default async function AdminDashboardPage() {
                       <div className="mt-1 flex items-center gap-2.5 text-[11px] text-[#6b7280] dark:text-[#9ca3af]">
                         <a
                           href={`tel:${msg.phone}`}
-                          className="flex items-center gap-1 text-[#124d34] dark:text-[#a7c5b6] hover:underline font-mono"
+                          className="flex items-center gap-1 font-mono text-[#124d34] hover:underline dark:text-[#a7c5b6]"
                         >
                           <Phone className="h-3 w-3" />
                           <span>{msg.phone}</span>
@@ -478,7 +478,7 @@ export default async function AdminDashboardPage() {
 
                     <Link
                       href="/admin/messages"
-                      className="rounded-lg border border-[#e6e4dc] dark:border-[#1a432f] bg-white dark:bg-[#143d28] px-2.5 py-1 text-xs font-semibold text-[#124d34] dark:text-[#e2f0e8] shadow-2xs hover:bg-[#f5eedf] dark:hover:bg-[#1a4f34]"
+                      className="rounded-lg border border-[#e6e4dc] bg-white px-2.5 py-1 text-xs font-semibold text-[#124d34] shadow-2xs hover:bg-[#f5eedf] dark:border-[#1a432f] dark:bg-[#143d28] dark:text-[#e2f0e8] dark:hover:bg-[#1a4f34]"
                     >
                       View
                     </Link>
@@ -489,8 +489,8 @@ export default async function AdminDashboardPage() {
           </div>
 
           {/* Recent Memberships */}
-          <div className="overflow-hidden rounded-2xl border border-[#e6e4dc] dark:border-[#1a432f] bg-white dark:bg-[#0c2419] shadow-xs">
-            <div className="flex items-center justify-between border-b border-[#e6e4dc] dark:border-[#1a432f] bg-[#fbfaf6] dark:bg-[#081e14] px-5 py-3.5">
+          <div className="overflow-hidden rounded-2xl border border-[#e6e4dc] bg-white shadow-xs dark:border-[#1a432f] dark:bg-[#0c2419]">
+            <div className="flex items-center justify-between border-b border-[#e6e4dc] bg-[#fbfaf6] px-5 py-3.5 dark:border-[#1a432f] dark:bg-[#081e14]">
               <div className="flex items-center gap-2">
                 <Users className="h-4 w-4 text-[#8b651e] dark:text-[#f5d78e]" />
                 <h3 className="font-serif text-sm font-bold text-[#0b2e1e] dark:text-white">
@@ -499,17 +499,17 @@ export default async function AdminDashboardPage() {
               </div>
               <Link
                 href="/admin/memberships"
-                className="inline-flex items-center gap-1 text-xs font-semibold text-[#124d34] dark:text-[#c99a45] hover:underline"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-[#124d34] hover:underline dark:text-[#c99a45]"
               >
                 <span>All Members</span>
                 <ArrowRight className="h-3 w-3" />
               </Link>
             </div>
 
-            <div className="divide-y divide-[#f3f1ea] dark:divide-[#1a432f]/60 px-5">
+            <div className="divide-y divide-[#f3f1ea] px-5 dark:divide-[#1a432f]/60">
               {recentMemberships.length === 0 ? (
                 <div className="py-10 text-center">
-                  <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 dark:bg-white/5 text-gray-400">
+                  <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-gray-400 dark:bg-white/5">
                     <Inbox className="h-5 w-5" />
                   </div>
                   <p className="mt-2 text-xs text-[#6b7280] dark:text-[#9ca3af]">
@@ -524,26 +524,26 @@ export default async function AdminDashboardPage() {
                   >
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="truncate font-semibold text-xs sm:text-sm text-[#1c2420] dark:text-[#e2f0e8]">
+                        <span className="truncate text-xs font-semibold text-[#1c2420] sm:text-sm dark:text-[#e2f0e8]">
                           {mem.full_name}
                         </span>
                         <span
-                          className={`rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider ${
+                          className={`rounded px-1.5 py-0.5 text-[9px] font-bold tracking-wider uppercase ${
                             mem.status === "pending"
-                              ? "bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-900"
-                              : "bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900"
+                              ? "border border-amber-200 bg-amber-100 text-amber-800 dark:border-amber-900 dark:bg-amber-950/60 dark:text-amber-300"
+                              : "border border-emerald-200 bg-emerald-100 text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950/60 dark:text-emerald-300"
                           }`}
                         >
                           {mem.status}
                         </span>
-                        <span className="rounded bg-[#f5eedf] dark:bg-[#2a2416] px-1.5 py-0.5 text-[9px] font-semibold text-[#8b651e] dark:text-[#f5d78e] capitalize">
+                        <span className="rounded bg-[#f5eedf] px-1.5 py-0.5 text-[9px] font-semibold text-[#8b651e] capitalize dark:bg-[#2a2416] dark:text-[#f5d78e]">
                           {mem.plan}
                         </span>
                       </div>
                       <div className="mt-1 flex items-center gap-2.5 text-[11px] text-[#6b7280] dark:text-[#9ca3af]">
                         <a
                           href={`tel:${mem.phone}`}
-                          className="flex items-center gap-1 text-[#124d34] dark:text-[#a7c5b6] hover:underline font-mono"
+                          className="flex items-center gap-1 font-mono text-[#124d34] hover:underline dark:text-[#a7c5b6]"
                         >
                           <Phone className="h-3 w-3" />
                           <span>{mem.phone}</span>
@@ -558,7 +558,7 @@ export default async function AdminDashboardPage() {
 
                     <Link
                       href="/admin/memberships"
-                      className="rounded-lg border border-[#e6e4dc] dark:border-[#1a432f] bg-white dark:bg-[#143d28] px-2.5 py-1 text-xs font-semibold text-[#124d34] dark:text-[#e2f0e8] shadow-2xs hover:bg-[#f5eedf] dark:hover:bg-[#1a4f34]"
+                      className="rounded-lg border border-[#e6e4dc] bg-white px-2.5 py-1 text-xs font-semibold text-[#124d34] shadow-2xs hover:bg-[#f5eedf] dark:border-[#1a432f] dark:bg-[#143d28] dark:text-[#e2f0e8] dark:hover:bg-[#1a4f34]"
                     >
                       Review
                     </Link>

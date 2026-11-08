@@ -39,8 +39,9 @@ export function AnimatedCounter({
           hasAnimatedRef.current = true;
           observer.disconnect();
 
-          const prefersReducedMotion =
-            window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          const prefersReducedMotion = window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+          ).matches;
 
           if (prefersReducedMotion) {
             setDisplayValue(value);

@@ -46,9 +46,10 @@ export function FormField({
               ? children.props.error
               : Boolean(error),
         }),
-        ...(!isCustomComponent && error && {
-          "aria-invalid": "true",
-        }),
+        ...(!isCustomComponent &&
+          error && {
+            "aria-invalid": "true",
+          }),
         "aria-describedby":
           [children.props["aria-describedby"], describedBy]
             .filter(Boolean)

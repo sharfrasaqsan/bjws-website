@@ -213,11 +213,11 @@ export function MembershipsManager({
               >
                 <span>{tab.label}</span>
                 <span
-                  className={`rounded-full px-1.5 py-0.2 text-[10px] font-bold ${
+                  className={`py-0.2 rounded-full px-1.5 text-[10px] font-bold ${
                     isSelected
                       ? "bg-white/20 text-white"
                       : tab.alert
-                        ? "bg-amber-100 text-amber-800 font-extrabold"
+                        ? "bg-amber-100 font-extrabold text-amber-800"
                         : "bg-[#e6e4dc] text-[#6b7280]"
                   }`}
                 >
@@ -254,7 +254,7 @@ export function MembershipsManager({
             type="button"
             onClick={handleExportCsv}
             disabled={filtered.length === 0}
-            className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[#c99a45]/40 bg-[#fbfaf6] hover:bg-[#f5eedf] text-[#0b2e1e] px-3 py-1.5 text-xs font-bold shadow-2xs transition-colors disabled:opacity-40"
+            className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[#c99a45]/40 bg-[#fbfaf6] px-3 py-1.5 text-xs font-bold text-[#0b2e1e] shadow-2xs transition-colors hover:bg-[#f5eedf] disabled:opacity-40"
             title="Download CSV spreadsheet of membership applications"
           >
             <Download className="h-3.5 w-3.5 text-[#c99a45]" />
@@ -316,7 +316,7 @@ export function MembershipsManager({
 
                       {/* Status Badge */}
                       <span
-                        className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide ${
+                        className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-bold tracking-wide uppercase ${
                           item.status === "pending"
                             ? "bg-amber-100 text-amber-800"
                             : item.status === "approved"
@@ -325,7 +325,7 @@ export function MembershipsManager({
                         }`}
                       >
                         {item.status === "pending" && (
-                          <span className="h-1.5 w-1.5 rounded-full bg-amber-600 animate-pulse" />
+                          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-600" />
                         )}
                         {item.status}
                       </span>
@@ -398,7 +398,7 @@ export function MembershipsManager({
               </div>
 
               {/* Application Details 4-Column Grid */}
-              <div className="grid grid-cols-1 gap-4 p-4 text-xs sm:grid-cols-2 lg:grid-cols-4 sm:p-5">
+              <div className="grid grid-cols-1 gap-4 p-4 text-xs sm:grid-cols-2 sm:p-5 lg:grid-cols-4">
                 {/* Contact Phone & WhatsApp */}
                 <div className="rounded-xl border border-[#f3f1ea] bg-[#fbfaf6] p-3">
                   <span className="block text-[11px] font-medium text-[#6b7280]">

@@ -108,7 +108,7 @@ export default async function AdminLayout({
                   href="/admin"
                   className="group flex items-center gap-3 transition-opacity hover:opacity-95"
                 >
-                  <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#124d34] to-[#041a10] ring-1 ring-[#c99a45]/40 shadow-inner">
+                  <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#124d34] to-[#041a10] shadow-inner ring-1 ring-[#c99a45]/40">
                     <span className="font-serif text-xs font-bold tracking-wider text-[#f5eedf]">
                       BJWS
                     </span>
@@ -194,7 +194,8 @@ export default async function AdminLayout({
                 <span>Registration: DS/TH/SS/VSSO/2023/01</span>
               </div>
               <p className="text-[11px] text-[#6b7280]">
-                Mullipothana, Eastern Province, Sri Lanka • Official Management System
+                Mullipothana, Eastern Province, Sri Lanka • Official Management
+                System
               </p>
             </div>
           </footer>

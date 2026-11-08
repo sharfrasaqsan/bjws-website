@@ -170,7 +170,12 @@ export function MessagesManager({ initialMessages }: MessagesManagerProps) {
         <div className="flex flex-wrap items-center gap-1.5">
           {[
             { key: "all", label: "All Messages", count: counts.all },
-            { key: "new", label: "New", count: counts.new, alert: counts.new > 0 },
+            {
+              key: "new",
+              label: "New",
+              count: counts.new,
+              alert: counts.new > 0,
+            },
             { key: "read", label: "Read", count: counts.read },
             { key: "replied", label: "Replied", count: counts.replied },
             { key: "archived", label: "Archived", count: counts.archived },
@@ -188,11 +193,11 @@ export function MessagesManager({ initialMessages }: MessagesManagerProps) {
               >
                 <span>{tab.label}</span>
                 <span
-                  className={`rounded-full px-1.5 py-0.2 text-[10px] font-bold ${
+                  className={`py-0.2 rounded-full px-1.5 text-[10px] font-bold ${
                     isSelected
                       ? "bg-white/20 text-white"
                       : tab.alert
-                        ? "bg-red-100 text-red-700 font-extrabold"
+                        ? "bg-red-100 font-extrabold text-red-700"
                         : "bg-[#e6e4dc] text-[#6b7280]"
                   }`}
                 >
@@ -229,7 +234,7 @@ export function MessagesManager({ initialMessages }: MessagesManagerProps) {
             type="button"
             onClick={handleExportCsv}
             disabled={filtered.length === 0}
-            className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[#c99a45]/40 bg-[#fbfaf6] hover:bg-[#f5eedf] text-[#0b2e1e] px-3 py-1.5 text-xs font-bold shadow-2xs transition-colors disabled:opacity-40"
+            className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[#c99a45]/40 bg-[#fbfaf6] px-3 py-1.5 text-xs font-bold text-[#0b2e1e] shadow-2xs transition-colors hover:bg-[#f5eedf] disabled:opacity-40"
             title="Download CSV spreadsheet of contact inquiries"
           >
             <Download className="h-3.5 w-3.5 text-[#c99a45]" />
@@ -291,7 +296,7 @@ export function MessagesManager({ initialMessages }: MessagesManagerProps) {
 
                       {/* Status Badge */}
                       <span
-                        className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide ${
+                        className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-bold tracking-wide uppercase ${
                           item.status === "new"
                             ? "bg-red-100 text-red-800"
                             : item.status === "replied"
@@ -302,7 +307,7 @@ export function MessagesManager({ initialMessages }: MessagesManagerProps) {
                         }`}
                       >
                         {item.status === "new" && (
-                          <span className="h-1.5 w-1.5 rounded-full bg-red-600 animate-pulse" />
+                          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-red-600" />
                         )}
                         {item.status}
                       </span>
@@ -406,7 +411,7 @@ export function MessagesManager({ initialMessages }: MessagesManagerProps) {
 
               {/* Message Content Body */}
               <div className="p-4 sm:p-5">
-                <div className="rounded-xl border border-[#f3f1ea] bg-[#fbfaf6] p-4 text-xs leading-relaxed text-[#1c2420] whitespace-pre-wrap sm:text-sm">
+                <div className="rounded-xl border border-[#f3f1ea] bg-[#fbfaf6] p-4 text-xs leading-relaxed whitespace-pre-wrap text-[#1c2420] sm:text-sm">
                   {item.message}
                 </div>
               </div>

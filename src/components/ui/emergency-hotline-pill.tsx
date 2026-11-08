@@ -41,25 +41,25 @@ export function EmergencyHotlinePill() {
   if (isStoredDismissed || isDismissedLocal) return null;
 
   return (
-    <div className="fixed bottom-4 right-4 z-40 md:hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
-      <div className="group relative flex items-center rounded-full border border-[#c99a45]/60 bg-[#072115] text-white shadow-2xl pl-3 pr-2 py-2 backdrop-blur-md">
+    <div className="animate-in fade-in slide-in-from-bottom-4 fixed right-4 bottom-4 z-40 duration-300 md:hidden">
+      <div className="group relative flex items-center rounded-full border border-[#c99a45]/60 bg-[#072115] py-2 pr-2 pl-3 text-white shadow-2xl backdrop-blur-md">
         {/* Pulsing Green Indicator */}
-        <span className="relative flex h-2.5 w-2.5 mr-2 shrink-0">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400" />
+        <span className="relative mr-2 flex h-2.5 w-2.5 shrink-0">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+          <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" />
         </span>
 
         {/* Call Link */}
         <a
           href="tel:+94776227323"
-          className="flex items-center gap-2 text-xs font-bold text-white hover:text-[#f5d78e] transition-colors pr-1"
+          className="flex items-center gap-2 pr-1 text-xs font-bold text-white transition-colors hover:text-[#f5d78e]"
           title="Direct Dial 24/7 Funeral Hotline"
         >
-          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#124d34] text-[#d4af37] border border-[#c99a45]/40 shrink-0">
+          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#c99a45]/40 bg-[#124d34] text-[#d4af37]">
             <Phone className="h-3.5 w-3.5 animate-bounce" />
           </div>
           <div className="flex flex-col text-left leading-tight">
-            <span className="text-[10px] font-semibold text-[#f5d78e] uppercase tracking-wider">
+            <span className="text-[10px] font-semibold tracking-wider text-[#f5d78e] uppercase">
               24/7 Janaza Hotline
             </span>
             <span className="font-mono text-xs font-bold text-white">
@@ -72,7 +72,7 @@ export function EmergencyHotlinePill() {
         <button
           type="button"
           onClick={handleDismiss}
-          className="ml-2 rounded-full p-1 text-white/50 hover:bg-white/10 hover:text-white transition-colors cursor-pointer"
+          className="ml-2 cursor-pointer rounded-full p-1 text-white/50 transition-colors hover:bg-white/10 hover:text-white"
           aria-label="Dismiss Hotline Pill"
         >
           <X className="h-3.5 w-3.5" />

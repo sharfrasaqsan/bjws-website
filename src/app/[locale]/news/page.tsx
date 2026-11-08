@@ -8,7 +8,10 @@ import { Container } from "@/components/ui/container";
 import { PageHeader } from "@/components/layout/page-header";
 import { NewsGrid } from "@/components/sections/news-grid";
 import { getArticles, type Article } from "@/content/news";
-import { createPublicClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import {
+  createPublicClient,
+  isSupabaseConfigured,
+} from "@/lib/supabase/server";
 import { buildPageMetadata } from "@/lib/seo";
 import { JsonLd, getBreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { getSiteAssets } from "@/content/site-assets";
@@ -68,11 +71,16 @@ export default async function NewsPage({
             si: "පුවත්",
           },
           author: d.author || "BJWS Secretariat",
-          image_url: d.image_url || "/images/gallery/home-service-community-shramadana-campaigns.webp",
+          image_url:
+            d.image_url ||
+            "/images/gallery/home-service-community-shramadana-campaigns.webp",
           locale: (d.locale as "en" | "ta" | "si") || "en",
           published_at: d.published_at || d.created_at,
           is_published: true,
-          read_time_minutes: Math.max(1, Math.ceil((d.content?.split(/\s+/).length || 200) / 180)),
+          read_time_minutes: Math.max(
+            1,
+            Math.ceil((d.content?.split(/\s+/).length || 200) / 180)
+          ),
         }));
       }
     } catch (err) {
@@ -128,4 +136,3 @@ export default async function NewsPage({
     </>
   );
 }
-

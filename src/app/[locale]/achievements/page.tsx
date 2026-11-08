@@ -124,7 +124,9 @@ export default async function AchievementsPage({
         title={t("pageTitle")}
         subtitle={t("subtitle")}
         eyebrow={t("eyebrow")}
-        imageSrc={assets.headerAchievements || "/images/gallery/shramadana-02.webp"}
+        imageSrc={
+          assets.headerAchievements || "/images/gallery/shramadana-02.webp"
+        }
         imageAlt="BJWS Verified Community Milestones & Achievements"
         breadcrumbs={[
           { label: tCommon("home"), href: "/" },
@@ -136,46 +138,57 @@ export default async function AchievementsPage({
         <Container size="xl">
           {/* Section 1: Verified Achievements by Category (Deduplicated Integrated Dashboard) */}
           <div className="mb-20">
-            <ScrollReveal variant="fade-up" className="mb-10 text-center sm:text-left">
-              <span className="font-sans text-xs font-bold uppercase tracking-wider text-[#b8952b]">
+            <ScrollReveal
+              variant="fade-up"
+              className="mb-10 text-center sm:text-left"
+            >
+              <span className="font-sans text-xs font-bold tracking-wider text-[#b8952b] uppercase">
                 Accountability & Verified Milestones
               </span>
-              <h2 className="mt-1 font-display text-2xl font-bold tracking-tight text-[#0b2e1e] sm:text-3xl lg:text-4xl">
+              <h2 className="font-display mt-1 text-2xl font-bold tracking-tight text-[#0b2e1e] sm:text-3xl lg:text-4xl">
                 Verified Community Achievements (2023 – 2025)
               </h2>
               <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#4b5563] sm:text-base">
-                Tangible milestones achieved through community shura consultation, volunteer labor, and transparent donor contributions.
+                Tangible milestones achieved through community shura
+                consultation, volunteer labor, and transparent donor
+                contributions.
               </p>
             </ScrollReveal>
 
-            <ScrollRevealGroup staggerMs={60} className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 items-stretch">
+            <ScrollRevealGroup
+              staggerMs={60}
+              className="grid grid-cols-1 items-stretch gap-6 md:grid-cols-2 lg:grid-cols-3"
+            >
               {achievementCategories.map((cat, idx) => {
                 const Icon = cat.icon;
                 return (
                   <article
                     key={idx}
-                    className="flex h-full flex-1 flex-col justify-between rounded-3xl border border-[#0b2e1e]/10 bg-white p-6 sm:p-8 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-[#0b2e1e]/25 hover:shadow-md"
+                    className="flex h-full flex-1 flex-col justify-between rounded-3xl border border-[#0b2e1e]/10 bg-white p-6 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-[#0b2e1e]/25 hover:shadow-md sm:p-8"
                   >
-                    <div className="flex flex-col flex-1">
+                    <div className="flex flex-1 flex-col">
                       <div className="mb-4 flex items-center justify-between gap-3 border-b border-[#0b2e1e]/10 pb-4">
                         <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#e8f3ee] text-[#0b2e1e]">
                           <Icon className="h-5 w-5" strokeWidth={2} />
                         </div>
                         <div className="text-right">
-                          <span className="block font-display text-2xl font-bold text-[#0b2e1e]">
+                          <span className="font-display block text-2xl font-bold text-[#0b2e1e]">
                             {cat.metric}
                           </span>
-                          <span className="block text-[11px] font-semibold uppercase tracking-wider text-[#b8952b]">
+                          <span className="block text-[11px] font-semibold tracking-wider text-[#b8952b] uppercase">
                             {cat.metricLabel}
                           </span>
                         </div>
                       </div>
-                      <h3 className="font-display text-xl font-bold text-[#0b2e1e] min-h-[3.25rem] flex items-center">
+                      <h3 className="font-display flex min-h-[3.25rem] items-center text-xl font-bold text-[#0b2e1e]">
                         {cat.title}
                       </h3>
-                      <ul className="mt-4 space-y-2.5 text-sm text-[#4b5563] flex-1">
+                      <ul className="mt-4 flex-1 space-y-2.5 text-sm text-[#4b5563]">
                         {cat.items.map((item, itemIdx) => (
-                          <li key={itemIdx} className="flex items-start gap-2.5">
+                          <li
+                            key={itemIdx}
+                            className="flex items-start gap-2.5"
+                          >
                             <span className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#0b2e1e] text-[9px] font-bold text-[#d4af37]">
                               ✓
                             </span>
@@ -193,10 +206,10 @@ export default async function AchievementsPage({
           {/* Section 2: Future Goals Roadmap / Strategic Timeline */}
           <ScrollReveal variant="fade-up" className="space-y-12">
             <div className="text-center sm:text-left">
-              <span className="font-sans text-xs font-bold uppercase tracking-wider text-[#b8952b]">
+              <span className="font-sans text-xs font-bold tracking-wider text-[#b8952b] uppercase">
                 {t("goalsEyebrow")}
               </span>
-              <h2 className="mt-1 font-display text-2xl font-bold tracking-tight text-[#0b2e1e] sm:text-3xl lg:text-4xl">
+              <h2 className="font-display mt-1 text-2xl font-bold tracking-tight text-[#0b2e1e] sm:text-3xl lg:text-4xl">
                 {t("goalsTitle")}
               </h2>
               <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#4b5563] sm:text-base">
@@ -206,7 +219,7 @@ export default async function AchievementsPage({
 
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
               {/* Short Term Goals Card */}
-              <div className="rounded-3xl border border-[#0b2e1e]/10 bg-white p-8 sm:p-10 shadow-sm">
+              <div className="rounded-3xl border border-[#0b2e1e]/10 bg-white p-8 shadow-sm sm:p-10">
                 <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-[#0b2e1e]/10 pb-4">
                   <div className="flex items-center gap-3">
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e8f3ee] text-[#0b2e1e]">
@@ -216,7 +229,9 @@ export default async function AchievementsPage({
                       <h3 className="font-display text-xl font-bold text-[#0b2e1e]">
                         {t("shortTermTitle")}
                       </h3>
-                      <div className="text-xs text-[#6b7280]">Next 12 Months Priority</div>
+                      <div className="text-xs text-[#6b7280]">
+                        Next 12 Months Priority
+                      </div>
                     </div>
                   </div>
                   <span className="rounded-full bg-[#e8f3ee] px-3 py-1 text-xs font-semibold text-[#0b2e1e]">
@@ -256,7 +271,9 @@ export default async function AchievementsPage({
                         <h3 className="font-display text-xl font-bold text-white">
                           {t("longTermTitle")}
                         </h3>
-                        <div className="text-xs text-[#fbfaf6]/70">Vision Horizon (Next 3–5 Years)</div>
+                        <div className="text-xs text-[#fbfaf6]/70">
+                          Vision Horizon (Next 3–5 Years)
+                        </div>
                       </div>
                     </div>
                     <span className="rounded-full bg-[#d4af37] px-3 py-1 text-xs font-bold text-[#0b2e1e]">

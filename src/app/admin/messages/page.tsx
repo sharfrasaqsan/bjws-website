@@ -56,7 +56,8 @@ export default async function AdminMessagesPage() {
                   Community Inquiries & Messages
                 </h1>
                 <p className="text-xs text-[#6b7280] sm:text-sm">
-                  Review public inquiries, follow up by phone or WhatsApp, and maintain contact logs.
+                  Review public inquiries, follow up by phone or WhatsApp, and
+                  maintain contact logs.
                 </p>
               </div>
             </div>

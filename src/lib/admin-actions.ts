@@ -210,7 +210,10 @@ export async function createMultilingualNoticeAction(
       const supabase = await createAdminClient();
       const { error } = await supabase.from("notices").insert(entries);
       if (error) {
-        console.warn("Supabase insert multilingual notices warning:", error.message);
+        console.warn(
+          "Supabase insert multilingual notices warning:",
+          error.message
+        );
       }
     } catch (err) {
       console.warn("Supabase insert multilingual notices warning:", err);
@@ -246,8 +249,7 @@ export async function updateMultilingualNoticeAction(
     (!title_si || !body_si)
   ) {
     return {
-      error:
-        "Please provide announcement details for at least one language.",
+      error: "Please provide announcement details for at least one language.",
     };
   }
 
@@ -270,8 +272,10 @@ export async function updateMultilingualNoticeAction(
       if (targetGroup) {
         for (const loc of ["ta", "en", "si"] as const) {
           const t = targetGroup.translations[loc];
-          const newTitle = loc === "ta" ? title_ta : loc === "en" ? title_en : title_si;
-          const newBody = loc === "ta" ? body_ta : loc === "en" ? body_en : body_si;
+          const newTitle =
+            loc === "ta" ? title_ta : loc === "en" ? title_en : title_si;
+          const newBody =
+            loc === "ta" ? body_ta : loc === "en" ? body_en : body_si;
 
           if (newTitle && newBody) {
             if (t?.id) {
@@ -286,7 +290,8 @@ export async function updateMultilingualNoticeAction(
                 body: newBody,
                 locale: loc,
                 is_published,
-                published_at: targetGroup.published_at || new Date().toISOString(),
+                published_at:
+                  targetGroup.published_at || new Date().toISOString(),
               });
             }
           }
@@ -585,7 +590,7 @@ export async function createMultilingualArticleAction(
     (formData.get("category") as Article["category"]) || "general";
   const author =
     (formData.get("author") as string)?.trim() || "BJWS Editorial Board";
-  const image_url = ((formData.get("image_url") as string)?.trim()) || "";
+  const image_url = (formData.get("image_url") as string)?.trim() || "";
   const is_published = formData.get("is_published") === "on";
 
   const title_en = (formData.get("title_en") as string)?.trim();
@@ -608,14 +613,21 @@ export async function createMultilingualArticleAction(
       if (Array.isArray(parsed)) {
         gallery = parsed
           .filter(
-            (item: unknown): item is { url?: unknown; alt?: unknown; caption?: unknown } =>
+            (
+              item: unknown
+            ): item is { url?: unknown; alt?: unknown; caption?: unknown } =>
               Boolean(item && typeof item === "object")
           )
-          .filter((item) => typeof item.url === "string" && item.url.trim().length > 0)
+          .filter(
+            (item) => typeof item.url === "string" && item.url.trim().length > 0
+          )
           .map((item) => ({
             url: String(item.url).trim(),
             alt: typeof item.alt === "string" ? item.alt.trim() : "",
-            caption: typeof item.caption === "string" ? item.caption.trim() : undefined,
+            caption:
+              typeof item.caption === "string"
+                ? item.caption.trim()
+                : undefined,
           }));
       }
     } catch {
@@ -789,7 +801,7 @@ export async function updateMultilingualArticleAction(
     (formData.get("category") as Article["category"]) || "general";
   const author =
     (formData.get("author") as string)?.trim() || "BJWS Editorial Board";
-  const image_url = ((formData.get("image_url") as string)?.trim()) || "";
+  const image_url = (formData.get("image_url") as string)?.trim() || "";
   const is_published = formData.get("is_published") === "on";
 
   const title_en = (formData.get("title_en") as string)?.trim();
@@ -812,14 +824,21 @@ export async function updateMultilingualArticleAction(
       if (Array.isArray(parsed)) {
         gallery = parsed
           .filter(
-            (item: unknown): item is { url?: unknown; alt?: unknown; caption?: unknown } =>
+            (
+              item: unknown
+            ): item is { url?: unknown; alt?: unknown; caption?: unknown } =>
               Boolean(item && typeof item === "object")
           )
-          .filter((item) => typeof item.url === "string" && item.url.trim().length > 0)
+          .filter(
+            (item) => typeof item.url === "string" && item.url.trim().length > 0
+          )
           .map((item) => ({
             url: String(item.url).trim(),
             alt: typeof item.alt === "string" ? item.alt.trim() : "",
-            caption: typeof item.caption === "string" ? item.caption.trim() : undefined,
+            caption:
+              typeof item.caption === "string"
+                ? item.caption.trim()
+                : undefined,
           }));
       }
     } catch {
@@ -1076,7 +1095,7 @@ export async function createArticleAction(
   const author =
     (formData.get("author") as string)?.trim() || "BJWS Editorial Board";
   const locale = (formData.get("locale") as "en" | "ta" | "si") || "en";
-  const image_url = ((formData.get("image_url") as string)?.trim()) || "";
+  const image_url = (formData.get("image_url") as string)?.trim() || "";
   const is_published = formData.get("is_published") === "on";
 
   if (!title || !content) {
@@ -1374,7 +1393,8 @@ export async function createTeamMemberAction(
   const isInactive = formData.get("isInactive") === "on";
   const memberId = (formData.get("memberId") as string)?.trim();
   const nic = (formData.get("nic") as string)?.trim();
-  const issueDate = (formData.get("issueDate") as string)?.trim() || "2024-01-01";
+  const issueDate =
+    (formData.get("issueDate") as string)?.trim() || "2024-01-01";
   const verificationStatus =
     (formData.get("verificationStatus") as TeamMember["verificationStatus"]) ||
     (isInactive ? "suspended" : "verified");
@@ -1681,7 +1701,8 @@ export async function createGalleryImageAction(
   const src = (formData.get("src") as string)?.trim() || "";
   const caption = (formData.get("caption") as string)?.trim();
   const category =
-    ((formData.get("category") as string)?.trim() as GalleryCategory) || "general";
+    ((formData.get("category") as string)?.trim() as GalleryCategory) ||
+    "general";
   const date =
     (formData.get("date") as string)?.trim() ||
     new Date().getFullYear().toString();
@@ -1749,7 +1770,8 @@ export async function updateGalleryImageAction(
   const src = (formData.get("src") as string)?.trim() || "";
   const caption = (formData.get("caption") as string)?.trim();
   const category =
-    ((formData.get("category") as string)?.trim() as GalleryCategory) || "general";
+    ((formData.get("category") as string)?.trim() as GalleryCategory) ||
+    "general";
   const date =
     (formData.get("date") as string)?.trim() ||
     new Date().getFullYear().toString();
@@ -1954,7 +1976,8 @@ export async function batchUploadGalleryAction(
   const files = formData.getAll("files") as File[];
   const captions = formData.getAll("captions") as string[];
   const category =
-    ((formData.get("category") as string)?.trim() as GalleryCategory) || "general";
+    ((formData.get("category") as string)?.trim() as GalleryCategory) ||
+    "general";
   const date =
     (formData.get("date") as string)?.trim() ||
     new Date().getFullYear().toString();
@@ -1999,8 +2022,8 @@ export async function batchUploadGalleryAction(
         (validFiles.length === 1 && captionPrefix
           ? captionPrefix
           : captionPrefix
-          ? `${captionPrefix} (${i + 1})`
-          : `Community Activity - Photo ${i + 1}`);
+            ? `${captionPrefix} (${i + 1})`
+            : `Community Activity - Photo ${i + 1}`);
 
       const newImage: GalleryImage = {
         id,
@@ -2088,7 +2111,10 @@ export async function renameGalleryCategoryAction(
         .eq("category", cleanOld);
 
       if (error) {
-        console.warn("Supabase rename gallery category warning:", error.message);
+        console.warn(
+          "Supabase rename gallery category warning:",
+          error.message
+        );
       }
     } catch (err) {
       console.warn("Supabase rename category exception:", err);

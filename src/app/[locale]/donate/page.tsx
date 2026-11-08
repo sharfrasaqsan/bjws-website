@@ -122,16 +122,16 @@ export default async function DonatePage({
                   {/* Bank Account Ledger Box */}
                   <div className="mt-8 space-y-4 rounded-2xl border border-white/15 bg-white/10 p-6 backdrop-blur-xs">
                     <div>
-                      <span className="block text-xs font-semibold uppercase tracking-wider text-[#d4af37]">
+                      <span className="block text-xs font-semibold tracking-wider text-[#d4af37] uppercase">
                         {t("accountNameLabel")}
                       </span>
-                      <span className="mt-1 block font-display text-lg font-bold text-white sm:text-xl">
+                      <span className="font-display mt-1 block text-lg font-bold text-white sm:text-xl">
                         {t("accountName")}
                       </span>
                     </div>
 
                     <div className="border-t border-white/10 pt-3">
-                      <span className="block text-xs font-semibold uppercase tracking-wider text-[#d4af37]">
+                      <span className="block text-xs font-semibold tracking-wider text-[#d4af37] uppercase">
                         {t("bankNameLabel")}
                       </span>
                       <span className="mt-1 block text-base font-medium text-white">
@@ -140,7 +140,7 @@ export default async function DonatePage({
                     </div>
 
                     <div className="border-t border-white/10 pt-3">
-                      <span className="block text-xs font-semibold uppercase tracking-wider text-[#d4af37]">
+                      <span className="block text-xs font-semibold tracking-wider text-[#d4af37] uppercase">
                         {t("accountNumberLabel")}
                       </span>
                       <span className="mt-1 block font-mono text-base font-bold text-white sm:text-lg">
@@ -149,7 +149,7 @@ export default async function DonatePage({
                     </div>
 
                     <div className="border-t border-white/10 pt-3">
-                      <span className="block text-xs font-semibold uppercase tracking-wider text-[#d4af37]">
+                      <span className="block text-xs font-semibold tracking-wider text-[#d4af37] uppercase">
                         {t("branchLabel")}
                       </span>
                       <span className="mt-1 block text-sm text-[#fbfaf6]/90">
@@ -169,7 +169,10 @@ export default async function DonatePage({
 
                   <div className="mt-6 flex flex-wrap items-center gap-3 text-xs text-[#d4af37]">
                     <ShieldCheck className="h-4 w-4" />
-                    <span>Reg No: DS/TH/SS/VSSO/2023/01 • Divisional Secretariat, Thambalagamuwa</span>
+                    <span>
+                      Reg No: DS/TH/SS/VSSO/2023/01 • Divisional Secretariat,
+                      Thambalagamuwa
+                    </span>
                   </div>
                 </div>
               </div>
@@ -186,8 +189,8 @@ export default async function DonatePage({
                   {t("confirmationDesc")}
                 </p>
 
-                <div className="mt-5 rounded-2xl bg-[#fbfaf6] border border-[#0b2e1e]/10 p-4">
-                  <div className="text-xs font-semibold uppercase tracking-wider text-[#6b7280]">
+                <div className="mt-5 rounded-2xl border border-[#0b2e1e]/10 bg-[#fbfaf6] p-4">
+                  <div className="text-xs font-semibold tracking-wider text-[#6b7280] uppercase">
                     Verified Officer Contact
                   </div>
                   <div className="mt-1 text-base font-bold text-[#0b2e1e]">
@@ -219,13 +222,17 @@ export default async function DonatePage({
             </ScrollReveal>
 
             {/* Right Column: Cause Breakdown & Alternative Membership */}
-            <ScrollReveal variant="fade-up" delay={2} className="space-y-8 lg:col-span-5">
+            <ScrollReveal
+              variant="fade-up"
+              delay={2}
+              className="space-y-8 lg:col-span-5"
+            >
               {/* How Funds Are Allocated */}
               <div className="rounded-3xl border border-[#0b2e1e]/10 bg-white p-8 shadow-sm sm:p-10">
-                <span className="font-sans text-xs font-bold uppercase tracking-wider text-[#b8952b]">
+                <span className="font-sans text-xs font-bold tracking-wider text-[#b8952b] uppercase">
                   Transparent Allocation
                 </span>
-                <h3 className="mt-1 font-display text-2xl font-bold text-[#0b2e1e]">
+                <h3 className="font-display mt-1 text-2xl font-bold text-[#0b2e1e]">
                   {t("causesTitle")}
                 </h3>
 
@@ -238,10 +245,10 @@ export default async function DonatePage({
                           <Icon className="h-5 w-5" />
                         </div>
                         <div>
-                          <span className="inline-block rounded-full bg-[#f4efe6] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#0b2e1e]">
+                          <span className="inline-block rounded-full bg-[#f4efe6] px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-[#0b2e1e] uppercase">
                             {c.badge}
                           </span>
-                          <h4 className="mt-1 font-display text-base font-bold text-[#0b2e1e]">
+                          <h4 className="font-display mt-1 text-base font-bold text-[#0b2e1e]">
                             {c.title}
                           </h4>
                           <p className="mt-1 text-xs leading-relaxed text-[#4b5563]">
@@ -282,4 +289,3 @@ export default async function DonatePage({
     </>
   );
 }
-

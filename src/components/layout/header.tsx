@@ -155,61 +155,92 @@ export function Header({ notices = [] }: HeaderProps) {
   return (
     <>
       {/* 1. TOP UTILITY BAR (Email, Phone, Language Switcher, Social Link) */}
-      <div className="relative z-50 bg-[#062115] text-emerald-100/90 border-b border-emerald-950/80 text-xs overflow-x-clip">
+      <div className="relative z-50 overflow-x-clip border-b border-emerald-950/80 bg-[#062115] text-xs text-emerald-100/90">
         {/* Subtle Islamic lattice texture */}
-        <IslamicPattern opacity={0.03} className="text-emerald-200 pointer-events-none" />
+        <IslamicPattern
+          opacity={0.03}
+          className="pointer-events-none text-emerald-200"
+        />
 
         <Container size="xl">
-          <div className="flex min-h-[38px] items-center justify-between gap-2 sm:gap-3 py-1">
+          <div className="flex min-h-[38px] items-center justify-between gap-2 py-1 sm:gap-3">
             {/* Left: Contact Info & Reg No */}
-            <div className="flex items-center gap-2.5 sm:gap-4 text-xs font-normal min-w-0">
+            <div className="flex min-w-0 items-center gap-2.5 text-xs font-normal sm:gap-4">
               {/* Phone / Emergency Hotline */}
               <a
                 href="tel:+94776227323"
-                className="inline-flex items-center gap-1.5 text-emerald-100 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-300 rounded shrink-0"
+                className="inline-flex shrink-0 items-center gap-1.5 rounded text-emerald-100 transition-colors hover:text-white focus-visible:ring-1 focus-visible:ring-amber-300 focus-visible:outline-none"
               >
-                <Phone className="h-3.5 w-3.5 text-[#c99a45] shrink-0" aria-hidden="true" />
-                <span className="font-medium text-[11px] sm:text-xs">
-                  <span className="hidden sm:inline text-emerald-200/70">{t("common.hotline")}: </span>
+                <Phone
+                  className="h-3.5 w-3.5 shrink-0 text-[#c99a45]"
+                  aria-hidden="true"
+                />
+                <span className="text-[11px] font-medium sm:text-xs">
+                  <span className="hidden text-emerald-200/70 sm:inline">
+                    {t("common.hotline")}:{" "}
+                  </span>
                   077 622 7323
                 </span>
               </a>
 
               {/* Divider */}
-              <span className="hidden md:inline text-emerald-800/80" aria-hidden="true">|</span>
+              <span
+                className="hidden text-emerald-800/80 md:inline"
+                aria-hidden="true"
+              >
+                |
+              </span>
 
               {/* Email */}
               <a
                 href="mailto:bjwsociety@gmail.com"
-                className="hidden md:inline-flex items-center gap-1.5 text-emerald-100 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-300 rounded"
+                className="hidden items-center gap-1.5 rounded text-emerald-100 transition-colors hover:text-white focus-visible:ring-1 focus-visible:ring-amber-300 focus-visible:outline-none md:inline-flex"
               >
-                <Mail className="h-3.5 w-3.5 text-emerald-300/80 shrink-0" aria-hidden="true" />
+                <Mail
+                  className="h-3.5 w-3.5 shrink-0 text-emerald-300/80"
+                  aria-hidden="true"
+                />
                 <span>bjwsociety@gmail.com</span>
               </a>
 
               {/* Divider */}
-              <span className="hidden lg:inline text-emerald-800/80" aria-hidden="true">|</span>
+              <span
+                className="hidden text-emerald-800/80 lg:inline"
+                aria-hidden="true"
+              >
+                |
+              </span>
 
               {/* Registration badge */}
-              <div className="hidden lg:inline-flex items-center gap-1.5 text-emerald-200/70 text-[11px]">
-                <ShieldCheck className="h-3.5 w-3.5 text-[#c99a45]" aria-hidden="true" />
+              <div className="hidden items-center gap-1.5 text-[11px] text-emerald-200/70 lg:inline-flex">
+                <ShieldCheck
+                  className="h-3.5 w-3.5 text-[#c99a45]"
+                  aria-hidden="true"
+                />
                 <span>{t("common.regNo")}</span>
               </div>
             </div>
 
             {/* Right: Language Switcher, Theme Switcher & Social Link */}
-            <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+            <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
               {/* Theme Toggle (Dark / Light) */}
               <ThemeToggle variant="topbar" />
 
               {/* Divider */}
-              <span className="text-emerald-800/80" aria-hidden="true">|</span>
+              <span className="text-emerald-800/80" aria-hidden="true">
+                |
+              </span>
 
               {/* Language Switcher */}
               <LanguageSwitcher variant="topbar" />
 
               {/* Divider (Desktop only) */}
-              <span className="hidden sm:inline text-emerald-800/80" aria-hidden="true">|</span>
+              <span
+                className="hidden text-emerald-800/80 sm:inline"
+                aria-hidden="true"
+              >
+                |
+              </span>
 
               {/* Facebook Link (Desktop only) */}
               <a
@@ -217,7 +248,7 @@ export function Header({ notices = [] }: HeaderProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="BJWS Facebook Community"
-                className="hidden sm:inline-flex items-center justify-center h-6 w-6 rounded text-emerald-200/80 hover:text-white hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-300"
+                className="hidden h-6 w-6 items-center justify-center rounded text-emerald-200/80 transition-colors hover:bg-white/10 hover:text-white focus-visible:ring-1 focus-visible:ring-amber-300 focus-visible:outline-none sm:inline-flex"
               >
                 <svg
                   className="h-3.5 w-3.5 fill-current"
@@ -237,19 +268,19 @@ export function Header({ notices = [] }: HeaderProps) {
         className={cn(
           "sticky top-0 z-40 w-full border-b transition-all duration-300",
           isScrolled
-            ? "border-[#e6e4dc]/80 bg-surface/95 dark:bg-[#0c2117]/95 shadow-md backdrop-blur-md"
-            : "border-[#e6e4dc] bg-surface/98 backdrop-blur-md shadow-2xs"
+            ? "bg-surface/95 border-[#e6e4dc]/80 shadow-md backdrop-blur-md dark:bg-[#0c2117]/95"
+            : "bg-surface/98 border-[#e6e4dc] shadow-2xs backdrop-blur-md"
         )}
       >
         <Container size="xl">
-          <div className="flex min-h-[4.25rem] sm:h-20 items-center justify-between gap-2 sm:gap-4 py-2 sm:py-0">
+          <div className="flex min-h-[4.25rem] items-center justify-between gap-2 py-2 sm:h-20 sm:gap-4 sm:py-0">
             {/* Brand Logo & Title */}
             <Link
               href="/"
-              className="group focus-visible:ring-ring flex items-center gap-2.5 sm:gap-3 rounded-md focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none min-w-0"
+              className="group focus-visible:ring-ring flex min-w-0 items-center gap-2.5 rounded-md focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:gap-3"
             >
               {/* Real BJWS Logo WebP */}
-              <div className="relative h-10 w-10 sm:h-12 sm:w-12 shrink-0 overflow-hidden rounded-lg border border-emerald-900/15 bg-white p-1 shadow-2xs transition-transform group-hover:scale-105">
+              <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg border border-emerald-900/15 bg-white p-1 shadow-2xs transition-transform group-hover:scale-105 sm:h-12 sm:w-12">
                 <Image
                   src="/images/bjws logo.webp"
                   alt="Buhary Janaza Welfare Society Logo"
@@ -261,13 +292,13 @@ export function Header({ notices = [] }: HeaderProps) {
               </div>
 
               {/* Brand Typography */}
-              <div className="flex flex-col min-w-0">
-                <span className="font-display text-sm font-bold tracking-tight text-[#0b2e1e] leading-snug sm:text-lg lg:text-xl truncate sm:overflow-visible">
+              <div className="flex min-w-0 flex-col">
+                <span className="font-display truncate text-sm leading-snug font-bold tracking-tight text-[#0b2e1e] sm:overflow-visible sm:text-lg lg:text-xl">
                   {t("common.societyName")}
                 </span>
-                <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-[11px] font-medium text-text-muted truncate">
+                <div className="text-text-muted flex items-center gap-1.5 truncate text-[10px] font-medium sm:gap-2 sm:text-[11px]">
                   <span>{t("common.location")}</span>
-                  <span className="text-[#c99a45] font-bold">•</span>
+                  <span className="font-bold text-[#c99a45]">•</span>
                   <span>{t("common.foundedYear")}</span>
                 </div>
               </div>
@@ -276,7 +307,7 @@ export function Header({ notices = [] }: HeaderProps) {
             {/* Desktop Navigation with Sub-Section Dropdowns */}
             <nav
               ref={navRef}
-              className="hidden items-center gap-1 xl:gap-2 lg:flex"
+              className="hidden items-center gap-1 lg:flex xl:gap-2"
               aria-label="Main Navigation"
             >
               {navItems.map((item) => {
@@ -292,11 +323,11 @@ export function Header({ notices = [] }: HeaderProps) {
                       href={item.href}
                       aria-current={isActive ? "page" : undefined}
                       className={cn(
-                        "relative rounded-md px-3 py-2 text-xs xl:text-sm font-medium whitespace-nowrap transition-colors",
+                        "relative rounded-md px-3 py-2 text-xs font-medium whitespace-nowrap transition-colors xl:text-sm",
                         "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none",
                         isActive
-                          ? "text-[#0b2e1e] dark:text-[#f5eedf] font-semibold after:absolute after:bottom-0 after:left-3 after:right-3 after:h-0.5 after:bg-[#124d34] dark:after:bg-[#c99a45] after:rounded-full"
-                          : "text-[#374151] dark:text-emerald-100/80 hover:text-[#124d34] dark:hover:text-white hover:bg-[#f4f2ea]/60 dark:hover:bg-white/5"
+                          ? "font-semibold text-[#0b2e1e] after:absolute after:right-3 after:bottom-0 after:left-3 after:h-0.5 after:rounded-full after:bg-[#124d34] dark:text-[#f5eedf] dark:after:bg-[#c99a45]"
+                          : "text-[#374151] hover:bg-[#f4f2ea]/60 hover:text-[#124d34] dark:text-emerald-100/80 dark:hover:bg-white/5 dark:hover:text-white"
                       )}
                     >
                       {item.label}
@@ -323,20 +354,20 @@ export function Header({ notices = [] }: HeaderProps) {
                       aria-expanded={isOpen}
                       aria-haspopup="true"
                       className={cn(
-                        "relative inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-xs xl:text-sm font-medium whitespace-nowrap transition-colors cursor-pointer",
+                        "relative inline-flex cursor-pointer items-center gap-1.5 rounded-md px-3 py-2 text-xs font-medium whitespace-nowrap transition-colors xl:text-sm",
                         "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none",
                         isAnyChildActive
-                          ? "text-[#0b2e1e] dark:text-[#f5eedf] font-semibold after:absolute after:bottom-0 after:left-3 after:right-3 after:h-0.5 after:bg-[#124d34] dark:after:bg-[#c99a45] after:rounded-full"
-                          : "text-[#374151] dark:text-emerald-100/80 hover:text-[#124d34] dark:hover:text-white hover:bg-[#f4f2ea]/60 dark:hover:bg-white/5",
+                          ? "font-semibold text-[#0b2e1e] after:absolute after:right-3 after:bottom-0 after:left-3 after:h-0.5 after:rounded-full after:bg-[#124d34] dark:text-[#f5eedf] dark:after:bg-[#c99a45]"
+                          : "text-[#374151] hover:bg-[#f4f2ea]/60 hover:text-[#124d34] dark:text-emerald-100/80 dark:hover:bg-white/5 dark:hover:text-white",
                         isOpen &&
-                          "bg-[#f4f2ea]/80 dark:bg-white/10 text-[#124d34] dark:text-white"
+                          "bg-[#f4f2ea]/80 text-[#124d34] dark:bg-white/10 dark:text-white"
                       )}
                     >
                       <span>{item.label}</span>
                       <ChevronDown
                         className={cn(
-                          "h-3.5 w-3.5 transition-transform duration-200 text-[#6b7280] dark:text-emerald-200/70",
-                          isOpen && "rotate-180 text-primary"
+                          "h-3.5 w-3.5 text-[#6b7280] transition-transform duration-200 dark:text-emerald-200/70",
+                          isOpen && "text-primary rotate-180"
                         )}
                         aria-hidden="true"
                       />
@@ -345,13 +376,13 @@ export function Header({ notices = [] }: HeaderProps) {
                     {/* Dropdown Popover Panel */}
                     <div
                       className={cn(
-                        "absolute left-0 top-full pt-2 z-50 transition-all duration-150 origin-top-left",
+                        "absolute top-full left-0 z-50 origin-top-left pt-2 transition-all duration-150",
                         isOpen
-                          ? "opacity-100 scale-100 pointer-events-auto"
-                          : "opacity-0 scale-95 pointer-events-none"
+                          ? "pointer-events-auto scale-100 opacity-100"
+                          : "pointer-events-none scale-95 opacity-0"
                       )}
                     >
-                      <div className="w-[300px] sm:w-[320px] rounded-2xl border border-emerald-950/10 dark:border-emerald-800/40 bg-surface/98 dark:bg-[#062115] p-2 shadow-xl ring-1 ring-black/5 backdrop-blur-md">
+                      <div className="bg-surface/98 w-[300px] rounded-2xl border border-emerald-950/10 p-2 shadow-xl ring-1 ring-black/5 backdrop-blur-md sm:w-[320px] dark:border-emerald-800/40 dark:bg-[#062115]">
                         <div className="space-y-1">
                           {item.items.map((sub) => {
                             const isSubActive = pathname.startsWith(sub.href);
@@ -364,7 +395,7 @@ export function Header({ notices = [] }: HeaderProps) {
                                 className={cn(
                                   "group flex items-start gap-3 rounded-xl p-2.5 transition-all",
                                   isSubActive
-                                    ? "bg-emerald-50 dark:bg-[#0c3121] ring-1 ring-emerald-500/20"
+                                    ? "bg-emerald-50 ring-1 ring-emerald-500/20 dark:bg-[#0c3121]"
                                     : "hover:bg-emerald-50/70 dark:hover:bg-white/5"
                                 )}
                               >
@@ -378,11 +409,11 @@ export function Header({ notices = [] }: HeaderProps) {
                                 >
                                   <IconComponent className="h-4 w-4" />
                                 </div>
-                                <div className="flex flex-col min-w-0">
+                                <div className="flex min-w-0 flex-col">
                                   <div className="flex items-center gap-1.5">
                                     <span
                                       className={cn(
-                                        "text-xs font-semibold leading-tight",
+                                        "text-xs leading-tight font-semibold",
                                         isSubActive
                                           ? "text-primary dark:text-[#e0b85c]"
                                           : "text-text group-hover:text-primary dark:text-emerald-100 dark:group-hover:text-white"
@@ -394,7 +425,7 @@ export function Header({ notices = [] }: HeaderProps) {
                                       <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 dark:bg-amber-400" />
                                     )}
                                   </div>
-                                  <span className="mt-0.5 text-[11px] leading-snug text-text-muted dark:text-emerald-300/70">
+                                  <span className="text-text-muted mt-0.5 text-[11px] leading-snug dark:text-emerald-300/70">
                                     {sub.description}
                                   </span>
                                 </div>
@@ -410,18 +441,21 @@ export function Header({ notices = [] }: HeaderProps) {
             </nav>
 
             {/* Right Side: Solid "Donate" Button & Mobile Toggle */}
-            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            <div className="flex shrink-0 items-center gap-2 sm:gap-3">
               {/* Solid ThemeForest Charity "Donate" Button */}
               <Link href="/donate" className="hidden sm:inline-flex">
                 <button
                   type="button"
                   className={cn(
-                    "cursor-pointer inline-flex items-center gap-1.5 xl:gap-2 rounded-md bg-[#124d34] px-4 xl:px-5 py-2 xl:py-2.5 text-xs xl:text-sm font-semibold text-white shadow-xs transition-all duration-200",
-                    "hover:bg-[#0b2e1e] hover:shadow-md hover:-translate-y-0.5",
+                    "inline-flex cursor-pointer items-center gap-1.5 rounded-md bg-[#124d34] px-4 py-2 text-xs font-semibold text-white shadow-xs transition-all duration-200 xl:gap-2 xl:px-5 xl:py-2.5 xl:text-sm",
+                    "hover:-translate-y-0.5 hover:bg-[#0b2e1e] hover:shadow-md",
                     "focus-visible:ring-2 focus-visible:ring-[#124d34] focus-visible:ring-offset-2 focus-visible:outline-none"
                   )}
                 >
-                  <Heart className="h-3.5 w-3.5 xl:h-4 xl:w-4 fill-white/20 transition-transform hover:scale-110" aria-hidden="true" />
+                  <Heart
+                    className="h-3.5 w-3.5 fill-white/20 transition-transform hover:scale-110 xl:h-4 xl:w-4"
+                    aria-hidden="true"
+                  />
                   <span>{t("nav.donate")}</span>
                 </button>
               </Link>
@@ -433,7 +467,7 @@ export function Header({ notices = [] }: HeaderProps) {
                 aria-expanded={mobileMenuOpen}
                 aria-controls="mobile-menu"
                 aria-label={t("common.openMenu")}
-                className="text-[#1c2420] dark:text-emerald-100 hover:bg-muted focus-visible:ring-ring rounded-md p-2 focus-visible:ring-2 focus-visible:outline-none lg:hidden transition-colors"
+                className="hover:bg-muted focus-visible:ring-ring rounded-md p-2 text-[#1c2420] transition-colors focus-visible:ring-2 focus-visible:outline-none lg:hidden dark:text-emerald-100"
               >
                 <Menu className="h-6 w-6" aria-hidden="true" />
               </button>

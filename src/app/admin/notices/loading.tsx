@@ -3,7 +3,7 @@ import { Skeleton, SkeletonTable } from "@/components/ui/skeleton";
 export default function AdminNoticesLoading() {
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border/80 pb-6">
+      <div className="border-border/80 flex flex-col justify-between gap-4 border-b pb-6 sm:flex-row sm:items-center">
         <div className="space-y-1.5">
           <Skeleton className="h-8 w-60" />
           <Skeleton className="h-4 w-88 max-w-full" />
@@ -15,4 +15,3 @@ export default function AdminNoticesLoading() {
     </div>
   );
 }
-

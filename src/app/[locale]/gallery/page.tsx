@@ -13,7 +13,10 @@ import {
   DEFAULT_BLUR,
   formatCategoryLabel,
 } from "@/content/gallery";
-import { createPublicClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import {
+  createPublicClient,
+  isSupabaseConfigured,
+} from "@/lib/supabase/server";
 import { buildPageMetadata } from "@/lib/seo";
 import { JsonLd, getBreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { ShieldCheck } from "lucide-react";
@@ -142,12 +145,14 @@ export default async function GalleryPage({
           <GalleryGrid images={approvedImages} translations={translations} />
 
           {/* Subtle Community Dignity Assurance Note */}
-          <div className="mt-16 border-t border-[#e6e4dc] pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#6b7280]">
+          <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-[#e6e4dc] pt-8 text-xs text-[#6b7280] sm:flex-row">
             <div className="flex items-center gap-2">
-              <ShieldCheck className="h-4 w-4 text-[#124d34] shrink-0" />
-              <span>{t("privacyNoticeTitle")} &mdash; {t("privacyNoticeDesc")}</span>
+              <ShieldCheck className="h-4 w-4 shrink-0 text-[#124d34]" />
+              <span>
+                {t("privacyNoticeTitle")} &mdash; {t("privacyNoticeDesc")}
+              </span>
             </div>
-            <span className="text-[11px] font-mono text-[#9ca3af] shrink-0">
+            <span className="shrink-0 font-mono text-[11px] text-[#9ca3af]">
               Buhary Janaza Welfare Society Visual Documentation
             </span>
           </div>

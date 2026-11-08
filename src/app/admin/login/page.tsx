@@ -46,14 +46,15 @@ export default function AdminLoginPage() {
         </div>
 
         {/* Login Card */}
-        <div className="overflow-hidden rounded-2xl border border-[#e6e4dc] border-t-4 border-t-[#c99a45] bg-white p-6 shadow-sm sm:p-8">
+        <div className="overflow-hidden rounded-2xl border border-t-4 border-[#e6e4dc] border-t-[#c99a45] bg-white p-6 shadow-sm sm:p-8">
           <div className="mb-6 border-b border-[#e6e4dc] pb-4">
             <div className="flex items-center gap-2 text-sm font-bold text-[#0b2e1e]">
               <ShieldCheck className="h-4 w-4 text-[#124d34]" />
               <span>Restricted Administration Console</span>
             </div>
             <p className="mt-1 text-xs text-[#6b7280]">
-              Authorized secretarial, treasury, and executive committee officers only.
+              Authorized secretarial, treasury, and executive committee officers
+              only.
             </p>
           </div>
 
@@ -119,7 +120,9 @@ export default function AdminLoginPage() {
               isLoading={isPending}
               className="mt-2 w-full bg-[#124d34] text-white hover:bg-[#0b2e1e]"
             >
-              {isPending ? "Authenticating Session..." : "Sign In to Admin Portal"}
+              {isPending
+                ? "Authenticating Session..."
+                : "Sign In to Admin Portal"}
             </Button>
           </form>
 
@@ -128,11 +131,14 @@ export default function AdminLoginPage() {
             <p className="flex items-center justify-center gap-1.5 text-[11px]">
               <ShieldCheck className="h-3.5 w-3.5 text-[#124d34]" />
               <span>
-                Protected by <strong className="text-[#1c2420]">Supabase Auth</strong> &amp; 256-Bit SSL
+                Protected by{" "}
+                <strong className="text-[#1c2420]">Supabase Auth</strong> &amp;
+                256-Bit SSL
               </span>
             </p>
             <p className="mt-1 text-[11px] text-[#9ca3af]">
-              Official Secretariat Portal. Unauthorized access attempts are monitored and logged.
+              Official Secretariat Portal. Unauthorized access attempts are
+              monitored and logged.
             </p>
           </div>
         </div>

@@ -17,7 +17,11 @@
  */
 
 export * from "./gallery-types";
-import type { GalleryCategory, GalleryCategoryMeta, GalleryImage } from "./gallery-types";
+import type {
+  GalleryCategory,
+  GalleryCategoryMeta,
+  GalleryImage,
+} from "./gallery-types";
 
 export const GALLERY_CATEGORIES: GalleryCategoryMeta[] = [];
 export const GALLERY_MANIFEST: GalleryImage[] = [];
@@ -68,7 +72,8 @@ function getSynchronizedStore(): GalleryImage[] {
         handledSrcs.add(staticMatch.src);
         synchronized.push({
           ...staticMatch,
-          approved: item.approved !== undefined ? item.approved : staticMatch.approved,
+          approved:
+            item.approved !== undefined ? item.approved : staticMatch.approved,
         });
       }
     } else {

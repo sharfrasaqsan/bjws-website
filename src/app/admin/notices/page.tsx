@@ -63,7 +63,8 @@ export default async function AdminNoticesPage() {
                   Community Bulletins &amp; Notices
                 </h1>
                 <p className="text-xs text-[#6b7280] sm:text-sm">
-                  Broadcast Janaza announcements, Shramadhana alerts, and community notices in Tamil, English, and Sinhala.
+                  Broadcast Janaza announcements, Shramadhana alerts, and
+                  community notices in Tamil, English, and Sinhala.
                 </p>
               </div>
             </div>

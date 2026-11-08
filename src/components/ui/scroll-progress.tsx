@@ -43,7 +43,7 @@ export function ScrollProgress() {
   return (
     <div
       aria-hidden="true"
-      className="fixed top-0 left-0 right-0 z-[60] h-[2.5px] pointer-events-none origin-left bg-gradient-to-r from-[#124d34] via-[#10b981] to-[#d4a359] transition-transform duration-75 ease-out will-change-transform"
+      className="pointer-events-none fixed top-0 right-0 left-0 z-[60] h-[2.5px] origin-left bg-gradient-to-r from-[#124d34] via-[#10b981] to-[#d4a359] transition-transform duration-75 ease-out will-change-transform"
       style={{
         transform: `scaleX(${progress / 100})`,
         opacity: progress > 1 ? 1 : 0,
@@ -51,4 +51,3 @@ export function ScrollProgress() {
     />
   );
 }
-

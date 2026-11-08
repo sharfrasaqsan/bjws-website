@@ -28,7 +28,7 @@ export function PageHeader({
   breadcrumbs,
 }: PageHeaderProps) {
   return (
-    <div className="relative overflow-hidden bg-[#072115] text-white py-12 sm:py-16 lg:py-20 border-b border-emerald-950">
+    <div className="relative overflow-hidden border-b border-emerald-950 bg-[#072115] py-12 text-white sm:py-16 lg:py-20">
       {/* Real background photography with deep evergreen overlay */}
       <div className="absolute inset-0 z-0">
         <Image
@@ -45,14 +45,14 @@ export function PageHeader({
       {/* Subtle Islamic lattice texture */}
       <IslamicPattern
         opacity={0.06}
-        className="text-[#d4a359] z-10 pointer-events-none"
+        className="pointer-events-none z-10 text-[#d4a359]"
       />
 
       <Container size="xl" className="relative z-20">
         {/* Breadcrumb Navigation */}
         <nav
           aria-label="Breadcrumb"
-          className="mb-4 inline-flex items-center gap-1.5 text-xs text-emerald-200/80 font-medium"
+          className="mb-4 inline-flex items-center gap-1.5 text-xs font-medium text-emerald-200/80"
         >
           {breadcrumbs.map((crumb, idx) => {
             const isLast = idx === breadcrumbs.length - 1;
@@ -67,7 +67,7 @@ export function PageHeader({
                 {crumb.href && !isLast ? (
                   <Link
                     href={crumb.href}
-                    className="hover:text-white transition-colors inline-flex items-center gap-1"
+                    className="inline-flex items-center gap-1 transition-colors hover:text-white"
                   >
                     {idx === 0 && <Home className="h-3 w-3" />}
                     <span>{crumb.label}</span>
@@ -75,7 +75,9 @@ export function PageHeader({
                 ) : (
                   <span
                     className={
-                      isLast ? "text-white font-semibold" : "text-emerald-200/80"
+                      isLast
+                        ? "font-semibold text-white"
+                        : "text-emerald-200/80"
                     }
                     aria-current={isLast ? "page" : undefined}
                   >
@@ -98,13 +100,13 @@ export function PageHeader({
         )}
 
         {/* Page Title */}
-        <h1 className="font-display text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight max-w-4xl">
+        <h1 className="font-display max-w-4xl text-2xl leading-tight font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
           {title}
         </h1>
 
         {/* Subtitle */}
         {subtitle && (
-          <p className="mt-4 text-xs sm:text-sm lg:text-base text-emerald-100/85 leading-relaxed max-w-3xl">
+          <p className="mt-4 max-w-3xl text-xs leading-relaxed text-emerald-100/85 sm:text-sm lg:text-base">
             {subtitle}
           </p>
         )}
@@ -112,4 +114,3 @@ export function PageHeader({
     </div>
   );
 }
-
