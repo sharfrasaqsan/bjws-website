@@ -24,15 +24,14 @@ export default async function AdminNoticesPage() {
         )
         .order("published_at", { ascending: false });
 
-      if (!error && data && data.length > 0) {
+      if (!error && data) {
         notices = data;
       }
     } catch (err) {
       console.warn("Failed to fetch notices:", err);
+      notices = getAllNotices();
     }
-  }
-
-  if (notices.length === 0) {
+  } else {
     notices = getAllNotices();
   }
 

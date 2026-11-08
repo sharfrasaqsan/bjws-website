@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 export default async function AdminGalleryPage() {
   await getAdminSession();
 
-  let images: GalleryImage[] = getAllGalleryImagesAdmin();
+  let images: GalleryImage[] = [];
 
   if (isSupabaseConfigured()) {
     try {
@@ -30,7 +30,7 @@ export default async function AdminGalleryPage() {
         .select("*")
         .order("created_at", { ascending: false });
 
-      if (!error && data && data.length > 0) {
+      if (!error && data) {
         images = data.map((d) => ({
           id: d.id,
           src: d.src,
@@ -51,7 +51,10 @@ export default async function AdminGalleryPage() {
         "Could not query Supabase gallery_images table, using fallback store:",
         err
       );
+      images = getAllGalleryImagesAdmin();
     }
+  } else {
+    images = getAllGalleryImagesAdmin();
   }
 
   return (

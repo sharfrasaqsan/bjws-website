@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 export default async function AdminNewsPage() {
   await getAdminSession();
 
-  let articles: Article[] = getAllArticlesAdmin();
+  let articles: Article[] = [];
 
   if (isSupabaseConfigured()) {
     try {
@@ -25,7 +25,7 @@ export default async function AdminNewsPage() {
         .select("*")
         .order("published_at", { ascending: false });
 
-      if (!error && data && data.length > 0) {
+      if (!error && data) {
         articles = data.map((d) => ({
           id: d.id,
           slug: d.slug,
@@ -50,11 +50,11 @@ export default async function AdminNewsPage() {
         }));
       }
     } catch (err) {
-      console.warn(
-        "Could not query Supabase articles table, using fallback store:",
-        err
-      );
+      console.warn("Could not query Supabase articles table:", err);
+      articles = getAllArticlesAdmin();
     }
+  } else {
+    articles = getAllArticlesAdmin();
   }
 
   return (

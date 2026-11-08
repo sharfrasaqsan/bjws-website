@@ -50,7 +50,7 @@ export default async function TeamPage({
   const t = await getTranslations("teamPage");
   const tCommon = await getTranslations("common");
   const assets = getSiteAssets();
-  let teamMembers: TeamMember[] = getTeamMembers();
+  let teamMembers: TeamMember[] = [];
 
   if (isSupabaseConfigured()) {
     try {
@@ -61,7 +61,7 @@ export default async function TeamPage({
         .eq("is_inactive", false)
         .order("created_at", { ascending: false });
 
-      if (!error && data && data.length > 0) {
+      if (!error && data) {
         teamMembers = data.map((d, idx) => {
           const raw = d as Record<string, unknown>;
           const known = findKnownMember({
@@ -117,7 +117,10 @@ export default async function TeamPage({
       }
     } catch (err) {
       console.warn("Supabase fetch team members warning:", err);
+      teamMembers = getTeamMembers();
     }
+  } else {
+    teamMembers = getTeamMembers();
   }
 
   const validLocale = (locale === "ta" || locale === "si" ? locale : "en") as

@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 export default async function AdminTeamPage() {
   await getAdminSession();
 
-  let members: TeamMember[] = getAllTeamMembersAdmin();
+  let members: TeamMember[] = [];
 
   if (isSupabaseConfigured()) {
     try {
@@ -37,7 +37,7 @@ export default async function AdminTeamPage() {
         .select("*")
         .order("created_at", { ascending: false });
 
-      if (!error && data && data.length > 0) {
+      if (!error && data) {
         members = data.map((d, idx) => {
           const raw = d as Record<string, unknown>;
           const known = findKnownMember({
@@ -96,7 +96,10 @@ export default async function AdminTeamPage() {
         "Could not query Supabase team_members table, using fallback store:",
         err
       );
+      members = getAllTeamMembersAdmin();
     }
+  } else {
+    members = getAllTeamMembersAdmin();
   }
 
   return (

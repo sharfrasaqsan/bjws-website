@@ -75,8 +75,6 @@ export default async function GalleryPage({
           approved: d.approved,
           consentNotes: d.consent_notes || undefined,
         }));
-      } else {
-        approvedImages = getApprovedGalleryImages();
       }
     } catch (err) {
       console.warn("Supabase fetch gallery images warning:", err);

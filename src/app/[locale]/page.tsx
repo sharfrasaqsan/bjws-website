@@ -183,7 +183,7 @@ export default async function HomePage({
         .select("*")
         .eq("approved", true);
 
-      if (!error && data && data.length > 0) {
+      if (!error && data) {
         allGalleryPhotos = data.map((d) => ({
           id: d.id,
           src: d.src,
@@ -199,11 +199,9 @@ export default async function HomePage({
         }));
       }
     } catch {
-      // Fallback handled below
+      allGalleryPhotos = getApprovedGalleryImages();
     }
-  }
-
-  if (allGalleryPhotos.length === 0) {
+  } else {
     allGalleryPhotos = getApprovedGalleryImages();
   }
 
