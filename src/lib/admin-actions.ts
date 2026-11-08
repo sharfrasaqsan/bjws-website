@@ -32,6 +32,7 @@ import {
   updateGalleryImageStore,
   deleteGalleryImageStore,
   toggleGalleryApprovalStore,
+  renameGalleryCategoryStore,
   type GalleryImage,
   type GalleryCategory,
   DEFAULT_BLUR,
@@ -1680,7 +1681,7 @@ export async function createGalleryImageAction(
   const src = (formData.get("src") as string)?.trim() || "";
   const caption = (formData.get("caption") as string)?.trim();
   const category =
-    (formData.get("category") as GalleryCategory) || "cemetery-shramadana";
+    ((formData.get("category") as string)?.trim() as GalleryCategory) || "general";
   const date =
     (formData.get("date") as string)?.trim() ||
     new Date().getFullYear().toString();
@@ -1748,7 +1749,7 @@ export async function updateGalleryImageAction(
   const src = (formData.get("src") as string)?.trim() || "";
   const caption = (formData.get("caption") as string)?.trim();
   const category =
-    (formData.get("category") as GalleryCategory) || "cemetery-shramadana";
+    ((formData.get("category") as string)?.trim() as GalleryCategory) || "general";
   const date =
     (formData.get("date") as string)?.trim() ||
     new Date().getFullYear().toString();
@@ -1951,8 +1952,9 @@ export async function batchUploadGalleryAction(
   if (!session) return { error: "Unauthorized" };
 
   const files = formData.getAll("files") as File[];
+  const captions = formData.getAll("captions") as string[];
   const category =
-    (formData.get("category") as GalleryCategory) || "cemetery-shramadana";
+    ((formData.get("category") as string)?.trim() as GalleryCategory) || "general";
   const date =
     (formData.get("date") as string)?.trim() ||
     new Date().getFullYear().toString();
@@ -1991,12 +1993,14 @@ export async function batchUploadGalleryAction(
       const id = `gal-${Date.now()}-${i + 1}-${Math.random()
         .toString(36)
         .substring(2, 7)}`;
+      const individualCaption = captions[i]?.trim();
       const caption =
-        validFiles.length === 1 && captionPrefix
+        individualCaption ||
+        (validFiles.length === 1 && captionPrefix
           ? captionPrefix
           : captionPrefix
           ? `${captionPrefix} (${i + 1})`
-          : `Community Activity - Photo ${i + 1}`;
+          : `Community Activity - Photo ${i + 1}`);
 
       const newImage: GalleryImage = {
         id,
@@ -2047,4 +2051,54 @@ export async function batchUploadGalleryAction(
   revalidatePath("/[locale]", "page");
 
   return { success: true, count: uploadedCount };
+}
+
+export async function renameGalleryCategoryAction(
+  oldCategory: string,
+  newCategory: string
+): Promise<{ success?: boolean; updatedCount?: number; error?: string }> {
+  const session = await getAdminSession();
+  if (!session) return { error: "Unauthorized" };
+
+  const cleanOld = oldCategory?.trim();
+  const cleanNew = newCategory
+    ?.trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+  if (!cleanOld || !cleanNew) {
+    return { error: "Both old and new category names are required." };
+  }
+
+  if (cleanOld === cleanNew) {
+    return { success: true, updatedCount: 0 };
+  }
+
+  // Update in-memory store
+  const updatedCount = renameGalleryCategoryStore(cleanOld, cleanNew);
+
+  // Update Supabase if configured
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createAdminClient();
+      const { error } = await supabase
+        .from("gallery_images")
+        .update({ category: cleanNew })
+        .eq("category", cleanOld);
+
+      if (error) {
+        console.warn("Supabase rename gallery category warning:", error.message);
+      }
+    } catch (err) {
+      console.warn("Supabase rename category exception:", err);
+    }
+  }
+
+  revalidatePath("/admin/gallery");
+  revalidatePath("/admin");
+  revalidatePath("/[locale]/gallery", "page");
+  revalidatePath("/[locale]", "page");
+
+  return { success: true, updatedCount };
 }

@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     const subtitleMap: Record<string, string> = {
       ta: "முள்ளிப்பொத்தானை புகாரி ஜும்ஆ பள்ளிவாசல் மஹல்லா",
       en: "Buhary Jummah Mosque Area, Mullipothana, Sri Lanka",
-      si: "බුහාරි ජුම්මා පල්ලිය ප්‍රදේශය, මුල්ලිපොතාන",
+      si: "බුහාරි ජුම්මා පල්ලිය ප්‍රදේශය, මොල්ලිපොතාන",
     };
 
     const subtitle = subtitleMap[locale] || subtitleMap.ta;

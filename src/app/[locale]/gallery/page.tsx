@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
 import { setRequestLocale, getTranslations } from "next-intl/server";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 import { Container } from "@/components/ui/container";
 import { PageHeader } from "@/components/layout/page-header";
 import { GalleryGrid } from "@/components/sections/gallery-grid";
 import {
   getApprovedGalleryImages,
-  GALLERY_CATEGORIES,
   type GalleryImage,
   type GalleryCategory,
   DEFAULT_BLUR,
+  formatCategoryLabel,
 } from "@/content/gallery";
 import { createPublicClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { buildPageMetadata } from "@/lib/seo";
@@ -83,27 +86,19 @@ export default async function GalleryPage({
     approvedImages = getApprovedGalleryImages();
   }
 
-  // Prepare localized categories mapping
+  // Prepare categories mapping from approved images
   const categoriesMap: Record<string, string> = {};
-  for (const cat of GALLERY_CATEGORIES) {
-    categoriesMap[cat.key] = t(cat.titleKey);
+  for (const img of approvedImages) {
+    if (img.category && !categoriesMap[img.category]) {
+      categoriesMap[img.category] = formatCategoryLabel(img.category);
+    }
   }
 
-  // Prepare localized captions and alt texts safely
+  // Prepare captions and alt texts directly (no need for ta/si translations for photo names)
   const captionsMap: Record<string, string> = {};
   for (const img of approvedImages) {
-    try {
-      captionsMap[img.captionKey] = t.has(img.captionKey)
-        ? t(img.captionKey)
-        : img.captionKey;
-    } catch {
-      captionsMap[img.captionKey] = img.captionKey;
-    }
-    try {
-      captionsMap[img.altKey] = t.has(img.altKey) ? t(img.altKey) : img.altKey;
-    } catch {
-      captionsMap[img.altKey] = img.altKey;
-    }
+    captionsMap[img.captionKey] = img.captionKey;
+    captionsMap[img.altKey] = img.altKey;
   }
 
   const translations = {
@@ -116,6 +111,8 @@ export default async function GalleryPage({
     noPhotosCategoryTitle: t("noPhotosCategoryTitle"),
     noPhotosCategoryDesc: t("noPhotosCategoryDesc"),
     viewAllPhotos: t("viewAllPhotos"),
+    seeMorePhotos: t("seeMorePhotos"),
+    allPhotosLoaded: t("allPhotosLoaded"),
   };
 
   return (

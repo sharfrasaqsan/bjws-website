@@ -54,6 +54,11 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "50mb",
+    },
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     qualities: [75, 85],

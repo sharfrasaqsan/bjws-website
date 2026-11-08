@@ -362,7 +362,9 @@
     "noPhotosDesc": "Community welfare activities, cemetery shramadhana programs, and official society events will be photographed and documented here soon.",
     "noPhotosCategoryTitle": "No Photos in This Album",
     "noPhotosCategoryDesc": "There are currently no photos uploaded under this specific album category. Select another album or return to all photos.",
-    "viewAllPhotos": "View All Photos"
+    "viewAllPhotos": "View All Photos",
+    "seeMorePhotos": "See More Photos",
+    "allPhotosLoaded": "All photos loaded"
   },
   "membershipPage": {
     "pageTitle": "Society Membership & Registration",

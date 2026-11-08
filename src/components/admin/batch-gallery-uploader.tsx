@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useState, useRef, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { GALLERY_CATEGORIES, type GalleryCategory } from "@/content/gallery";
+import { type GalleryCategory } from "@/content/gallery";
 import { batchUploadGalleryAction } from "@/lib/admin-actions";
 import {
   UploadCloud,
@@ -24,12 +24,14 @@ interface BatchItem {
   name: string;
   originalSize: number;
   compressedSize: number;
+  caption: string;
 }
 
 interface BatchGalleryUploaderProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess?: (count: number) => void;
+  existingCategories?: Array<{ key: string; label: string }>;
 }
 
 /**
@@ -114,6 +116,7 @@ export function BatchGalleryUploader({
   isOpen,
   onClose,
   onSuccess,
+  existingCategories = [],
 }: BatchGalleryUploaderProps) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -124,14 +127,16 @@ export function BatchGalleryUploader({
   const [isPending, startTransition] = useTransition();
 
   // Batch Form State
-  const [category, setCategory] = useState<GalleryCategory>("cemetery-shramadana");
-  const [isCustomCategory, setIsCustomCategory] = useState<boolean>(false);
+  const initialCategory =
+    existingCategories.length > 0 ? existingCategories[0].key : "";
+  const [category, setCategory] = useState<string>(initialCategory);
+  const [isCustomCategory, setIsCustomCategory] = useState<boolean>(
+    existingCategories.length === 0
+  );
   const [customCategoryInput, setCustomCategoryInput] = useState<string>("");
-  const [date, setDate] = useState<string>(new Date().getFullYear().toString());
   const [location, setLocation] = useState<string>("Mullipothana");
-  const [captionPrefix, setCaptionPrefix] = useState<string>("");
+  const [commonCaption, setCommonCaption] = useState<string>("");
   const [approved, setApproved] = useState<boolean>(true);
-  const [consentNotes, setConsentNotes] = useState<string>("");
 
   // Upload Progress & Errors
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -159,6 +164,15 @@ export function BatchGalleryUploader({
       try {
         const compressedBlob = await compressImageInBrowser(file, 1920, 0.85);
         const previewUrl = URL.createObjectURL(compressedBlob);
+        const cleanName = file.name
+          .replace(/\.[^/.]+$/, "")
+          .replace(/[-_]+/g, " ")
+          .replace(/\s+/g, " ")
+          .trim();
+
+        const defaultCaption = commonCaption.trim()
+          ? `${commonCaption.trim()} (${items.length + i + 1})`
+          : cleanName;
 
         newItems.push({
           id: `batch-${Date.now()}-${i}-${Math.random().toString(36).substring(2, 6)}`,
@@ -168,6 +182,7 @@ export function BatchGalleryUploader({
           name: file.name,
           originalSize: file.size,
           compressedSize: compressedBlob.size,
+          caption: defaultCaption,
         });
       } catch (err) {
         console.warn(`Compression error for ${file.name}:`, err);
@@ -213,6 +228,25 @@ export function BatchGalleryUploader({
     setSuccessCount(null);
   };
 
+  const handleUpdateItemCaption = (id: string, newCaption: string) => {
+    setItems((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, caption: newCaption } : item
+      )
+    );
+  };
+
+  const handleApplyCommonTitle = () => {
+    const prefix = commonCaption.trim();
+    if (!prefix) return;
+    setItems((prev) =>
+      prev.map((item, idx) => ({
+        ...item,
+        caption: prev.length === 1 ? prefix : `${prefix} (${idx + 1})`,
+      }))
+    );
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (items.length === 0) {
@@ -226,31 +260,35 @@ export function BatchGalleryUploader({
       try {
         const formData = new FormData();
 
-        // Convert compressed blobs to files
+        // Convert compressed blobs to files with individual captions
         items.forEach((item, index) => {
           const extension = item.name.split(".").pop() || "webp";
           const baseName = item.name.replace(/\.[^/.]+$/, "");
-          const cleanFileName = `${baseName}-${index + 1}.${extension === "png" || extension === "jpeg" || extension === "jpg" ? "webp" : extension}`;
+          const cleanFileName = `${baseName}-${index + 1}.${
+            extension === "png" || extension === "jpeg" || extension === "jpg"
+              ? "webp"
+              : extension
+          }`;
           const fileToUpload = new File([item.compressedBlob], cleanFileName, {
             type: item.compressedBlob.type || "image/webp",
           });
           formData.append("files", fileToUpload);
+          formData.append("captions", item.caption.trim() || item.name);
         });
 
-        const finalCategory = isCustomCategory
-          ? customCategoryInput
-              .trim()
-              .toLowerCase()
-              .replace(/[^a-z0-9]+/g, "-")
-              .replace(/^-+|-+$/g, "") || "general"
-          : category;
+        const finalCategory =
+          isCustomCategory || !category
+            ? customCategoryInput
+                .trim()
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, "-")
+                .replace(/^-+|-+$/g, "") || "general"
+            : category;
 
         formData.append("category", finalCategory);
-        formData.append("date", date);
         formData.append("location", location);
-        formData.append("captionPrefix", captionPrefix);
+        formData.append("captionPrefix", commonCaption);
         formData.append("approved", approved ? "true" : "false");
-        formData.append("consentNotes", consentNotes);
 
         const res = await batchUploadGalleryAction(formData);
 
@@ -273,10 +311,15 @@ export function BatchGalleryUploader({
   };
 
   const totalOriginalSize = items.reduce((acc, cur) => acc + cur.originalSize, 0);
-  const totalCompressedSize = items.reduce((acc, cur) => acc + cur.compressedSize, 0);
+  const totalCompressedSize = items.reduce(
+    (acc, cur) => acc + cur.compressedSize,
+    0
+  );
   const percentSaved =
     totalOriginalSize > 0
-      ? Math.round(((totalOriginalSize - totalCompressedSize) / totalOriginalSize) * 100)
+      ? Math.round(
+          ((totalOriginalSize - totalCompressedSize) / totalOriginalSize) * 100
+        )
       : 0;
 
   return (
@@ -287,7 +330,7 @@ export function BatchGalleryUploader({
           type="button"
           onClick={onClose}
           disabled={isPending}
-          className="absolute right-5 top-5 rounded-full p-2 text-text-muted hover:bg-background hover:text-text transition-colors disabled:opacity-30"
+          className="absolute right-5 top-5 rounded-full p-2 text-text-muted hover:bg-background hover:text-text transition-colors disabled:opacity-30 cursor-pointer"
           aria-label="Close"
         >
           <X className="h-5 w-5" />
@@ -309,13 +352,13 @@ export function BatchGalleryUploader({
               </span>
             </div>
             <p className="text-xs text-text-muted">
-              Select 10, 50, or more photos at once. Photos are automatically compressed to fast WebP before upload.
+              Select multiple photos at once. You can edit individual titles for every photo below.
             </p>
           </div>
         </div>
 
         {/* Scrollable Content Body */}
-        <div className="flex-1 overflow-y-auto py-5 space-y-6">
+        <div className="flex-1 overflow-y-auto py-5 space-y-5">
           {/* Success Banner */}
           {successCount !== null && (
             <div className="flex items-center justify-between rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 p-4 border border-emerald-600/30 text-emerald-800 dark:text-emerald-200">
@@ -333,7 +376,7 @@ export function BatchGalleryUploader({
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white px-3.5 py-1.5 text-xs font-semibold shadow-xs"
+                className="rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white px-3.5 py-1.5 text-xs font-semibold shadow-xs cursor-pointer"
               >
                 Done
               </button>
@@ -389,11 +432,52 @@ export function BatchGalleryUploader({
             </p>
           </div>
 
-          {/* Selected Photos List & Compression Stats */}
+          {/* Common Event Title Helper */}
+          <div className="rounded-2xl border border-border bg-surface p-4 space-y-2">
+            <div className="flex items-center justify-between">
+              <label className="block text-xs font-bold uppercase tracking-wider text-text-muted">
+                Common Event Name (Optional Prefix)
+              </label>
+              {items.length > 0 && commonCaption.trim() && (
+                <button
+                  type="button"
+                  onClick={handleApplyCommonTitle}
+                  className="text-[11px] font-bold text-primary hover:underline cursor-pointer flex items-center gap-1"
+                >
+                  <span>Apply to All {items.length} Photos</span>
+                </button>
+              )}
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={commonCaption}
+                onChange={(e) => setCommonCaption(e.target.value)}
+                placeholder="e.g. Mahallah Cemetery Annual Shramadhana"
+                disabled={isPending}
+                className="flex-1 rounded-xl border border-border bg-background px-3.5 py-2 text-xs sm:text-sm text-text focus:border-primary focus:outline-none"
+              />
+              {items.length > 0 && (
+                <button
+                  type="button"
+                  onClick={handleApplyCommonTitle}
+                  disabled={!commonCaption.trim() || isPending}
+                  className="rounded-xl border border-primary/40 bg-primary/10 hover:bg-primary/20 text-primary px-3.5 py-2 text-xs font-semibold whitespace-nowrap transition-colors disabled:opacity-40 cursor-pointer"
+                >
+                  Apply to All
+                </button>
+              )}
+            </div>
+            <p className="text-[11px] text-text-muted">
+              You can type a common title and click &quot;Apply to All&quot;, or customize individual titles for each photo below.
+            </p>
+          </div>
+
+          {/* Selected Photos List with Individual Titles */}
           {items.length > 0 && (
             <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-xs font-bold text-text">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-border pb-2">
+                <div className="flex flex-wrap items-center gap-2 text-xs font-bold text-text">
                   <FileImage className="h-4 w-4 text-primary" />
                   <span>
                     {items.length} {items.length === 1 ? "Photo" : "Photos"} Selected
@@ -412,46 +496,65 @@ export function BatchGalleryUploader({
                   type="button"
                   onClick={handleClearAll}
                   disabled={isPending}
-                  className="inline-flex items-center gap-1 text-xs font-semibold text-rose-600 hover:text-rose-700 transition-colors"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-rose-600 hover:text-rose-700 transition-colors self-start sm:self-auto cursor-pointer"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                   <span>Clear All</span>
                 </button>
               </div>
 
-              {/* Thumbnails Grid Preview */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3 max-h-56 overflow-y-auto p-2 rounded-2xl bg-background border border-border">
+              {/* Photos with individual caption inputs */}
+              <div className="max-h-72 overflow-y-auto space-y-2.5 p-2 rounded-2xl bg-background border border-border">
                 {items.map((item, idx) => (
                   <div
                     key={item.id}
-                    className="group/item relative aspect-4/3 rounded-xl overflow-hidden border border-border bg-black/5"
+                    className="flex items-center gap-3 p-2.5 rounded-xl bg-surface border border-border hover:border-primary/40 transition-colors"
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={item.previewUrl}
-                      alt={item.name}
-                      className="h-full w-full object-cover"
-                    />
+                    {/* Thumbnail */}
+                    <div className="relative h-14 w-18 shrink-0 rounded-lg overflow-hidden border border-border bg-black/5">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={item.previewUrl}
+                        alt={item.caption || item.name}
+                        className="h-full w-full object-cover"
+                      />
+                      <span className="absolute top-1 left-1 rounded bg-black/75 px-1 py-0.2 text-[9px] font-bold text-white">
+                        #{idx + 1}
+                      </span>
+                    </div>
 
-                    {/* Sequential badge */}
-                    <span className="absolute top-1 left-1 rounded-md bg-black/70 px-1.5 py-0.5 text-[9px] font-bold text-white">
-                      #{idx + 1}
-                    </span>
-
-                    {/* Size badge */}
-                    <span className="absolute bottom-1 left-1 rounded-md bg-black/70 px-1.5 py-0.5 text-[9px] font-mono text-emerald-300">
-                      {formatBytes(item.compressedSize)}
-                    </span>
+                    {/* Caption Input & File Info */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2 mb-1">
+                        <label className="text-[10px] font-bold uppercase tracking-wider text-text-muted truncate">
+                          Photo #{idx + 1} Event Title / Caption *
+                        </label>
+                        <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 shrink-0">
+                          {formatBytes(item.compressedSize)}
+                        </span>
+                      </div>
+                      <input
+                        type="text"
+                        value={item.caption}
+                        onChange={(e) =>
+                          handleUpdateItemCaption(item.id, e.target.value)
+                        }
+                        placeholder="Enter specific event title for this photo..."
+                        required
+                        disabled={isPending}
+                        className="w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-text placeholder:text-text-muted/60 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                      />
+                    </div>
 
                     {/* Remove button */}
                     <button
                       type="button"
                       onClick={() => handleRemoveItem(item.id)}
                       disabled={isPending}
-                      className="absolute top-1 right-1 rounded-full bg-black/70 p-1 text-white hover:bg-rose-600 transition-colors opacity-0 group-hover/item:opacity-100"
-                      aria-label="Remove photo"
+                      className="rounded-lg p-2 text-text-muted hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors shrink-0 cursor-pointer"
+                      title="Remove photo"
                     >
-                      <X className="h-3 w-3" />
+                      <X className="h-4 w-4" />
                     </button>
                   </div>
                 ))}
@@ -460,26 +563,32 @@ export function BatchGalleryUploader({
           )}
 
           {/* Batch Settings Form */}
-          <form id="batch-upload-form" onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <form
+            id="batch-upload-form"
+            onSubmit={handleSubmit}
+            className="space-y-4 pt-2 border-t border-border"
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Category */}
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="block text-xs font-bold uppercase tracking-wider text-text-muted">
                     Album Category *
                   </label>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsCustomCategory(!isCustomCategory);
-                      setCustomCategoryInput("");
-                    }}
-                    className="text-[11px] font-semibold text-primary hover:underline cursor-pointer"
-                  >
-                    {isCustomCategory ? "Choose Existing" : "+ New Category"}
-                  </button>
+                  {existingCategories.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsCustomCategory(!isCustomCategory);
+                        setCustomCategoryInput("");
+                      }}
+                      className="text-[11px] font-semibold text-primary hover:underline cursor-pointer"
+                    >
+                      {isCustomCategory ? "Choose Existing" : "+ New Category"}
+                    </button>
+                  )}
                 </div>
-                {isCustomCategory ? (
+                {isCustomCategory || existingCategories.length === 0 ? (
                   <input
                     type="text"
                     value={customCategoryInput}
@@ -496,28 +605,13 @@ export function BatchGalleryUploader({
                     disabled={isPending}
                     className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
                   >
-                    {GALLERY_CATEGORIES.map((cat) => (
+                    {existingCategories.map((cat) => (
                       <option key={cat.key} value={cat.key}>
-                        {cat.key.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
+                        {cat.label}
                       </option>
                     ))}
                   </select>
                 )}
-              </div>
-
-              {/* Year / Date */}
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1.5">
-                  Year / Date *
-                </label>
-                <input
-                  type="text"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  disabled={isPending}
-                  required
-                  className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
-                />
               </div>
 
               {/* Location */}
@@ -534,39 +628,6 @@ export function BatchGalleryUploader({
                   className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
                 />
               </div>
-            </div>
-
-            {/* Common Caption / Prefix */}
-            <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1.5">
-                Common Caption / Event Title
-              </label>
-              <input
-                type="text"
-                value={captionPrefix}
-                onChange={(e) => setCaptionPrefix(e.target.value)}
-                disabled={isPending}
-                placeholder="e.g. Mahallah Cemetery Shramadana volunteer cleanup drive"
-                className="w-full rounded-xl border border-border bg-background px-3.5 py-2 text-xs sm:text-sm text-text focus:border-primary focus:outline-none"
-              />
-              <p className="text-[11px] text-text-muted mt-1">
-                Sequential numbers will be added automatically, e.g. &quot;{captionPrefix || "Photo"} (1)&quot;, &quot;{captionPrefix || "Photo"} (2)&quot;.
-              </p>
-            </div>
-
-            {/* Privacy & Consent Notes */}
-            <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1.5">
-                Privacy & Consent Verification Notes
-              </label>
-              <input
-                type="text"
-                value={consentNotes}
-                onChange={(e) => setConsentNotes(e.target.value)}
-                disabled={isPending}
-                placeholder="e.g. Consent verified for community volunteers. No sensitive burial rites shown."
-                className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
-              />
             </div>
 
             {/* Approved Toggle */}
@@ -594,7 +655,10 @@ export function BatchGalleryUploader({
         <div className="flex items-center justify-between border-t border-border pt-4 shrink-0">
           <div className="text-xs text-text-muted">
             {items.length > 0 ? (
-              <span>Ready to upload {items.length} {items.length === 1 ? "photo" : "photos"}</span>
+              <span>
+                Ready to upload {items.length}{" "}
+                {items.length === 1 ? "photo" : "photos"}
+              </span>
             ) : (
               <span>No photos selected yet</span>
             )}
@@ -605,7 +669,7 @@ export function BatchGalleryUploader({
               type="button"
               onClick={onClose}
               disabled={isPending}
-              className="rounded-xl border border-border px-4 py-2 text-xs font-semibold text-text hover:bg-background transition-colors disabled:opacity-50"
+              className="rounded-xl border border-border px-4 py-2 text-xs font-semibold text-text hover:bg-background transition-colors disabled:opacity-50 cursor-pointer"
             >
               Cancel
             </button>
@@ -623,7 +687,9 @@ export function BatchGalleryUploader({
               ) : (
                 <>
                   <UploadCloud className="h-4 w-4 text-[#d4af37]" />
-                  <span>Upload {items.length > 0 ? `${items.length} Photos` : "Photos"}</span>
+                  <span>
+                    Upload {items.length > 0 ? `${items.length} Photos` : "Photos"}
+                  </span>
                 </>
               )}
             </button>
@@ -633,4 +699,3 @@ export function BatchGalleryUploader({
     </div>
   );
 }
-

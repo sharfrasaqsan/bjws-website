@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { useState, useEffect, useMemo, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { useTranslations, useLocale } from "next-intl";
 import { IslamicPattern } from "@/components/ui/islamic-pattern";
 import { formatAdminDate } from "@/lib/utils";
@@ -40,6 +41,26 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
   const [isDismissed, setIsDismissed] = useState(false);
   const [activeModalNotice, setActiveModalNotice] =
     useState<NoticeItem | null>(null);
+
+  // Lock body scroll and close on Escape key when modal is open
+  useEffect(() => {
+    if (!activeModalNotice) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setActiveModalNotice(null);
+      }
+    };
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [activeModalNotice]);
 
   // Fallback verified announcements if Supabase has no records
   const fallbackNotices: Record<string, NoticeItem[]> = useMemo(
@@ -80,7 +101,7 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
         {
           id: "seed-si-1",
           title: "මහල්ල සුසාන භූමි වාර්ෂික ශ්‍රමදාන වැඩසටහන",
-          body: "මුල්ලිපොத்தான බුහාරි සුසාන භූමිය පිරිසිදු කිරීමේ වාර්ෂික ශ්‍රමදාන කටයුතු සඳහා ප්‍රජාවේ සියලු දෙනාට සහභාගී වන ලෙස ගෞරවයෙන් ආරාධනා කරමු.\n\nදිනය: එළඹෙන ඉරිදා පෙ.ව. 7:00 ට\nස්ථානය: මුල්ලිපොத்தான සුසාන භූමි පරිශ්‍රය\nවිමසීම්: 077 622 7323",
+          body: "මොල්ලිපොතාන බුහාරි සුසාන භූමිය පිරිසිදු කිරීමේ වාර්ෂික ශ්‍රමදාන කටයුතු සඳහා ප්‍රජාවේ සියලු දෙනාට සහභාගී වන ලෙස ගෞරවයෙන් ආරාධනා කරමු.\n\nදිනය: එළඹෙන ඉරිදා පෙ.ව. 7:00 ට\nස්ථානය: මොල්ලිපොතාන සුසාන භූමි පරිශ්‍රය\nවිමසීම්: 077 622 7323",
           locale: "si",
           published_at: "2026-03-01T08:00:00Z",
         },
@@ -326,110 +347,113 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
         </div>
       </div>
 
-      {/* Accessible Detail Modal */}
-      {activeModalNotice && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="notice-modal-title"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
-        >
-          {/* Backdrop with blur */}
+      {/* Accessible Detail Modal portaled directly to document.body for true screen centering */}
+      {typeof document !== "undefined" &&
+        activeModalNotice &&
+        createPortal(
           <div
-            className="fixed inset-0 bg-black/70 backdrop-blur-xs transition-opacity animate-in fade-in-50"
-            onClick={() => setActiveModalNotice(null)}
-            aria-hidden="true"
-          />
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="notice-modal-title"
+            className="fixed inset-0 z-[100] flex min-h-screen items-center justify-center p-4 sm:p-6 overflow-y-auto animate-in fade-in-50 duration-200"
+          >
+            {/* Backdrop with blur */}
+            <div
+              className="fixed inset-0 bg-black/75 backdrop-blur-xs transition-opacity"
+              onClick={() => setActiveModalNotice(null)}
+              aria-hidden="true"
+            />
 
-          {/* Modal Container */}
-          <div className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-[#e6e4dc] border-t-4 border-t-[#c99a45] bg-white p-6 text-[#1c2420] shadow-2xl z-10 animate-in fade-in-50 zoom-in-95 sm:p-7">
-            {/* Modal Header */}
-            <div className="flex items-start justify-between gap-4 border-b border-[#e6e4dc] pb-4">
-              <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#e8f3ee] text-[#124d34] ring-1 ring-[#c99a45]/30">
-                  <Megaphone className="h-5 w-5 text-[#c99a45]" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-serif text-[11px] font-bold tracking-wider uppercase text-[#8b651e]">
-                      Official Society Bulletin
-                    </span>
-                    <span className="rounded bg-[#f5eedf] px-1.5 py-0.2 font-mono text-[10px] text-[#8b651e] uppercase">
-                      {activeModalNotice.locale}
-                    </span>
+            {/* Centered Modal Container */}
+            <div className="relative my-auto w-full max-w-lg transform overflow-hidden rounded-2xl border border-[#e6e4dc] border-t-4 border-t-[#c99a45] bg-white p-6 text-[#1c2420] shadow-2xl z-10 animate-in zoom-in-95 duration-200 sm:p-7">
+              {/* Modal Header */}
+              <div className="flex items-start justify-between gap-4 border-b border-[#e6e4dc] pb-4">
+                <div className="flex items-start gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#e8f3ee] text-[#124d34] ring-1 ring-[#c99a45]/30">
+                    <Megaphone className="h-5 w-5 text-[#c99a45]" />
                   </div>
-                  <h3
-                    id="notice-modal-title"
-                    className="font-serif text-lg font-bold text-[#0b2e1e] sm:text-xl leading-snug mt-0.5"
-                  >
-                    {activeModalNotice.title}
-                  </h3>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-serif text-[11px] font-bold tracking-wider uppercase text-[#8b651e]">
+                        Official Society Bulletin
+                      </span>
+                      <span className="rounded bg-[#f5eedf] px-1.5 py-0.2 font-mono text-[10px] text-[#8b651e] uppercase">
+                        {activeModalNotice.locale}
+                      </span>
+                    </div>
+                    <h3
+                      id="notice-modal-title"
+                      className="font-serif text-lg font-bold text-[#0b2e1e] sm:text-xl leading-snug mt-0.5"
+                    >
+                      {activeModalNotice.title}
+                    </h3>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveModalNotice(null)}
+                  aria-label="Close notice details"
+                  className="cursor-pointer rounded-lg p-1.5 text-[#6b7280] hover:bg-[#f3f1ea] hover:text-[#1c2420] transition-colors"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+
+              {/* Modal Body */}
+              <div className="py-4 text-xs sm:text-sm leading-relaxed text-[#374151] whitespace-pre-wrap">
+                {activeModalNotice.body}
+              </div>
+
+              {/* Verified Organization Signoff */}
+              <div className="rounded-xl border border-[#e6e4dc] bg-[#fbfaf6] p-3 text-xs text-[#4b5563] flex items-center justify-between">
+                <div className="flex items-center gap-1.5">
+                  <ShieldCheck className="h-4 w-4 text-[#124d34]" />
+                  <span className="font-medium">Buhary Janaza Welfare Society</span>
+                </div>
+                <div className="flex items-center gap-1 text-[11px] text-[#6b7280]">
+                  <Calendar className="h-3.5 w-3.5 text-[#9ca3af]" />
+                  <span>
+                    {activeModalNotice.published_at
+                      ? formatAdminDate(activeModalNotice.published_at)
+                      : ""}
+                  </span>
                 </div>
               </div>
 
-              <button
-                type="button"
-                onClick={() => setActiveModalNotice(null)}
-                aria-label="Close notice details"
-                className="cursor-pointer rounded-lg p-1.5 text-[#6b7280] hover:bg-[#f3f1ea] hover:text-[#1c2420] transition-colors"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
+              {/* Quick Actions Footer */}
+              <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-[#f3f1ea] pt-4">
+                <div className="flex items-center gap-2">
+                  <a
+                    href="tel:+94776227323"
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-[#e6e4dc] bg-white px-3 py-1.5 text-xs font-semibold text-[#124d34] shadow-2xs hover:bg-[#fbfaf6]"
+                  >
+                    <Phone className="h-3.5 w-3.5 text-[#c99a45]" />
+                    <span>Call 077 622 7323</span>
+                  </a>
+                  <a
+                    href="https://wa.me/94776227323"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800 hover:bg-emerald-100"
+                  >
+                    <MessageCircle className="h-3.5 w-3.5 text-emerald-600" />
+                    <span>WhatsApp</span>
+                  </a>
+                </div>
 
-            {/* Modal Body */}
-            <div className="py-4 text-xs sm:text-sm leading-relaxed text-[#374151] whitespace-pre-wrap">
-              {activeModalNotice.body}
-            </div>
-
-            {/* Verified Organization Signoff */}
-            <div className="rounded-xl border border-[#e6e4dc] bg-[#fbfaf6] p-3 text-xs text-[#4b5563] flex items-center justify-between">
-              <div className="flex items-center gap-1.5">
-                <ShieldCheck className="h-4 w-4 text-[#124d34]" />
-                <span className="font-medium">Buhary Janaza Welfare Society</span>
-              </div>
-              <div className="flex items-center gap-1 text-[11px] text-[#6b7280]">
-                <Calendar className="h-3.5 w-3.5 text-[#9ca3af]" />
-                <span>
-                  {activeModalNotice.published_at
-                    ? formatAdminDate(activeModalNotice.published_at)
-                    : ""}
-                </span>
-              </div>
-            </div>
-
-            {/* Quick Actions Footer */}
-            <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-[#f3f1ea] pt-4">
-              <div className="flex items-center gap-2">
-                <a
-                  href="tel:+94776227323"
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-[#e6e4dc] bg-white px-3 py-1.5 text-xs font-semibold text-[#124d34] shadow-2xs hover:bg-[#fbfaf6]"
+                <button
+                  type="button"
+                  onClick={() => setActiveModalNotice(null)}
+                  className="cursor-pointer rounded-lg bg-[#124d34] px-4 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-[#0b2e1e] transition-colors"
                 >
-                  <Phone className="h-3.5 w-3.5 text-[#c99a45]" />
-                  <span>Call 077 622 7323</span>
-                </a>
-                <a
-                  href="https://wa.me/94776227323"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800 hover:bg-emerald-100"
-                >
-                  <MessageCircle className="h-3.5 w-3.5 text-emerald-600" />
-                  <span>WhatsApp</span>
-                </a>
+                  Close
+                </button>
               </div>
-
-              <button
-                type="button"
-                onClick={() => setActiveModalNotice(null)}
-                className="cursor-pointer rounded-lg bg-[#124d34] px-4 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-[#0b2e1e] transition-colors"
-              >
-                Close
-              </button>
             </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body
+        )}
     </>
   );
 }

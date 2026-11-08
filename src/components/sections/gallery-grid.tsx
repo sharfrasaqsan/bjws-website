@@ -6,7 +6,7 @@ import Image from "next/image";
 import {
   type GalleryImage,
   type GalleryCategory,
-  GALLERY_CATEGORIES,
+  formatCategoryLabel,
 } from "@/content/gallery";
 import { ScrollRevealGroup } from "@/components/ui/scroll-reveal";
 import { cn } from "@/lib/utils";
@@ -30,6 +30,8 @@ interface GalleryGridProps {
     noPhotosCategoryTitle?: string;
     noPhotosCategoryDesc?: string;
     viewAllPhotos?: string;
+    seeMorePhotos?: string;
+    allPhotosLoaded?: string;
   };
 }
 
@@ -66,18 +68,7 @@ export function GalleryGrid({ images, translations }: GalleryGridProps) {
     const list: Array<{ key: string; title: string }> = [];
     const seen = new Set<string>();
 
-    // 1. Built-in categories
-    GALLERY_CATEGORIES.forEach((cat) => {
-      seen.add(cat.key);
-      list.push({
-        key: cat.key,
-        title:
-          translations.categories[cat.key] ||
-          cat.key.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
-      });
-    });
-
-    // 2. Any dynamically added categories in images
+    // Dynamically added categories in images
     images.forEach((img) => {
       if (img.category && !seen.has(img.category)) {
         seen.add(img.category);
@@ -85,9 +76,7 @@ export function GalleryGrid({ images, translations }: GalleryGridProps) {
           key: img.category,
           title:
             translations.categories[img.category] ||
-            img.category
-              .replace(/-/g, " ")
-              .replace(/\b\w/g, (c) => c.toUpperCase()),
+            formatCategoryLabel(img.category),
         });
       }
     });
@@ -284,7 +273,7 @@ export function GalleryGrid({ images, translations }: GalleryGridProps) {
             onClick={() => setVisibleCount((prev) => prev + LOAD_MORE_STEP)}
             className="group inline-flex items-center gap-2.5 rounded-full bg-[#124d34] hover:bg-[#0b2e1e] text-white px-7 py-3 text-xs sm:text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5 cursor-pointer"
           >
-            <span>Load More Photos</span>
+            <span>{translations.seeMorePhotos || "See More Photos"}</span>
             <span className="rounded-full bg-white/15 px-2 py-0.5 text-[11px] font-bold">
               +{Math.min(LOAD_MORE_STEP, remainingCount)}
             </span>
@@ -302,7 +291,10 @@ export function GalleryGrid({ images, translations }: GalleryGridProps) {
         <div className="pt-6 flex justify-center">
           <span className="inline-flex items-center gap-2 rounded-full bg-[#f3f1ea] px-4 py-1.5 text-xs font-medium text-[#6b7280] border border-[#e6e4dc]">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
-            <span>All {filteredImages.length} photos loaded</span>
+            <span>
+              {translations.allPhotosLoaded || "All photos loaded"} (
+              {filteredImages.length})
+            </span>
           </span>
         </div>
       )}

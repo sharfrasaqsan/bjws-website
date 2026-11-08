@@ -6,13 +6,14 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
   type GalleryImage,
-  GALLERY_CATEGORIES,
+  formatCategoryLabel,
 } from "@/content/gallery";
 import {
   createGalleryImageAction,
   updateGalleryImageAction,
   deleteGalleryImageAction,
   toggleGalleryApprovalAction,
+  renameGalleryCategoryAction,
 } from "@/lib/admin-actions";
 import {
   Image as ImageIcon,
@@ -24,13 +25,11 @@ import {
   Eye,
   EyeOff,
   MapPin,
-  Calendar,
-  ShieldCheck,
   ShieldAlert,
   X,
-  FileCheck,
   Lock,
   UploadCloud,
+  Tags,
 } from "lucide-react";
 import { BatchGalleryUploader } from "@/components/admin/batch-gallery-uploader";
 import { SingleImageDropzone } from "@/components/admin/single-image-dropzone";
@@ -64,25 +63,34 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
   const [isEditCustomCategory, setIsEditCustomCategory] = useState(false);
   const [editCustomCategoryInput, setEditCustomCategoryInput] = useState("");
 
-  // Dynamic unique categories list
-  const allCategories = React.useMemo(() => {
-    const list: Array<{ key: string; label: string }> = [];
-    const seen = new Set<string>();
+  // Category Manager Modal state
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [editingCategoryKey, setEditingCategoryKey] = useState<string | null>(null);
+  const [editingCategoryName, setEditingCategoryName] = useState("");
+  const [categoryActionMessage, setCategoryActionMessage] = useState<{
+    text: string;
+    isError?: boolean;
+  } | null>(null);
 
-    GALLERY_CATEGORIES.forEach((cat) => {
-      seen.add(cat.key);
-      list.push({
-        key: cat.key,
-        label: cat.key.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
-      });
+  // Dynamic unique categories list with counts
+  const allCategories = React.useMemo(() => {
+    const countMap: Record<string, number> = {};
+    images.forEach((img) => {
+      if (img.category) {
+        countMap[img.category] = (countMap[img.category] || 0) + 1;
+      }
     });
+
+    const list: Array<{ key: string; label: string; count: number }> = [];
+    const seen = new Set<string>();
 
     images.forEach((img) => {
       if (img.category && !seen.has(img.category)) {
         seen.add(img.category);
         list.push({
           key: img.category,
-          label: img.category.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+          label: formatCategoryLabel(img.category),
+          count: countMap[img.category] || 0,
         });
       }
     });
@@ -109,8 +117,7 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
     const matchesQuery =
       img.captionKey.toLowerCase().includes(q) ||
       img.location.toLowerCase().includes(q) ||
-      img.date.toLowerCase().includes(q) ||
-      (img.consentNotes && img.consentNotes.toLowerCase().includes(q));
+      img.category.toLowerCase().includes(q);
 
     return matchesCat && matchesApproval && matchesQuery;
   });
@@ -206,6 +213,41 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
     });
   };
 
+  const handleSaveCategoryRename = async (oldCategory: string) => {
+    if (!editingCategoryName.trim()) return;
+    const cleanNew = editingCategoryName
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+
+    if (cleanNew === oldCategory) {
+      setEditingCategoryKey(null);
+      return;
+    }
+
+    startTransition(async () => {
+      const res = await renameGalleryCategoryAction(oldCategory, editingCategoryName);
+      if (res?.error) {
+        setCategoryActionMessage({ text: res.error, isError: true });
+      } else {
+        // Update local state immediately
+        setImages((prev) =>
+          prev.map((img) =>
+            img.category === oldCategory ? { ...img, category: cleanNew } : img
+          )
+        );
+        setEditingCategoryKey(null);
+        setEditingCategoryName("");
+        setCategoryActionMessage({
+          text: `Renamed album category to "${editingCategoryName}" (${res.updatedCount || 0} photos updated).`,
+          isError: false,
+        });
+        router.refresh();
+      }
+    });
+  };
+
   const openEditModal = (image: GalleryImage) => {
     setEditingImage(image);
     setEditPhotoUrl(image.src);
@@ -223,7 +265,7 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
   const openCreateModal = () => {
     setIsCreateOpen(true);
     setCreatePhotoUrl("");
-    setIsCreateCustomCategory(false);
+    setIsCreateCustomCategory(allCategories.length === 0);
     setCreateCustomCategoryInput("");
     setFormError(null);
   };
@@ -236,23 +278,6 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
 
   return (
     <div className="space-y-6">
-      {/* Privacy Policy Warning & Governance Banner */}
-      <div className="rounded-2xl border border-[#c99a45]/30 bg-amber-500/5 p-4 sm:p-5 text-xs text-text shadow-xs">
-        <div className="flex items-start gap-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#c99a45]/20 text-[#c99a45]">
-            <ShieldCheck className="h-5 w-5" />
-          </div>
-          <div className="space-y-1">
-            <h4 className="font-display text-sm font-bold text-[#0b2e1e] dark:text-[#d4a359]">
-              Strict Privacy & Dignity Policy Enforced
-            </h4>
-            <p className="text-text-muted leading-relaxed">
-              Every photo in the registry requires an explicit <code className="font-bold text-[#0b2e1e] dark:text-[#c99a45]">approved: true</code> flag to appear on the public website. Funeral preparation, ghusl, or shrouding photos must <strong>never depict the deceased</strong>. Photos of community members, women, or youth require documented consent.
-            </p>
-          </div>
-        </div>
-      </div>
-
       {/* Top Metrics Strip */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="rounded-2xl border border-border bg-surface p-4 shadow-2xs flex items-center justify-between">
@@ -365,7 +390,20 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
             ))}
           </select>
 
-          {/* Batch Upload & Add Buttons */}
+          {/* Batch Upload, Add & Edit Categories Buttons */}
+          <button
+            type="button"
+            onClick={() => {
+              setIsCategoryModalOpen(true);
+              setCategoryActionMessage(null);
+              setEditingCategoryKey(null);
+            }}
+            className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-background hover:bg-surface px-4 py-2 text-xs font-semibold text-text shadow-xs transition-colors shrink-0 cursor-pointer"
+          >
+            <Tags className="h-4 w-4 text-[#124d34]" />
+            <span>Edit Categories ({allCategories.length})</span>
+          </button>
+
           <button
             type="button"
             onClick={() => setIsBatchOpen(true)}
@@ -448,25 +486,10 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
                     {img.captionKey}
                   </h3>
 
-                  <div className="flex flex-wrap items-center gap-3 text-xs text-text-muted">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-3 w-3" />
-                      <span>{img.date}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <MapPin className="h-3 w-3" />
-                      <span className="truncate max-w-[160px]">{img.location}</span>
-                    </div>
+                  <div className="flex items-center gap-1 text-xs text-text-muted">
+                    <MapPin className="h-3 w-3 shrink-0" />
+                    <span className="truncate max-w-[200px]">{img.location}</span>
                   </div>
-
-                  {img.consentNotes && (
-                    <div className="rounded-xl bg-background border border-border p-2.5 text-[11px] text-text-muted flex items-start gap-2">
-                      <FileCheck className="h-3.5 w-3.5 text-[#c99a45] shrink-0 mt-0.5" />
-                      <span className="line-clamp-2 italic">
-                        {img.consentNotes}
-                      </span>
-                    </div>
-                  )}
                 </div>
               </div>
 
@@ -613,25 +636,27 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
                 />
               </div>
 
-              {/* Category, Date, Location */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {/* Category & Location */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <div className="flex items-center justify-between mb-1">
                     <label className="block text-xs font-bold uppercase tracking-wider text-text-muted">
                       Album Category *
                     </label>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsCreateCustomCategory(!isCreateCustomCategory);
-                        setCreateCustomCategoryInput("");
-                      }}
-                      className="text-[11px] font-semibold text-primary hover:underline cursor-pointer"
-                    >
-                      {isCreateCustomCategory ? "Choose Existing" : "+ New Category"}
-                    </button>
+                    {allCategories.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsCreateCustomCategory(!isCreateCustomCategory);
+                          setCreateCustomCategoryInput("");
+                        }}
+                        className="text-[11px] font-semibold text-primary hover:underline cursor-pointer"
+                      >
+                        {isCreateCustomCategory ? "Choose Existing" : "+ New Category"}
+                      </button>
+                    )}
                   </div>
-                  {isCreateCustomCategory ? (
+                  {isCreateCustomCategory || allCategories.length === 0 ? (
                     <input
                       type="text"
                       value={createCustomCategoryInput}
@@ -657,19 +682,6 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
 
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
-                    Event Year / Date *
-                  </label>
-                  <input
-                    type="text"
-                    name="date"
-                    required
-                    defaultValue={new Date().getFullYear().toString()}
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
                     Location *
                   </label>
                   <input
@@ -680,19 +692,6 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
                     className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
                   />
                 </div>
-              </div>
-
-              {/* Consent Notes */}
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
-                  Privacy & Consent Verification Notes
-                </label>
-                <textarea
-                  name="consentNotes"
-                  rows={2}
-                  placeholder="e.g. Explicit consent confirmed for all volunteers. No grieving individuals or sensitive burial procedures shown."
-                  className="w-full rounded-xl border border-border bg-background p-3 text-xs text-text focus:border-primary focus:outline-none"
-                />
               </div>
 
               {/* Compliance & Approval Checkbox */}
@@ -802,27 +801,37 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
                 />
               </div>
 
-              {/* Category, Date, Location */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {/* Category & Location */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <div className="flex items-center justify-between mb-1">
                     <label className="block text-xs font-bold uppercase tracking-wider text-text-muted">
                       Album Category *
                     </label>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsEditCustomCategory(!isEditCustomCategory);
-                        setEditCustomCategoryInput("");
-                      }}
-                      className="text-[11px] font-semibold text-primary hover:underline cursor-pointer"
-                    >
-                      {isEditCustomCategory ? "Choose Existing" : "+ New Category"}
-                    </button>
+                    {allCategories.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const nextState = !isEditCustomCategory;
+                          setIsEditCustomCategory(nextState);
+                          setEditCustomCategoryInput(
+                            nextState
+                              ? editingImage.category
+                                  .replace(/-/g, " ")
+                                  .replace(/\b\w/g, (c) => c.toUpperCase())
+                              : ""
+                          );
+                        }}
+                        className="text-[11px] font-semibold text-primary hover:underline cursor-pointer"
+                      >
+                        {isEditCustomCategory ? "Choose From List" : "+ New / Custom Category"}
+                      </button>
+                    )}
                   </div>
-                  {isEditCustomCategory ? (
+                  {isEditCustomCategory || allCategories.length === 0 ? (
                     <input
                       type="text"
+                      name="category"
                       value={editCustomCategoryInput}
                       onChange={(e) => setEditCustomCategoryInput(e.target.value)}
                       placeholder="e.g. Ramadan Relief 2026"
@@ -838,24 +847,11 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
                     >
                       {allCategories.map((cat) => (
                         <option key={cat.key} value={cat.key}>
-                          {cat.label}
+                          {cat.label} ({cat.count})
                         </option>
                       ))}
                     </select>
                   )}
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
-                    Event Year / Date *
-                  </label>
-                  <input
-                    type="text"
-                    name="date"
-                    required
-                    defaultValue={editingImage.date}
-                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
-                  />
                 </div>
 
                 <div>
@@ -870,19 +866,6 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
                     className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-text focus:border-primary focus:outline-none"
                   />
                 </div>
-              </div>
-
-              {/* Consent Notes */}
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
-                  Privacy & Consent Verification Notes
-                </label>
-                <textarea
-                  name="consentNotes"
-                  rows={2}
-                  defaultValue={editingImage.consentNotes || ""}
-                  className="w-full rounded-xl border border-border bg-background p-3 text-xs text-text focus:border-primary focus:outline-none"
-                />
               </div>
 
               {/* Compliance & Approval Checkbox */}
@@ -960,10 +943,161 @@ export function GalleryManager({ initialImages }: GalleryManagerProps) {
           </div>
         </div>
       )}
+
+      {/* MANAGE / EDIT ALBUM CATEGORIES MODAL */}
+      {isCategoryModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs overflow-y-auto">
+          <div className="relative w-full max-w-2xl rounded-3xl border border-border bg-surface p-6 sm:p-8 shadow-2xl my-8 max-h-[90vh] overflow-y-auto">
+            <button
+              type="button"
+              onClick={() => {
+                setIsCategoryModalOpen(false);
+                setEditingCategoryKey(null);
+                setCategoryActionMessage(null);
+              }}
+              className="absolute right-5 top-5 rounded-full p-2 text-text-muted hover:bg-background hover:text-text cursor-pointer"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            <div className="flex items-center gap-3 border-b border-border pb-4">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <Tags className="h-5 w-5" />
+              </div>
+              <div>
+                <h2 className="font-display text-xl font-bold text-text">
+                  Edit Album Categories
+                </h2>
+                <p className="text-xs text-text-muted">
+                  View all photo albums, check photo counts, and rename categories across all photos in one click.
+                </p>
+              </div>
+            </div>
+
+            {categoryActionMessage && (
+              <div
+                className={`mt-4 flex items-center gap-2 rounded-xl p-3 text-xs font-semibold ${
+                  categoryActionMessage.isError
+                    ? "bg-rose-50 text-rose-700 dark:bg-rose-950 dark:text-rose-300"
+                    : "bg-emerald-50 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300"
+                }`}
+              >
+                {categoryActionMessage.isError ? (
+                  <ShieldAlert className="h-4 w-4 shrink-0" />
+                ) : (
+                  <CheckCircle2 className="h-4 w-4 shrink-0" />
+                )}
+                <span>{categoryActionMessage.text}</span>
+              </div>
+            )}
+
+            <div className="mt-6 space-y-3">
+              {allCategories.length === 0 ? (
+                <div className="text-center py-8 text-xs text-text-muted">
+                  No categories found. Upload photos to generate albums.
+                </div>
+              ) : (
+                allCategories.map((cat) => {
+                  const isEditingThis = editingCategoryKey === cat.key;
+
+                  return (
+                    <div
+                      key={cat.key}
+                      className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-2xl border border-border bg-background transition-colors hover:border-primary/30"
+                    >
+                      {isEditingThis ? (
+                        <div className="flex-1 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                          <input
+                            type="text"
+                            value={editingCategoryName}
+                            onChange={(e) => setEditingCategoryName(e.target.value)}
+                            placeholder="New category name..."
+                            autoFocus
+                            className="flex-1 rounded-xl border border-primary bg-surface px-3 py-1.5 text-xs text-text focus:outline-none"
+                          />
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              disabled={isPending || !editingCategoryName.trim()}
+                              onClick={() => handleSaveCategoryRename(cat.key)}
+                              className="rounded-xl bg-[#0b2e1e] hover:bg-[#124d34] px-3.5 py-1.5 text-xs font-semibold text-white transition-colors disabled:opacity-50 cursor-pointer"
+                            >
+                              {isPending ? "Saving..." : "Save"}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setEditingCategoryKey(null);
+                                setEditingCategoryName("");
+                              }}
+                              className="rounded-xl border border-border bg-surface px-3 py-1.5 text-xs font-medium text-text hover:bg-background cursor-pointer"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="flex items-center gap-3">
+                            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary font-bold text-xs">
+                              <Tags className="h-4 w-4" />
+                            </span>
+                            <div>
+                              <div className="text-xs sm:text-sm font-bold text-text">
+                                {cat.label}
+                              </div>
+                              <div className="text-[11px] font-mono text-text-muted">
+                                slug: {cat.key}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-3">
+                            <span className="rounded-full bg-surface border border-border px-2.5 py-1 text-[11px] font-semibold text-text-muted">
+                              {cat.count} {cat.count === 1 ? "photo" : "photos"}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setEditingCategoryKey(cat.key);
+                                setEditingCategoryName(cat.label);
+                                setCategoryActionMessage(null);
+                              }}
+                              className="inline-flex items-center gap-1 rounded-lg border border-border bg-surface hover:bg-background px-2.5 py-1 text-xs font-semibold text-text transition-colors cursor-pointer"
+                            >
+                              <Edit2 className="h-3.5 w-3.5 text-primary" />
+                              <span>Rename</span>
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  );
+                })
+              )}
+            </div>
+
+            <div className="mt-6 pt-4 border-t border-border flex justify-end">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsCategoryModalOpen(false);
+                  setEditingCategoryKey(null);
+                }}
+                className="rounded-xl bg-[#0b2e1e] hover:bg-[#124d34] text-white px-5 py-2 text-xs font-semibold transition-colors cursor-pointer"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* BATCH UPLOADER MODAL */}
       <BatchGalleryUploader
         isOpen={isBatchOpen}
         onClose={() => setIsBatchOpen(false)}
+        existingCategories={allCategories}
         onSuccess={() => {
           setIsBatchOpen(false);
           window.location.reload();

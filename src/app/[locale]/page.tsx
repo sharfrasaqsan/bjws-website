@@ -23,7 +23,6 @@ import {
   Award,
   Calendar,
   Camera,
-  Eye,
   Mail,
   Sparkles,
   BookOpen,
@@ -31,6 +30,7 @@ import {
   Building2,
   CheckCircle2,
   ExternalLink,
+  Tag,
 } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import {
@@ -39,6 +39,12 @@ import {
   getServicesJsonLd,
 } from "@/components/seo/json-ld";
 import { getArticles, type Article } from "@/content/news";
+import {
+  getApprovedGalleryImages,
+  type GalleryImage,
+  DEFAULT_BLUR,
+  formatCategoryLabel,
+} from "@/content/gallery";
 import {
   createPublicClient,
   isSupabaseConfigured,
@@ -60,6 +66,52 @@ export async function generateMetadata({
     path: "/",
     locale,
   });
+}
+
+// Select a diverse random sample of approved photos across different categories
+function getRandomGalleryShowcase(
+  images: GalleryImage[],
+  count: number = 5
+): GalleryImage[] {
+  if (images.length <= count) return [...images];
+
+  // Group by category to ensure a balanced, diverse showcase across community programs
+  const byCategory = new Map<string, GalleryImage[]>();
+  for (const img of images) {
+    const cat = img.category || "general";
+    if (!byCategory.has(cat)) byCategory.set(cat, []);
+    byCategory.get(cat)!.push(img);
+  }
+
+  const shuffledCategories = Array.from(byCategory.keys()).sort(
+    () => Math.random() - 0.5
+  );
+  const selected: GalleryImage[] = [];
+  const usedSrcs = new Set<string>();
+
+  // Pick 1 random photo from different categories first
+  for (const cat of shuffledCategories) {
+    if (selected.length >= count) break;
+    const catImages = byCategory.get(cat)!;
+    const randomImg = catImages[Math.floor(Math.random() * catImages.length)];
+    if (!usedSrcs.has(randomImg.src)) {
+      usedSrcs.add(randomImg.src);
+      selected.push(randomImg);
+    }
+  }
+
+  // If still need more to fill count, pick from remaining images
+  if (selected.length < count) {
+    const remaining = images
+      .filter((img) => !usedSrcs.has(img.src))
+      .sort(() => Math.random() - 0.5);
+    for (const img of remaining) {
+      if (selected.length >= count) break;
+      selected.push(img);
+    }
+  }
+
+  return selected.sort(() => Math.random() - 0.5);
 }
 
 export default async function HomePage({
@@ -120,6 +172,43 @@ export default async function HomePage({
   if (latestArticles.length === 0) {
     latestArticles = getArticles(locale).slice(0, 3);
   }
+
+  // Load approved gallery images (from Supabase or local store) and pick random showcase images
+  let allGalleryPhotos: GalleryImage[] = [];
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = createPublicClient();
+      const { data, error } = await supabase
+        .from("gallery_images")
+        .select("*")
+        .eq("approved", true);
+
+      if (!error && data && data.length > 0) {
+        allGalleryPhotos = data.map((d) => ({
+          id: d.id,
+          src: d.src,
+          altKey: d.caption,
+          captionKey: d.caption,
+          category: d.category,
+          date: d.date,
+          location: d.location,
+          width: 1200,
+          height: 800,
+          blurDataURL: DEFAULT_BLUR,
+          approved: d.approved,
+        }));
+      }
+    } catch {
+      // Fallback handled below
+    }
+  }
+
+  if (allGalleryPhotos.length === 0) {
+    allGalleryPhotos = getApprovedGalleryImages();
+  }
+
+  // Random 5 images from gallery for "Moments of Community Service" showcase
+  const showcasePhotos = getRandomGalleryShowcase(allGalleryPhotos, 5);
 
   // All 7 Core Programs of BJWS
   const coreServices = [
@@ -1046,35 +1135,14 @@ export default async function HomePage({
             </Link>
           </div>
 
-          {/* 5-Photo Showcase Strip */}
+          {/* 5-Photo Showcase Strip (Dynamic Random Selection from Gallery) */}
           <ScrollRevealGroup
             staggerMs={50}
             className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4"
           >
-            {[
-              {
-                src: assets.galleryPreview1,
-                caption: "Cemetery Access Road",
-              },
-              {
-                src: assets.galleryPreview2,
-                caption: "Ghusl Training Session",
-              },
-              {
-                src: assets.galleryPreview3,
-                caption: "Water Facilities",
-              },
-              {
-                src: assets.galleryPreview4,
-                caption: "Ration Pack Storage",
-              },
-              {
-                src: assets.galleryPreview5,
-                caption: "Mahallah Shramadhana",
-              },
-            ].map((photo, i) => (
+            {showcasePhotos.map((photo, i) => (
               <Link
-                key={i}
+                key={photo.id || photo.src || i}
                 href="/gallery"
                 className={`group relative rounded-xl overflow-hidden shadow-2xs border border-[#e6e4dc] bg-muted block ${
                   i === 4
@@ -1084,15 +1152,18 @@ export default async function HomePage({
               >
                 <Image
                   src={photo.src}
-                  alt={photo.caption}
+                  alt={photo.captionKey || photo.altKey || "Community Service Photo"}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 20vw"
                   className="object-cover object-center transition-transform duration-500 group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3 text-white">
-                  <Eye className="h-5 w-5 text-[#d4a359] mb-1 opacity-90" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3 text-white">
+                  <div className="flex items-center gap-1.5 mb-1 text-[10px] font-bold uppercase tracking-wider text-[#d4a359]">
+                    <Tag className="h-3 w-3 shrink-0" />
+                    <span>{formatCategoryLabel(photo.category)}</span>
+                  </div>
                   <span className="text-xs font-semibold leading-tight line-clamp-2">
-                    {photo.caption}
+                    {photo.captionKey || photo.altKey}
                   </span>
                 </div>
               </Link>

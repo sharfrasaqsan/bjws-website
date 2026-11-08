@@ -16,233 +16,84 @@
  * 3. Any unapproved or pending-verification photo remains omitted from public views.
  */
 
-export type GalleryCategory =
-  | "cemetery-shramadana"
-  | "ghusl-kafan"
-  | "iftar-functions"
-  | "water-concrete"
-  | "livelihood-project"
-  | "cemetery-road"
-  | (string & {});
+export * from "./gallery-types";
+import type { GalleryCategory, GalleryCategoryMeta, GalleryImage } from "./gallery-types";
 
-export interface GalleryCategoryMeta {
-  key: GalleryCategory;
-  titleKey: string;
-  descriptionKey: string;
-}
+export const GALLERY_CATEGORIES: GalleryCategoryMeta[] = [];
+export const GALLERY_MANIFEST: GalleryImage[] = [];
 
-export interface GalleryImage {
-  id: string;
-  src: string;
-  altKey: string;
-  captionKey: string;
-  category: GalleryCategory;
-  date: string;
-  location: string;
-  width: number;
-  height: number;
-  blurDataURL: string;
-  /**
-   * Only images with approved: true are permitted to be rendered.
-   * Requires explicit consent for photos showing identifiable persons, women, or children.
-   */
-  approved: boolean;
-  /**
-   * Optional notes on consent status for society records.
-   */
-  consentNotes?: string;
-}
-
-export const GALLERY_CATEGORIES: GalleryCategoryMeta[] = [
-  {
-    key: "cemetery-shramadana",
-    titleKey: "categoryCemeteryShramadana",
-    descriptionKey: "categoryCemeteryShramadanaDesc",
-  },
-  {
-    key: "ghusl-kafan",
-    titleKey: "categoryGhuslKafan",
-    descriptionKey: "categoryGhuslKafanDesc",
-  },
-  {
-    key: "iftar-functions",
-    titleKey: "categoryIftarFunctions",
-    descriptionKey: "categoryIftarFunctionsDesc",
-  },
-  {
-    key: "water-concrete",
-    titleKey: "categoryWaterConcrete",
-    descriptionKey: "categoryWaterConcreteDesc",
-  },
-  {
-    key: "livelihood-project",
-    titleKey: "categoryLivelihood",
-    descriptionKey: "categoryLivelihoodDesc",
-  },
-  {
-    key: "cemetery-road",
-    titleKey: "categoryCemeteryRoad",
-    descriptionKey: "categoryCemeteryRoadDesc",
-  },
-];
-
-// Universal compact blur placeholder for fast LQIP
-export const DEFAULT_BLUR =
-  "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAAAwAQCdASoQAAoAAkA4JaQAA3AE/u8AAA==";
-
-export const GALLERY_MANIFEST: GalleryImage[] = [
-  // 1. Cemetery Shramadana
-  {
-    id: "shramadana-01",
-    src: "/images/gallery/shramadana-01.webp",
-    altKey: "photoShramadana1Alt",
-    captionKey: "photoShramadana1Caption",
-    category: "cemetery-shramadana",
-    date: "2024",
-    location: "Mahallah Cemetery, Mullipothana",
-    width: 1200,
-    height: 800,
-    blurDataURL: DEFAULT_BLUR,
-    approved: true,
-    consentNotes: "Public voluntary community shramadhana activity.",
-  },
-  {
-    id: "shramadana-02",
-    src: "/images/gallery/shramadana-02.webp",
-    altKey: "photoShramadana2Alt",
-    captionKey: "photoShramadana2Caption",
-    category: "cemetery-shramadana",
-    date: "2024",
-    location: "Mahallah Cemetery, Mullipothana",
-    width: 1200,
-    height: 800,
-    blurDataURL: DEFAULT_BLUR,
-    approved: true,
-    consentNotes: "Public landscape cleaning documentation.",
-  },
-
-  // 2. Ghusl and Kafan Programme
-  {
-    id: "ghusl-01",
-    src: "/images/gallery/ghusl-01.webp",
-    altKey: "photoGhusl1Alt",
-    captionKey: "photoGhusl1Caption",
-    category: "ghusl-kafan",
-    date: "2024",
-    location: "Buhary Jummah Mosque",
-    width: 1200,
-    height: 800,
-    blurDataURL: DEFAULT_BLUR,
-    approved: true,
-    consentNotes: "Volunteer educational demonstration.",
-  },
-  {
-    id: "ghusl-02",
-    src: "/images/gallery/ghusl-02.webp",
-    altKey: "photoGhusl2Alt",
-    captionKey: "photoGhusl2Caption",
-    category: "ghusl-kafan",
-    date: "2024",
-    location: "Jamiya Mosque, Mullipothana",
-    width: 1200,
-    height: 800,
-    blurDataURL: DEFAULT_BLUR,
-    approved: true,
-    consentNotes: "Educational seminar for registered youth volunteers.",
-  },
-
-  // 3. Iftar Functions
-  {
-    id: "iftar-01",
-    src: "/images/gallery/iftar-01.webp",
-    altKey: "photoIftar1Alt",
-    captionKey: "photoIftar1Caption",
-    category: "iftar-functions",
-    date: "2024",
-    location: "Muhaideen Mosque, Mullipothana",
-    width: 1200,
-    height: 800,
-    blurDataURL: DEFAULT_BLUR,
-    approved: true,
-    consentNotes: "Community Iftar gathering event.",
-  },
-  {
-    id: "iftar-02",
-    src: "/images/gallery/iftar-02.webp",
-    altKey: "photoIftar2Alt",
-    captionKey: "photoIftar2Caption",
-    category: "iftar-functions",
-    date: "2024",
-    location: "Jamiya Mosque, Mullipothana",
-    width: 1200,
-    height: 800,
-    blurDataURL: DEFAULT_BLUR,
-    approved: true,
-    consentNotes: "Dry ration and Iftar meal distribution.",
-  },
-
-  // 4. Mosque Water and Concrete Work
-  {
-    id: "water-concrete-01",
-    src: "/images/gallery/water-concrete-01.webp",
-    altKey: "photoWaterConcrete1Alt",
-    captionKey: "photoWaterConcrete1Caption",
-    category: "water-concrete",
-    date: "2024",
-    location: "Buhary Mosque Premises",
-    width: 1200,
-    height: 800,
-    blurDataURL: DEFAULT_BLUR,
-    approved: true,
-    consentNotes: "Infrastructure development documentation.",
-  },
-
-  // 5. Livelihood Project
-  {
-    id: "livelihood-01",
-    src: "/images/gallery/livelihood-01.webp",
-    altKey: "photoLivelihood1Alt",
-    captionKey: "photoLivelihood1Caption",
-    category: "livelihood-project",
-    date: "2024",
-    location: "Mullipothana Mahallah",
-    width: 1200,
-    height: 800,
-    blurDataURL: DEFAULT_BLUR,
-    approved: true,
-    consentNotes: "Welfare livelihood assistance project.",
-  },
-
-  // 6. Cemetery Road Project
-  {
-    id: "cemetery-road-01",
-    src: "/images/gallery/cemetery-road-01.webp",
-    altKey: "photoCemeteryRoad1Alt",
-    captionKey: "photoCemeteryRoad1Caption",
-    category: "cemetery-road",
-    date: "2024",
-    location: "Cemetery Access Road",
-    width: 1200,
-    height: 800,
-    blurDataURL: DEFAULT_BLUR,
-    approved: true,
-    consentNotes: "Access road civil works documentation.",
-  },
-];
+import { INITIAL_UPLOADED_IMAGES } from "./gallery-uploads";
 
 declare global {
   var __galleryStore: GalleryImage[] | undefined;
 }
 
-// In-memory store for server actions in development / demo mode
-let liveGalleryStore: GalleryImage[] = globalThis.__galleryStore || [...GALLERY_MANIFEST];
-globalThis.__galleryStore = liveGalleryStore;
+// Synchronize in-memory store with latest static definitions on disk
+function getSynchronizedStore(): GalleryImage[] {
+  const staticList = [...INITIAL_UPLOADED_IMAGES, ...GALLERY_MANIFEST];
+  const staticBySrc = new Map<string, GalleryImage>();
+  const staticById = new Map<string, GalleryImage>();
+
+  for (const img of staticList) {
+    staticBySrc.set(img.src, img);
+    staticById.set(img.id, img);
+  }
+
+  const existingStore = globalThis.__galleryStore;
+  if (!existingStore || existingStore.length === 0) {
+    const fresh = [...staticList];
+    globalThis.__galleryStore = fresh;
+    return fresh;
+  }
+
+  // Force latest metadata (captions, categories, alt text) from disk for all static images,
+  // while preserving dynamic uploads and approval toggles from current session.
+  const synchronized: GalleryImage[] = [];
+  const handledSrcs = new Set<string>();
+
+  const REMOVED_CATEGORIES = new Set([
+    "ghusl-kafan",
+    "iftar-functions",
+    "livelihood-project",
+  ]);
+
+  for (const item of existingStore) {
+    if (REMOVED_CATEGORIES.has(item.category)) {
+      continue; // Totally removed per society executive direction
+    }
+
+    const staticMatch = staticBySrc.get(item.src) || staticById.get(item.id);
+    if (staticMatch) {
+      if (!handledSrcs.has(staticMatch.src)) {
+        handledSrcs.add(staticMatch.src);
+        synchronized.push({
+          ...staticMatch,
+          approved: item.approved !== undefined ? item.approved : staticMatch.approved,
+        });
+      }
+    } else {
+      // Dynamic photo added during this admin session (excluding removed categories)
+      synchronized.push(item);
+    }
+  }
+
+  // Ensure any newly added static photos are included
+  for (const img of staticList) {
+    if (!handledSrcs.has(img.src)) {
+      handledSrcs.add(img.src);
+      synchronized.push(img);
+    }
+  }
+
+  globalThis.__galleryStore = synchronized;
+  return synchronized;
+}
 
 /**
  * Returns strictly approved gallery images in compliance with the Privacy & Consent Policy.
  */
 export function getApprovedGalleryImages(): GalleryImage[] {
-  return liveGalleryStore.filter((item) => item.approved === true);
+  return getSynchronizedStore().filter((item) => item.approved === true);
 }
 
 /**
@@ -251,7 +102,7 @@ export function getApprovedGalleryImages(): GalleryImage[] {
 export function getApprovedGalleryByCategory(
   category: GalleryCategory
 ): GalleryImage[] {
-  return liveGalleryStore.filter(
+  return getSynchronizedStore().filter(
     (item) => item.approved === true && item.category === category
   );
 }
@@ -260,40 +111,59 @@ export function getApprovedGalleryByCategory(
  * Returns all gallery images for executive administration, including unapproved/pending.
  */
 export function getAllGalleryImagesAdmin(): GalleryImage[] {
-  return [...liveGalleryStore];
+  return [...getSynchronizedStore()];
 }
 
 export function addGalleryImageStore(image: GalleryImage): void {
-  liveGalleryStore = [image, ...liveGalleryStore];
-  globalThis.__galleryStore = liveGalleryStore;
+  const store = getSynchronizedStore();
+  globalThis.__galleryStore = [image, ...store];
 }
 
 export function updateGalleryImageStore(
   id: string,
   updates: Partial<GalleryImage>
 ): boolean {
-  const index = liveGalleryStore.findIndex((img) => img.id === id);
+  const store = getSynchronizedStore();
+  const index = store.findIndex((img) => img.id === id);
   if (index === -1) return false;
 
-  liveGalleryStore[index] = {
-    ...liveGalleryStore[index],
+  store[index] = {
+    ...store[index],
     ...updates,
   };
-  globalThis.__galleryStore = liveGalleryStore;
+  globalThis.__galleryStore = store;
   return true;
 }
 
 export function deleteGalleryImageStore(id: string): boolean {
-  const initialLen = liveGalleryStore.length;
-  liveGalleryStore = liveGalleryStore.filter((img) => img.id !== id);
-  globalThis.__galleryStore = liveGalleryStore;
-  return liveGalleryStore.length < initialLen;
+  const store = getSynchronizedStore();
+  const initialLen = store.length;
+  const filtered = store.filter((img) => img.id !== id);
+  globalThis.__galleryStore = filtered;
+  return filtered.length < initialLen;
 }
 
 export function toggleGalleryApprovalStore(id: string): boolean {
-  const image = liveGalleryStore.find((img) => img.id === id);
+  const store = getSynchronizedStore();
+  const image = store.find((img) => img.id === id);
   if (!image) return false;
   image.approved = !image.approved;
-  globalThis.__galleryStore = liveGalleryStore;
+  globalThis.__galleryStore = store;
   return true;
+}
+
+export function renameGalleryCategoryStore(
+  oldCategory: string,
+  newCategory: string
+): number {
+  const store = getSynchronizedStore();
+  let count = 0;
+  globalThis.__galleryStore = store.map((img) => {
+    if (img.category === oldCategory) {
+      count++;
+      return { ...img, category: newCategory as GalleryCategory };
+    }
+    return img;
+  });
+  return count;
 }
