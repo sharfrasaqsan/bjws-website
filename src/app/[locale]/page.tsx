@@ -169,7 +169,7 @@ export default async function HomePage({
     }
   }
 
-  if (latestArticles.length === 0) {
+  if (latestArticles.length === 0 && !isSupabaseConfigured()) {
     latestArticles = getArticles(locale).slice(0, 3);
   }
 

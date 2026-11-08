@@ -80,7 +80,7 @@ export default async function NewsPage({
     }
   }
 
-  if (articles.length === 0) {
+  if (articles.length === 0 && !isSupabaseConfigured()) {
     articles = getArticles(locale);
   }
 
