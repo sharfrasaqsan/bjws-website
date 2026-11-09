@@ -7,6 +7,7 @@ export interface NoticeRecord {
   updated_at?: string;
   is_published: boolean;
   show_on_homepage?: boolean;
+  image_url?: string;
   created_at?: string;
 }
 
@@ -16,6 +17,7 @@ export interface UnifiedNoticeRecord {
   updated_at?: string;
   is_published: boolean;
   show_on_homepage?: boolean;
+  image_url?: string;
   translations: {
     ta?: NoticeRecord;
     en?: NoticeRecord;
@@ -60,6 +62,7 @@ export function groupNotices(raw: NoticeRecord[]): UnifiedNoticeRecord[] {
           updated_at: item.updated_at,
           is_published: item.is_published,
           show_on_homepage: item.show_on_homepage ?? true,
+          image_url: item.image_url,
           translations: {},
         });
       }
@@ -67,6 +70,7 @@ export function groupNotices(raw: NoticeRecord[]): UnifiedNoticeRecord[] {
       u.translations[loc] = item;
       if (item.is_published) u.is_published = true;
       if (item.updated_at) u.updated_at = item.updated_at;
+      if (item.image_url) u.image_url = item.image_url;
       if (item.show_on_homepage !== undefined)
         u.show_on_homepage = item.show_on_homepage;
       continue;
@@ -83,6 +87,7 @@ export function groupNotices(raw: NoticeRecord[]): UnifiedNoticeRecord[] {
           updated_at: item.updated_at,
           is_published: item.is_published,
           show_on_homepage: item.show_on_homepage ?? true,
+          image_url: item.image_url,
           translations: {},
         });
       }
@@ -90,6 +95,7 @@ export function groupNotices(raw: NoticeRecord[]): UnifiedNoticeRecord[] {
       u.translations[loc] = item;
       if (item.is_published) u.is_published = true;
       if (item.updated_at) u.updated_at = item.updated_at;
+      if (item.image_url) u.image_url = item.image_url;
       if (item.show_on_homepage !== undefined)
         u.show_on_homepage = item.show_on_homepage;
       continue;
@@ -112,6 +118,7 @@ export function groupNotices(raw: NoticeRecord[]): UnifiedNoticeRecord[] {
       matchedGroup.translations[loc] = item;
       if (item.is_published) matchedGroup.is_published = true;
       if (item.updated_at) matchedGroup.updated_at = item.updated_at;
+      if (item.image_url) matchedGroup.image_url = item.image_url;
       if (item.show_on_homepage !== undefined)
         matchedGroup.show_on_homepage = item.show_on_homepage;
     } else {
@@ -122,6 +129,7 @@ export function groupNotices(raw: NoticeRecord[]): UnifiedNoticeRecord[] {
         updated_at: item.updated_at,
         is_published: item.is_published,
         show_on_homepage: item.show_on_homepage ?? true,
+        image_url: item.image_url,
         translations: {
           [loc]: item,
         },
@@ -153,11 +161,23 @@ export function updateUnifiedNoticeStore(
   updatedTranslations: Partial<
     Record<"ta" | "en" | "si", { title: string; body: string }>
   >,
-  is_published: boolean
+  is_published: boolean,
+  image_url?: string,
+  show_on_homepage?: boolean,
+  published_at?: string,
+  updated_at?: string
 ): void {
   const now = new Date().toISOString();
   const currentGroups = groupNotices(liveNoticesStore);
   const targetGroup = currentGroups.find((g) => g.baseId === baseId);
+  const resolvedImageUrl =
+    image_url !== undefined ? image_url : targetGroup?.image_url;
+  const resolvedShowOnHomepage =
+    show_on_homepage !== undefined
+      ? show_on_homepage
+      : (targetGroup?.show_on_homepage ?? true);
+  const resolvedPublishedAt = published_at || targetGroup?.published_at || now;
+  const resolvedUpdatedAt = updated_at || now;
 
   if (targetGroup) {
     const existingIds = Object.values(targetGroup.translations)
@@ -177,8 +197,11 @@ export function updateUnifiedNoticeStore(
           title: trans.title,
           body: trans.body,
           locale: loc,
-          published_at: targetGroup.published_at || now,
+          published_at: resolvedPublishedAt,
+          updated_at: resolvedUpdatedAt,
           is_published,
+          show_on_homepage: resolvedShowOnHomepage,
+          image_url: resolvedImageUrl || undefined,
         });
       }
     }
@@ -192,8 +215,11 @@ export function updateUnifiedNoticeStore(
           title: trans.title,
           body: trans.body,
           locale: loc,
-          published_at: now,
+          published_at: resolvedPublishedAt,
+          updated_at: resolvedUpdatedAt,
           is_published,
+          show_on_homepage: resolvedShowOnHomepage,
+          image_url: resolvedImageUrl || undefined,
         });
       }
     }

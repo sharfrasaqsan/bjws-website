@@ -10,7 +10,9 @@ import {
   useSyncExternalStore,
 } from "react";
 import { createPortal } from "react-dom";
-import { useTranslations, useLocale } from "next-intl";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { useLocale } from "next-intl";
 import { IslamicPattern } from "@/components/ui/islamic-pattern";
 import { formatAdminDate } from "@/lib/utils";
 import { Link } from "@/i18n/routing";
@@ -25,10 +27,10 @@ import {
   X,
   Calendar,
   Clock,
-  AlertCircle,
   Phone,
   MessageCircle,
   ShieldCheck,
+  Maximize2,
 } from "lucide-react";
 
 export interface NoticeItem {
@@ -39,6 +41,7 @@ export interface NoticeItem {
   published_at: string;
   updated_at?: string;
   show_on_homepage?: boolean;
+  image_url?: string;
 }
 
 interface JanazaTickerProps {
@@ -62,8 +65,11 @@ function getServerSnapshot() {
 }
 
 export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
-  const t = useTranslations("common");
   const locale = useLocale();
+  const pathname = usePathname();
+
+  // Hide the floating notice popup completely when user enters the notices page
+  const isNoticesPage = pathname?.includes("/notices");
 
   const isStoredDismissed = useSyncExternalStore(
     subscribe,
@@ -78,6 +84,7 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
   const [activeModalNotice, setActiveModalNotice] = useState<NoticeItem | null>(
     null
   );
+  const [isImageLightboxOpen, setIsImageLightboxOpen] = useState(false);
 
   const isDismissed = isStoredDismissed || isDismissedLocal;
 
@@ -107,7 +114,11 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        setActiveModalNotice(null);
+        if (isImageLightboxOpen) {
+          setIsImageLightboxOpen(false);
+        } else {
+          setActiveModalNotice(null);
+        }
       }
     };
 
@@ -119,14 +130,26 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
       document.body.style.overflow = originalOverflow;
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [activeModalNotice]);
+  }, [activeModalNotice, isImageLightboxOpen]);
 
-  // Filter notices for active locale; if no exact match for this locale, use all received notices
+  // Filter notices for active locale (fallback to all received notices)
+  // Constraint: Maximum 3 notices are shown in the homepage widget
   const activeNotices: NoticeItem[] = useMemo(() => {
     if (!notices || notices.length === 0) return [];
-    const localized = notices.filter((n) => n.locale === locale);
-    if (localized.length > 0) return localized;
-    return notices;
+    const localized = notices.filter(
+      (n) =>
+        n.locale === locale &&
+        (n.show_on_homepage === undefined || n.show_on_homepage === true)
+    );
+    const list =
+      localized.length > 0
+        ? localized
+        : notices.filter(
+            (n) =>
+              n.show_on_homepage === undefined || n.show_on_homepage === true
+          );
+    // Limit to max 3 notices on homepage
+    return list.slice(0, 3);
   }, [notices, locale]);
 
   const totalNotices = activeNotices.length;
@@ -157,21 +180,14 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
     };
   }, [totalNotices, isPaused, isDismissed, isMinimized, handleNext]);
 
-  if (totalNotices === 0) {
+  // When visiting the notices page, or if no notices exist, completely hide popup
+  if (isNoticesPage || totalNotices === 0) {
     return null;
   }
 
   // Safe index within bounds
   const safeIndex = currentIndex >= totalNotices ? 0 : currentIndex;
   const currentNotice = activeNotices[safeIndex] || activeNotices[0];
-
-  // Detect if notice is an urgent Janaza funeral notice
-  const isJanazaUrgent =
-    currentNotice.title.toLowerCase().includes("janaza") ||
-    currentNotice.title.includes("ஜனாஸா") ||
-    currentNotice.title.includes("ජනාසා") ||
-    currentNotice.body.toLowerCase().includes("janaza") ||
-    currentNotice.body.includes("ஜனாஸா");
 
   const formattedDate = currentNotice.published_at
     ? formatAdminDate(currentNotice.published_at)
@@ -180,6 +196,13 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
   const whatsappShareText = encodeURIComponent(
     `*${currentNotice.title}*\n\n${currentNotice.body}\n\n— *Buhary Janaza Welfare Society (BJWS)*\nhttps://bjws.org/${locale}/notices`
   );
+
+  const noticeBadgeText =
+    locale === "ta"
+      ? "அதிகாரபூர்வ அறிவித்தல்"
+      : locale === "si"
+        ? "නිල නිවේදනය"
+        : "Official Notice";
 
   return (
     <>
@@ -193,16 +216,8 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
             title="Open Community Notices"
           >
             <span className="relative flex h-2.5 w-2.5">
-              <span
-                className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 ${
-                  isJanazaUrgent ? "bg-red-400" : "bg-amber-400"
-                }`}
-              />
-              <span
-                className={`relative inline-flex h-2.5 w-2.5 rounded-full ${
-                  isJanazaUrgent ? "bg-red-500" : "bg-amber-400"
-                }`}
-              />
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-amber-400" />
             </span>
             <Bell className="h-3.5 w-3.5 text-amber-300 transition-transform group-hover:rotate-12" />
             <span className="font-mono text-xs font-bold text-amber-200">
@@ -222,22 +237,14 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
             title="Expand Notice"
           >
             <span className="relative flex h-2.5 w-2.5 shrink-0">
-              <span
-                className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 ${
-                  isJanazaUrgent ? "bg-red-400" : "bg-amber-400"
-                }`}
-              />
-              <span
-                className={`relative inline-flex h-2.5 w-2.5 rounded-full ${
-                  isJanazaUrgent ? "bg-red-500" : "bg-amber-400"
-                }`}
-              />
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-amber-400" />
             </span>
 
             <Bell className="h-3.5 w-3.5 shrink-0 text-amber-300 transition-transform group-hover:rotate-12" />
 
             <span className="shrink-0 text-xs font-bold text-amber-200">
-              {isJanazaUrgent ? "Janaza" : "Notice"}{" "}
+              {noticeBadgeText}{" "}
               <span className="font-mono text-amber-300/80">
                 ({safeIndex + 1}/{totalNotices})
               </span>
@@ -256,7 +263,7 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
       {!isDismissed && !isMinimized && (
         <aside
           role="region"
-          aria-label={t("janazaNotice")}
+          aria-label={noticeBadgeText}
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
           className={`animate-in fade-in slide-in-from-bottom-5 fixed right-4 bottom-20 z-40 w-[calc(100vw-2rem)] max-w-sm duration-300 sm:w-[380px] md:right-6 md:bottom-6 ${
@@ -278,34 +285,14 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
               <div className="flex items-center gap-2">
                 {/* Pulsing Beacon Dot */}
                 <span className="relative flex h-2.5 w-2.5 shrink-0">
-                  <span
-                    className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 ${
-                      isJanazaUrgent ? "bg-red-400" : "bg-amber-400"
-                    }`}
-                  />
-                  <span
-                    className={`relative inline-flex h-2.5 w-2.5 rounded-full ${
-                      isJanazaUrgent ? "bg-red-500" : "bg-amber-400"
-                    }`}
-                  />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
+                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-amber-400" />
                 </span>
 
                 {/* Badge Label */}
-                <span
-                  className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-extrabold tracking-wider uppercase ${
-                    isJanazaUrgent
-                      ? "border border-red-500/40 bg-red-500/20 text-red-200"
-                      : "border border-amber-400/40 bg-amber-400/20 text-amber-300"
-                  }`}
-                >
-                  {isJanazaUrgent ? (
-                    <Bell className="h-2.5 w-2.5" />
-                  ) : (
-                    <Megaphone className="h-2.5 w-2.5 text-amber-300" />
-                  )}
-                  <span>
-                    {isJanazaUrgent ? "Janaza Alert" : "Official Notice"}
-                  </span>
+                <span className="inline-flex items-center gap-1 rounded-full border border-amber-400/40 bg-amber-400/20 px-2.5 py-0.5 text-[10px] font-extrabold tracking-wider text-amber-300 uppercase">
+                  <Megaphone className="h-2.5 w-2.5 text-amber-300" />
+                  <span>{noticeBadgeText}</span>
                 </span>
 
                 {/* Notice Counter */}
@@ -361,19 +348,34 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
               </div>
             </div>
 
-            {/* Middle Card: Title, Body Snippet & Date */}
+            {/* Middle Card: Title, Body Snippet, Optional Thumbnail & Date */}
             <div className="pt-3 pb-3">
               <button
                 type="button"
                 onClick={() => setActiveModalNotice(currentNotice)}
-                className="group w-full cursor-pointer text-left"
+                className="group flex w-full cursor-pointer items-start gap-3 text-left"
               >
-                <h4 className="font-display line-clamp-2 text-sm leading-snug font-bold text-white transition-colors group-hover:text-amber-300 sm:text-base">
-                  {currentNotice.title}
-                </h4>
-                <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-emerald-100/75">
-                  {currentNotice.body}
-                </p>
+                {/* Optional Notice Image Thumbnail */}
+                {currentNotice.image_url && (
+                  <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-amber-400/40 bg-black/40">
+                    <Image
+                      src={currentNotice.image_url}
+                      alt={currentNotice.title}
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-110"
+                      sizes="56px"
+                    />
+                  </div>
+                )}
+
+                <div className="min-w-0 flex-1">
+                  <h4 className="font-display line-clamp-2 text-sm leading-snug font-bold text-white transition-colors group-hover:text-amber-300 sm:text-base">
+                    {currentNotice.title}
+                  </h4>
+                  <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-emerald-100/75">
+                    {currentNotice.body}
+                  </p>
+                </div>
               </button>
 
               {formattedDate && (
@@ -441,7 +443,10 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
             {/* Backdrop Blur */}
             <div
               className="fixed inset-0 bg-black/75 backdrop-blur-md transition-opacity duration-200"
-              onClick={() => setActiveModalNotice(null)}
+              onClick={() => {
+                setIsImageLightboxOpen(false);
+                setActiveModalNotice(null);
+              }}
               aria-hidden="true"
             />
 
@@ -457,47 +462,9 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
                 <div className="relative z-10">
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2">
-                      <span
-                        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-extrabold tracking-wider uppercase shadow-xs ${
-                          activeModalNotice.title
-                            .toLowerCase()
-                            .includes("janaza") ||
-                          activeModalNotice.title.includes("ஜனாஸா") ||
-                          activeModalNotice.title.includes("ජනාසා") ||
-                          activeModalNotice.body
-                            .toLowerCase()
-                            .includes("janaza") ||
-                          activeModalNotice.body.includes("ஜனாஸா")
-                            ? "bg-red-500/25 text-red-200 ring-1 ring-red-400/40"
-                            : "bg-amber-400/25 text-amber-200 ring-1 ring-amber-300/40"
-                        }`}
-                      >
-                        {activeModalNotice.title
-                          .toLowerCase()
-                          .includes("janaza") ||
-                        activeModalNotice.title.includes("ஜனாஸா") ||
-                        activeModalNotice.title.includes("ජනාසා") ||
-                        activeModalNotice.body
-                          .toLowerCase()
-                          .includes("janaza") ||
-                        activeModalNotice.body.includes("ஜனாஸா") ? (
-                          <AlertCircle className="h-3.5 w-3.5 text-red-300" />
-                        ) : (
-                          <Megaphone className="h-3.5 w-3.5 text-amber-300" />
-                        )}
-                        <span>
-                          {activeModalNotice.title
-                            .toLowerCase()
-                            .includes("janaza") ||
-                          activeModalNotice.title.includes("ஜனாஸா") ||
-                          activeModalNotice.title.includes("ජනාසා") ||
-                          activeModalNotice.body
-                            .toLowerCase()
-                            .includes("janaza") ||
-                          activeModalNotice.body.includes("ஜனாஸா")
-                            ? "Janaza Alert"
-                            : "Official Society Notice"}
-                        </span>
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-400/25 px-3 py-1 text-xs font-extrabold tracking-wider text-amber-200 uppercase shadow-xs ring-1 ring-amber-300/40">
+                        <Megaphone className="h-3.5 w-3.5 text-amber-300" />
+                        <span>{noticeBadgeText}</span>
                       </span>
 
                       <span className="rounded-full bg-white/10 px-2.5 py-0.5 font-mono text-[11px] font-bold text-amber-200 uppercase ring-1 ring-white/15">
@@ -552,28 +519,26 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
 
               {/* Modal Body Scroll Area */}
               <div className="max-h-[55vh] space-y-4 overflow-y-auto p-6 sm:p-7">
-                {/* Emergency Funeral Banner if Janaza */}
-                {(activeModalNotice.title.toLowerCase().includes("janaza") ||
-                  activeModalNotice.title.includes("ஜனாஸா") ||
-                  activeModalNotice.title.includes("ජනාසා") ||
-                  activeModalNotice.body.toLowerCase().includes("janaza") ||
-                  activeModalNotice.body.includes("ஜனாஸா")) && (
-                  <div className="flex flex-col gap-3 rounded-2xl border border-red-500/25 bg-gradient-to-r from-red-50 via-amber-50 to-emerald-50/50 p-4 sm:flex-row sm:items-center sm:justify-between dark:border-red-500/30 dark:from-red-950/30 dark:via-amber-950/20 dark:to-emerald-950/20">
-                    <div>
-                      <p className="text-[11px] font-bold tracking-wider text-red-800 uppercase dark:text-red-300">
-                        24/7 Funeral Emergency Hotline
-                      </p>
-                      <p className="text-xs font-semibold text-stone-900 dark:text-stone-100">
-                        Immediate burial coordination across Sri Lanka
-                      </p>
+                {/* Notice Image Flyer (if attached) */}
+                {activeModalNotice.image_url && (
+                  <div className="group relative overflow-hidden rounded-2xl border border-stone-200 bg-stone-100 shadow-sm dark:border-emerald-950 dark:bg-black/50">
+                    <div className="relative aspect-[16/9] max-h-72 w-full">
+                      <Image
+                        src={activeModalNotice.image_url}
+                        alt={activeModalNotice.title}
+                        fill
+                        className="object-contain"
+                        sizes="(max-width: 768px) 100vw, 672px"
+                      />
                     </div>
-                    <a
-                      href="tel:+94776227323"
-                      className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-red-600 px-3.5 py-1.5 text-xs font-bold text-white shadow-xs transition hover:bg-red-700"
+                    <button
+                      type="button"
+                      onClick={() => setIsImageLightboxOpen(true)}
+                      className="absolute right-3 bottom-3 inline-flex items-center gap-1.5 rounded-xl bg-black/70 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-md transition-opacity hover:bg-black/90"
                     >
-                      <Phone className="h-3.5 w-3.5" />
-                      <span>+94 77 622 7323</span>
-                    </a>
+                      <Maximize2 className="h-3.5 w-3.5" />
+                      <span>View Full Image</span>
+                    </button>
                   </div>
                 )}
 
@@ -633,6 +598,34 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
                 </div>
               </div>
             </div>
+
+            {/* Optional Full Image Lightbox */}
+            {isImageLightboxOpen && activeModalNotice.image_url && (
+              <div
+                className="fixed inset-0 z-60 flex items-center justify-center bg-black/90 p-4"
+                onClick={() => setIsImageLightboxOpen(false)}
+              >
+                <button
+                  type="button"
+                  onClick={() => setIsImageLightboxOpen(false)}
+                  className="absolute top-5 right-5 flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-white transition hover:bg-white/40"
+                  aria-label="Close image lightbox"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+                <div
+                  className="relative max-h-[90vh] max-w-[90vw]"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={activeModalNotice.image_url}
+                    alt={activeModalNotice.title}
+                    className="max-h-[85vh] max-w-[85vw] rounded-2xl object-contain shadow-2xl"
+                  />
+                </div>
+              </div>
+            )}
           </div>,
           document.body
         )}

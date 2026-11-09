@@ -154,6 +154,7 @@ export async function createMultilingualNoticeAction(
   const body_en = (formData.get("body_en") as string)?.trim();
   const title_si = (formData.get("title_si") as string)?.trim();
   const body_si = (formData.get("body_si") as string)?.trim();
+  const image_url = (formData.get("image_url") as string)?.trim() || "";
   const is_published = formData.get("is_published") === "on";
   const show_on_homepage = formData.get("show_on_homepage") !== "off";
   const published_at =
@@ -183,6 +184,7 @@ export async function createMultilingualNoticeAction(
       locale: "ta",
       is_published,
       show_on_homepage,
+      image_url: image_url || undefined,
       published_at,
       updated_at,
     });
@@ -195,6 +197,7 @@ export async function createMultilingualNoticeAction(
       locale: "en",
       is_published,
       show_on_homepage,
+      image_url: image_url || undefined,
       published_at,
       updated_at,
     });
@@ -207,6 +210,7 @@ export async function createMultilingualNoticeAction(
       locale: "si",
       is_published,
       show_on_homepage,
+      image_url: image_url || undefined,
       published_at,
       updated_at,
     });
@@ -227,16 +231,28 @@ export async function createMultilingualNoticeAction(
         published_at: e.published_at,
       }));
 
-      const { error: insertErr } = await supabase.from("notices").insert(
-        basePayload.map((e, idx) => ({
-          ...e,
-          updated_at: entries[idx].updated_at,
-          show_on_homepage: entries[idx].show_on_homepage,
-        }))
-      );
+      const fullPayload = basePayload.map((e, idx) => ({
+        ...e,
+        updated_at: entries[idx].updated_at,
+        show_on_homepage: entries[idx].show_on_homepage,
+        image_url: entries[idx].image_url || null,
+      }));
+
+      const { error: insertErr } = await supabase
+        .from("notices")
+        .insert(fullPayload);
 
       if (insertErr && insertErr.message.includes("column")) {
-        await supabase.from("notices").insert(basePayload);
+        const { error: fallbackErr } = await supabase.from("notices").insert(
+          basePayload.map((e, idx) => ({
+            ...e,
+            updated_at: entries[idx].updated_at,
+            show_on_homepage: entries[idx].show_on_homepage,
+          }))
+        );
+        if (fallbackErr && fallbackErr.message.includes("column")) {
+          await supabase.from("notices").insert(basePayload);
+        }
       }
     } catch (err) {
       console.warn("Supabase insert multilingual notices warning:", err);
@@ -264,6 +280,7 @@ export async function updateMultilingualNoticeAction(
   const body_en = (formData.get("body_en") as string)?.trim();
   const title_si = (formData.get("title_si") as string)?.trim();
   const body_si = (formData.get("body_si") as string)?.trim();
+  const image_url = (formData.get("image_url") as string)?.trim() || "";
   const is_published = formData.get("is_published") === "on";
   const show_on_homepage = formData.get("show_on_homepage") === "on";
   const published_at = (formData.get("published_at") as string)?.trim();
@@ -287,7 +304,11 @@ export async function updateMultilingualNoticeAction(
       en: title_en && body_en ? { title: title_en, body: body_en } : undefined,
       si: title_si && body_si ? { title: title_si, body: body_si } : undefined,
     },
-    is_published
+    is_published,
+    image_url,
+    show_on_homepage,
+    published_at,
+    updated_at
   );
 
   if (isSupabaseConfigured()) {
@@ -322,14 +343,25 @@ export async function updateMultilingualNoticeAction(
                   ...baseUpdate,
                   updated_at,
                   show_on_homepage,
+                  image_url: image_url || null,
                 })
                 .eq("id", t.id);
 
               if (updErr && updErr.message.includes("column")) {
-                await supabase
+                const { error: fallbackErr } = await supabase
                   .from("notices")
-                  .update(baseUpdate)
+                  .update({
+                    ...baseUpdate,
+                    updated_at,
+                    show_on_homepage,
+                  })
                   .eq("id", t.id);
+                if (fallbackErr && fallbackErr.message.includes("column")) {
+                  await supabase
+                    .from("notices")
+                    .update(baseUpdate)
+                    .eq("id", t.id);
+                }
               }
             } else {
               const baseInsert = {
@@ -344,9 +376,19 @@ export async function updateMultilingualNoticeAction(
                 ...baseInsert,
                 updated_at,
                 show_on_homepage,
+                image_url: image_url || null,
               });
               if (insErr && insErr.message.includes("column")) {
-                await supabase.from("notices").insert(baseInsert);
+                const { error: fallbackErr } = await supabase
+                  .from("notices")
+                  .insert({
+                    ...baseInsert,
+                    updated_at,
+                    show_on_homepage,
+                  });
+                if (fallbackErr && fallbackErr.message.includes("column")) {
+                  await supabase.from("notices").insert(baseInsert);
+                }
               }
             }
           }

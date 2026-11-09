@@ -93,6 +93,7 @@ export interface Database {
           published_at: string;
           updated_at?: string;
           show_on_homepage?: boolean;
+          image_url?: string | null;
           is_published: boolean;
           created_at: string;
         };
@@ -104,6 +105,7 @@ export interface Database {
           published_at?: string;
           updated_at?: string;
           show_on_homepage?: boolean;
+          image_url?: string | null;
           is_published?: boolean;
           created_at?: string;
         };
@@ -115,6 +117,7 @@ export interface Database {
           published_at?: string;
           updated_at?: string;
           show_on_homepage?: boolean;
+          image_url?: string | null;
           is_published?: boolean;
           created_at?: string;
         };

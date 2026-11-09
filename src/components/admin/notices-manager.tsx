@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { useState, useTransition, useActionState, useRef } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
   createMultilingualNoticeAction,
@@ -16,6 +17,7 @@ import {
   type UnifiedNoticeRecord,
 } from "@/content/notices";
 import { formatAdminDate } from "@/lib/utils";
+import { SingleImageDropzone } from "@/components/admin/single-image-dropzone";
 import {
   Plus,
   Eye,
@@ -26,12 +28,12 @@ import {
   AlertCircle,
   X,
   Pencil,
-  Bell,
   Sparkles,
   Layers,
   MessageCircle,
   Clock,
   Megaphone,
+  ImageIcon,
 } from "lucide-react";
 
 export type { NoticeRecord, UnifiedNoticeRecord };
@@ -75,6 +77,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
     body_en: "",
     title_si: "",
     body_si: "",
+    image_url: "",
   });
 
   const [editFields, setEditFields] = useState({
@@ -84,6 +87,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
     body_en: "",
     title_si: "",
     body_si: "",
+    image_url: "",
     is_published: true,
   });
 
@@ -98,6 +102,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
       body_en: item.translations.en?.body || "",
       title_si: item.translations.si?.title || "",
       body_si: item.translations.si?.body || "",
+      image_url: item.image_url || "",
       is_published: item.is_published,
     });
     // Set default tab to the first non-empty translation
@@ -120,12 +125,14 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
       prevState: { error?: string; success?: boolean } | null,
       formData: FormData
     ) => {
+      formData.set("image_url", createFields.image_url.trim());
       const res = await createMultilingualNoticeAction(prevState, formData);
       if (res.success) {
         setShowCreate(false);
         const timestamp = Date.now();
         const published_at = new Date().toISOString();
         const is_published = formData.get("is_published") === "on";
+        const image_url = createFields.image_url.trim() || undefined;
 
         const newTranslations: UnifiedNoticeRecord["translations"] = {};
         if (createFields.title_ta && createFields.body_ta) {
@@ -136,6 +143,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
             locale: "ta",
             published_at,
             is_published,
+            image_url,
           };
         }
         if (createFields.title_en && createFields.body_en) {
@@ -146,6 +154,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
             locale: "en",
             published_at,
             is_published,
+            image_url,
           };
         }
         if (createFields.title_si && createFields.body_si) {
@@ -156,6 +165,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
             locale: "si",
             published_at,
             is_published,
+            image_url,
           };
         }
 
@@ -163,6 +173,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
           baseId: `notice-${timestamp}`,
           published_at,
           is_published,
+          image_url,
           translations: newTranslations,
         };
 
@@ -174,6 +185,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
           body_en: "",
           title_si: "",
           body_si: "",
+          image_url: "",
         });
         router.refresh();
       }
@@ -189,6 +201,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
       formData: FormData
     ) => {
       if (!editingNotice) return { error: "No notice selected for editing." };
+      formData.set("image_url", editFields.image_url.trim());
       const res = await updateMultilingualNoticeAction(
         editingNotice.baseId,
         prevState,
@@ -197,6 +210,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
       if (res.success) {
         const is_published = formData.get("is_published") === "on";
         const published_at = editingNotice.published_at;
+        const image_url = editFields.image_url.trim() || undefined;
 
         const updatedTranslations: UnifiedNoticeRecord["translations"] = {
           ...editingNotice.translations,
@@ -211,6 +225,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
             locale: "ta",
             published_at,
             is_published,
+            image_url,
           };
         }
         if (editFields.title_en && editFields.body_en) {
@@ -222,6 +237,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
             locale: "en",
             published_at,
             is_published,
+            image_url,
           };
         }
         if (editFields.title_si && editFields.body_si) {
@@ -233,12 +249,14 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
             locale: "si",
             published_at,
             is_published,
+            image_url,
           };
         }
 
         const updatedItem: UnifiedNoticeRecord = {
           ...editingNotice,
           is_published,
+          image_url,
           translations: updatedTranslations,
         };
 
@@ -658,6 +676,20 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
               </div>
             </div>
 
+            {/* Optional Notice Image / Flyer */}
+            <div>
+              <SingleImageDropzone
+                name="image_url"
+                value={createFields.image_url}
+                onChange={(url) =>
+                  setCreateFields((p) => ({ ...p, image_url: url }))
+                }
+                folder="notices"
+                label="Notice Image / Circular / Flyer (Optional)"
+                helperText="Attach an official flyer, banner, or announcement circular (auto-compressed to WebP)."
+              />
+            </div>
+
             {/* Publication and Homepage settings */}
             <div className="grid grid-cols-1 gap-4 rounded-xl border border-[#e6e4dc] bg-[#fbfaf6] p-4 sm:grid-cols-2">
               <div>
@@ -965,6 +997,20 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
               </div>
             </div>
 
+            {/* Optional Notice Image / Flyer */}
+            <div>
+              <SingleImageDropzone
+                name="image_url"
+                value={editFields.image_url}
+                onChange={(url) =>
+                  setEditFields((p) => ({ ...p, image_url: url }))
+                }
+                folder="notices"
+                label="Notice Image / Circular / Flyer (Optional)"
+                helperText="Attach an official flyer, banner, or announcement circular (auto-compressed to WebP)."
+              />
+            </div>
+
             {/* Publication and Homepage settings */}
             <div className="grid grid-cols-1 gap-4 rounded-xl border border-[#e6e4dc] bg-[#fbfaf6] p-4 sm:grid-cols-2">
               <div className="space-y-3">
@@ -1102,17 +1148,6 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
               item.translations.en ||
               item.translations.si;
 
-            const isJanaza =
-              (item.translations.ta?.title || "").includes("ஜனாஸா") ||
-              (item.translations.ta?.body || "").includes("ஜனாஸா") ||
-              (item.translations.en?.title || "")
-                .toLowerCase()
-                .includes("janaza") ||
-              (item.translations.en?.body || "")
-                .toLowerCase()
-                .includes("janaza") ||
-              (item.translations.si?.title || "").includes("ජනාසා");
-
             return (
               <div
                 key={item.baseId}
@@ -1130,11 +1165,11 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
                         {activeTrans?.title || "Untitled Announcement"}
                       </span>
 
-                      {/* Janaza Beacon Indicator */}
-                      {isJanaza && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-[#f5eedf] px-2 py-0.5 text-[10px] font-bold text-[#8b651e] ring-1 ring-[#c99a45]/40">
-                          <Bell className="h-3 w-3 text-[#c99a45]" />
-                          <span>Janaza Alert</span>
+                      {/* Image Indicator */}
+                      {item.image_url && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-800 ring-1 ring-emerald-300">
+                          <ImageIcon className="h-3 w-3 text-emerald-600" />
+                          <span>Image Attached</span>
                         </span>
                       )}
 
@@ -1400,8 +1435,22 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
                     </div>
                   </div>
 
-                  <div className="rounded-xl border border-[#f3f1ea] bg-[#fbfaf6] p-4 text-xs leading-relaxed whitespace-pre-wrap text-[#1c2420] sm:text-sm">
-                    {activeTrans?.body || "(No translation for this language)"}
+                  <div className="flex flex-col items-start gap-4 rounded-xl border border-[#f3f1ea] bg-[#fbfaf6] p-4 text-xs leading-relaxed text-[#1c2420] sm:flex-row sm:text-sm">
+                    {item.image_url && (
+                      <div className="relative h-24 w-36 shrink-0 overflow-hidden rounded-xl border border-[#e6e4dc] bg-stone-100 shadow-2xs">
+                        <Image
+                          src={item.image_url}
+                          alt={activeTrans?.title || "Notice flyer"}
+                          fill
+                          className="object-cover"
+                          sizes="144px"
+                        />
+                      </div>
+                    )}
+                    <div className="flex-1 whitespace-pre-wrap">
+                      {activeTrans?.body ||
+                        "(No translation for this language)"}
+                    </div>
                   </div>
                 </div>
               </div>

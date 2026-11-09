@@ -35,6 +35,7 @@ export default async function AdminNoticesPage() {
             d.show_on_homepage !== undefined
               ? Boolean(d.show_on_homepage)
               : true,
+          image_url: d.image_url ? String(d.image_url) : undefined,
           created_at: d.created_at ? String(d.created_at) : undefined,
         }));
       }

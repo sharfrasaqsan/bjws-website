@@ -8,7 +8,7 @@ import { uploadSingleImageAction } from "@/lib/admin-actions";
 interface SingleImageDropzoneProps {
   value: string;
   onChange: (url: string) => void;
-  folder?: "gallery" | "news" | "team" | "general";
+  folder?: "gallery" | "news" | "team" | "general" | "notices";
   label?: string;
   helperText?: string;
   name?: string;
