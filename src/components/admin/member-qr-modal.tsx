@@ -220,35 +220,57 @@ export function MemberQrModal({
       fCtx.stroke();
 
       // Officer Full Name (Prominent & Executive)
+      const rawName = (member.name || "").trim().toUpperCase();
       fCtx.fillStyle = "#0b2e1e";
-      fCtx.font = `bold 32px ${ID_FONT}`;
       fCtx.textAlign = "center";
       fCtx.textBaseline = "alphabetic";
-      fCtx.fillText(member.name.toUpperCase(), 319, 555);
 
-      // Underline rule below name (Golden accent matching template)
+      // Dynamically calculate font size for name to guarantee it never overflows
+      let nameFontSize = 32;
+      fCtx.font = `bold ${nameFontSize}px ${ID_FONT}`;
+      let nameWidth = fCtx.measureText(rawName).width;
+      const maxNameWidth = 460;
+      if (nameWidth > maxNameWidth) {
+        nameFontSize = Math.max(
+          22,
+          Math.floor((maxNameWidth / nameWidth) * nameFontSize)
+        );
+        fCtx.font = `bold ${nameFontSize}px ${ID_FONT}`;
+        nameWidth = fCtx.measureText(rawName).width;
+      }
+      fCtx.fillText(rawName, 319, 555);
+
+      // Underline rule below name (Golden accent matching template, centered & proportional)
+      const ruleWidth = Math.min(420, Math.max(220, nameWidth * 0.8));
       fCtx.beginPath();
-      fCtx.moveTo(189, 570);
-      fCtx.lineTo(449, 570);
+      fCtx.moveTo(319 - ruleWidth / 2, 570);
+      fCtx.lineTo(319 + ruleWidth / 2, 570);
       fCtx.strokeStyle = "#c99a45";
       fCtx.lineWidth = 3;
       fCtx.stroke();
 
       // Role / Position
+      const rawRole = (member.role.en || member.role.ta || "").toUpperCase();
+      let roleFontSize = 22;
+      fCtx.font = `bold ${roleFontSize}px ${ID_FONT}`;
+      const roleWidth = fCtx.measureText(rawRole).width;
+      if (roleWidth > maxNameWidth) {
+        roleFontSize = Math.max(
+          17,
+          Math.floor((maxNameWidth / roleWidth) * roleFontSize)
+        );
+        fCtx.font = `bold ${roleFontSize}px ${ID_FONT}`;
+      }
       fCtx.fillStyle = "#0b2e1e";
-      fCtx.font = `bold 22px ${ID_FONT}`;
       fCtx.textAlign = "center";
-      fCtx.fillText(
-        (member.role.en || member.role.ta || "").toUpperCase(),
-        319,
-        606
-      );
+      fCtx.fillText(rawRole, 319, 606);
 
-      // Attribute Rows (ID No, NIC, Address, Phone, Issue Date, Exp Date) - Unified Font, Size & Color
-      const startX = 105;
-      const valX = 225;
-      const addrMaxWidth = 365; // Ample width to prevent unnecessary line breaks
-      const addrLineHeight = 24;
+      // Attribute Rows (ID No, NIC, Address, Phone) - Balanced 3-Column Aligned Table
+      const startX = 95;
+      const colonX = 200;
+      const valX = 218;
+      const addrMaxWidth = 325;
+      const addrLineHeight = 25;
 
       // Calculate word-wrapped full address lines so nothing is cut off
       const rawAddress = (member.address || "Mullipothana, Sri Lanka").trim();
@@ -287,17 +309,24 @@ export function MemberQrModal({
         { label: "Phone", val: member.phone || "+94 77 622 7323" },
       ];
 
-      let startY = member.nic ? 655 : 668;
-      const rowGap = member.nic ? 42 : 46;
+      let startY = member.nic ? 658 : 670;
+      const rowGap = member.nic ? 46 : 52;
 
       for (const row of rows) {
-        // Label - 100% unified font, size, weight & deep brand forest green
+        // Label - Left aligned at startX
         fCtx.textAlign = "left";
         fCtx.font = `bold 20px ${ID_FONT}`;
         fCtx.fillStyle = "#0b2e1e";
         fCtx.fillText(row.label, startX, startY);
 
-        // Value - 100% unified font, size, weight & deep brand forest green
+        // Colon - Vertically aligned at colonX
+        fCtx.textAlign = "center";
+        fCtx.font = `bold 20px ${ID_FONT}`;
+        fCtx.fillStyle = "#0b2e1e";
+        fCtx.fillText(":", colonX, startY);
+
+        // Value - Left aligned at valX
+        fCtx.textAlign = "left";
         if (row.isAddr && row.lines) {
           fCtx.font = `bold 20px ${ID_FONT}`;
           fCtx.fillStyle = "#0b2e1e";
