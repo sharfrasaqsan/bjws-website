@@ -1,7 +1,14 @@
 "use client";
 
 import * as React from "react";
-import { useState, useEffect, useMemo, useRef, useCallback } from "react";
+import {
+  useState,
+  useEffect,
+  useMemo,
+  useRef,
+  useCallback,
+  useSyncExternalStore,
+} from "react";
 import { createPortal } from "react-dom";
 import { useTranslations, useLocale } from "next-intl";
 import { IslamicPattern } from "@/components/ui/islamic-pattern";
@@ -12,6 +19,8 @@ import {
   Megaphone,
   ChevronLeft,
   ChevronRight,
+  ChevronUp,
+  Minus,
   ArrowRight,
   X,
   Calendar,
@@ -20,7 +29,6 @@ import {
   Phone,
   MessageCircle,
   ShieldCheck,
-  ExternalLink,
 } from "lucide-react";
 
 export interface NoticeItem {
@@ -38,16 +46,60 @@ interface JanazaTickerProps {
   className?: string;
 }
 
+function subscribe(callback: () => void) {
+  window.addEventListener("storage", callback);
+  return () => window.removeEventListener("storage", callback);
+}
+
+function getSnapshot() {
+  return typeof window !== "undefined"
+    ? sessionStorage.getItem("bjws_notice_island_dismissed") === "true"
+    : false;
+}
+
+function getServerSnapshot() {
+  return false;
+}
+
 export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
   const t = useTranslations("common");
   const locale = useLocale();
 
+  const isStoredDismissed = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getServerSnapshot
+  );
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const [isDismissed, setIsDismissed] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [isDismissedLocal, setIsDismissedLocal] = useState(false);
   const [activeModalNotice, setActiveModalNotice] = useState<NoticeItem | null>(
     null
   );
+
+  const isDismissed = isStoredDismissed || isDismissedLocal;
+
+  const handleDismiss = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsDismissedLocal(true);
+    try {
+      sessionStorage.setItem("bjws_notice_island_dismissed", "true");
+    } catch {
+      // Ignore storage restrictions
+    }
+  };
+
+  const handleReopen = () => {
+    setIsDismissedLocal(false);
+    setIsMinimized(false);
+    try {
+      sessionStorage.removeItem("bjws_notice_island_dismissed");
+    } catch {
+      // Ignore
+    }
+  };
 
   // Lock body scroll and close on Escape key when modal is open
   useEffect(() => {
@@ -79,7 +131,7 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
 
   const totalNotices = activeNotices.length;
 
-  // Auto-advance notice every 7 seconds when not paused
+  // Auto-advance notice every 8 seconds when not paused
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleNext = useCallback(() => {
@@ -91,50 +143,29 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
   }, [totalNotices]);
 
   useEffect(() => {
-    if (totalNotices <= 1 || isPaused || isDismissed) {
+    if (totalNotices <= 1 || isPaused || isDismissed || isMinimized) {
       if (timerRef.current) clearInterval(timerRef.current);
       return;
     }
 
     timerRef.current = setInterval(() => {
       handleNext();
-    }, 7000);
+    }, 8000);
 
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [totalNotices, isPaused, isDismissed, handleNext]);
+  }, [totalNotices, isPaused, isDismissed, isMinimized, handleNext]);
 
   if (totalNotices === 0) {
     return null;
-  }
-
-  // If dismissed, show a prominent, luminous gold re-open pill so users don't miss official notices
-  if (isDismissed) {
-    return (
-      <div className="relative z-30 border-b border-amber-400/40 bg-gradient-to-r from-[#031c12] via-[#093522] to-[#031c12] px-4 py-1.5 text-center shadow-xs">
-        <button
-          type="button"
-          onClick={() => setIsDismissed(false)}
-          className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-amber-400/50 bg-amber-400/10 px-3.5 py-0.5 text-xs font-bold text-amber-300 transition-all hover:bg-amber-400 hover:text-stone-950 hover:shadow-xs"
-        >
-          <Bell className="h-3.5 w-3.5 animate-bounce text-amber-400" />
-          <span>
-            {t("janazaNotice")} ({totalNotices})
-          </span>
-          <span className="py-0.2 rounded bg-amber-400 px-1.5 text-[10px] font-extrabold text-stone-950 uppercase">
-            Show
-          </span>
-        </button>
-      </div>
-    );
   }
 
   // Safe index within bounds
   const safeIndex = currentIndex >= totalNotices ? 0 : currentIndex;
   const currentNotice = activeNotices[safeIndex] || activeNotices[0];
 
-  // Detect if current notice is an urgent Janaza funeral notice
+  // Detect if notice is an urgent Janaza funeral notice
   const isJanazaUrgent =
     currentNotice.title.toLowerCase().includes("janaza") ||
     currentNotice.title.includes("ஜனாஸா") ||
@@ -152,215 +183,275 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
 
   return (
     <>
-      <div
-        role="region"
-        aria-label={t("janazaNotice")}
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
-        className={`relative z-30 border-y-2 border-amber-400/80 bg-gradient-to-r from-[#031910] via-[#0b3823] to-[#031910] text-[#fbfaf6] shadow-[0_4px_22px_rgba(245,158,11,0.22)] transition-all ${
-          className || ""
-        }`}
-      >
-        {/* Subtle Islamic Lattice Background Texture */}
-        <IslamicPattern
-          opacity={0.045}
-          className="pointer-events-none text-amber-400"
-        />
-
-        {/* Ambient Top Glow Line */}
-        <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-amber-300 to-transparent opacity-80" />
-
-        <div className="relative mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
-          <div className="flex min-h-[46px] items-center justify-between gap-2.5 py-1.5 text-xs sm:min-h-[48px] sm:gap-4 sm:py-2">
-            {/* Left: Glowing Beacon & Vibrant Institutional Badge */}
-            <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-              <span className="relative flex h-3 w-3 sm:h-3.5 sm:w-3.5">
-                <span
-                  className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 motion-reduce:hidden ${
-                    isJanazaUrgent ? "bg-red-400" : "bg-amber-400"
-                  }`}
-                />
-                <span
-                  className={`relative inline-flex h-3 w-3 rounded-full shadow-sm sm:h-3.5 sm:w-3.5 ${
-                    isJanazaUrgent
-                      ? "bg-red-500 ring-2 ring-red-300"
-                      : "bg-amber-400 ring-2 ring-amber-200"
-                  }`}
-                />
-              </span>
-
+      {/* 1. DISMISSED FLOATING BADGE (Subtle glowing trigger at bottom-right) */}
+      {isDismissed && (
+        <div className="animate-in fade-in fixed right-4 bottom-20 z-40 duration-200 md:right-6 md:bottom-6">
+          <button
+            type="button"
+            onClick={handleReopen}
+            className="group relative flex cursor-pointer items-center gap-2 rounded-full border border-amber-400/60 bg-[#072115]/95 px-3.5 py-2 text-white shadow-2xl backdrop-blur-xl transition-all hover:scale-105 hover:border-amber-300"
+            title="Open Community Notices"
+          >
+            <span className="relative flex h-2.5 w-2.5">
               <span
-                className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-extrabold tracking-wide uppercase shadow-sm sm:px-3 sm:text-xs ${
-                  isJanazaUrgent
-                    ? "bg-gradient-to-r from-red-600 to-rose-700 text-white ring-1 ring-red-300"
-                    : "bg-gradient-to-r from-amber-400 to-amber-500 text-stone-950 ring-1 ring-amber-300"
+                className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 ${
+                  isJanazaUrgent ? "bg-red-400" : "bg-amber-400"
                 }`}
-              >
-                {isJanazaUrgent ? (
-                  <Bell className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                ) : (
-                  <Megaphone
-                    className="h-3.5 w-3.5 shrink-0 text-stone-950"
-                    aria-hidden="true"
-                  />
-                )}
-                <span>
-                  {isJanazaUrgent ? (
-                    <>
-                      <span className="sm:hidden">
-                        {locale === "ta"
-                          ? "ஜனாஸா"
-                          : locale === "si"
-                            ? "ජනාසා"
-                            : "Janaza"}
-                      </span>
-                      <span className="hidden sm:inline">
-                        {locale === "ta"
-                          ? "ஜனாஸா அறிவித்தல்"
-                          : locale === "si"
-                            ? "ජනාසා නිවේදනය"
-                            : "Janaza Alert"}
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      <span className="sm:hidden">
-                        {locale === "ta"
-                          ? "அறிவித்தல்"
-                          : locale === "si"
-                            ? "නිවේදනය"
-                            : "Notice"}
-                      </span>
-                      <span className="hidden sm:inline">
-                        {t("janazaNotice")}
-                      </span>
-                    </>
-                  )}
-                </span>
+              />
+              <span
+                className={`relative inline-flex h-2.5 w-2.5 rounded-full ${
+                  isJanazaUrgent ? "bg-red-500" : "bg-amber-400"
+                }`}
+              />
+            </span>
+            <Bell className="h-3.5 w-3.5 text-amber-300 transition-transform group-hover:rotate-12" />
+            <span className="font-mono text-xs font-bold text-amber-200">
+              {totalNotices}
+            </span>
+          </button>
+        </div>
+      )}
+
+      {/* 2. MINIMIZED FLOATING CAPSULE PILL */}
+      {!isDismissed && isMinimized && (
+        <div className="animate-in fade-in fixed right-4 bottom-20 z-40 duration-200 md:right-6 md:bottom-6">
+          <button
+            type="button"
+            onClick={() => setIsMinimized(false)}
+            className="group relative flex max-w-[320px] cursor-pointer items-center gap-2.5 rounded-full border border-amber-400/60 bg-[#062115]/95 px-4 py-2.5 text-white shadow-2xl backdrop-blur-xl transition-all hover:scale-105 hover:border-amber-300"
+            title="Expand Notice"
+          >
+            <span className="relative flex h-2.5 w-2.5 shrink-0">
+              <span
+                className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 ${
+                  isJanazaUrgent ? "bg-red-400" : "bg-amber-400"
+                }`}
+              />
+              <span
+                className={`relative inline-flex h-2.5 w-2.5 rounded-full ${
+                  isJanazaUrgent ? "bg-red-500" : "bg-amber-400"
+                }`}
+              />
+            </span>
+
+            <Bell className="h-3.5 w-3.5 shrink-0 text-amber-300 transition-transform group-hover:rotate-12" />
+
+            <span className="shrink-0 text-xs font-bold text-amber-200">
+              {isJanazaUrgent ? "Janaza" : "Notice"}{" "}
+              <span className="font-mono text-amber-300/80">
+                ({safeIndex + 1}/{totalNotices})
               </span>
-            </div>
+            </span>
 
-            {/* Center: Notice Content with High Contrast Text */}
-            <div className="min-w-0 flex-1">
-              <button
-                type="button"
-                onClick={() => setActiveModalNotice(currentNotice)}
-                className="group flex w-full cursor-pointer items-center text-left transition-colors focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none"
-                title={currentNotice.title}
-              >
-                <div className="flex min-w-0 flex-1 items-baseline gap-2 truncate">
-                  <span className="truncate text-xs font-bold text-white transition group-hover:text-amber-300 sm:text-sm md:text-[15px]">
-                    {currentNotice.title}
-                  </span>
+            <span className="hidden truncate text-xs text-emerald-100/80 sm:inline">
+              {currentNotice.title}
+            </span>
 
-                  {formattedDate && (
-                    <span className="hidden shrink-0 rounded-sm bg-white/10 px-1.5 py-0.5 font-mono text-[11px] text-amber-200 md:inline">
-                      {formattedDate}
-                    </span>
+            <ChevronUp className="h-3.5 w-3.5 shrink-0 text-amber-300 transition-transform group-hover:-translate-y-0.5" />
+          </button>
+        </div>
+      )}
+
+      {/* 3. EXPANDED FLOATING DYNAMIC ISLAND CARD */}
+      {!isDismissed && !isMinimized && (
+        <aside
+          role="region"
+          aria-label={t("janazaNotice")}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          className={`animate-in fade-in slide-in-from-bottom-5 fixed right-4 bottom-20 z-40 w-[calc(100vw-2rem)] max-w-sm duration-300 sm:w-[380px] md:right-6 md:bottom-6 ${
+            className || ""
+          }`}
+        >
+          <div className="relative overflow-hidden rounded-3xl border border-amber-400/40 bg-gradient-to-br from-[#062115]/98 via-[#093522]/98 to-[#041a10]/98 p-4 text-white shadow-[0_16px_40px_rgba(0,0,0,0.55)] ring-1 ring-white/10 backdrop-blur-2xl sm:p-5">
+            {/* Subtle Islamic Lattice Pattern */}
+            <IslamicPattern
+              opacity={0.045}
+              className="pointer-events-none text-amber-400"
+            />
+
+            {/* Glowing Golden Top Rim Line */}
+            <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400 to-transparent" />
+
+            {/* Top Header Bar */}
+            <div className="flex items-center justify-between gap-2 border-b border-white/10 pb-3">
+              <div className="flex items-center gap-2">
+                {/* Pulsing Beacon Dot */}
+                <span className="relative flex h-2.5 w-2.5 shrink-0">
+                  <span
+                    className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 ${
+                      isJanazaUrgent ? "bg-red-400" : "bg-amber-400"
+                    }`}
+                  />
+                  <span
+                    className={`relative inline-flex h-2.5 w-2.5 rounded-full ${
+                      isJanazaUrgent ? "bg-red-500" : "bg-amber-400"
+                    }`}
+                  />
+                </span>
+
+                {/* Badge Label */}
+                <span
+                  className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-extrabold tracking-wider uppercase ${
+                    isJanazaUrgent
+                      ? "border border-red-500/40 bg-red-500/20 text-red-200"
+                      : "border border-amber-400/40 bg-amber-400/20 text-amber-300"
+                  }`}
+                >
+                  {isJanazaUrgent ? (
+                    <Bell className="h-2.5 w-2.5" />
+                  ) : (
+                    <Megaphone className="h-2.5 w-2.5 text-amber-300" />
                   )}
-
-                  {currentNotice.body && (
-                    <span className="hidden truncate text-xs text-emerald-100/75 lg:inline">
-                      — {currentNotice.body.replace(/\n+/g, " ").slice(0, 90)}
-                      ...
-                    </span>
-                  )}
-                </div>
-              </button>
-            </div>
-
-            {/* Right: Action Button & Controls */}
-            <div className="flex shrink-0 items-center gap-1.5 sm:gap-2.5">
-              {/* Carousel Pagination Arrows (if > 1 notice) */}
-              {totalNotices > 1 && (
-                <div className="flex items-center gap-1 rounded-full border border-white/15 bg-black/20 px-2 py-0.5 text-[11px] text-amber-200">
-                  <span className="font-mono text-[11px] font-bold text-amber-400">
-                    {currentIndex + 1}/{totalNotices}
+                  <span>
+                    {isJanazaUrgent ? "Janaza Alert" : "Official Notice"}
                   </span>
-                  <div className="flex items-center gap-0.5">
+                </span>
+
+                {/* Notice Counter */}
+                {totalNotices > 1 && (
+                  <span className="font-mono text-[10px] font-semibold text-emerald-200/70">
+                    {safeIndex + 1}/{totalNotices}
+                  </span>
+                )}
+              </div>
+
+              {/* Navigation & Window Controls */}
+              <div className="flex items-center gap-1">
+                {totalNotices > 1 && (
+                  <div className="mr-1 flex items-center gap-0.5 border-r border-white/10 pr-1">
                     <button
                       type="button"
                       onClick={handlePrev}
-                      aria-label="Previous Notice"
-                      className="cursor-pointer rounded-full p-0.5 text-amber-200 transition hover:bg-white/20 hover:text-white"
+                      className="cursor-pointer rounded-md p-1 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+                      aria-label="Previous notice"
                     >
                       <ChevronLeft className="h-3.5 w-3.5" />
                     </button>
                     <button
                       type="button"
                       onClick={handleNext}
-                      aria-label="Next Notice"
-                      className="cursor-pointer rounded-full p-0.5 text-amber-200 transition hover:bg-white/20 hover:text-white"
+                      className="cursor-pointer rounded-md p-1 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+                      aria-label="Next notice"
                     >
                       <ChevronRight className="h-3.5 w-3.5" />
                     </button>
                   </div>
-                </div>
-              )}
+                )}
 
-              {/* Eye-catching "View Notice" Action Pill Button */}
+                <button
+                  type="button"
+                  onClick={() => setIsMinimized(true)}
+                  className="cursor-pointer rounded-md p-1 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+                  title="Minimize"
+                  aria-label="Minimize notice"
+                >
+                  <Minus className="h-3.5 w-3.5" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleDismiss}
+                  className="cursor-pointer rounded-md p-1 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+                  title="Close"
+                  aria-label="Dismiss notice"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Middle Card: Title, Body Snippet & Date */}
+            <div className="pt-3 pb-3">
               <button
                 type="button"
                 onClick={() => setActiveModalNotice(currentNotice)}
-                className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-amber-400 px-3 py-1 text-xs font-extrabold text-stone-950 shadow-md transition-all hover:scale-105 hover:bg-amber-300 focus-visible:ring-2 focus-visible:ring-amber-200 focus-visible:outline-none sm:px-3.5"
+                className="group w-full cursor-pointer text-left"
               >
-                <span>{t("viewNotice")}</span>
-                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                <h4 className="font-display line-clamp-2 text-sm leading-snug font-bold text-white transition-colors group-hover:text-amber-300 sm:text-base">
+                  {currentNotice.title}
+                </h4>
+                <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-emerald-100/75">
+                  {currentNotice.body}
+                </p>
               </button>
 
-              {/* Link to all notices */}
-              <Link
-                href="/notices"
-                className="hidden items-center gap-1 rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-xs font-semibold text-white transition hover:bg-white/20 sm:inline-flex"
-                title="View All Notices"
-              >
-                <span>All</span>
-                <ExternalLink className="h-3 w-3" />
-              </Link>
+              {formattedDate && (
+                <div className="mt-2.5 flex items-center gap-1.5 font-mono text-[11px] text-amber-300/80">
+                  <Calendar className="h-3 w-3 text-amber-400" />
+                  <span>{formattedDate}</span>
+                </div>
+              )}
+            </div>
 
-              {/* Dismiss Button */}
+            {/* Bottom Row: Actions */}
+            <div className="flex items-center justify-between gap-2 border-t border-white/10 pt-3">
               <button
                 type="button"
-                onClick={() => setIsDismissed(true)}
-                aria-label="Dismiss notice bar"
-                className="cursor-pointer rounded-full p-1 text-stone-300 transition hover:bg-white/15 hover:text-white focus-visible:ring-1 focus-visible:ring-amber-400 focus-visible:outline-none"
-                title="Dismiss"
+                onClick={() => setActiveModalNotice(currentNotice)}
+                className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 px-3.5 py-1.5 text-xs font-bold text-stone-950 shadow-xs transition hover:from-amber-300 hover:to-amber-400"
               >
-                <X className="h-4 w-4" aria-hidden="true" />
+                <span>
+                  {locale === "ta"
+                    ? "முழு விபரம்"
+                    : locale === "si"
+                      ? "සම්පූර්ණ විස්තරය"
+                      : "Read Notice"}
+                </span>
+                <ArrowRight className="h-3 w-3" />
               </button>
+
+              <div className="flex items-center gap-2">
+                <a
+                  href={`https://api.whatsapp.com/send?text=${whatsappShareText}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Share on WhatsApp"
+                  className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-[#25D366]/20 text-[#25D366] transition-colors hover:bg-[#25D366] hover:text-white"
+                  aria-label="Share notice on WhatsApp"
+                >
+                  <MessageCircle className="h-3.5 w-3.5" />
+                </a>
+
+                <Link
+                  href="/notices"
+                  className="text-[11px] font-semibold text-emerald-300 underline transition-colors hover:text-white"
+                >
+                  {locale === "ta"
+                    ? "அனைத்தும்"
+                    : locale === "si"
+                      ? "සියල්ල"
+                      : "All Notices"}
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        </aside>
+      )}
 
-      {/* Accessible Detail Modal portaled directly to document.body for true screen centering */}
-      {typeof document !== "undefined" &&
-        activeModalNotice &&
+      {/* 4. FULL NOTICE DETAIL MODAL (Opens when clicking Read Notice) */}
+      {activeModalNotice &&
         createPortal(
           <div
             role="dialog"
             aria-modal="true"
             aria-labelledby="notice-modal-title"
-            className="animate-in fade-in-50 fixed inset-0 z-[100] flex min-h-screen items-center justify-center overflow-y-auto p-4 duration-200 sm:p-6"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
           >
-            {/* Backdrop with deep blur */}
+            {/* Backdrop Blur */}
             <div
-              className="fixed inset-0 bg-black/80 backdrop-blur-md transition-opacity"
+              className="fixed inset-0 bg-black/75 backdrop-blur-md transition-opacity duration-200"
               onClick={() => setActiveModalNotice(null)}
               aria-hidden="true"
             />
 
-            {/* Centered Modal Container */}
-            <div className="animate-in zoom-in-95 relative z-10 my-auto w-full max-w-xl transform overflow-hidden rounded-3xl border border-stone-200/90 bg-white text-stone-900 shadow-2xl duration-200 dark:border-emerald-950/80 dark:bg-[#0c1811] dark:text-stone-100">
-              {/* Luminous Top Gold Accent Bar */}
-              <div className="h-1.5 w-full bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500" />
-
-              {/* Modal Hero Header with Islamic Accent & Badges */}
-              <div className="relative overflow-hidden bg-gradient-to-br from-[#021a10] via-[#093522] to-[#041a10] p-6 text-white sm:p-7">
-                {/* Background Lattice */}
+            {/* Modal Dialog Card */}
+            <div className="animate-in fade-in zoom-in-95 relative z-10 w-full max-w-2xl overflow-hidden rounded-3xl border border-amber-400/50 bg-gradient-to-b from-white via-white to-stone-50 shadow-2xl transition-all duration-200 dark:from-[#0a1e14] dark:via-[#091a11] dark:to-[#05110b]">
+              {/* Top Islamic Pattern Header */}
+              <div className="relative overflow-hidden border-b border-amber-400/40 bg-gradient-to-r from-[#031c12] via-[#093522] to-[#031c12] p-6 text-white sm:p-7">
                 <IslamicPattern
                   opacity={0.06}
-                  className="pointer-events-none text-amber-400"
+                  className="pointer-events-none text-amber-300"
                 />
 
                 <div className="relative z-10">
@@ -539,14 +630,6 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
                     <span>All Notices</span>
                     <ArrowRight className="h-3 w-3" />
                   </Link>
-
-                  <button
-                    type="button"
-                    onClick={() => setActiveModalNotice(null)}
-                    className="cursor-pointer rounded-xl bg-[#124d34] px-4 py-2 text-xs font-bold text-white shadow-xs transition hover:bg-[#0b2e1e] dark:bg-emerald-700 dark:hover:bg-emerald-600"
-                  >
-                    Close
-                  </button>
                 </div>
               </div>
             </div>

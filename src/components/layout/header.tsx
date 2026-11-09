@@ -516,10 +516,10 @@ export function Header({ notices = [] }: HeaderProps) {
             </div>
           </div>
         </Container>
-
-        {/* 2b. SLIM JANAZA ANNOUNCEMENTS TICKER (Fed by notices table, hidden if empty) */}
-        <JanazaTicker notices={notices} />
       </header>
+
+      {/* Floating Dynamic Island Notice Announcement Widget (Replaced old top bar) */}
+      <JanazaTicker notices={notices} />
 
       {/* Accessible Mobile Menu */}
       <MobileMenu
