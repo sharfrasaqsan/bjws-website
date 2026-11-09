@@ -7,7 +7,6 @@ import {
   useMemo,
   useRef,
   useCallback,
-  useSyncExternalStore,
 } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
@@ -49,64 +48,20 @@ interface JanazaTickerProps {
   className?: string;
 }
 
-function subscribe(callback: () => void) {
-  window.addEventListener("storage", callback);
-  return () => window.removeEventListener("storage", callback);
-}
-
-function getSnapshot() {
-  return typeof window !== "undefined"
-    ? sessionStorage.getItem("bjws_notice_island_dismissed") === "true"
-    : false;
-}
-
-function getServerSnapshot() {
-  return false;
-}
-
 export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
   const locale = useLocale();
   const pathname = usePathname();
 
-  // Hide the floating notice popup completely when user enters the notices page
+  // Hide the floating notice popup ONLY when user enters the notices page
   const isNoticesPage = pathname?.includes("/notices");
-
-  const isStoredDismissed = useSyncExternalStore(
-    subscribe,
-    getSnapshot,
-    getServerSnapshot
-  );
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
-  const [isDismissedLocal, setIsDismissedLocal] = useState(false);
   const [activeModalNotice, setActiveModalNotice] = useState<NoticeItem | null>(
     null
   );
   const [isImageLightboxOpen, setIsImageLightboxOpen] = useState(false);
-
-  const isDismissed = isStoredDismissed || isDismissedLocal;
-
-  const handleDismiss = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsDismissedLocal(true);
-    try {
-      sessionStorage.setItem("bjws_notice_island_dismissed", "true");
-    } catch {
-      // Ignore storage restrictions
-    }
-  };
-
-  const handleReopen = () => {
-    setIsDismissedLocal(false);
-    setIsMinimized(false);
-    try {
-      sessionStorage.removeItem("bjws_notice_island_dismissed");
-    } catch {
-      // Ignore
-    }
-  };
 
   // Lock body scroll and close on Escape key when modal is open
   useEffect(() => {
@@ -166,7 +121,7 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
   }, [totalNotices]);
 
   useEffect(() => {
-    if (totalNotices <= 1 || isPaused || isDismissed || isMinimized) {
+    if (totalNotices <= 1 || isPaused || isMinimized) {
       if (timerRef.current) clearInterval(timerRef.current);
       return;
     }
@@ -178,9 +133,9 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [totalNotices, isPaused, isDismissed, isMinimized, handleNext]);
+  }, [totalNotices, isPaused, isMinimized, handleNext]);
 
-  // When visiting the notices page, or if no notices exist, completely hide popup
+  // When visiting the notices page, or if no notices exist, hide popup
   if (isNoticesPage || totalNotices === 0) {
     return null;
   }
@@ -206,34 +161,13 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
 
   return (
     <>
-      {/* 1. DISMISSED FLOATING BADGE (Subtle glowing trigger at bottom-right) */}
-      {isDismissed && (
-        <div className="animate-in fade-in fixed right-4 bottom-20 z-40 duration-200 md:right-6 md:bottom-6">
-          <button
-            type="button"
-            onClick={handleReopen}
-            className="group relative flex cursor-pointer items-center gap-2 rounded-full border border-amber-400/60 bg-[#072115]/95 px-3.5 py-2 text-white shadow-2xl backdrop-blur-xl transition-all hover:scale-105 hover:border-amber-300"
-            title="Open Community Notices"
-          >
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
-              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-amber-400" />
-            </span>
-            <Bell className="h-3.5 w-3.5 text-amber-300 transition-transform group-hover:rotate-12" />
-            <span className="font-mono text-xs font-bold text-amber-200">
-              {totalNotices}
-            </span>
-          </button>
-        </div>
-      )}
-
-      {/* 2. MINIMIZED FLOATING CAPSULE PILL */}
-      {!isDismissed && isMinimized && (
+      {/* 1. MINIMIZED FLOATING CAPSULE PILL */}
+      {isMinimized ? (
         <div className="animate-in fade-in fixed right-4 bottom-20 z-40 duration-200 md:right-6 md:bottom-6">
           <button
             type="button"
             onClick={() => setIsMinimized(false)}
-            className="group relative flex max-w-[320px] cursor-pointer items-center gap-2.5 rounded-full border border-amber-400/60 bg-[#062115]/95 px-4 py-2.5 text-white shadow-2xl backdrop-blur-xl transition-all hover:scale-105 hover:border-amber-300"
+            className="group relative flex max-w-[340px] cursor-pointer items-center gap-2.5 rounded-full border border-amber-400/60 bg-[#062115]/95 px-4 py-2.5 text-white shadow-2xl backdrop-blur-xl transition-all hover:scale-105 hover:border-amber-300"
             title="Expand Notice"
           >
             <span className="relative flex h-2.5 w-2.5 shrink-0">
@@ -250,17 +184,15 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
               </span>
             </span>
 
-            <span className="hidden truncate text-xs text-emerald-100/80 sm:inline">
+            <span className="hidden truncate text-xs text-emerald-100/80 sm:inline max-w-[140px]">
               {currentNotice.title}
             </span>
 
             <ChevronUp className="h-3.5 w-3.5 shrink-0 text-amber-300 transition-transform group-hover:-translate-y-0.5" />
           </button>
         </div>
-      )}
-
-      {/* 3. EXPANDED FLOATING DYNAMIC ISLAND CARD */}
-      {!isDismissed && !isMinimized && (
+      ) : (
+        /* 2. EXPANDED FLOATING DYNAMIC ISLAND CARD */
         <aside
           role="region"
           aria-label={noticeBadgeText}
@@ -338,10 +270,10 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
 
                 <button
                   type="button"
-                  onClick={handleDismiss}
+                  onClick={() => setIsMinimized(true)}
                   className="cursor-pointer rounded-md p-1 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
-                  title="Close"
-                  aria-label="Dismiss notice"
+                  title="Minimize"
+                  aria-label="Close notice card"
                 >
                   <X className="h-3.5 w-3.5" />
                 </button>
@@ -431,7 +363,7 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
         </aside>
       )}
 
-      {/* 4. FULL NOTICE DETAIL MODAL (Opens when clicking Read Notice) */}
+      {/* 3. FULL NOTICE DETAIL MODAL (Opens when clicking Read Notice) */}
       {activeModalNotice &&
         createPortal(
           <div
@@ -462,7 +394,7 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
                 <div className="relative z-10">
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2">
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-400/25 px-3 py-1 text-xs font-extrabold tracking-wider text-amber-200 uppercase shadow-xs ring-1 ring-amber-300/40">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-400/25 px-3 py-1 text-xs font-extrabold tracking-wider text-amber-200 uppercase ring-1 ring-amber-300/40 shadow-xs">
                         <Megaphone className="h-3.5 w-3.5 text-amber-300" />
                         <span>{noticeBadgeText}</span>
                       </span>
@@ -522,7 +454,7 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
                 {/* Notice Image Flyer (if attached) */}
                 {activeModalNotice.image_url && (
                   <div className="group relative overflow-hidden rounded-2xl border border-stone-200 bg-stone-100 shadow-sm dark:border-emerald-950 dark:bg-black/50">
-                    <div className="relative aspect-[16/9] max-h-72 w-full">
+                    <div className="relative aspect-[16/9] w-full max-h-72">
                       <Image
                         src={activeModalNotice.image_url}
                         alt={activeModalNotice.title}

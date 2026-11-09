@@ -18,6 +18,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeScript } from "@/components/theme-script";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
 import { EmergencyHotlinePill } from "@/components/ui/emergency-hotline-pill";
+import { getAllNotices } from "@/content/notices";
 import "../globals.css";
 
 const inter = Inter({
@@ -154,36 +155,61 @@ export default async function LocaleLayout({
     const supabase = createPublicClient();
     const { data, error } = await supabase
       .from("notices")
-      .select(
-        "id, title, body, locale, published_at, show_on_homepage, image_url"
-      )
+      .select("*")
       .eq("is_published", true)
       .eq("show_on_homepage", true)
       .order("published_at", { ascending: false })
       .limit(10);
     if (!error && data && data.length > 0) {
-      notices = data.map((d) => ({
-        ...d,
-        image_url: d.image_url || undefined,
+      notices = data.map((d: Record<string, unknown>) => ({
+        id: String(d.id),
+        title: String(d.title),
+        body: String(d.body),
+        locale: String(d.locale),
+        published_at: String(d.published_at),
+        show_on_homepage:
+          d.show_on_homepage !== undefined
+            ? Boolean(d.show_on_homepage)
+            : true,
+        image_url: d.image_url ? String(d.image_url) : undefined,
       }));
     } else {
       const { data: fallbackData } = await supabase
         .from("notices")
-        .select(
-          "id, title, body, locale, published_at, show_on_homepage, image_url"
-        )
+        .select("*")
         .eq("is_published", true)
         .order("published_at", { ascending: false })
         .limit(10);
-      if (fallbackData) {
-        notices = fallbackData.map((d) => ({
-          ...d,
-          image_url: d.image_url || undefined,
+      if (fallbackData && fallbackData.length > 0) {
+        notices = fallbackData.map((d: Record<string, unknown>) => ({
+          id: String(d.id),
+          title: String(d.title),
+          body: String(d.body),
+          locale: String(d.locale),
+          published_at: String(d.published_at),
+          show_on_homepage:
+            d.show_on_homepage !== undefined
+              ? Boolean(d.show_on_homepage)
+              : true,
+          image_url: d.image_url ? String(d.image_url) : undefined,
         }));
       }
     }
   } catch {
     notices = [];
+  }
+
+  // Guaranteed fallback to in-memory store so notices are always available
+  if (notices.length === 0) {
+    notices = getAllNotices().map((n) => ({
+      id: n.id,
+      title: n.title,
+      body: n.body,
+      locale: n.locale,
+      published_at: n.published_at,
+      show_on_homepage: n.show_on_homepage ?? true,
+      image_url: n.image_url,
+    }));
   }
 
   const cookieStore = await cookies();
