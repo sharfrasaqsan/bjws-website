@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 import { useTranslations, useLocale } from "next-intl";
 import { IslamicPattern } from "@/components/ui/islamic-pattern";
 import { formatAdminDate } from "@/lib/utils";
+import { Link } from "@/i18n/routing";
 import {
   Bell,
   Megaphone,
@@ -17,6 +18,7 @@ import {
   Phone,
   MessageCircle,
   ShieldCheck,
+  ExternalLink,
 } from "lucide-react";
 
 export interface NoticeItem {
@@ -25,6 +27,8 @@ export interface NoticeItem {
   body: string;
   locale: string;
   published_at: string;
+  updated_at?: string;
+  show_on_homepage?: boolean;
 }
 
 interface JanazaTickerProps {
@@ -103,25 +107,28 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
     return null;
   }
 
-  // If dismissed, show a minimal, elegant re-open pill so users don't lose emergency notices
+  // If dismissed, show a prominent, luminous gold re-open pill so users don't miss official notices
   if (isDismissed) {
     return (
-      <div className="relative z-30 border-b border-[#c99a45]/20 bg-[#062115] px-4 py-1 text-center">
+      <div className="relative z-30 border-b border-amber-400/40 bg-gradient-to-r from-[#031c12] via-[#093522] to-[#031c12] px-4 py-1.5 text-center shadow-xs">
         <button
+          type="button"
           onClick={() => setIsDismissed(false)}
-          className="inline-flex cursor-pointer items-center gap-1.5 text-[11px] font-semibold text-[#c99a45] transition-colors hover:text-[#f5eedf]"
+          className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-amber-400/50 bg-amber-400/10 px-3.5 py-0.5 text-xs font-bold text-amber-300 transition-all hover:bg-amber-400 hover:text-stone-950 hover:shadow-xs"
         >
-          <Bell className="h-3 w-3 animate-bounce" />
+          <Bell className="h-3.5 w-3.5 animate-bounce text-amber-400" />
           <span>
             {t("janazaNotice")} ({totalNotices})
           </span>
-          <span className="ml-1 underline">Show</span>
+          <span className="py-0.2 rounded bg-amber-400 px-1.5 text-[10px] font-extrabold text-stone-950 uppercase">
+            Show
+          </span>
         </button>
       </div>
     );
   }
 
-  // Safe index within bounds (avoids redundant setState in effect)
+  // Safe index within bounds
   const safeIndex = currentIndex >= totalNotices ? 0 : currentIndex;
   const currentNotice = activeNotices[safeIndex] || activeNotices[0];
 
@@ -137,6 +144,10 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
     ? formatAdminDate(currentNotice.published_at)
     : "";
 
+  const whatsappShareText = encodeURIComponent(
+    `*${currentNotice.title}*\n\n${currentNotice.body}\n\n— *Buhary Janaza Welfare Society (BJWS)*\nhttps://bjws.org/${locale}/notices`
+  );
+
   return (
     <>
       <div
@@ -144,45 +155,50 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
         aria-label={t("janazaNotice")}
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
-        className={`relative z-30 border-y border-[#c99a45]/30 bg-gradient-to-r from-[#041a10] via-[#092e1e] to-[#041a10] text-[#e8f3ee] shadow-sm transition-all ${
+        className={`relative z-30 border-y-2 border-amber-400/80 bg-gradient-to-r from-[#031910] via-[#0b3823] to-[#031910] text-[#fbfaf6] shadow-[0_4px_22px_rgba(245,158,11,0.22)] transition-all ${
           className || ""
         }`}
       >
-        {/* Subtle Islamic Lattice Background */}
+        {/* Subtle Islamic Lattice Background Texture */}
         <IslamicPattern
-          opacity={0.035}
-          className="pointer-events-none text-[#c99a45]"
+          opacity={0.045}
+          className="pointer-events-none text-amber-400"
         />
 
-        <div className="relative mx-auto max-w-7xl px-2.5 sm:px-6 lg:px-8">
-          <div className="flex min-h-[40px] items-center justify-between gap-2 py-1 text-xs sm:min-h-[42px] sm:gap-3 sm:py-1.5">
-            {/* Left: Pulsing Beacon & Institutional Category Badge */}
-            <div className="flex shrink-0 items-center gap-1.5 sm:gap-2.5">
-              <span className="relative flex h-2 w-2 sm:h-2.5 sm:w-2.5">
+        {/* Ambient Top Glow Line */}
+        <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-amber-300 to-transparent opacity-80" />
+
+        <div className="relative mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
+          <div className="flex min-h-[46px] items-center justify-between gap-2.5 py-1.5 text-xs sm:min-h-[48px] sm:gap-4 sm:py-2">
+            {/* Left: Glowing Beacon & Vibrant Institutional Badge */}
+            <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+              <span className="relative flex h-3 w-3 sm:h-3.5 sm:w-3.5">
                 <span
                   className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 motion-reduce:hidden ${
-                    isJanazaUrgent ? "bg-amber-400" : "bg-emerald-400"
+                    isJanazaUrgent ? "bg-red-400" : "bg-amber-400"
                   }`}
                 />
                 <span
-                  className={`relative inline-flex h-2 w-2 rounded-full sm:h-2.5 sm:w-2.5 ${
-                    isJanazaUrgent ? "bg-[#c99a45]" : "bg-emerald-500"
+                  className={`relative inline-flex h-3 w-3 rounded-full shadow-sm sm:h-3.5 sm:w-3.5 ${
+                    isJanazaUrgent
+                      ? "bg-red-500 ring-2 ring-red-300"
+                      : "bg-amber-400 ring-2 ring-amber-200"
                   }`}
                 />
               </span>
 
               <span
-                className={`inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 font-serif text-[10px] font-bold tracking-wider uppercase shadow-2xs sm:gap-1.5 sm:px-2.5 ${
+                className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-extrabold tracking-wide uppercase shadow-sm sm:px-3 sm:text-xs ${
                   isJanazaUrgent
-                    ? "bg-[#c99a45] text-[#041a10] ring-1 ring-[#c99a45]/40"
-                    : "bg-[#14553a] text-white ring-1 ring-[#c99a45]/30"
+                    ? "bg-gradient-to-r from-red-600 to-rose-700 text-white ring-1 ring-red-300"
+                    : "bg-gradient-to-r from-amber-400 to-amber-500 text-stone-950 ring-1 ring-amber-300"
                 }`}
               >
                 {isJanazaUrgent ? (
-                  <Bell className="h-3 w-3 shrink-0" aria-hidden="true" />
+                  <Bell className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 ) : (
                   <Megaphone
-                    className="h-3 w-3 shrink-0 text-[#c99a45]"
+                    className="h-3.5 w-3.5 shrink-0 text-stone-950"
                     aria-hidden="true"
                   />
                 )}
@@ -201,7 +217,7 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
                           ? "ஜனாஸா அறிவித்தல்"
                           : locale === "si"
                             ? "ජනාසා නිවේදනය"
-                            : "Janaza Notice"}
+                            : "Janaza Alert"}
                       </span>
                     </>
                   ) : (
@@ -222,28 +238,28 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
               </span>
             </div>
 
-            {/* Center: Notice Content with Smooth Fade & Modal Trigger */}
+            {/* Center: Notice Content with High Contrast Text */}
             <div className="min-w-0 flex-1">
               <button
                 type="button"
                 onClick={() => setActiveModalNotice(currentNotice)}
-                className="group flex w-full cursor-pointer items-center text-left transition-colors focus-visible:ring-1 focus-visible:ring-[#c99a45] focus-visible:outline-none"
+                className="group flex w-full cursor-pointer items-center text-left transition-colors focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none"
                 title={currentNotice.title}
               >
                 <div className="flex min-w-0 flex-1 items-baseline gap-2 truncate">
-                  <span className="truncate text-xs font-semibold text-white group-hover:text-[#f5eedf] group-hover:underline sm:text-sm">
+                  <span className="truncate text-xs font-bold text-white transition group-hover:text-amber-300 sm:text-sm md:text-[15px]">
                     {currentNotice.title}
                   </span>
 
                   {formattedDate && (
-                    <span className="hidden shrink-0 text-[11px] font-normal text-[#a7c5b6] md:inline">
-                      ({formattedDate})
+                    <span className="hidden shrink-0 rounded-sm bg-white/10 px-1.5 py-0.5 font-mono text-[11px] text-amber-200 md:inline">
+                      {formattedDate}
                     </span>
                   )}
 
                   {currentNotice.body && (
-                    <span className="hidden truncate text-[11px] font-normal text-[#d1fae5]/70 lg:inline">
-                      — {currentNotice.body.replace(/\n+/g, " ").slice(0, 80)}
+                    <span className="hidden truncate text-xs text-emerald-100/75 lg:inline">
+                      — {currentNotice.body.replace(/\n+/g, " ").slice(0, 90)}
                       ...
                     </span>
                   )}
@@ -251,20 +267,20 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
               </button>
             </div>
 
-            {/* Right: Controls (Pagination, View Action, Close) */}
-            <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+            {/* Right: Action Button & Controls */}
+            <div className="flex shrink-0 items-center gap-1.5 sm:gap-2.5">
               {/* Carousel Pagination Arrows (if > 1 notice) */}
               {totalNotices > 1 && (
-                <div className="flex items-center gap-0.5 border-r border-[#1a432f] pr-1 text-[10px] text-[#a7c5b6] sm:gap-1 sm:pr-1.5">
-                  <span className="font-mono text-[10px] font-bold text-[#c99a45]">
+                <div className="flex items-center gap-1 rounded-full border border-white/15 bg-black/20 px-2 py-0.5 text-[11px] text-amber-200">
+                  <span className="font-mono text-[11px] font-bold text-amber-400">
                     {currentIndex + 1}/{totalNotices}
                   </span>
-                  <div className="flex items-center">
+                  <div className="flex items-center gap-0.5">
                     <button
                       type="button"
                       onClick={handlePrev}
                       aria-label="Previous Notice"
-                      className="cursor-pointer rounded p-0.5 text-[#a7c5b6] transition-colors hover:bg-[#124d34] hover:text-white"
+                      className="cursor-pointer rounded-full p-0.5 text-amber-200 transition hover:bg-white/20 hover:text-white"
                     >
                       <ChevronLeft className="h-3.5 w-3.5" />
                     </button>
@@ -272,7 +288,7 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
                       type="button"
                       onClick={handleNext}
                       aria-label="Next Notice"
-                      className="cursor-pointer rounded p-0.5 text-[#a7c5b6] transition-colors hover:bg-[#124d34] hover:text-white"
+                      className="cursor-pointer rounded-full p-0.5 text-amber-200 transition hover:bg-white/20 hover:text-white"
                     >
                       <ChevronRight className="h-3.5 w-3.5" />
                     </button>
@@ -280,25 +296,35 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
                 </div>
               )}
 
-              {/* View Full Notice Button */}
+              {/* Eye-catching "View Notice" Action Pill Button */}
               <button
                 type="button"
                 onClick={() => setActiveModalNotice(currentNotice)}
-                className="inline-flex cursor-pointer items-center gap-1 rounded px-1.5 py-0.5 text-[11px] font-bold text-[#c99a45] transition-colors hover:text-white hover:underline focus-visible:ring-1 focus-visible:ring-[#c99a45] focus-visible:outline-none sm:px-2"
+                className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-amber-400 px-3 py-1 text-xs font-extrabold text-stone-950 shadow-md transition-all hover:scale-105 hover:bg-amber-300 focus-visible:ring-2 focus-visible:ring-amber-200 focus-visible:outline-none sm:px-3.5"
               >
-                <span className="hidden sm:inline">{t("viewNotice")}</span>
-                <ArrowRight className="h-3 w-3" aria-hidden="true" />
+                <span>{t("viewNotice")}</span>
+                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
               </button>
+
+              {/* Link to all notices */}
+              <Link
+                href="/notices"
+                className="hidden items-center gap-1 rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-xs font-semibold text-white transition hover:bg-white/20 sm:inline-flex"
+                title="View All Notices"
+              >
+                <span>All</span>
+                <ExternalLink className="h-3 w-3" />
+              </Link>
 
               {/* Dismiss Button */}
               <button
                 type="button"
                 onClick={() => setIsDismissed(true)}
                 aria-label="Dismiss notice bar"
-                className="cursor-pointer rounded p-1 text-[#a7c5b6] transition-colors hover:bg-[#124d34] hover:text-white focus-visible:ring-1 focus-visible:ring-[#c99a45] focus-visible:outline-none"
+                className="cursor-pointer rounded-full p-1 text-stone-300 transition hover:bg-white/15 hover:text-white focus-visible:ring-1 focus-visible:ring-amber-400 focus-visible:outline-none"
                 title="Dismiss"
               >
-                <X className="h-3.5 w-3.5" aria-hidden="true" />
+                <X className="h-4 w-4" aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -317,31 +343,31 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
           >
             {/* Backdrop with blur */}
             <div
-              className="fixed inset-0 bg-black/75 backdrop-blur-xs transition-opacity"
+              className="fixed inset-0 bg-black/80 backdrop-blur-xs transition-opacity"
               onClick={() => setActiveModalNotice(null)}
               aria-hidden="true"
             />
 
             {/* Centered Modal Container */}
-            <div className="animate-in zoom-in-95 relative z-10 my-auto w-full max-w-lg transform overflow-hidden rounded-2xl border border-t-4 border-[#e6e4dc] border-t-[#c99a45] bg-white p-6 text-[#1c2420] shadow-2xl duration-200 sm:p-7">
+            <div className="animate-in zoom-in-95 relative z-10 my-auto w-full max-w-lg transform overflow-hidden rounded-3xl border border-t-4 border-stone-200/90 border-t-amber-500 bg-white p-6 text-stone-900 shadow-2xl duration-200 sm:p-8 dark:border-emerald-950 dark:border-t-amber-400 dark:bg-[#0f1d16] dark:text-stone-100">
               {/* Modal Header */}
-              <div className="flex items-start justify-between gap-4 border-b border-[#e6e4dc] pb-4">
+              <div className="flex items-start justify-between gap-4 border-b border-stone-100 pb-4 dark:border-emerald-950">
                 <div className="flex items-start gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#e8f3ee] text-[#124d34] ring-1 ring-[#c99a45]/30">
-                    <Megaphone className="h-5 w-5 text-[#c99a45]" />
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-amber-50 text-amber-700 ring-1 ring-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:ring-amber-800">
+                    <Megaphone className="h-5 w-5" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-serif text-[11px] font-bold tracking-wider text-[#8b651e] uppercase">
+                      <span className="font-serif text-[11px] font-bold tracking-wider text-amber-800 uppercase dark:text-amber-300">
                         Official Society Bulletin
                       </span>
-                      <span className="py-0.2 rounded bg-[#f5eedf] px-1.5 font-mono text-[10px] text-[#8b651e] uppercase">
+                      <span className="rounded bg-stone-100 px-1.5 py-0.5 font-mono text-[10px] text-stone-700 uppercase dark:bg-emerald-950 dark:text-emerald-200">
                         {activeModalNotice.locale}
                       </span>
                     </div>
                     <h3
                       id="notice-modal-title"
-                      className="mt-0.5 font-serif text-lg leading-snug font-bold text-[#0b2e1e] sm:text-xl"
+                      className="font-display mt-1 text-lg leading-snug font-bold text-stone-900 sm:text-xl dark:text-white"
                     >
                       {activeModalNotice.title}
                     </h3>
@@ -352,27 +378,27 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
                   type="button"
                   onClick={() => setActiveModalNotice(null)}
                   aria-label="Close notice details"
-                  className="cursor-pointer rounded-lg p-1.5 text-[#6b7280] transition-colors hover:bg-[#f3f1ea] hover:text-[#1c2420]"
+                  className="cursor-pointer rounded-lg p-1.5 text-stone-500 transition hover:bg-stone-100 hover:text-stone-900 dark:text-stone-400 dark:hover:bg-emerald-950 dark:hover:text-white"
                 >
                   <X className="h-5 w-5" />
                 </button>
               </div>
 
               {/* Modal Body */}
-              <div className="py-4 text-xs leading-relaxed whitespace-pre-wrap text-[#374151] sm:text-sm">
+              <div className="py-5 text-xs leading-relaxed whitespace-pre-wrap text-stone-700 sm:text-sm dark:text-stone-300">
                 {activeModalNotice.body}
               </div>
 
-              {/* Verified Organization Signoff */}
-              <div className="flex items-center justify-between rounded-xl border border-[#e6e4dc] bg-[#fbfaf6] p-3 text-xs text-[#4b5563]">
-                <div className="flex items-center gap-1.5">
-                  <ShieldCheck className="h-4 w-4 text-[#124d34]" />
-                  <span className="font-medium">
+              {/* Verified Organization Signoff & Date */}
+              <div className="flex items-center justify-between rounded-xl border border-stone-200/80 bg-stone-50 p-3.5 text-xs text-stone-600 dark:border-emerald-950 dark:bg-[#062115] dark:text-stone-400">
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="h-4 w-4 text-emerald-700 dark:text-emerald-400" />
+                  <span className="font-semibold text-stone-900 dark:text-stone-200">
                     Buhary Janaza Welfare Society
                   </span>
                 </div>
-                <div className="flex items-center gap-1 text-[11px] text-[#6b7280]">
-                  <Calendar className="h-3.5 w-3.5 text-[#9ca3af]" />
+                <div className="flex items-center gap-1 font-mono text-[11px]">
+                  <Calendar className="h-3.5 w-3.5 text-stone-400" />
                   <span>
                     {activeModalNotice.published_at
                       ? formatAdminDate(activeModalNotice.published_at)
@@ -382,33 +408,45 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
               </div>
 
               {/* Quick Actions Footer */}
-              <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-[#f3f1ea] pt-4">
+              <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-stone-100 pt-4 dark:border-emerald-950">
                 <div className="flex items-center gap-2">
                   <a
-                    href="tel:+94776227323"
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-[#e6e4dc] bg-white px-3 py-1.5 text-xs font-semibold text-[#124d34] shadow-2xs hover:bg-[#fbfaf6]"
+                    href="tel:+94774835530"
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-stone-200 bg-white px-3 py-1.5 text-xs font-semibold text-stone-800 shadow-2xs hover:bg-stone-50 dark:border-emerald-900 dark:bg-emerald-950/60 dark:text-emerald-200 dark:hover:bg-emerald-900/60"
                   >
-                    <Phone className="h-3.5 w-3.5 text-[#c99a45]" />
-                    <span>Call 077 622 7323</span>
+                    <Phone className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
+                    <span>077 483 5530</span>
                   </a>
+
                   <a
-                    href="https://wa.me/94776227323"
+                    href={`https://api.whatsapp.com/send?text=${whatsappShareText}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800 hover:bg-emerald-100"
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800 hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-200"
                   >
-                    <MessageCircle className="h-3.5 w-3.5 text-emerald-600" />
+                    <MessageCircle className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
                     <span>WhatsApp</span>
                   </a>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => setActiveModalNotice(null)}
-                  className="cursor-pointer rounded-lg bg-[#124d34] px-4 py-1.5 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-[#0b2e1e]"
-                >
-                  Close
-                </button>
+                <div className="flex items-center gap-2">
+                  <Link
+                    href="/notices"
+                    onClick={() => setActiveModalNotice(null)}
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 underline hover:text-emerald-800 dark:text-emerald-400 dark:hover:text-emerald-300"
+                  >
+                    <span>All Notices</span>
+                    <ArrowRight className="h-3 w-3" />
+                  </Link>
+
+                  <button
+                    type="button"
+                    onClick={() => setActiveModalNotice(null)}
+                    className="cursor-pointer rounded-xl bg-[#124d34] px-4 py-2 text-xs font-bold text-white shadow-xs transition hover:bg-[#0b2e1e] dark:bg-emerald-700 dark:hover:bg-emerald-600"
+                  >
+                    Close
+                  </button>
+                </div>
               </div>
             </div>
           </div>,

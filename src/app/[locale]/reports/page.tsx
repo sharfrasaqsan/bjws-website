@@ -7,7 +7,6 @@ import {
   createPublicClient,
   isSupabaseConfigured,
 } from "@/lib/supabase/server";
-import { NoticesSection } from "@/components/sections/notices-section";
 import { buildPageMetadata } from "@/lib/seo";
 import { JsonLd, getBreadcrumbJsonLd } from "@/components/seo/json-ld";
 import {
@@ -16,8 +15,11 @@ import {
   ShieldCheck,
   FileCheck,
   PhoneCall,
+  Calendar,
+  Clock,
 } from "lucide-react";
 import { getSiteAssets } from "@/content/site-assets";
+import { formatAdminDate } from "@/lib/utils";
 
 // Live Dynamic Data - Direct sync with Supabase
 export const dynamic = "force-dynamic";
@@ -46,6 +48,8 @@ interface ReportItem {
   year: number;
   file_path: string;
   file_size: string | null;
+  published_at?: string;
+  updated_at?: string;
 }
 
 export default async function ReportsPage({
@@ -67,27 +71,29 @@ export default async function ReportsPage({
       const supabase = createPublicClient();
       const { data, error } = await supabase
         .from("reports")
-        .select("id, title, year, file_path, file_size")
+        .select("*")
         .eq("is_published", true)
         .order("year", { ascending: false });
 
       if (!error && data) {
-        reports = data;
+        reports = data.map((d: Record<string, unknown>) => ({
+          id: String(d.id),
+          title: String(d.title),
+          year: Number(d.year),
+          file_path: String(d.file_path),
+          file_size: d.file_size ? String(d.file_size) : null,
+          published_at: d.published_at
+            ? String(d.published_at)
+            : d.created_at
+              ? String(d.created_at)
+              : undefined,
+          updated_at: d.updated_at ? String(d.updated_at) : undefined,
+        }));
       }
     } catch (err) {
       console.warn("Could not fetch reports from Supabase:", err);
     }
   }
-
-  // Reports are strictly driven by Supabase. If empty, an empty state is shown.
-
-  const noticeTranslations = {
-    sectionTitle: t("noticesTitle"),
-    sectionEyebrow: t("noticesEyebrow"),
-    sectionSubtitle: t("noticesSubtitle"),
-    emptyMessage: t("noticesEmpty"),
-    noticeBadge: t("noticesBadge"),
-  };
 
   return (
     <>
@@ -199,6 +205,25 @@ export default async function ReportsPage({
                             Audited by community-nominated treasurer & approved
                             by the executive committee.
                           </p>
+                          <div className="mt-2.5 flex flex-wrap items-center gap-3 text-[11px] text-[#6b7280]">
+                            {report.published_at && (
+                              <span className="flex items-center gap-1 font-mono text-[#8b651e]">
+                                <Calendar className="h-3 w-3 text-[#c99a45]" />
+                                <span>
+                                  Published:{" "}
+                                  {formatAdminDate(report.published_at)}
+                                </span>
+                              </span>
+                            )}
+                            {report.updated_at && (
+                              <span className="flex items-center gap-1 font-mono text-emerald-700">
+                                <Clock className="h-3 w-3 text-emerald-600" />
+                                <span>
+                                  Updated: {formatAdminDate(report.updated_at)}
+                                </span>
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -226,7 +251,7 @@ export default async function ReportsPage({
           {/* Immediate Janaza Reporting / 24/7 Organizer Contact Banner */}
           <ScrollReveal
             variant="scale"
-            className="relative mb-20 overflow-hidden rounded-3xl bg-[#0b2e1e] p-8 text-white shadow-xl sm:p-10 lg:p-12"
+            className="relative overflow-hidden rounded-3xl bg-[#0b2e1e] p-8 text-white shadow-xl sm:p-10 lg:p-12"
           >
             <div className="relative z-10 flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-center">
               <div className="max-w-2xl">
@@ -265,9 +290,6 @@ export default async function ReportsPage({
               </div>
             </div>
           </ScrollReveal>
-
-          {/* Live Community Notices Section */}
-          <NoticesSection locale={locale} translations={noticeTranslations} />
         </Container>
       </div>
     </>

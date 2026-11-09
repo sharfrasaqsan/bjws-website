@@ -83,6 +83,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
     author: "BJWS Editorial Board",
     image_url: "",
     is_published: true,
+    published_at: new Date().toISOString().slice(0, 10),
   });
 
   // Controlled form state for edit
@@ -100,6 +101,8 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
     author: "BJWS Editorial Board",
     image_url: "",
     is_published: true,
+    published_at: new Date().toISOString().slice(0, 10),
+    updated_at: new Date().toISOString().slice(0, 10),
   });
 
   // Gallery state for related internal images with alt text
@@ -132,6 +135,10 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
       author: art.author,
       image_url: art.image_url,
       is_published: art.is_published,
+      published_at: art.published_at
+        ? art.published_at.slice(0, 10)
+        : new Date().toISOString().slice(0, 10),
+      updated_at: new Date().toISOString().slice(0, 10),
     });
     const initialGallery =
       art.gallery ||
@@ -287,6 +294,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
       author: "BJWS Editorial Board",
       image_url: "",
       is_published: true,
+      published_at: new Date().toISOString().slice(0, 10),
     });
     setCreateGallery([]);
     setIsCreateOpen(true);
@@ -309,6 +317,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
       author: "BJWS Editorial Board",
       image_url: "",
       is_published: true,
+      published_at: new Date().toISOString().slice(0, 10),
     });
     setCreateGallery([]);
     setFormError(null);
@@ -544,13 +553,26 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
 
                   {/* Metadata & Preview Switcher */}
                   <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[#f3f1ea] pt-1 text-[11px] text-[#6b7280]">
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       <span>By {art.author}</span>
                       <span>•</span>
-                      <span className="flex items-center gap-1">
+                      <span className="flex items-center gap-1 font-mono text-[#8b651e]">
                         <Calendar className="h-3 w-3 text-[#c99a45]" />
-                        {formatAdminDate(art.published_at)}
+                        <span>
+                          Published: {formatAdminDate(art.published_at)}
+                        </span>
                       </span>
+                      {art.updated_at && (
+                        <>
+                          <span>•</span>
+                          <span className="flex items-center gap-1 font-mono text-emerald-700">
+                            <Clock className="h-3 w-3 text-emerald-600" />
+                            <span>
+                              Updated: {formatAdminDate(art.updated_at)}
+                            </span>
+                          </span>
+                        </>
+                      )}
                       <span>•</span>
                       <span className="font-mono text-[10px] text-[#9ca3af]">
                         slug: /{art.baseSlug}
@@ -774,6 +796,25 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                         setCreateFields((p) => ({ ...p, slug: e.target.value }))
                       }
                       placeholder="e.g. shramadhana-2026"
+                      className="w-full rounded-xl border border-[#e6e4dc] bg-white px-3 py-2 text-xs text-[#1c2420] focus:border-[#124d34] focus:outline-none"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="font-semibold text-[#1c2420]">
+                      Publish Date *
+                    </label>
+                    <input
+                      type="date"
+                      name="published_at"
+                      value={createFields.published_at}
+                      onChange={(e) =>
+                        setCreateFields((p) => ({
+                          ...p,
+                          published_at: e.target.value,
+                        }))
+                      }
+                      required
                       className="w-full rounded-xl border border-[#e6e4dc] bg-white px-3 py-2 text-xs text-[#1c2420] focus:border-[#124d34] focus:outline-none"
                     />
                   </div>
@@ -1263,6 +1304,43 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                       value={editFields.author}
                       onChange={(e) =>
                         setEditFields((p) => ({ ...p, author: e.target.value }))
+                      }
+                      className="w-full rounded-xl border border-[#e6e4dc] bg-white px-3 py-2 text-xs text-[#1c2420] focus:border-[#124d34] focus:outline-none"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="font-semibold text-[#1c2420]">
+                      Publish Date *
+                    </label>
+                    <input
+                      type="date"
+                      name="published_at"
+                      value={editFields.published_at}
+                      onChange={(e) =>
+                        setEditFields((p) => ({
+                          ...p,
+                          published_at: e.target.value,
+                        }))
+                      }
+                      required
+                      className="w-full rounded-xl border border-[#e6e4dc] bg-white px-3 py-2 text-xs text-[#1c2420] focus:border-[#124d34] focus:outline-none"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="font-semibold text-[#1c2420]">
+                      Last Updated Date
+                    </label>
+                    <input
+                      type="date"
+                      name="updated_at"
+                      value={editFields.updated_at}
+                      onChange={(e) =>
+                        setEditFields((p) => ({
+                          ...p,
+                          updated_at: e.target.value,
+                        }))
                       }
                       className="w-full rounded-xl border border-[#e6e4dc] bg-white px-3 py-2 text-xs text-[#1c2420] focus:border-[#124d34] focus:outline-none"
                     />

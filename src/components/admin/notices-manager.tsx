@@ -8,6 +8,7 @@ import {
   updateMultilingualNoticeAction,
   toggleNoticeGroupPublishAction,
   deleteNoticeGroupAction,
+  toggleNoticeHomepageAction,
 } from "@/lib/admin-actions";
 import {
   groupNotices,
@@ -29,6 +30,8 @@ import {
   Sparkles,
   Layers,
   MessageCircle,
+  Clock,
+  Megaphone,
 } from "lucide-react";
 
 export type { NoticeRecord, UnifiedNoticeRecord };
@@ -281,6 +284,41 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
         router.refresh();
       } catch (err) {
         alert("Failed to toggle publish status: " + (err as Error).message);
+      }
+    });
+  };
+
+  const handleToggleHomepageBar = (
+    baseId: string,
+    currentHomepageState: boolean,
+    translationIds?: string[]
+  ) => {
+    startTransition(async () => {
+      try {
+        await toggleNoticeHomepageAction(
+          baseId,
+          currentHomepageState,
+          translationIds
+        );
+        setUnifiedNotices((prev) =>
+          prev.map((n) =>
+            n.baseId === baseId
+              ? {
+                  ...n,
+                  show_on_homepage: !currentHomepageState,
+                  translations: Object.fromEntries(
+                    Object.entries(n.translations).map(([k, v]) => [
+                      k,
+                      v ? { ...v, show_on_homepage: !currentHomepageState } : v,
+                    ])
+                  ),
+                }
+              : n
+          )
+        );
+        router.refresh();
+      } catch (err) {
+        alert("Failed to toggle homepage display: " + (err as Error).message);
       }
     });
   };
@@ -620,23 +658,62 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
               </div>
             </div>
 
-            {/* Publication switch */}
-            <div className="flex items-center gap-2.5 rounded-lg border border-[#e6e4dc] bg-[#fbfaf6] p-3">
-              <input
-                id="is_published"
-                name="is_published"
-                type="checkbox"
-                defaultChecked
-                disabled={isCreating}
-                className="h-4 w-4 cursor-pointer rounded border-[#cbd5e1] text-[#124d34] focus:ring-[#124d34]"
-              />
-              <label
-                htmlFor="is_published"
-                className="cursor-pointer text-xs font-medium text-[#1c2420] select-none"
-              >
-                Publish immediately to homepage announcement notice bar across
-                all languages
-              </label>
+            {/* Publication and Homepage settings */}
+            <div className="grid grid-cols-1 gap-4 rounded-xl border border-[#e6e4dc] bg-[#fbfaf6] p-4 sm:grid-cols-2">
+              <div>
+                <label
+                  htmlFor="published_at"
+                  className="mb-1 block text-xs font-semibold text-[#1c2420]"
+                >
+                  Publish Date <span className="text-red-500">*</span>
+                </label>
+                <input
+                  id="published_at"
+                  name="published_at"
+                  type="date"
+                  defaultValue={new Date().toISOString().slice(0, 10)}
+                  required
+                  disabled={isCreating}
+                  className="w-full rounded-lg border border-[#e6e4dc] bg-white px-3 py-2 text-xs text-[#1c2420] transition-colors focus:border-[#124d34] focus:outline-none"
+                />
+              </div>
+
+              <div className="space-y-2 pt-1 sm:pt-4">
+                <div className="flex items-center gap-2">
+                  <input
+                    id="is_published"
+                    name="is_published"
+                    type="checkbox"
+                    defaultChecked
+                    disabled={isCreating}
+                    className="h-4 w-4 cursor-pointer rounded border-[#cbd5e1] text-[#124d34] focus:ring-[#124d34]"
+                  />
+                  <label
+                    htmlFor="is_published"
+                    className="cursor-pointer text-xs font-medium text-[#1c2420] select-none"
+                  >
+                    Active / Published (Live in Notices Directory)
+                  </label>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    id="show_on_homepage"
+                    name="show_on_homepage"
+                    type="checkbox"
+                    defaultChecked
+                    disabled={isCreating}
+                    className="h-4 w-4 cursor-pointer rounded border-[#cbd5e1] text-[#c99a45] focus:ring-[#c99a45]"
+                  />
+                  <label
+                    htmlFor="show_on_homepage"
+                    className="flex cursor-pointer items-center gap-1.5 text-xs font-bold text-[#8b651e] select-none"
+                  >
+                    <Megaphone className="h-3.5 w-3.5 text-[#c99a45]" />
+                    <span>Display in Homepage Announcement Notice Bar</span>
+                  </label>
+                </div>
+              </div>
             </div>
 
             <div className="flex justify-end gap-2.5 pt-2">
@@ -888,22 +965,86 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
               </div>
             </div>
 
-            <div className="flex items-center gap-2.5 rounded-lg border border-[#e6e4dc] bg-[#fbfaf6] p-3">
-              <input
-                id="edit_is_published"
-                name="is_published"
-                type="checkbox"
-                defaultChecked={editingNotice.is_published}
-                disabled={isEditing}
-                className="h-4 w-4 cursor-pointer rounded border-[#cbd5e1] text-[#124d34] focus:ring-[#124d34]"
-              />
-              <label
-                htmlFor="edit_is_published"
-                className="cursor-pointer text-xs font-medium text-[#1c2420] select-none"
-              >
-                Keep notice live on public homepage announcement bar across all
-                languages
-              </label>
+            {/* Publication and Homepage settings */}
+            <div className="grid grid-cols-1 gap-4 rounded-xl border border-[#e6e4dc] bg-[#fbfaf6] p-4 sm:grid-cols-2">
+              <div className="space-y-3">
+                <div>
+                  <label
+                    htmlFor="edit_published_at"
+                    className="mb-1 block text-xs font-semibold text-[#1c2420]"
+                  >
+                    Original Publish Date{" "}
+                    <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    id="edit_published_at"
+                    name="published_at"
+                    type="date"
+                    defaultValue={
+                      editingNotice.published_at
+                        ? editingNotice.published_at.slice(0, 10)
+                        : new Date().toISOString().slice(0, 10)
+                    }
+                    required
+                    disabled={isEditing}
+                    className="w-full rounded-lg border border-[#e6e4dc] bg-white px-3 py-2 text-xs text-[#1c2420] transition-colors focus:border-[#124d34] focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="edit_updated_at"
+                    className="mb-1 block text-xs font-semibold text-[#1c2420]"
+                  >
+                    Last Updated Date
+                  </label>
+                  <input
+                    id="edit_updated_at"
+                    name="updated_at"
+                    type="date"
+                    defaultValue={new Date().toISOString().slice(0, 10)}
+                    disabled={isEditing}
+                    className="w-full rounded-lg border border-[#e6e4dc] bg-white px-3 py-2 text-xs text-[#1c2420] transition-colors focus:border-[#124d34] focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-3 pt-1 sm:pt-4">
+                <div className="flex items-center gap-2">
+                  <input
+                    id="edit_is_published"
+                    name="is_published"
+                    type="checkbox"
+                    defaultChecked={editingNotice.is_published}
+                    disabled={isEditing}
+                    className="h-4 w-4 cursor-pointer rounded border-[#cbd5e1] text-[#124d34] focus:ring-[#124d34]"
+                  />
+                  <label
+                    htmlFor="edit_is_published"
+                    className="cursor-pointer text-xs font-medium text-[#1c2420] select-none"
+                  >
+                    Active / Published in Notices Directory
+                  </label>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    id="edit_show_on_homepage"
+                    name="show_on_homepage"
+                    type="checkbox"
+                    defaultChecked={editingNotice.show_on_homepage ?? true}
+                    disabled={isEditing}
+                    className="h-4 w-4 cursor-pointer rounded border-[#cbd5e1] text-[#c99a45] focus:ring-[#c99a45]"
+                  />
+                  <label
+                    htmlFor="edit_show_on_homepage"
+                    className="flex cursor-pointer items-center gap-1.5 text-xs font-bold text-[#8b651e] select-none"
+                  >
+                    <Megaphone className="h-3.5 w-3.5 text-[#c99a45]" />
+                    <span>Display in Homepage Announcement Notice Bar</span>
+                  </label>
+                </div>
+              </div>
             </div>
 
             <div className="flex justify-end gap-2.5 pt-2">
@@ -1008,7 +1149,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
                         {item.is_published ? (
                           <>
                             <Eye className="h-3 w-3 text-emerald-700" />
-                            <span>Live on Homepage</span>
+                            <span>Directory Live</span>
                           </>
                         ) : (
                           <>
@@ -1017,9 +1158,31 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
                           </>
                         )}
                       </span>
+
+                      {/* Homepage Bar Badge */}
+                      <span
+                        className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-bold ${
+                          item.show_on_homepage
+                            ? "bg-amber-100 text-amber-900 ring-1 ring-amber-500/30"
+                            : "bg-gray-100 text-gray-500"
+                        }`}
+                      >
+                        <Megaphone
+                          className={`h-3 w-3 ${
+                            item.show_on_homepage
+                              ? "text-amber-600"
+                              : "text-gray-400"
+                          }`}
+                        />
+                        <span>
+                          {item.show_on_homepage
+                            ? "Homepage Bar Active"
+                            : "Not on Homepage Bar"}
+                        </span>
+                      </span>
                     </div>
 
-                    {/* Language Availability Indicators */}
+                    {/* Language Availability & Dates */}
                     <div className="flex flex-wrap items-center gap-2 pt-1 text-xs text-[#6b7280]">
                       <span className="text-[11px] font-semibold text-[#8b651e]">
                         Languages:
@@ -1055,15 +1218,67 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
                       </div>
 
                       <span>•</span>
-                      <div className="flex items-center gap-1 text-[11px]">
-                        <Calendar className="h-3 w-3 text-[#9ca3af]" />
-                        <span>{formatAdminDate(item.published_at)}</span>
+                      <div className="flex items-center gap-1 font-mono text-[11px] text-[#8b651e]">
+                        <Calendar className="h-3 w-3 text-[#c99a45]" />
+                        <span>
+                          Published: {formatAdminDate(item.published_at)}
+                        </span>
                       </div>
+
+                      {item.updated_at && (
+                        <>
+                          <span>•</span>
+                          <div className="flex items-center gap-1 font-mono text-[11px] text-emerald-700">
+                            <Clock className="h-3 w-3 text-emerald-600" />
+                            <span>
+                              Updated: {formatAdminDate(item.updated_at)}
+                            </span>
+                          </div>
+                        </>
+                      )}
                     </div>
                   </div>
 
                   {/* Actions: Edit, Publish Toggle, Delete */}
                   <div className="flex shrink-0 items-center gap-2 sm:self-center">
+                    {/* HOMEPAGE BAR PIN / TOGGLE BUTTON */}
+                    <button
+                      disabled={isPending}
+                      type="button"
+                      onClick={() =>
+                        handleToggleHomepageBar(
+                          item.baseId,
+                          item.show_on_homepage ?? true,
+                          Object.values(item.translations)
+                            .map((t) => t?.id)
+                            .filter(Boolean) as string[]
+                        )
+                      }
+                      className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-semibold shadow-2xs transition-colors disabled:opacity-50 ${
+                        item.show_on_homepage
+                          ? "border-amber-300 bg-amber-50 text-amber-800 hover:bg-amber-100"
+                          : "border-[#e6e4dc] bg-white text-[#4b5563] hover:bg-[#f3f1ea]"
+                      }`}
+                      title={
+                        item.show_on_homepage
+                          ? "Notice is showing in homepage bar. Click to hide from homepage bar."
+                          : "Notice is hidden from homepage bar. Click to display in homepage bar."
+                      }
+                    >
+                      <Megaphone
+                        className={`h-3.5 w-3.5 ${
+                          item.show_on_homepage
+                            ? "text-amber-600"
+                            : "text-[#9ca3af]"
+                        }`}
+                      />
+                      <span>
+                        {item.show_on_homepage
+                          ? "In Homepage Bar"
+                          : "+ Pin to Bar"}
+                      </span>
+                    </button>
+
                     {/* WHATSAPP BROADCAST BUTTON */}
                     <button
                       type="button"

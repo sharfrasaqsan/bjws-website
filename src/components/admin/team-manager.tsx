@@ -62,9 +62,6 @@ export function TeamManager({
 
   // Modals
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [createCategory, setCreateCategory] = useState<string>(
-    mode === "volunteer" ? "volunteer" : "operations"
-  );
   const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
   const [qrMember, setQrMember] = useState<TeamMember | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
@@ -409,10 +406,7 @@ export function TeamManager({
           {mode === "volunteer" ? (
             <button
               type="button"
-              onClick={() => {
-                setCreateCategory("volunteer");
-                openCreateModal();
-              }}
+              onClick={openCreateModal}
               className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-[#0b2e1e] px-4 py-2.5 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-[#124d34]"
             >
               <HeartHandshake className="h-4 w-4 text-[#c99a45]" />
@@ -421,10 +415,7 @@ export function TeamManager({
           ) : (
             <button
               type="button"
-              onClick={() => {
-                setCreateCategory("operations");
-                openCreateModal();
-              }}
+              onClick={openCreateModal}
               className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-[#0b2e1e] px-4 py-2.5 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-[#124d34]"
             >
               <Plus className="h-4 w-4 text-[#c99a45]" />
@@ -565,13 +556,9 @@ export function TeamManager({
                     <h3 className="font-display text-text truncate text-base font-bold">
                       {member.name}
                     </h3>
-                    {member.category === "volunteer" ? (
+                    {member.category === "volunteer" && (
                       <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-[10px] font-bold text-amber-800 ring-1 ring-amber-500/30 dark:bg-amber-950 dark:text-amber-300">
                         <HeartHandshake className="h-3 w-3" /> Youth Volunteer
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100/60 px-2 py-0.5 text-[10px] font-semibold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
-                        {member.categoryLabel?.en || "Officer"}
                       </span>
                     )}
                     <span
@@ -775,33 +762,12 @@ export function TeamManager({
             )}
 
             <form onSubmit={handleCreateSubmit} className="mt-6 space-y-4">
-              {/* Personnel Category Selector */}
-              {mode === "volunteer" ? (
-                <input type="hidden" name="category" value="volunteer" />
-              ) : (
-                <div>
-                  <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
-                    Department &amp; Committee Category *
-                  </label>
-                  <select
-                    name="category"
-                    defaultValue={createCategory}
-                    className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2.5 text-xs font-semibold focus:outline-none sm:text-sm"
-                  >
-                    <option value="operations">
-                      Operations &amp; Field Committee
-                    </option>
-                    <option value="executive">
-                      Executive Council (Leadership)
-                    </option>
-                    <option value="funeral">Funeral Services Taskforce</option>
-                    <option value="welfare">Community Welfare Officer</option>
-                    <option value="cemetery">
-                      Cemetery Care &amp; Shramadhana
-                    </option>
-                  </select>
-                </div>
-              )}
+              {/* Hidden category based on mode */}
+              <input
+                type="hidden"
+                name="category"
+                value={mode === "volunteer" ? "volunteer" : "operations"}
+              />
 
               <div>
                 <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
@@ -1076,33 +1042,15 @@ export function TeamManager({
             <form onSubmit={handleEditSubmit} className="mt-6 space-y-4">
               <input type="hidden" name="id" value={editingMember.id} />
 
-              {/* Personnel Category */}
-              {mode === "volunteer" ? (
-                <input type="hidden" name="category" value="volunteer" />
-              ) : (
-                <div>
-                  <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">
-                    Personnel Type &amp; Category *
-                  </label>
-                  <select
-                    name="category"
-                    defaultValue={editingMember.category || "operations"}
-                    className="border-border bg-background text-text focus:border-primary w-full rounded-xl border px-3 py-2.5 text-xs font-semibold focus:outline-none sm:text-sm"
-                  >
-                    <option value="operations">
-                      Operations &amp; Committee Officer
-                    </option>
-                    <option value="executive">
-                      Executive Council (Leadership)
-                    </option>
-                    <option value="funeral">Funeral Services Taskforce</option>
-                    <option value="welfare">Community Welfare Officer</option>
-                    <option value="cemetery">
-                      Cemetery Care &amp; Shramadhana
-                    </option>
-                  </select>
-                </div>
-              )}
+              {/* Hidden category */}
+              <input
+                type="hidden"
+                name="category"
+                value={
+                  editingMember.category ||
+                  (mode === "volunteer" ? "volunteer" : "operations")
+                }
+              />
 
               <div>
                 <label className="text-text-muted mb-1 block text-xs font-bold tracking-wider uppercase">

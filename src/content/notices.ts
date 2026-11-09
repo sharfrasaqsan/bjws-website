@@ -4,14 +4,18 @@ export interface NoticeRecord {
   body: string;
   locale: "ta" | "en" | "si" | string;
   published_at: string;
+  updated_at?: string;
   is_published: boolean;
+  show_on_homepage?: boolean;
   created_at?: string;
 }
 
 export interface UnifiedNoticeRecord {
   baseId: string;
   published_at: string;
+  updated_at?: string;
   is_published: boolean;
+  show_on_homepage?: boolean;
   translations: {
     ta?: NoticeRecord;
     en?: NoticeRecord;
@@ -53,13 +57,18 @@ export function groupNotices(raw: NoticeRecord[]): UnifiedNoticeRecord[] {
         map.set(key, {
           baseId: key,
           published_at: item.published_at,
+          updated_at: item.updated_at,
           is_published: item.is_published,
+          show_on_homepage: item.show_on_homepage ?? true,
           translations: {},
         });
       }
       const u = map.get(key)!;
       u.translations[loc] = item;
       if (item.is_published) u.is_published = true;
+      if (item.updated_at) u.updated_at = item.updated_at;
+      if (item.show_on_homepage !== undefined)
+        u.show_on_homepage = item.show_on_homepage;
       continue;
     }
 
@@ -71,13 +80,18 @@ export function groupNotices(raw: NoticeRecord[]): UnifiedNoticeRecord[] {
         map.set(baseKey, {
           baseId: baseKey,
           published_at: item.published_at,
+          updated_at: item.updated_at,
           is_published: item.is_published,
+          show_on_homepage: item.show_on_homepage ?? true,
           translations: {},
         });
       }
       const u = map.get(baseKey)!;
       u.translations[loc] = item;
       if (item.is_published) u.is_published = true;
+      if (item.updated_at) u.updated_at = item.updated_at;
+      if (item.show_on_homepage !== undefined)
+        u.show_on_homepage = item.show_on_homepage;
       continue;
     }
 
@@ -97,12 +111,17 @@ export function groupNotices(raw: NoticeRecord[]): UnifiedNoticeRecord[] {
     if (matchedGroup) {
       matchedGroup.translations[loc] = item;
       if (item.is_published) matchedGroup.is_published = true;
+      if (item.updated_at) matchedGroup.updated_at = item.updated_at;
+      if (item.show_on_homepage !== undefined)
+        matchedGroup.show_on_homepage = item.show_on_homepage;
     } else {
       const key = item.id;
       map.set(key, {
         baseId: key,
         published_at: item.published_at,
+        updated_at: item.updated_at,
         is_published: item.is_published,
+        show_on_homepage: item.show_on_homepage ?? true,
         translations: {
           [loc]: item,
         },

@@ -146,18 +146,30 @@ export default async function LocaleLayout({
     body: string;
     locale: string;
     published_at: string;
+    show_on_homepage?: boolean;
   }[] = [];
 
   try {
     const supabase = createPublicClient();
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("notices")
-      .select("id, title, body, locale, published_at")
+      .select("id, title, body, locale, published_at, show_on_homepage")
       .eq("is_published", true)
+      .eq("show_on_homepage", true)
       .order("published_at", { ascending: false })
       .limit(15);
-    if (data) {
+    if (!error && data && data.length > 0) {
       notices = data;
+    } else {
+      const { data: fallbackData } = await supabase
+        .from("notices")
+        .select("id, title, body, locale, published_at")
+        .eq("is_published", true)
+        .order("published_at", { ascending: false })
+        .limit(15);
+      if (fallbackData) {
+        notices = fallbackData;
+      }
     }
   } catch {
     notices = [];

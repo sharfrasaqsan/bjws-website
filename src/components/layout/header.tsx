@@ -24,6 +24,7 @@ import {
   Award,
   FileText,
   Newspaper,
+  Megaphone,
   Images,
 } from "lucide-react";
 
@@ -139,6 +140,12 @@ export function Header({ notices = [] }: HeaderProps) {
           label: t("nav.news"),
           description: t("nav.newsDesc"),
           icon: Newspaper,
+        },
+        {
+          href: "/notices",
+          label: t("nav.notices"),
+          description: t("nav.noticesDesc"),
+          icon: Megaphone,
         },
         {
           href: "/gallery",

@@ -19,13 +19,24 @@ export default async function AdminNoticesPage() {
       const supabase = await createAdminClient();
       const { data, error } = await supabase
         .from("notices")
-        .select(
-          "id, title, body, locale, published_at, is_published, created_at"
-        )
+        .select("*")
         .order("published_at", { ascending: false });
 
       if (!error && data) {
-        notices = data;
+        notices = data.map((d: Record<string, unknown>) => ({
+          id: String(d.id),
+          title: String(d.title),
+          body: String(d.body),
+          locale: String(d.locale),
+          published_at: String(d.published_at),
+          updated_at: d.updated_at ? String(d.updated_at) : undefined,
+          is_published: Boolean(d.is_published),
+          show_on_homepage:
+            d.show_on_homepage !== undefined
+              ? Boolean(d.show_on_homepage)
+              : true,
+          created_at: d.created_at ? String(d.created_at) : undefined,
+        }));
       }
     } catch (err) {
       console.warn("Failed to fetch notices:", err);

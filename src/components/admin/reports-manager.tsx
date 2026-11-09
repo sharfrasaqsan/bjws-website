@@ -18,7 +18,10 @@ import {
   AlertCircle,
   CheckCircle2,
   X,
+  Calendar,
+  Clock,
 } from "lucide-react";
+import { formatAdminDate } from "@/lib/utils";
 
 export interface ReportRecord {
   id: string;
@@ -27,6 +30,8 @@ export interface ReportRecord {
   file_path: string;
   file_size: string | null;
   is_published: boolean;
+  published_at?: string;
+  updated_at?: string;
   created_at?: string;
 }
 
@@ -209,24 +214,24 @@ export function ReportsManager({ initialReports }: ReportsManagerProps) {
               </div>
             )}
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-              <div className="sm:col-span-2">
-                <label
-                  htmlFor="title"
-                  className="mb-1 block text-xs font-semibold text-[#1c2420]"
-                >
-                  Report Title <span className="text-red-500">*</span>
-                </label>
-                <input
-                  id="title"
-                  name="title"
-                  placeholder="e.g. Annual Activities & Financial Summary Report 2025"
-                  required
-                  disabled={isUploading}
-                  className="w-full rounded-lg border border-[#e6e4dc] bg-[#fbfaf6] px-3.5 py-2 text-xs text-[#1c2420] placeholder-[#9ca3af] transition-colors focus:border-[#124d34] focus:bg-white focus:outline-none sm:text-sm"
-                />
-              </div>
+            <div>
+              <label
+                htmlFor="title"
+                className="mb-1 block text-xs font-semibold text-[#1c2420]"
+              >
+                Report Title <span className="text-red-500">*</span>
+              </label>
+              <input
+                id="title"
+                name="title"
+                placeholder="e.g. Annual Activities & Financial Summary Report 2025"
+                required
+                disabled={isUploading}
+                className="w-full rounded-lg border border-[#e6e4dc] bg-[#fbfaf6] px-3.5 py-2 text-xs text-[#1c2420] placeholder-[#9ca3af] transition-colors focus:border-[#124d34] focus:bg-white focus:outline-none sm:text-sm"
+              />
+            </div>
 
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <label
                   htmlFor="year"
@@ -241,6 +246,24 @@ export function ReportsManager({ initialReports }: ReportsManagerProps) {
                   min={2020}
                   max={2030}
                   defaultValue={2025}
+                  required
+                  disabled={isUploading}
+                  className="w-full rounded-lg border border-[#e6e4dc] bg-[#fbfaf6] px-3 py-2 text-xs text-[#1c2420] transition-colors focus:border-[#124d34] focus:bg-white focus:outline-none sm:text-sm"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="published_at"
+                  className="mb-1 block text-xs font-semibold text-[#1c2420]"
+                >
+                  Publish Date <span className="text-red-500">*</span>
+                </label>
+                <input
+                  id="published_at"
+                  name="published_at"
+                  type="date"
+                  defaultValue={new Date().toISOString().slice(0, 10)}
                   required
                   disabled={isUploading}
                   className="w-full rounded-lg border border-[#e6e4dc] bg-[#fbfaf6] px-3 py-2 text-xs text-[#1c2420] transition-colors focus:border-[#124d34] focus:bg-white focus:outline-none sm:text-sm"
@@ -386,13 +409,34 @@ export function ReportsManager({ initialReports }: ReportsManagerProps) {
                         </span>
                       )}
 
+                      <span className="inline-flex items-center gap-1 font-mono text-[11px] text-[#8b651e]">
+                        <Calendar className="h-3 w-3 text-[#c99a45]" />
+                        <span>
+                          Published:{" "}
+                          {formatAdminDate(
+                            item.published_at ||
+                              item.created_at ||
+                              new Date().toISOString()
+                          )}
+                        </span>
+                      </span>
+
+                      {item.updated_at && (
+                        <span className="inline-flex items-center gap-1 font-mono text-[11px] text-emerald-700">
+                          <Clock className="h-3 w-3 text-emerald-600" />
+                          <span>
+                            Updated: {formatAdminDate(item.updated_at)}
+                          </span>
+                        </span>
+                      )}
+
                       <a
                         href={item.file_path}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1 font-semibold text-[#124d34] hover:underline"
                       >
-                        <span>Open / Download PDF Document</span>
+                        <span>Open PDF Document</span>
                         <ExternalLink className="h-3.5 w-3.5" />
                       </a>
                     </div>

@@ -42,6 +42,8 @@ export default async function AdminNewsPage() {
           image_url: d.image_url || "",
           locale: (d.locale as "en" | "ta" | "si") || "en",
           published_at: d.published_at || d.created_at,
+          updated_at:
+            ((d as Record<string, unknown>).updated_at as string) || undefined,
           is_published: d.is_published ?? true,
           read_time_minutes: Math.max(
             1,

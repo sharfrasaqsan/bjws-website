@@ -21,13 +21,25 @@ export default async function AdminReportsPage() {
       const supabase = await createAdminClient();
       const { data, error } = await supabase
         .from("reports")
-        .select(
-          "id, title, year, file_path, file_size, is_published, created_at"
-        )
+        .select("*")
         .order("year", { ascending: false });
 
       if (!error && data) {
-        reports = data;
+        reports = data.map((d: Record<string, unknown>) => ({
+          id: String(d.id),
+          title: String(d.title),
+          year: Number(d.year),
+          file_path: String(d.file_path),
+          file_size: d.file_size ? String(d.file_size) : null,
+          is_published: Boolean(d.is_published),
+          published_at: d.published_at
+            ? String(d.published_at)
+            : d.created_at
+              ? String(d.created_at)
+              : undefined,
+          updated_at: d.updated_at ? String(d.updated_at) : undefined,
+          created_at: d.created_at ? String(d.created_at) : undefined,
+        }));
       }
     } catch (err) {
       console.warn("Failed to fetch reports:", err);

@@ -24,6 +24,7 @@ export function Footer() {
     { href: "/team", label: t("nav.team") },
     { href: "/services", label: t("nav.services") },
     { href: "/news", label: t("nav.news") },
+    { href: "/notices", label: t("nav.notices") },
     { href: "/achievements", label: t("nav.achievements") },
     { href: "/gallery", label: t("nav.gallery") },
     { href: "/membership", label: t("nav.membership") },

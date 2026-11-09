@@ -91,6 +91,8 @@ export interface Database {
           body: string;
           locale: string;
           published_at: string;
+          updated_at?: string;
+          show_on_homepage?: boolean;
           is_published: boolean;
           created_at: string;
         };
@@ -100,6 +102,8 @@ export interface Database {
           body: string;
           locale?: string;
           published_at?: string;
+          updated_at?: string;
+          show_on_homepage?: boolean;
           is_published?: boolean;
           created_at?: string;
         };
@@ -109,6 +113,8 @@ export interface Database {
           body?: string;
           locale?: string;
           published_at?: string;
+          updated_at?: string;
+          show_on_homepage?: boolean;
           is_published?: boolean;
           created_at?: string;
         };
@@ -122,6 +128,8 @@ export interface Database {
           file_path: string;
           file_size: string | null;
           is_published: boolean;
+          published_at?: string;
+          updated_at?: string;
           created_at: string;
         };
         Insert: {
@@ -131,6 +139,8 @@ export interface Database {
           file_path: string;
           file_size?: string | null;
           is_published?: boolean;
+          published_at?: string;
+          updated_at?: string;
           created_at?: string;
         };
         Update: {
@@ -140,6 +150,8 @@ export interface Database {
           file_path?: string;
           file_size?: string | null;
           is_published?: boolean;
+          published_at?: string;
+          updated_at?: string;
           created_at?: string;
         };
         Relationships: [];
@@ -157,6 +169,7 @@ export interface Database {
           locale: string;
           is_published: boolean;
           published_at: string;
+          updated_at?: string;
           created_at: string;
         };
         Insert: {
@@ -171,6 +184,7 @@ export interface Database {
           locale?: string;
           is_published?: boolean;
           published_at?: string;
+          updated_at?: string;
           created_at?: string;
         };
         Update: {
@@ -185,6 +199,7 @@ export interface Database {
           locale?: string;
           is_published?: boolean;
           published_at?: string;
+          updated_at?: string;
           created_at?: string;
         };
         Relationships: [];

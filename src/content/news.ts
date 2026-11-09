@@ -21,6 +21,7 @@ export interface Article {
   gallery?: ArticleImage[];
   locale: "en" | "ta" | "si";
   published_at: string;
+  updated_at?: string;
   is_published: boolean;
   read_time_minutes: number;
 }
@@ -38,6 +39,7 @@ export interface UnifiedArticle {
   image_url: string;
   gallery?: ArticleImage[];
   published_at: string;
+  updated_at?: string;
   is_published: boolean;
   translations: {
     en?: Article;
@@ -118,6 +120,7 @@ export function getUnifiedArticlesAdmin(
         image_url: art.image_url,
         gallery: art.gallery,
         published_at: art.published_at,
+        updated_at: art.updated_at,
         is_published: art.is_published,
         translations: {},
       });

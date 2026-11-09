@@ -32,6 +32,8 @@
     "mediaGroup": "News & Media",
     "news": "News & Blog",
     "newsDesc": "Latest updates & announcements",
+    "notices": "Official Notices",
+    "noticesDesc": "Community circulars & press updates",
     "gallery": "Gallery",
     "galleryDesc": "Cemetery drives & event photos",
     "membership": "Membership",
@@ -531,5 +533,17 @@
     "backToNews": "Back to all News",
     "relatedTitle": "Related Announcements",
     "noArticles": "No articles found matching your criteria."
+  },
+  "noticesPage": {
+    "pageTitle": "Community Notices & Announcements",
+    "subtitle": "Timely official updates, Janaza notifications, society circulars, and community dispatches from the Buhary Janaza Welfare Society.",
+    "breadcrumbs": "Official Notices",
+    "badge": "Official Notice",
+    "badgeJanaza": "Janaza Alert",
+    "publishedOn": "Published",
+    "updatedOn": "Updated",
+    "shareWhatsApp": "Share on WhatsApp",
+    "noNotices": "No official notices are currently published.",
+    "hotlineBanner": "For immediate funeral emergencies or death notifications, contact our 24/7 hotline directly at +94 77 483 5530."
   }
 }
