@@ -204,7 +204,7 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
       {/* Mobile Backdrop to dismiss card when tapping outside on phone */}
       {isExpanded && isMobile && (
         <div
-          className="fixed inset-0 z-30 bg-black/40 backdrop-blur-2xs duration-200 md:hidden"
+          className="backdrop-blur-2xs fixed inset-0 z-30 bg-black/40 duration-200 md:hidden"
           onClick={() => setUserExpanded(false)}
           aria-hidden="true"
         />
@@ -233,7 +233,7 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
               </span>
             </span>
 
-            <span className="hidden truncate text-xs text-emerald-100/80 sm:inline max-w-[140px]">
+            <span className="hidden max-w-[140px] truncate text-xs text-emerald-100/80 sm:inline">
               {currentNotice.title}
             </span>
 
@@ -247,7 +247,7 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
           aria-label={noticeBadgeText}
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
-          className={`animate-in fade-in slide-in-from-bottom-5 fixed right-4 bottom-20 z-40 w-[calc(100vw-2rem)] max-w-sm max-h-[82vh] overflow-y-auto duration-300 sm:w-[380px] md:right-6 md:bottom-6 ${
+          className={`animate-in fade-in slide-in-from-bottom-5 fixed right-4 bottom-20 z-40 max-h-[82vh] w-[calc(100vw-2rem)] max-w-sm overflow-y-auto duration-300 sm:w-[380px] md:right-6 md:bottom-6 ${
             className || ""
           }`}
         >
@@ -443,7 +443,7 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
                 <div className="relative z-10">
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2">
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-400/25 px-3 py-1 text-xs font-extrabold tracking-wider text-amber-200 uppercase ring-1 ring-amber-300/40 shadow-xs">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-400/25 px-3 py-1 text-xs font-extrabold tracking-wider text-amber-200 uppercase shadow-xs ring-1 ring-amber-300/40">
                         <Megaphone className="h-3.5 w-3.5 text-amber-300" />
                         <span>{noticeBadgeText}</span>
                       </span>
@@ -503,7 +503,7 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
                 {/* Notice Image Flyer (if attached) */}
                 {activeModalNotice.image_url && (
                   <div className="group relative overflow-hidden rounded-2xl border border-stone-200 bg-stone-100 shadow-sm dark:border-emerald-950 dark:bg-black/50">
-                    <div className="relative aspect-[16/9] w-full max-h-72">
+                    <div className="relative aspect-[16/9] max-h-72 w-full">
                       <Image
                         src={activeModalNotice.image_url}
                         alt={activeModalNotice.title}

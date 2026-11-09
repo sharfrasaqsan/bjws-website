@@ -168,9 +168,7 @@ export default async function LocaleLayout({
         locale: String(d.locale),
         published_at: String(d.published_at),
         show_on_homepage:
-          d.show_on_homepage !== undefined
-            ? Boolean(d.show_on_homepage)
-            : true,
+          d.show_on_homepage !== undefined ? Boolean(d.show_on_homepage) : true,
         image_url: d.image_url ? String(d.image_url) : undefined,
       }));
     } else {
