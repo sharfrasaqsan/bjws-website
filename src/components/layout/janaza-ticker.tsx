@@ -15,6 +15,8 @@ import {
   ArrowRight,
   X,
   Calendar,
+  Clock,
+  AlertCircle,
   Phone,
   MessageCircle,
   ShieldCheck,
@@ -341,91 +343,190 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
             aria-labelledby="notice-modal-title"
             className="animate-in fade-in-50 fixed inset-0 z-[100] flex min-h-screen items-center justify-center overflow-y-auto p-4 duration-200 sm:p-6"
           >
-            {/* Backdrop with blur */}
+            {/* Backdrop with deep blur */}
             <div
-              className="fixed inset-0 bg-black/80 backdrop-blur-xs transition-opacity"
+              className="fixed inset-0 bg-black/80 backdrop-blur-md transition-opacity"
               onClick={() => setActiveModalNotice(null)}
               aria-hidden="true"
             />
 
             {/* Centered Modal Container */}
-            <div className="animate-in zoom-in-95 relative z-10 my-auto w-full max-w-lg transform overflow-hidden rounded-3xl border border-t-4 border-stone-200/90 border-t-amber-500 bg-white p-6 text-stone-900 shadow-2xl duration-200 sm:p-8 dark:border-emerald-950 dark:border-t-amber-400 dark:bg-[#0f1d16] dark:text-stone-100">
-              {/* Modal Header */}
-              <div className="flex items-start justify-between gap-4 border-b border-stone-100 pb-4 dark:border-emerald-950">
-                <div className="flex items-start gap-3">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-amber-50 text-amber-700 ring-1 ring-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:ring-amber-800">
-                    <Megaphone className="h-5 w-5" />
-                  </div>
-                  <div>
+            <div className="animate-in zoom-in-95 relative z-10 my-auto w-full max-w-xl transform overflow-hidden rounded-3xl border border-stone-200/90 bg-white text-stone-900 shadow-2xl duration-200 dark:border-emerald-950/80 dark:bg-[#0c1811] dark:text-stone-100">
+              {/* Luminous Top Gold Accent Bar */}
+              <div className="h-1.5 w-full bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500" />
+
+              {/* Modal Hero Header with Islamic Accent & Badges */}
+              <div className="relative overflow-hidden bg-gradient-to-br from-[#021a10] via-[#093522] to-[#041a10] p-6 text-white sm:p-7">
+                {/* Background Lattice */}
+                <IslamicPattern
+                  opacity={0.06}
+                  className="pointer-events-none text-amber-400"
+                />
+
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2">
-                      <span className="font-serif text-[11px] font-bold tracking-wider text-amber-800 uppercase dark:text-amber-300">
-                        Official Society Bulletin
+                      <span
+                        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-extrabold tracking-wider uppercase shadow-xs ${
+                          activeModalNotice.title
+                            .toLowerCase()
+                            .includes("janaza") ||
+                          activeModalNotice.title.includes("ஜனாஸா") ||
+                          activeModalNotice.title.includes("ජනාසා") ||
+                          activeModalNotice.body
+                            .toLowerCase()
+                            .includes("janaza") ||
+                          activeModalNotice.body.includes("ஜனாஸா")
+                            ? "bg-red-500/25 text-red-200 ring-1 ring-red-400/40"
+                            : "bg-amber-400/25 text-amber-200 ring-1 ring-amber-300/40"
+                        }`}
+                      >
+                        {activeModalNotice.title
+                          .toLowerCase()
+                          .includes("janaza") ||
+                        activeModalNotice.title.includes("ஜனாஸா") ||
+                        activeModalNotice.title.includes("ජනාසා") ||
+                        activeModalNotice.body
+                          .toLowerCase()
+                          .includes("janaza") ||
+                        activeModalNotice.body.includes("ஜனாஸா") ? (
+                          <AlertCircle className="h-3.5 w-3.5 text-red-300" />
+                        ) : (
+                          <Megaphone className="h-3.5 w-3.5 text-amber-300" />
+                        )}
+                        <span>
+                          {activeModalNotice.title
+                            .toLowerCase()
+                            .includes("janaza") ||
+                          activeModalNotice.title.includes("ஜனாஸா") ||
+                          activeModalNotice.title.includes("ජනාසා") ||
+                          activeModalNotice.body
+                            .toLowerCase()
+                            .includes("janaza") ||
+                          activeModalNotice.body.includes("ஜனாஸா")
+                            ? "Janaza Alert"
+                            : "Official Society Notice"}
+                        </span>
                       </span>
-                      <span className="rounded bg-stone-100 px-1.5 py-0.5 font-mono text-[10px] text-stone-700 uppercase dark:bg-emerald-950 dark:text-emerald-200">
+
+                      <span className="rounded-full bg-white/10 px-2.5 py-0.5 font-mono text-[11px] font-bold text-amber-200 uppercase ring-1 ring-white/15">
                         {activeModalNotice.locale}
                       </span>
                     </div>
-                    <h3
-                      id="notice-modal-title"
-                      className="font-display mt-1 text-lg leading-snug font-bold text-stone-900 sm:text-xl dark:text-white"
+
+                    <button
+                      type="button"
+                      onClick={() => setActiveModalNotice(null)}
+                      aria-label="Close notice details"
+                      className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white/80 transition-all hover:bg-white/20 hover:text-white"
                     >
-                      {activeModalNotice.title}
-                    </h3>
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+
+                  {/* Title */}
+                  <h3
+                    id="notice-modal-title"
+                    className="font-display mt-4 text-xl leading-tight font-bold tracking-tight text-white sm:text-2xl"
+                  >
+                    {activeModalNotice.title}
+                  </h3>
+
+                  {/* Date Metadata Badges */}
+                  <div className="mt-3.5 flex flex-wrap items-center gap-3 font-mono text-xs text-amber-200/90">
+                    <span className="inline-flex items-center gap-1.5 rounded-md bg-white/10 px-2 py-0.5">
+                      <Calendar className="h-3.5 w-3.5 text-amber-300" />
+                      <span>
+                        Published:{" "}
+                        {activeModalNotice.published_at
+                          ? formatAdminDate(activeModalNotice.published_at)
+                          : ""}
+                      </span>
+                    </span>
+
+                    {activeModalNotice.updated_at &&
+                      activeModalNotice.updated_at.slice(0, 10) !==
+                        activeModalNotice.published_at.slice(0, 10) && (
+                        <span className="inline-flex items-center gap-1.5 rounded-md bg-white/10 px-2 py-0.5 text-amber-100/80">
+                          <Clock className="h-3.5 w-3.5 text-amber-300" />
+                          <span>
+                            Updated:{" "}
+                            {formatAdminDate(activeModalNotice.updated_at)}
+                          </span>
+                        </span>
+                      )}
                   </div>
                 </div>
-
-                <button
-                  type="button"
-                  onClick={() => setActiveModalNotice(null)}
-                  aria-label="Close notice details"
-                  className="cursor-pointer rounded-lg p-1.5 text-stone-500 transition hover:bg-stone-100 hover:text-stone-900 dark:text-stone-400 dark:hover:bg-emerald-950 dark:hover:text-white"
-                >
-                  <X className="h-5 w-5" />
-                </button>
               </div>
 
-              {/* Modal Body */}
-              <div className="py-5 text-xs leading-relaxed whitespace-pre-wrap text-stone-700 sm:text-sm dark:text-stone-300">
-                {activeModalNotice.body}
-              </div>
+              {/* Modal Body Scroll Area */}
+              <div className="max-h-[55vh] space-y-4 overflow-y-auto p-6 sm:p-7">
+                {/* Emergency Funeral Banner if Janaza */}
+                {(activeModalNotice.title.toLowerCase().includes("janaza") ||
+                  activeModalNotice.title.includes("ஜனாஸா") ||
+                  activeModalNotice.title.includes("ජනාසා") ||
+                  activeModalNotice.body.toLowerCase().includes("janaza") ||
+                  activeModalNotice.body.includes("ஜனாஸா")) && (
+                  <div className="flex flex-col gap-3 rounded-2xl border border-red-500/25 bg-gradient-to-r from-red-50 via-amber-50 to-emerald-50/50 p-4 sm:flex-row sm:items-center sm:justify-between dark:border-red-500/30 dark:from-red-950/30 dark:via-amber-950/20 dark:to-emerald-950/20">
+                    <div>
+                      <p className="text-[11px] font-bold tracking-wider text-red-800 uppercase dark:text-red-300">
+                        24/7 Funeral Emergency Hotline
+                      </p>
+                      <p className="text-xs font-semibold text-stone-900 dark:text-stone-100">
+                        Immediate burial coordination across Sri Lanka
+                      </p>
+                    </div>
+                    <a
+                      href="tel:+94774835530"
+                      className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-red-600 px-3.5 py-1.5 text-xs font-bold text-white shadow-xs transition hover:bg-red-700"
+                    >
+                      <Phone className="h-3.5 w-3.5" />
+                      <span>+94 77 483 5530</span>
+                    </a>
+                  </div>
+                )}
 
-              {/* Verified Organization Signoff & Date */}
-              <div className="flex items-center justify-between rounded-xl border border-stone-200/80 bg-stone-50 p-3.5 text-xs text-stone-600 dark:border-emerald-950 dark:bg-[#062115] dark:text-stone-400">
-                <div className="flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-emerald-700 dark:text-emerald-400" />
-                  <span className="font-semibold text-stone-900 dark:text-stone-200">
-                    Buhary Janaza Welfare Society
-                  </span>
+                {/* Formatted Notice Text */}
+                <div className="rounded-2xl border border-stone-200/80 bg-[#faf8f5] p-5 text-sm leading-relaxed whitespace-pre-line text-stone-800 shadow-2xs sm:text-[15px] dark:border-emerald-950/80 dark:bg-[#07170f] dark:text-stone-200">
+                  {activeModalNotice.body}
                 </div>
-                <div className="flex items-center gap-1 font-mono text-[11px]">
-                  <Calendar className="h-3.5 w-3.5 text-stone-400" />
-                  <span>
-                    {activeModalNotice.published_at
-                      ? formatAdminDate(activeModalNotice.published_at)
-                      : ""}
+
+                {/* Verified Organization Signoff */}
+                <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-stone-200/80 bg-stone-50 px-4 py-3 text-xs text-stone-600 dark:border-emerald-950 dark:bg-[#041a10] dark:text-stone-400">
+                  <div className="flex items-center gap-2">
+                    <ShieldCheck className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                    <span className="font-semibold text-stone-900 dark:text-stone-200">
+                      Buhary Janaza Welfare Society (BJWS)
+                    </span>
+                    <span className="hidden text-[11px] text-stone-500 sm:inline dark:text-stone-400">
+                      • Reg: DS/TH/SS/VSSO/2023/01
+                    </span>
+                  </div>
+                  <span className="text-[11px] font-medium text-stone-500 dark:text-stone-400">
+                    Mullipothana, Sri Lanka
                   </span>
                 </div>
               </div>
 
               {/* Quick Actions Footer */}
-              <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-stone-100 pt-4 dark:border-emerald-950">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-t border-stone-200/80 bg-stone-50 px-6 py-4 dark:border-emerald-950/80 dark:bg-[#06160e]">
                 <div className="flex items-center gap-2">
-                  <a
-                    href="tel:+94774835530"
-                    className="inline-flex items-center gap-1.5 rounded-xl border border-stone-200 bg-white px-3 py-1.5 text-xs font-semibold text-stone-800 shadow-2xs hover:bg-stone-50 dark:border-emerald-900 dark:bg-emerald-950/60 dark:text-emerald-200 dark:hover:bg-emerald-900/60"
-                  >
-                    <Phone className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
-                    <span>077 483 5530</span>
-                  </a>
-
                   <a
                     href={`https://api.whatsapp.com/send?text=${whatsappShareText}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800 hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-200"
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-[#25D366] px-3.5 py-2 text-xs font-bold text-white shadow-xs transition hover:bg-[#20ba59]"
                   >
-                    <MessageCircle className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
-                    <span>WhatsApp</span>
+                    <MessageCircle className="h-3.5 w-3.5" />
+                    <span>Share on WhatsApp</span>
+                  </a>
+
+                  <a
+                    href="tel:+94774835530"
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-stone-300 bg-white px-3 py-2 text-xs font-bold text-stone-800 shadow-2xs transition hover:bg-stone-100 dark:border-emerald-900 dark:bg-emerald-950/60 dark:text-emerald-100"
+                  >
+                    <Phone className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
+                    <span>Hotline</span>
                   </a>
                 </div>
 
@@ -433,7 +534,7 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
                   <Link
                     href="/notices"
                     onClick={() => setActiveModalNotice(null)}
-                    className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 underline hover:text-emerald-800 dark:text-emerald-400 dark:hover:text-emerald-300"
+                    className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 underline hover:text-emerald-800 dark:text-emerald-400 dark:hover:text-emerald-300"
                   >
                     <span>All Notices</span>
                     <ArrowRight className="h-3 w-3" />

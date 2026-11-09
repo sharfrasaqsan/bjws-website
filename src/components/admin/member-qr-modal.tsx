@@ -285,12 +285,10 @@ export function MemberQrModal({
         ...(member.nic ? [{ label: "NIC", val: member.nic }] : []),
         { label: "Address", lines: addrLines, isAddr: true },
         { label: "Phone", val: member.phone || "+94 77 622 7323" },
-        { label: "Issue Date", val: issueDate },
-        { label: "Exp Date", val: expiryDate },
       ];
 
-      let startY = member.nic ? 646 : 658;
-      const rowGap = member.nic ? 35 : 39;
+      let startY = member.nic ? 655 : 668;
+      const rowGap = member.nic ? 42 : 46;
 
       for (const row of rows) {
         // Label - 100% unified font, size, weight & deep brand forest green

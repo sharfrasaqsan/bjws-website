@@ -24,3 +24,4 @@ CREATE INDEX IF NOT EXISTS idx_reports_published_at ON public.reports(published_
 -- 3. Table: articles (Add updated_at)
 ALTER TABLE public.articles 
 ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ DEFAULT now();
+
