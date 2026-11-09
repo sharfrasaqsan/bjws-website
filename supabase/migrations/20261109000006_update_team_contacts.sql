@@ -182,3 +182,4 @@ SET
     email = 'rameesrayyan419@gmail.com',
     address = 'No. 419, Unit 07, Mullipothana'
 WHERE id = 'ramees' OR name ILIKE '%Ramees%';
+
