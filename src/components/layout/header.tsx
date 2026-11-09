@@ -251,7 +251,7 @@ export function Header({ notices = [] }: HeaderProps) {
 
               {/* Facebook Link (Desktop only) */}
               <a
-                href="https://www.facebook.com"
+                href="https://www.facebook.com/profile.php?id=61553295778772"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="BJWS Facebook Community"

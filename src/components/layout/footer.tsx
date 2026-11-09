@@ -186,7 +186,7 @@ export function Footer() {
               {/* Social */}
               <div className="flex items-center gap-3 pt-2">
                 <a
-                  href="https://www.facebook.com"
+                  href="https://www.facebook.com/profile.php?id=61553295778772"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="BJWS Facebook Community"
