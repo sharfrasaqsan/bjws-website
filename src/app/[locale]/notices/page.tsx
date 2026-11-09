@@ -147,11 +147,11 @@ export default async function NoticesPage({
                 </div>
               </div>
               <a
-                href="tel:+94774835530"
+                href="tel:+94776227323"
                 className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-amber-600 px-4 py-2.5 text-xs font-bold text-white shadow-xs transition hover:bg-amber-700 sm:text-sm dark:bg-amber-500 dark:hover:bg-amber-600"
               >
                 <Phone className="h-4 w-4" />
-                <span>+94 77 483 5530</span>
+                <span>+94 77 622 7323</span>
               </a>
             </div>
           </div>

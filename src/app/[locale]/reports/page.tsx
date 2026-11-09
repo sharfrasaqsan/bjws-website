@@ -131,7 +131,7 @@ export default async function ReportsPage({
               </div>
               <div>
                 <span className="font-sans text-xs font-bold tracking-wider text-[#b8952b] uppercase">
-                  Accountability Declaration
+                  {t("accountabilityEyebrow")}
                 </span>
                 <h2 className="font-display mt-1 text-2xl font-bold text-[#0b2e1e] sm:text-3xl">
                   {t("transparencyTitle")}
@@ -140,9 +140,9 @@ export default async function ReportsPage({
                   {t("transparencyBody")}
                 </p>
                 <div className="mt-4 flex flex-wrap items-center gap-4 text-xs font-semibold text-[#6b7280]">
-                  <span>• Audited by General Assembly</span>
-                  <span>• Submitted to Divisional Secretariat</span>
-                  <span>• Reg: DS/TH/SS/VSSO/2023/01</span>
+                  <span>• {t("auditBadge1")}</span>
+                  <span>• {t("auditBadge2")}</span>
+                  <span>• {t("auditBadge3")}</span>
                 </div>
               </div>
             </div>
@@ -152,7 +152,7 @@ export default async function ReportsPage({
           <div className="mb-20">
             <ScrollReveal className="mb-8 border-b border-[#0b2e1e]/10 pb-4">
               <span className="font-sans text-xs font-bold tracking-wider text-[#b8952b] uppercase">
-                Public Records
+                {t("publicRecordsEyebrow")}
               </span>
               <h2 className="font-display mt-1 text-2xl font-bold tracking-tight text-[#0b2e1e] sm:text-3xl">
                 {t("reportsListTitle")}
@@ -165,11 +165,10 @@ export default async function ReportsPage({
                   <FileText className="h-6 w-6 text-[#b8952b]" />
                 </div>
                 <h3 className="font-display mt-4 text-lg font-bold text-[#0b2e1e]">
-                  No Official Reports Published Yet
+                  {t("reportsEmptyTitle")}
                 </h3>
                 <p className="mx-auto mt-2 max-w-md text-sm text-[#6b7280]">
-                  Audited annual reports and administrative statements will be
-                  published here upon executive approval.
+                  {t("reportsEmptySubtitle")}
                 </p>
               </div>
             ) : (

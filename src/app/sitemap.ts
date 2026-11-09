@@ -1,14 +1,19 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL, LOCALES, DEFAULT_LOCALE } from "@/lib/seo";
 import { SEED_ARTICLES } from "@/content/news";
+import {
+  createPublicClient,
+  isSupabaseConfigured,
+} from "@/lib/supabase/server";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const routes = [
     "",
     "/about",
     "/team",
     "/services",
     "/news",
+    "/notices",
     "/achievements",
     "/gallery",
     "/membership",
@@ -37,7 +42,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
         url: `${SITE_URL}/${locale}${cleanRoute}`,
         lastModified: currentDate,
         changeFrequency:
-          cleanRoute === "" || cleanRoute === "/reports"
+          cleanRoute === "" ||
+          cleanRoute === "/notices" ||
+          cleanRoute === "/reports"
             ? "weekly"
             : cleanRoute === "/services" || cleanRoute === "/membership"
               ? "monthly"
@@ -45,7 +52,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
         priority:
           cleanRoute === ""
             ? 1.0
-            : cleanRoute === "/services" || cleanRoute === "/membership"
+            : cleanRoute === "/services" ||
+                cleanRoute === "/membership" ||
+                cleanRoute === "/notices"
               ? 0.9
               : cleanRoute === "/contact" || cleanRoute === "/reports"
                 ? 0.8
@@ -59,6 +68,48 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Include dynamic news articles for maximum search discoverability
   const addedSlugs = new Set<string>();
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = createPublicClient();
+      const { data } = await supabase
+        .from("articles")
+        .select("slug, published_at, updated_at")
+        .eq("is_published", true);
+
+      if (data) {
+        for (const item of data) {
+          if (!item.slug || addedSlugs.has(item.slug)) continue;
+          addedSlugs.add(item.slug);
+
+          const articleRoute = `/news/${item.slug}`;
+
+          for (const locale of LOCALES) {
+            const languagesMap: Record<string, string> = {
+              "x-default": `${SITE_URL}/${DEFAULT_LOCALE}${articleRoute}`,
+            };
+
+            for (const loc of LOCALES) {
+              languagesMap[loc] = `${SITE_URL}/${loc}${articleRoute}`;
+            }
+
+            sitemapEntries.push({
+              url: `${SITE_URL}/${locale}${articleRoute}`,
+              lastModified: item.updated_at || item.published_at || currentDate,
+              changeFrequency: "weekly",
+              priority: 0.75,
+              alternates: {
+                languages: languagesMap,
+              },
+            });
+          }
+        }
+      }
+    } catch {
+      // Fallback handled below
+    }
+  }
+
   for (const article of SEED_ARTICLES) {
     if (!article.is_published || addedSlugs.has(article.slug)) continue;
     addedSlugs.add(article.slug);

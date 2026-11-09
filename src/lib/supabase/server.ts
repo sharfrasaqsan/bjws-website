@@ -44,8 +44,12 @@ export async function createClient() {
 export async function createAdminClient() {
   const supabaseUrl =
     process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
-  const serviceRoleKey =
+  const rawServiceKey =
     process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY;
+  const serviceRoleKey =
+    rawServiceKey && !rawServiceKey.endsWith("...")
+      ? rawServiceKey
+      : process.env.SUPABASE_SECRET_KEY;
 
   if (serviceRoleKey && supabaseUrl) {
     return createSupabaseClient<Database>(supabaseUrl, serviceRoleKey, {

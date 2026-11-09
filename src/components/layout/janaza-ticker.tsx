@@ -477,11 +477,11 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
                       </p>
                     </div>
                     <a
-                      href="tel:+94774835530"
+                      href="tel:+94776227323"
                       className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-red-600 px-3.5 py-1.5 text-xs font-bold text-white shadow-xs transition hover:bg-red-700"
                     >
                       <Phone className="h-3.5 w-3.5" />
-                      <span>+94 77 483 5530</span>
+                      <span>+94 77 622 7323</span>
                     </a>
                   </div>
                 )}
@@ -522,7 +522,7 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
                   </a>
 
                   <a
-                    href="tel:+94774835530"
+                    href="tel:+94776227323"
                     className="inline-flex items-center gap-1.5 rounded-xl border border-stone-300 bg-white px-3 py-2 text-xs font-bold text-stone-800 shadow-2xs transition hover:bg-stone-100 dark:border-emerald-900 dark:bg-emerald-950/60 dark:text-emerald-100"
                   >
                     <Phone className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />

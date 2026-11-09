@@ -896,8 +896,7 @@ export default async function HomePage({
 
           {latestArticles.length === 0 ? (
             <div className="rounded-2xl border border-[#e6e4dc] bg-white p-8 text-center text-xs text-[#6b7280]">
-              No news announcements published yet. Recent activities will appear
-              here.
+              {t("noArticlesYet")}
             </div>
           ) : (
             <ScrollRevealGroup
