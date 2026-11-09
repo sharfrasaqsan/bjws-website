@@ -66,7 +66,11 @@ export function getOrganizationJsonLd() {
       "@type": "AdministrativeArea",
       name: "Mullipothana, Thambalagamuwa, Eastern Province, Sri Lanka",
     },
-    sameAs: ["https://www.facebook.com/profile.php?id=61553295778772"],
+    sameAs: [
+      "https://www.facebook.com/profile.php?id=61553295778772",
+      "https://x.com/bjwsociety",
+      "https://www.youtube.com/@bjwsociety",
+    ],
   };
 }
 
