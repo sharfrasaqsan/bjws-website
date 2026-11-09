@@ -7,6 +7,7 @@ import {
   useMemo,
   useRef,
   useCallback,
+  useSyncExternalStore,
 } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
@@ -48,6 +49,23 @@ interface JanazaTickerProps {
   className?: string;
 }
 
+function subscribeMobile(callback: () => void) {
+  if (typeof window === "undefined") return () => {};
+  const mql = window.matchMedia("(max-width: 767px)");
+  mql.addEventListener("change", callback);
+  return () => mql.removeEventListener("change", callback);
+}
+
+function getMobileSnapshot() {
+  return typeof window !== "undefined"
+    ? window.matchMedia("(max-width: 767px)").matches
+    : false;
+}
+
+function getServerSnapshot() {
+  return false;
+}
+
 export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
   const locale = useLocale();
   const pathname = usePathname();
@@ -55,13 +73,35 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
   // Hide the floating notice popup ONLY when user enters the notices page
   const isNoticesPage = pathname?.includes("/notices");
 
+  // React 19 sync store: detects mobile viewport without cascading render warnings
+  const isMobile = useSyncExternalStore(
+    subscribeMobile,
+    getMobileSnapshot,
+    getServerSnapshot
+  );
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(false);
+  const [userExpanded, setUserExpanded] = useState<boolean | null>(null);
   const [activeModalNotice, setActiveModalNotice] = useState<NoticeItem | null>(
     null
   );
   const [isImageLightboxOpen, setIsImageLightboxOpen] = useState(false);
+
+  // On desktop: default to expanded. On mobile: default to compact capsule pill
+  const isExpanded = userExpanded !== null ? userExpanded : !isMobile;
+
+  // Auto-collapse on scroll down so site reading is never obstructed
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 80) {
+        setUserExpanded(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Lock body scroll and close on Escape key when modal is open
   useEffect(() => {
@@ -121,7 +161,7 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
   }, [totalNotices]);
 
   useEffect(() => {
-    if (totalNotices <= 1 || isPaused || isMinimized) {
+    if (totalNotices <= 1 || isPaused || !isExpanded) {
       if (timerRef.current) clearInterval(timerRef.current);
       return;
     }
@@ -133,7 +173,7 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [totalNotices, isPaused, isMinimized, handleNext]);
+  }, [totalNotices, isPaused, isExpanded, handleNext]);
 
   // When visiting the notices page, or if no notices exist, hide popup
   if (isNoticesPage || totalNotices === 0) {
@@ -161,13 +201,22 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
 
   return (
     <>
-      {/* 1. MINIMIZED FLOATING CAPSULE PILL */}
-      {isMinimized ? (
+      {/* Mobile Backdrop to dismiss card when tapping outside on phone */}
+      {isExpanded && isMobile && (
+        <div
+          className="fixed inset-0 z-30 bg-black/40 backdrop-blur-2xs duration-200 md:hidden"
+          onClick={() => setUserExpanded(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* 1. MINIMIZED FLOATING CAPSULE PILL (Default on mobile, ultra-compact) */}
+      {!isExpanded ? (
         <div className="animate-in fade-in fixed right-4 bottom-20 z-40 duration-200 md:right-6 md:bottom-6">
           <button
             type="button"
-            onClick={() => setIsMinimized(false)}
-            className="group relative flex max-w-[340px] cursor-pointer items-center gap-2.5 rounded-full border border-amber-400/60 bg-[#062115]/95 px-4 py-2.5 text-white shadow-2xl backdrop-blur-xl transition-all hover:scale-105 hover:border-amber-300"
+            onClick={() => setUserExpanded(true)}
+            className="group relative flex max-w-[340px] cursor-pointer items-center gap-2 rounded-full border border-amber-400/60 bg-[#062115]/95 px-3.5 py-2 text-white shadow-2xl backdrop-blur-xl transition-all hover:scale-105 hover:border-amber-300 sm:gap-2.5 sm:px-4 sm:py-2.5"
             title="Expand Notice"
           >
             <span className="relative flex h-2.5 w-2.5 shrink-0">
@@ -177,7 +226,7 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
 
             <Bell className="h-3.5 w-3.5 shrink-0 text-amber-300 transition-transform group-hover:rotate-12" />
 
-            <span className="shrink-0 text-xs font-bold text-amber-200">
+            <span className="shrink-0 text-[11px] font-bold text-amber-200 sm:text-xs">
               {noticeBadgeText}{" "}
               <span className="font-mono text-amber-300/80">
                 ({safeIndex + 1}/{totalNotices})
@@ -192,13 +241,13 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
           </button>
         </div>
       ) : (
-        /* 2. EXPANDED FLOATING DYNAMIC ISLAND CARD */
+        /* 2. EXPANDED FLOATING DYNAMIC ISLAND CARD (Default on desktop, opens on mobile tap) */
         <aside
           role="region"
           aria-label={noticeBadgeText}
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
-          className={`animate-in fade-in slide-in-from-bottom-5 fixed right-4 bottom-20 z-40 w-[calc(100vw-2rem)] max-w-sm duration-300 sm:w-[380px] md:right-6 md:bottom-6 ${
+          className={`animate-in fade-in slide-in-from-bottom-5 fixed right-4 bottom-20 z-40 w-[calc(100vw-2rem)] max-w-sm max-h-[82vh] overflow-y-auto duration-300 sm:w-[380px] md:right-6 md:bottom-6 ${
             className || ""
           }`}
         >
@@ -260,7 +309,7 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
 
                 <button
                   type="button"
-                  onClick={() => setIsMinimized(true)}
+                  onClick={() => setUserExpanded(false)}
                   className="cursor-pointer rounded-md p-1 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
                   title="Minimize"
                   aria-label="Minimize notice"
@@ -270,7 +319,7 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
 
                 <button
                   type="button"
-                  onClick={() => setIsMinimized(true)}
+                  onClick={() => setUserExpanded(false)}
                   className="cursor-pointer rounded-md p-1 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
                   title="Minimize"
                   aria-label="Close notice card"
