@@ -334,7 +334,7 @@ export default async function AboutPage({
                 <div className="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-[#0b2e1e]/10 bg-white p-3 shadow-xs">
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-[#0b2e1e] px-3 py-1 text-xs font-bold text-[#d4af37]">
                     <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#d4af37]" />
-                    Serving Since 2023
+                    {t("servingBadge")}
                   </span>
                   <span className="text-xs font-semibold text-[#0b2e1e]">
                     Official Society Signboard & Registry
