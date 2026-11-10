@@ -331,6 +331,29 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
     e.preventDefault();
     setFormError(null);
     const formData = new FormData(e.currentTarget);
+
+    // Guarantee all multilingual fields from React state are reliably present in formData
+    formData.set("title_ta", createFields.title_ta.trim());
+    formData.set("excerpt_ta", createFields.excerpt_ta.trim());
+    formData.set("content_ta", createFields.content_ta.trim());
+
+    formData.set("title_en", createFields.title_en.trim());
+    formData.set("excerpt_en", createFields.excerpt_en.trim());
+    formData.set("content_en", createFields.content_en.trim());
+
+    formData.set("title_si", createFields.title_si.trim());
+    formData.set("excerpt_si", createFields.excerpt_si.trim());
+    formData.set("content_si", createFields.content_si.trim());
+
+    formData.set("slug", createFields.slug.trim());
+    formData.set("category", createFields.category);
+    formData.set("author", createFields.author.trim());
+    formData.set("published_at", createFields.published_at.trim());
+    if (createFields.is_published) {
+      formData.set("is_published", "on");
+    } else {
+      formData.delete("is_published");
+    }
     formData.set("image_url", createFields.image_url.trim());
     formData.set("gallery", JSON.stringify(createGallery));
 
@@ -350,6 +373,29 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
     if (!editingArticle) return;
     setFormError(null);
     const formData = new FormData(e.currentTarget);
+
+    // Guarantee all multilingual fields from React state are reliably present in formData
+    formData.set("title_ta", editFields.title_ta.trim());
+    formData.set("excerpt_ta", editFields.excerpt_ta.trim());
+    formData.set("content_ta", editFields.content_ta.trim());
+
+    formData.set("title_en", editFields.title_en.trim());
+    formData.set("excerpt_en", editFields.excerpt_en.trim());
+    formData.set("content_en", editFields.content_en.trim());
+
+    formData.set("title_si", editFields.title_si.trim());
+    formData.set("excerpt_si", editFields.excerpt_si.trim());
+    formData.set("content_si", editFields.content_si.trim());
+
+    formData.set("category", editFields.category);
+    formData.set("author", editFields.author.trim());
+    formData.set("published_at", editFields.published_at.trim());
+    formData.set("updated_at", editFields.updated_at.trim());
+    if (editFields.is_published) {
+      formData.set("is_published", "on");
+    } else {
+      formData.delete("is_published");
+    }
     formData.set("image_url", editFields.image_url.trim());
     formData.set("gallery", JSON.stringify(editGallery));
 

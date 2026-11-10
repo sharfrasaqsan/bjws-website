@@ -1,5 +1,9 @@
 import { Metadata } from "next";
 import Link from "next/link";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 import { getAdminSession } from "@/lib/admin-auth";
 import { getAllArticlesAdmin, type Article } from "@/content/news";
 import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/server";

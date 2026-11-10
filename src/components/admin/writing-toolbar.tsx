@@ -173,7 +173,8 @@ export function WritingToolbar({
         </div>
       </div>
 
-      {activeTab === "write" ? (
+      {/* Write Workspace - Always mounted in DOM so form submission never loses textarea content */}
+      <div className={activeTab === "write" ? "block" : "hidden"}>
         <div className="focus-within:border-primary focus-within:ring-primary/20 overflow-hidden rounded-xl border border-[#e6e4dc] bg-white shadow-2xs focus-within:ring-2">
           {/* Enhanced Writing Toolbar */}
           <div className="text-text-muted flex flex-wrap items-center gap-0.5 border-b border-[#f0eee6] bg-[#fbfaf6] p-1.5 text-xs">
@@ -412,8 +413,10 @@ export function WritingToolbar({
             </span>
           </div>
         </div>
-      ) : (
-        /* Live Preview Container */
+      </div>
+
+      {/* Live Preview Container */}
+      {activeTab === "preview" && (
         <div className="min-h-[220px] space-y-4 rounded-xl border border-[#e6e4dc] bg-[#fbfaf6] p-5 shadow-2xs sm:p-6">
           <div className="text-text-muted mb-3 flex items-center justify-between border-b border-[#e6e4dc] pb-2 text-xs">
             <span className="flex items-center gap-1.5 font-bold text-[#0b2e1e]">

@@ -14,7 +14,7 @@ import {
   deleteUnifiedArticleStore,
   toggleUnifiedArticlePublishStore,
   extractBaseSlug,
-  getArticles,
+  getAllArticlesAdmin,
   type Article,
   type ArticleImage,
 } from "@/content/news";
@@ -973,39 +973,50 @@ export async function createMultilingualArticleAction(
   if (isSupabaseConfigured()) {
     try {
       const supabase = await createAdminClient();
-      const baseArticlesPayload = newArticles.map((a) => ({
-        id: a.id,
-        slug: a.slug,
-        title: a.title,
-        excerpt: a.excerpt,
-        content: a.content,
-        category: a.category,
-        author: a.author,
-        image_url: a.image_url,
-        locale: a.locale,
-        is_published: a.is_published,
-        published_at: a.published_at,
-      }));
+      for (const art of newArticles) {
+        const payload = {
+          id: art.id,
+          slug: art.slug,
+          title: art.title,
+          excerpt: art.excerpt,
+          content: art.content,
+          category: art.category,
+          author: art.author,
+          image_url: art.image_url,
+          locale: art.locale,
+          is_published: art.is_published,
+          published_at: art.published_at,
+          ...(art.updated_at ? { updated_at: art.updated_at } : {}),
+        };
 
-      const { error: insertErr } = await supabase.from("articles").insert(
-        baseArticlesPayload.map((a, idx) => ({
-          ...a,
-          ...(newArticles[idx].updated_at
-            ? { updated_at: newArticles[idx].updated_at }
-            : {}),
-        }))
-      );
+        const { error: upsertErr } = await supabase
+          .from("articles")
+          .upsert(payload, { onConflict: "slug" });
 
-      if (insertErr && insertErr.message.includes("column")) {
-        await supabase.from("articles").insert(baseArticlesPayload);
+        if (upsertErr) {
+          console.error(`Supabase upsert error for ${art.locale}:`, upsertErr);
+          return {
+            error: `Failed to save ${art.locale.toUpperCase()} article: ${upsertErr.message}`,
+          };
+        }
       }
-    } catch (err) {
-      console.warn("Supabase insert multilingual article warning:", err);
+    } catch (err: unknown) {
+      console.error("Supabase insert multilingual article error:", err);
+      return {
+        error:
+          err instanceof Error
+            ? err.message
+            : "An unexpected error occurred while saving the article to the database.",
+      };
     }
   }
 
   revalidatePath("/admin/news");
   revalidatePath("/[locale]/news", "page");
+  revalidatePath("/[locale]/news/[slug]", "page");
+  revalidatePath("/en/news");
+  revalidatePath("/ta/news");
+  revalidatePath("/si/news");
   return { success: true };
 }
 
@@ -1161,7 +1172,7 @@ export async function updateMultilingualArticleAction(
 
   updateUnifiedArticleStore(normalizedBase, commonUpdates, translationUpdates);
 
-  const existingArticles = getArticles("en", true);
+  const existingArticles = getAllArticlesAdmin();
   const langSpecs = [
     {
       loc: "en" as const,
@@ -1205,7 +1216,8 @@ export async function updateMultilingualArticleAction(
             author,
             image_url,
             locale: spec.loc,
-            published_at: new Date().toISOString(),
+            published_at: published_at || new Date().toISOString(),
+            updated_at: updated_at || undefined,
             is_published,
             read_time_minutes: Math.max(
               1,
@@ -1223,31 +1235,49 @@ export async function updateMultilingualArticleAction(
       for (const spec of langSpecs) {
         if (spec.title && spec.content) {
           const s = `${normalizedBase}${spec.slugSuffix}`;
-          await supabase.from("articles").upsert(
-            {
-              slug: s,
-              title: spec.title,
-              excerpt: spec.excerpt || spec.content.slice(0, 160) + "...",
-              content: spec.content,
-              category,
-              author,
-              image_url,
-              locale: spec.loc,
-              is_published,
-              ...(published_at ? { published_at } : {}),
-              ...(updated_at ? { updated_at } : {}),
-            },
-            { onConflict: "slug" }
-          );
+          const payload = {
+            slug: s,
+            title: spec.title,
+            excerpt: spec.excerpt || spec.content.slice(0, 160) + "...",
+            content: spec.content,
+            category,
+            author,
+            image_url,
+            locale: spec.loc,
+            is_published,
+            ...(published_at ? { published_at } : {}),
+            ...(updated_at ? { updated_at } : {}),
+          };
+
+          const { error: upsertErr } = await supabase
+            .from("articles")
+            .upsert(payload, { onConflict: "slug" });
+
+          if (upsertErr) {
+            console.error(`Supabase update error for ${spec.loc}:`, upsertErr);
+            return {
+              error: `Failed to save ${spec.loc.toUpperCase()} translation: ${upsertErr.message}`,
+            };
+          }
         }
       }
-    } catch (err) {
-      console.warn("Supabase update multilingual article warning:", err);
+    } catch (err: unknown) {
+      console.error("Supabase update multilingual article error:", err);
+      return {
+        error:
+          err instanceof Error
+            ? err.message
+            : "An unexpected error occurred while updating the article.",
+      };
     }
   }
 
   revalidatePath("/admin/news");
   revalidatePath("/[locale]/news", "page");
+  revalidatePath("/[locale]/news/[slug]", "page");
+  revalidatePath("/en/news");
+  revalidatePath("/ta/news");
+  revalidatePath("/si/news");
   return { success: true };
 }
 
