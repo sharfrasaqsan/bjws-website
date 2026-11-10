@@ -83,7 +83,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
     author: "BJWS Editorial Board",
     image_url: "",
     is_published: true,
-    published_at: new Date().toISOString().slice(0, 10),
+    published_at: "",
   });
 
   // Controlled form state for edit
@@ -101,8 +101,8 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
     author: "BJWS Editorial Board",
     image_url: "",
     is_published: true,
-    published_at: new Date().toISOString().slice(0, 10),
-    updated_at: new Date().toISOString().slice(0, 10),
+    published_at: "",
+    updated_at: "",
   });
 
   // Gallery state for related internal images with alt text
@@ -135,10 +135,8 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
       author: art.author,
       image_url: art.image_url,
       is_published: art.is_published,
-      published_at: art.published_at
-        ? art.published_at.slice(0, 10)
-        : new Date().toISOString().slice(0, 10),
-      updated_at: new Date().toISOString().slice(0, 10),
+      published_at: art.published_at ? art.published_at.slice(0, 10) : "",
+      updated_at: art.updated_at ? art.updated_at.slice(0, 10) : "",
     });
     const initialGallery =
       art.gallery ||
@@ -294,7 +292,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
       author: "BJWS Editorial Board",
       image_url: "",
       is_published: true,
-      published_at: new Date().toISOString().slice(0, 10),
+      published_at: "",
     });
     setCreateGallery([]);
     setIsCreateOpen(true);
@@ -317,7 +315,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
       author: "BJWS Editorial Board",
       image_url: "",
       is_published: true,
-      published_at: new Date().toISOString().slice(0, 10),
+      published_at: "",
     });
     setCreateGallery([]);
     setFormError(null);
@@ -801,9 +799,41 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="font-semibold text-[#1c2420]">
-                      Publish Date *
-                    </label>
+                    <div className="flex items-center justify-between">
+                      <label className="font-semibold text-[#1c2420]">
+                        Publish Date
+                      </label>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setCreateFields((p) => ({
+                              ...p,
+                              published_at: new Date()
+                                .toISOString()
+                                .slice(0, 10),
+                            }))
+                          }
+                          className="text-[11px] font-semibold text-[#124d34] hover:underline"
+                        >
+                          Set Today
+                        </button>
+                        {createFields.published_at && (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setCreateFields((p) => ({
+                                ...p,
+                                published_at: "",
+                              }))
+                            }
+                            className="text-[11px] font-semibold text-slate-500 hover:underline"
+                          >
+                            Clear
+                          </button>
+                        )}
+                      </div>
+                    </div>
                     <input
                       type="date"
                       name="published_at"
@@ -814,7 +844,6 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                           published_at: e.target.value,
                         }))
                       }
-                      required
                       className="w-full rounded-xl border border-[#e6e4dc] bg-white px-3 py-2 text-xs text-[#1c2420] focus:border-[#124d34] focus:outline-none"
                     />
                   </div>
@@ -1310,9 +1339,23 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="font-semibold text-[#1c2420]">
-                      Publish Date *
-                    </label>
+                    <div className="flex items-center justify-between">
+                      <label className="font-semibold text-[#1c2420]">
+                        Publish Date
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setEditFields((p) => ({
+                            ...p,
+                            published_at: new Date().toISOString().slice(0, 10),
+                          }))
+                        }
+                        className="text-[11px] font-semibold text-[#124d34] hover:underline"
+                      >
+                        Set Today
+                      </button>
+                    </div>
                     <input
                       type="date"
                       name="published_at"
@@ -1323,15 +1366,44 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
                           published_at: e.target.value,
                         }))
                       }
-                      required
                       className="w-full rounded-xl border border-[#e6e4dc] bg-white px-3 py-2 text-xs text-[#1c2420] focus:border-[#124d34] focus:outline-none"
                     />
                   </div>
 
                   <div className="space-y-1">
-                    <label className="font-semibold text-[#1c2420]">
-                      Last Updated Date
-                    </label>
+                    <div className="flex items-center justify-between">
+                      <label className="font-semibold text-[#1c2420]">
+                        Last Updated Date
+                      </label>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setEditFields((p) => ({
+                              ...p,
+                              updated_at: new Date().toISOString().slice(0, 10),
+                            }))
+                          }
+                          className="text-[11px] font-semibold text-[#124d34] hover:underline"
+                        >
+                          Set Today
+                        </button>
+                        {editFields.updated_at && (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setEditFields((p) => ({
+                                ...p,
+                                updated_at: "",
+                              }))
+                            }
+                            className="text-[11px] font-semibold text-slate-500 hover:underline"
+                          >
+                            Clear
+                          </button>
+                        )}
+                      </div>
+                    </div>
                     <input
                       type="date"
                       name="updated_at"

@@ -59,6 +59,8 @@ export function ReportsManager({ initialReports }: ReportsManagerProps) {
       if (res.success) {
         setShowUpload(false);
         const file = formData.get("file") as File | null;
+        const rawPublishedAt = (formData.get("published_at") as string)?.trim();
+        const rawUpdatedAt = (formData.get("updated_at") as string)?.trim();
         const newReport: ReportRecord = {
           id: "temp-" + Date.now(),
           title: formData.get("title") as string,
@@ -70,6 +72,12 @@ export function ReportsManager({ initialReports }: ReportsManagerProps) {
             ? `${(file.size / (1024 * 1024)).toFixed(1)} MB`
             : "1.5 MB",
           is_published: formData.get("is_published") === "on",
+          published_at: rawPublishedAt
+            ? new Date(rawPublishedAt).toISOString()
+            : new Date().toISOString(),
+          updated_at: rawUpdatedAt
+            ? new Date(rawUpdatedAt).toISOString()
+            : undefined,
         };
         setReports((prev) => [newReport, ...prev]);
       }
@@ -253,18 +261,31 @@ export function ReportsManager({ initialReports }: ReportsManagerProps) {
               </div>
 
               <div>
-                <label
-                  htmlFor="published_at"
-                  className="mb-1 block text-xs font-semibold text-[#1c2420]"
-                >
-                  Publish Date <span className="text-red-500">*</span>
-                </label>
+                <div className="mb-1 flex items-center justify-between">
+                  <label
+                    htmlFor="published_at"
+                    className="block text-xs font-semibold text-[#1c2420]"
+                  >
+                    Publish Date
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const el = document.getElementById(
+                        "published_at"
+                      ) as HTMLInputElement | null;
+                      if (el) el.value = new Date().toISOString().slice(0, 10);
+                    }}
+                    className="text-[11px] font-semibold text-[#124d34] hover:underline"
+                  >
+                    Set Today
+                  </button>
+                </div>
                 <input
                   id="published_at"
                   name="published_at"
                   type="date"
-                  defaultValue={new Date().toISOString().slice(0, 10)}
-                  required
+                  defaultValue=""
                   disabled={isUploading}
                   className="w-full rounded-lg border border-[#e6e4dc] bg-[#fbfaf6] px-3 py-2 text-xs text-[#1c2420] transition-colors focus:border-[#124d34] focus:bg-white focus:outline-none sm:text-sm"
                 />

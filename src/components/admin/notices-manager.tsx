@@ -130,7 +130,14 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
       if (res.success) {
         setShowCreate(false);
         const timestamp = Date.now();
-        const published_at = new Date().toISOString();
+        const rawPublishedAt = (formData.get("published_at") as string)?.trim();
+        const published_at = rawPublishedAt
+          ? new Date(rawPublishedAt).toISOString()
+          : new Date().toISOString();
+        const rawUpdatedAt = (formData.get("updated_at") as string)?.trim();
+        const updated_at = rawUpdatedAt
+          ? new Date(rawUpdatedAt).toISOString()
+          : undefined;
         const is_published = formData.get("is_published") === "on";
         const image_url = createFields.image_url.trim() || undefined;
 
@@ -142,6 +149,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
             body: createFields.body_ta,
             locale: "ta",
             published_at,
+            updated_at,
             is_published,
             image_url,
           };
@@ -153,6 +161,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
             body: createFields.body_en,
             locale: "en",
             published_at,
+            updated_at,
             is_published,
             image_url,
           };
@@ -164,6 +173,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
             body: createFields.body_si,
             locale: "si",
             published_at,
+            updated_at,
             is_published,
             image_url,
           };
@@ -172,6 +182,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
         const newNotice: UnifiedNoticeRecord = {
           baseId: `notice-${timestamp}`,
           published_at,
+          updated_at,
           is_published,
           image_url,
           translations: newTranslations,
@@ -209,7 +220,18 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
       );
       if (res.success) {
         const is_published = formData.get("is_published") === "on";
-        const published_at = editingNotice.published_at;
+        const rawPublishedAt = (formData.get("published_at") as string)?.trim();
+        const published_at = rawPublishedAt
+          ? new Date(rawPublishedAt).toISOString()
+          : editingNotice.published_at;
+
+        const rawUpdatedAt = (formData.get("updated_at") as string)?.trim();
+        const updated_at = rawUpdatedAt
+          ? new Date(rawUpdatedAt).toISOString()
+          : rawUpdatedAt === ""
+            ? undefined
+            : editingNotice.updated_at;
+
         const image_url = editFields.image_url.trim() || undefined;
 
         const updatedTranslations: UnifiedNoticeRecord["translations"] = {
@@ -224,6 +246,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
             body: editFields.body_ta,
             locale: "ta",
             published_at,
+            updated_at,
             is_published,
             image_url,
           };
@@ -236,6 +259,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
             body: editFields.body_en,
             locale: "en",
             published_at,
+            updated_at,
             is_published,
             image_url,
           };
@@ -248,6 +272,7 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
             body: editFields.body_si,
             locale: "si",
             published_at,
+            updated_at,
             is_published,
             image_url,
           };
@@ -255,6 +280,8 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
 
         const updatedItem: UnifiedNoticeRecord = {
           ...editingNotice,
+          published_at,
+          updated_at,
           is_published,
           image_url,
           translations: updatedTranslations,
@@ -693,18 +720,31 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
             {/* Publication and Homepage settings */}
             <div className="grid grid-cols-1 gap-4 rounded-xl border border-[#e6e4dc] bg-[#fbfaf6] p-4 sm:grid-cols-2">
               <div>
-                <label
-                  htmlFor="published_at"
-                  className="mb-1 block text-xs font-semibold text-[#1c2420]"
-                >
-                  Publish Date <span className="text-red-500">*</span>
-                </label>
+                <div className="mb-1 flex items-center justify-between">
+                  <label
+                    htmlFor="published_at"
+                    className="block text-xs font-semibold text-[#1c2420]"
+                  >
+                    Publish Date
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const el = document.getElementById(
+                        "published_at"
+                      ) as HTMLInputElement | null;
+                      if (el) el.value = new Date().toISOString().slice(0, 10);
+                    }}
+                    className="text-[11px] font-semibold text-[#124d34] hover:underline"
+                  >
+                    Set Today
+                  </button>
+                </div>
                 <input
                   id="published_at"
                   name="published_at"
                   type="date"
-                  defaultValue={new Date().toISOString().slice(0, 10)}
-                  required
+                  defaultValue=""
                   disabled={isCreating}
                   className="w-full rounded-lg border border-[#e6e4dc] bg-white px-3 py-2 text-xs text-[#1c2420] transition-colors focus:border-[#124d34] focus:outline-none"
                 />
@@ -1015,13 +1055,27 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
             <div className="grid grid-cols-1 gap-4 rounded-xl border border-[#e6e4dc] bg-[#fbfaf6] p-4 sm:grid-cols-2">
               <div className="space-y-3">
                 <div>
-                  <label
-                    htmlFor="edit_published_at"
-                    className="mb-1 block text-xs font-semibold text-[#1c2420]"
-                  >
-                    Original Publish Date{" "}
-                    <span className="text-red-500">*</span>
-                  </label>
+                  <div className="mb-1 flex items-center justify-between">
+                    <label
+                      htmlFor="edit_published_at"
+                      className="block text-xs font-semibold text-[#1c2420]"
+                    >
+                      Original Publish Date
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const el = document.getElementById(
+                          "edit_published_at"
+                        ) as HTMLInputElement | null;
+                        if (el)
+                          el.value = new Date().toISOString().slice(0, 10);
+                      }}
+                      className="text-[11px] font-semibold text-[#124d34] hover:underline"
+                    >
+                      Set Today
+                    </button>
+                  </div>
                   <input
                     id="edit_published_at"
                     name="published_at"
@@ -1029,26 +1083,58 @@ export function NoticesManager({ initialNotices }: NoticesManagerProps) {
                     defaultValue={
                       editingNotice.published_at
                         ? editingNotice.published_at.slice(0, 10)
-                        : new Date().toISOString().slice(0, 10)
+                        : ""
                     }
-                    required
                     disabled={isEditing}
                     className="w-full rounded-lg border border-[#e6e4dc] bg-white px-3 py-2 text-xs text-[#1c2420] transition-colors focus:border-[#124d34] focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="edit_updated_at"
-                    className="mb-1 block text-xs font-semibold text-[#1c2420]"
-                  >
-                    Last Updated Date
-                  </label>
+                  <div className="mb-1 flex items-center justify-between">
+                    <label
+                      htmlFor="edit_updated_at"
+                      className="block text-xs font-semibold text-[#1c2420]"
+                    >
+                      Last Updated Date
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const el = document.getElementById(
+                            "edit_updated_at"
+                          ) as HTMLInputElement | null;
+                          if (el)
+                            el.value = new Date().toISOString().slice(0, 10);
+                        }}
+                        className="text-[11px] font-semibold text-[#124d34] hover:underline"
+                      >
+                        Set Today
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const el = document.getElementById(
+                            "edit_updated_at"
+                          ) as HTMLInputElement | null;
+                          if (el) el.value = "";
+                        }}
+                        className="text-[11px] font-semibold text-slate-500 hover:underline"
+                      >
+                        Clear
+                      </button>
+                    </div>
+                  </div>
                   <input
                     id="edit_updated_at"
                     name="updated_at"
                     type="date"
-                    defaultValue={new Date().toISOString().slice(0, 10)}
+                    defaultValue={
+                      editingNotice.updated_at
+                        ? editingNotice.updated_at.slice(0, 10)
+                        : ""
+                    }
                     disabled={isEditing}
                     className="w-full rounded-lg border border-[#e6e4dc] bg-white px-3 py-2 text-xs text-[#1c2420] transition-colors focus:border-[#124d34] focus:outline-none"
                   />

@@ -157,11 +157,14 @@ export async function createMultilingualNoticeAction(
   const image_url = (formData.get("image_url") as string)?.trim() || "";
   const is_published = formData.get("is_published") === "on";
   const show_on_homepage = formData.get("show_on_homepage") !== "off";
-  const published_at =
-    (formData.get("published_at") as string)?.trim() ||
-    new Date().toISOString();
-  const updated_at =
-    (formData.get("updated_at") as string)?.trim() || published_at;
+  const rawPublishedAt = (formData.get("published_at") as string)?.trim();
+  const published_at = rawPublishedAt
+    ? new Date(rawPublishedAt).toISOString()
+    : new Date().toISOString();
+  const rawUpdatedAt = (formData.get("updated_at") as string)?.trim();
+  const updated_at = rawUpdatedAt
+    ? new Date(rawUpdatedAt).toISOString()
+    : undefined;
 
   if (
     (!title_ta || !body_ta) &&
@@ -233,7 +236,9 @@ export async function createMultilingualNoticeAction(
 
       const fullPayload = basePayload.map((e, idx) => ({
         ...e,
-        updated_at: entries[idx].updated_at,
+        ...(entries[idx].updated_at
+          ? { updated_at: entries[idx].updated_at }
+          : {}),
         show_on_homepage: entries[idx].show_on_homepage,
         image_url: entries[idx].image_url || null,
       }));
@@ -246,7 +251,9 @@ export async function createMultilingualNoticeAction(
         const { error: fallbackErr } = await supabase.from("notices").insert(
           basePayload.map((e, idx) => ({
             ...e,
-            updated_at: entries[idx].updated_at,
+            ...(entries[idx].updated_at
+              ? { updated_at: entries[idx].updated_at }
+              : {}),
             show_on_homepage: entries[idx].show_on_homepage,
           }))
         );
@@ -283,9 +290,14 @@ export async function updateMultilingualNoticeAction(
   const image_url = (formData.get("image_url") as string)?.trim() || "";
   const is_published = formData.get("is_published") === "on";
   const show_on_homepage = formData.get("show_on_homepage") === "on";
-  const published_at = (formData.get("published_at") as string)?.trim();
-  const updated_at =
-    (formData.get("updated_at") as string)?.trim() || new Date().toISOString();
+  const rawPublishedAt = (formData.get("published_at") as string)?.trim();
+  const published_at = rawPublishedAt
+    ? new Date(rawPublishedAt).toISOString()
+    : undefined;
+  const rawUpdatedAt = (formData.get("updated_at") as string)?.trim();
+  const updated_at = rawUpdatedAt
+    ? new Date(rawUpdatedAt).toISOString()
+    : undefined;
 
   if (
     (!title_ta || !body_ta) &&
@@ -308,7 +320,7 @@ export async function updateMultilingualNoticeAction(
     image_url,
     show_on_homepage,
     published_at,
-    updated_at
+    updated_at === null ? "" : updated_at
   );
 
   if (isSupabaseConfigured()) {
@@ -341,7 +353,7 @@ export async function updateMultilingualNoticeAction(
                 .from("notices")
                 .update({
                   ...baseUpdate,
-                  updated_at,
+                  ...(updated_at ? { updated_at } : {}),
                   show_on_homepage,
                   image_url: image_url || null,
                 })
@@ -352,7 +364,7 @@ export async function updateMultilingualNoticeAction(
                   .from("notices")
                   .update({
                     ...baseUpdate,
-                    updated_at,
+                    ...(updated_at ? { updated_at } : {}),
                     show_on_homepage,
                   })
                   .eq("id", t.id);
@@ -374,7 +386,7 @@ export async function updateMultilingualNoticeAction(
               };
               const { error: insErr } = await supabase.from("notices").insert({
                 ...baseInsert,
-                updated_at,
+                ...(updated_at ? { updated_at } : {}),
                 show_on_homepage,
                 image_url: image_url || null,
               });
@@ -383,7 +395,7 @@ export async function updateMultilingualNoticeAction(
                   .from("notices")
                   .insert({
                     ...baseInsert,
-                    updated_at,
+                    ...(updated_at ? { updated_at } : {}),
                     show_on_homepage,
                   });
                 if (fallbackErr && fallbackErr.message.includes("column")) {
@@ -620,9 +632,14 @@ export async function uploadReportAction(
   const year = parseInt(yearStr, 10);
   const file = formData.get("file") as File | null;
   const is_published = formData.get("is_published") === "on";
-  const published_at = (formData.get("published_at") as string)?.trim();
-  const updated_at =
-    (formData.get("updated_at") as string)?.trim() || new Date().toISOString();
+  const rawPublishedAt = (formData.get("published_at") as string)?.trim();
+  const published_at = rawPublishedAt
+    ? new Date(rawPublishedAt).toISOString()
+    : new Date().toISOString();
+  const rawUpdatedAt = (formData.get("updated_at") as string)?.trim();
+  const updated_at = rawUpdatedAt
+    ? new Date(rawUpdatedAt).toISOString()
+    : undefined;
 
   if (!title || isNaN(year) || !file || file.size === 0) {
     return { error: "Title, year, and a valid PDF file are required." };
@@ -672,8 +689,8 @@ export async function uploadReportAction(
 
     let { error: dbError } = await supabase.from("reports").insert({
       ...basePayload,
-      published_at,
-      updated_at,
+      ...(published_at ? { published_at } : {}),
+      ...(updated_at ? { updated_at } : {}),
     });
 
     if (dbError && dbError.message.includes("column")) {
@@ -770,9 +787,16 @@ export async function createMultilingualArticleAction(
     (formData.get("author") as string)?.trim() || "BJWS Editorial Board";
   const image_url = (formData.get("image_url") as string)?.trim() || "";
   const is_published = formData.get("is_published") === "on";
-  const published_at = (formData.get("published_at") as string)?.trim();
-  const updated_at =
-    (formData.get("updated_at") as string)?.trim() || new Date().toISOString();
+  const rawPublishedAt = (formData.get("published_at") as string)?.trim();
+  const published_at = rawPublishedAt
+    ? new Date(rawPublishedAt).toISOString()
+    : undefined;
+  const rawUpdatedAt = (formData.get("updated_at") as string)?.trim();
+  const updated_at = rawUpdatedAt
+    ? new Date(rawUpdatedAt).toISOString()
+    : formData.has("updated_at") && rawUpdatedAt === ""
+      ? null
+      : undefined;
 
   const title_en = (formData.get("title_en") as string)?.trim();
   const excerpt_en = (formData.get("excerpt_en") as string)?.trim();
@@ -840,7 +864,7 @@ export async function createMultilingualArticleAction(
 
   const baseTimestamp = Date.now();
   const finalPublishedAt = published_at || new Date().toISOString();
-  const finalUpdatedAt = updated_at || finalPublishedAt;
+  const finalUpdatedAt = updated_at ? updated_at : undefined;
 
   const categoryLabels: Record<
     Article["category"],
@@ -966,7 +990,9 @@ export async function createMultilingualArticleAction(
       const { error: insertErr } = await supabase.from("articles").insert(
         baseArticlesPayload.map((a, idx) => ({
           ...a,
-          updated_at: newArticles[idx].updated_at,
+          ...(newArticles[idx].updated_at
+            ? { updated_at: newArticles[idx].updated_at }
+            : {}),
         }))
       );
 
@@ -997,9 +1023,16 @@ export async function updateMultilingualArticleAction(
     (formData.get("author") as string)?.trim() || "BJWS Editorial Board";
   const image_url = (formData.get("image_url") as string)?.trim() || "";
   const is_published = formData.get("is_published") === "on";
-  const published_at = (formData.get("published_at") as string)?.trim();
-  const updated_at =
-    (formData.get("updated_at") as string)?.trim() || new Date().toISOString();
+  const rawPublishedAt = (formData.get("published_at") as string)?.trim();
+  const published_at = rawPublishedAt
+    ? new Date(rawPublishedAt).toISOString()
+    : undefined;
+  const rawUpdatedAt = (formData.get("updated_at") as string)?.trim();
+  const updated_at = rawUpdatedAt
+    ? new Date(rawUpdatedAt).toISOString()
+    : formData.has("updated_at") && rawUpdatedAt === ""
+      ? null
+      : undefined;
 
   const title_en = (formData.get("title_en") as string)?.trim();
   const excerpt_en = (formData.get("excerpt_en") as string)?.trim();
@@ -1298,11 +1331,14 @@ export async function createArticleAction(
   const locale = (formData.get("locale") as "en" | "ta" | "si") || "en";
   const image_url = (formData.get("image_url") as string)?.trim() || "";
   const is_published = formData.get("is_published") === "on";
-  const published_at =
-    (formData.get("published_at") as string)?.trim() ||
-    new Date().toISOString();
-  const updated_at =
-    (formData.get("updated_at") as string)?.trim() || published_at;
+  const rawPublishedAt = (formData.get("published_at") as string)?.trim();
+  const published_at = rawPublishedAt
+    ? new Date(rawPublishedAt).toISOString()
+    : new Date().toISOString();
+  const rawUpdatedAt = (formData.get("updated_at") as string)?.trim();
+  const updated_at = rawUpdatedAt
+    ? new Date(rawUpdatedAt).toISOString()
+    : undefined;
 
   if (!title || !content) {
     return { error: "Title and content are required." };
@@ -1384,7 +1420,7 @@ export async function createArticleAction(
         locale,
         is_published,
         published_at,
-        updated_at,
+        ...(updated_at ? { updated_at } : {}),
       });
     } catch (err) {
       console.warn("Supabase insert article warning:", err);
@@ -1416,9 +1452,14 @@ export async function updateArticleAction(
   const locale = (formData.get("locale") as "en" | "ta" | "si") || "en";
   const image_url = (formData.get("image_url") as string)?.trim();
   const is_published = formData.get("is_published") === "on";
-  const published_at = (formData.get("published_at") as string)?.trim();
-  const updated_at =
-    (formData.get("updated_at") as string)?.trim() || new Date().toISOString();
+  const rawPublishedAt = (formData.get("published_at") as string)?.trim();
+  const published_at = rawPublishedAt
+    ? new Date(rawPublishedAt).toISOString()
+    : undefined;
+  const rawUpdatedAt = (formData.get("updated_at") as string)?.trim();
+  const updated_at = rawUpdatedAt
+    ? new Date(rawUpdatedAt).toISOString()
+    : undefined;
 
   if (!id || !title || !content) {
     return { error: "ID, title, and content are required." };
@@ -1466,7 +1507,9 @@ export async function updateArticleAction(
     locale,
     is_published,
     ...(published_at ? { published_at } : {}),
-    ...(updated_at ? { updated_at } : {}),
+    ...(updated_at !== undefined
+      ? { updated_at: updated_at || undefined }
+      : {}),
     ...(image_url ? { image_url } : {}),
   };
 

@@ -177,7 +177,10 @@ export function updateUnifiedNoticeStore(
       ? show_on_homepage
       : (targetGroup?.show_on_homepage ?? true);
   const resolvedPublishedAt = published_at || targetGroup?.published_at || now;
-  const resolvedUpdatedAt = updated_at || now;
+  const resolvedUpdatedAt =
+    updated_at !== undefined
+      ? updated_at || undefined
+      : targetGroup?.updated_at;
 
   if (targetGroup) {
     const existingIds = Object.values(targetGroup.translations)
