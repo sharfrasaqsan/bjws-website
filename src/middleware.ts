@@ -94,6 +94,17 @@ export default async function middleware(request: NextRequest) {
     return response;
   }
 
+  // Force root "/" to always redirect to English ("/en") as the default language
+  // and clear any stale NEXT_LOCALE cookie from previous sessions.
+  if (pathname === "/") {
+    const enUrl = new URL("/en", request.url);
+    const response = NextResponse.redirect(enUrl);
+    if (request.cookies.has("NEXT_LOCALE")) {
+      response.cookies.delete("NEXT_LOCALE");
+    }
+    return response;
+  }
+
   // Handle internationalized public pages
   return intlMiddleware(request);
 }
