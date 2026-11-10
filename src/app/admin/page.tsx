@@ -8,7 +8,8 @@ import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { formatAdminDate } from "@/lib/utils";
 import { getAllTeamMembersAdmin } from "@/content/team";
 import { getAllGalleryImagesAdmin } from "@/content/gallery";
-import { getAllArticlesAdmin } from "@/content/news";
+import { getUnifiedArticlesAdmin } from "@/content/news";
+import { getUnifiedNoticesAdmin } from "@/content/notices";
 import {
   MessageSquare,
   Users,
@@ -31,7 +32,13 @@ export default async function AdminDashboardPage() {
 
   let messageStats = { total: 0, new: 0 };
   let membershipStats = { total: 0, pending: 0 };
-  let noticeStats = { total: 0, published: 0 };
+
+  const fallbackNotices = getUnifiedNoticesAdmin();
+  let noticeStats = {
+    total: fallbackNotices.length,
+    published: fallbackNotices.filter((n) => n.is_published).length,
+  };
+
   let reportStats = { total: 0, published: 0 };
 
   // Team, Gallery, and News stats (initialized with local fallback)
@@ -47,7 +54,7 @@ export default async function AdminDashboardPage() {
     approved: fallbackGallery.filter((g) => g.approved).length,
   };
 
-  const fallbackArticles = getAllArticlesAdmin();
+  const fallbackArticles = getUnifiedArticlesAdmin();
   let newsStats = {
     total: fallbackArticles.length,
     published: fallbackArticles.filter((a) => a.is_published).length,
@@ -94,11 +101,17 @@ export default async function AdminDashboardPage() {
           .from("membership_requests")
           .select("id, full_name, phone, plan, status, created_at")
           .order("created_at", { ascending: false }),
-        supabase.from("notices").select("id, is_published"),
+        supabase
+          .from("notices")
+          .select(
+            "id, title, body, locale, published_at, updated_at, is_published, image_url, show_on_homepage"
+          ),
         supabase.from("reports").select("id, is_published"),
         supabase.from("team_members").select("id, is_inactive"),
         supabase.from("gallery_images").select("id, approved"),
-        supabase.from("articles").select("id, is_published"),
+        supabase
+          .from("articles")
+          .select("id, slug, locale, is_published, published_at"),
       ]);
 
       if (messages) {
@@ -117,10 +130,26 @@ export default async function AdminDashboardPage() {
         recentMemberships = memberships.slice(0, 5);
       }
 
-      if (notices) {
+      if (notices && notices.length > 0) {
+        const unifiedNotices = getUnifiedNoticesAdmin(
+          notices.map((n) => ({
+            id: String(n.id),
+            title: String(n.title || ""),
+            body: String(n.body || ""),
+            locale: String(n.locale || "ta"),
+            published_at: String(n.published_at || new Date().toISOString()),
+            updated_at: n.updated_at ? String(n.updated_at) : undefined,
+            is_published: Boolean(n.is_published),
+            show_on_homepage:
+              n.show_on_homepage !== undefined
+                ? Boolean(n.show_on_homepage)
+                : true,
+            image_url: n.image_url ? String(n.image_url) : undefined,
+          }))
+        );
         noticeStats = {
-          total: notices.length,
-          published: notices.filter((n) => n.is_published).length,
+          total: unifiedNotices.length,
+          published: unifiedNotices.filter((n) => n.is_published).length,
         };
       }
 
@@ -146,9 +175,26 @@ export default async function AdminDashboardPage() {
       }
 
       if (dbArticles && dbArticles.length > 0) {
+        const unifiedArticles = getUnifiedArticlesAdmin(
+          dbArticles.map((d) => ({
+            id: String(d.id),
+            slug: String(d.slug),
+            title: "",
+            excerpt: "",
+            content: "",
+            category: "general" as const,
+            categoryLabel: { en: "General", ta: "செய்திகள்", si: "පුවත්" },
+            author: "",
+            image_url: "",
+            locale: (d.locale as "en" | "ta" | "si") || "en",
+            published_at: String(d.published_at || new Date().toISOString()),
+            is_published: Boolean(d.is_published),
+            read_time_minutes: 1,
+          }))
+        );
         newsStats = {
-          total: dbArticles.length,
-          published: dbArticles.filter((a) => a.is_published).length,
+          total: unifiedArticles.length,
+          published: unifiedArticles.filter((a) => a.is_published).length,
         };
       }
     } catch (err) {

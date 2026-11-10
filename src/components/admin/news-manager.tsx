@@ -449,9 +449,9 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
 
             const activeTrans =
               art.translations[currentLang] ||
-              art.translations.ta ||
-              art.translations.en ||
-              art.translations.si;
+              (currentLang === "si"
+                ? art.translations.en
+                : art.translations.en || art.translations.ta);
 
             return (
               <div
@@ -540,13 +540,18 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
 
                   {/* Title */}
                   <h3 className="line-clamp-1 font-serif text-base font-bold text-[#0b2e1e] sm:text-lg">
-                    {activeTrans?.title || "Untitled Article"}
+                    {activeTrans?.title ||
+                      (currentLang === "si"
+                        ? "සිංහල පරිවර්තනයක් තවම එකතු කර නැත (No Sinhala translation)"
+                        : "Untitled Article")}
                   </h3>
 
                   {/* Excerpt */}
                   <p className="line-clamp-2 text-xs leading-relaxed text-[#4b5563]">
                     {activeTrans?.excerpt ||
-                      "(No summary provided for this language)"}
+                      (currentLang === "si"
+                        ? "(මෙම ලිපිය සඳහා සිංහල පරිවර්තනයක් ලබා දී නොමැත)"
+                        : "(No summary provided for this language)")}
                   </p>
 
                   {/* Metadata & Preview Switcher */}

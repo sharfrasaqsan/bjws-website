@@ -11,6 +11,7 @@ import { Container } from "@/components/ui/container";
 import {
   getArticleBySlug,
   getArticles,
+  extractBaseSlug,
   SEED_ARTICLES,
   type Article,
 } from "@/content/news";
@@ -60,11 +61,50 @@ export async function generateMetadata({
   if (isSupabaseConfigured()) {
     try {
       const supabase = createPublicClient();
-      const { data } = await supabase
+      const cleanSlug = decodeURIComponent(slug).toLowerCase();
+      const baseSlug = extractBaseSlug(cleanSlug);
+      const targetSlug = locale === "en" ? baseSlug : `${baseSlug}-${locale}`;
+
+      // 1. Try exact target slug for current locale
+      let { data } = await supabase
         .from("articles")
         .select("*")
-        .eq("slug", slug)
+        .eq("slug", targetSlug)
+        .eq("locale", locale)
         .maybeSingle();
+
+      // 2. If not found, try raw cleanSlug with matching locale
+      if (!data) {
+        const res = await supabase
+          .from("articles")
+          .select("*")
+          .eq("slug", cleanSlug)
+          .eq("locale", locale)
+          .maybeSingle();
+        data = res.data;
+      }
+
+      // 3. Fallback: try English translation (never fallback to Tamil when locale === "si")
+      if (!data) {
+        const res = await supabase
+          .from("articles")
+          .select("*")
+          .eq("slug", baseSlug)
+          .eq("locale", "en")
+          .maybeSingle();
+        data = res.data;
+      }
+
+      // 4. For non-Sinhala routes only, try raw slug
+      if (!data && locale !== "si") {
+        const res = await supabase
+          .from("articles")
+          .select("*")
+          .eq("slug", cleanSlug)
+          .maybeSingle();
+        data = res.data;
+      }
+
       if (data) {
         article = {
           id: data.id,
@@ -128,11 +168,50 @@ export default async function ArticleDetailPage({
   if (isSupabaseConfigured()) {
     try {
       const supabase = createPublicClient();
-      const { data } = await supabase
+      const cleanSlug = decodeURIComponent(slug).toLowerCase();
+      const baseSlug = extractBaseSlug(cleanSlug);
+      const targetSlug = locale === "en" ? baseSlug : `${baseSlug}-${locale}`;
+
+      // 1. Try exact target slug for current locale
+      let { data } = await supabase
         .from("articles")
         .select("*")
-        .eq("slug", slug)
+        .eq("slug", targetSlug)
+        .eq("locale", locale)
         .maybeSingle();
+
+      // 2. If not found, try raw cleanSlug with matching locale
+      if (!data) {
+        const res = await supabase
+          .from("articles")
+          .select("*")
+          .eq("slug", cleanSlug)
+          .eq("locale", locale)
+          .maybeSingle();
+        data = res.data;
+      }
+
+      // 3. Fallback: try English translation (never fallback to Tamil when locale === "si")
+      if (!data) {
+        const res = await supabase
+          .from("articles")
+          .select("*")
+          .eq("slug", baseSlug)
+          .eq("locale", "en")
+          .maybeSingle();
+        data = res.data;
+      }
+
+      // 4. For non-Sinhala routes only, try raw slug
+      if (!data && locale !== "si") {
+        const res = await supabase
+          .from("articles")
+          .select("*")
+          .eq("slug", cleanSlug)
+          .maybeSingle();
+        data = res.data;
+      }
+
       if (data) {
         article = {
           id: data.id,

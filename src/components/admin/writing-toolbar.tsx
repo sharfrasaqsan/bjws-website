@@ -58,31 +58,53 @@ export function WritingToolbar({
   const wrapSelection = (
     before: string,
     after: string = "",
-    defaultText: string = "text"
+    defaultText: string = "text",
+    isBlock: boolean = false
   ) => {
     const textarea = textareaRef.current;
     if (!textarea) return;
 
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
-    const selected = value.substring(start, end) || defaultText;
+    const hasSelection = start !== end;
+    const selected = hasSelection ? value.substring(start, end) : defaultText;
+
+    let prefix = before;
+    let suffix = after;
+
+    if (isBlock) {
+      // Ensure block elements (headings, lists, quotes) start on a new line without creating extra blank lines
+      const isStartOfLine = start === 0 || value[start - 1] === "\n";
+      if (!isStartOfLine) {
+        prefix = "\n" + prefix;
+      }
+      const isEndOfLine = end >= value.length || value[end] === "\n";
+      if (!isEndOfLine && !suffix) {
+        suffix = "\n";
+      }
+    }
 
     const updated =
       value.substring(0, start) +
-      before +
+      prefix +
       selected +
-      after +
+      suffix +
       value.substring(end);
+
+    const prevScrollTop = textarea.scrollTop;
     onChange(updated);
 
-    // Reposition cursor
+    // Reposition cursor without viewport jumping or auto-scrolling
     setTimeout(() => {
-      textarea.focus();
-      textarea.setSelectionRange(
-        start + before.length,
-        start + before.length + selected.length
+      if (!textareaRef.current) return;
+      const el = textareaRef.current;
+      el.focus({ preventScroll: true });
+      el.scrollTop = prevScrollTop;
+      el.setSelectionRange(
+        start + prefix.length,
+        start + prefix.length + selected.length
       );
-    }, 10);
+    }, 0);
   };
 
   const handleApplyLink = () => {
@@ -99,8 +121,8 @@ export function WritingToolbar({
 
   const handleInsertInternalImage = (img: ArticleImage) => {
     const alt = img.alt || "Article illustration";
-    const markdown = `\n![${alt}](${img.url})\n`;
-    wrapSelection(markdown, "", "");
+    const markdown = `![${alt}](${img.url})`;
+    wrapSelection(markdown, "", "", true);
     setIsImagePickerOpen(false);
   };
 
@@ -158,6 +180,7 @@ export function WritingToolbar({
             {/* Bold */}
             <button
               type="button"
+              onMouseDown={(e) => e.preventDefault()}
               onClick={() => wrapSelection("**", "**", "bold text")}
               title="Bold (**text**)"
               className="hover:text-text cursor-pointer rounded p-1.5 transition-colors hover:bg-white hover:shadow-2xs"
@@ -168,6 +191,7 @@ export function WritingToolbar({
             {/* Italic */}
             <button
               type="button"
+              onMouseDown={(e) => e.preventDefault()}
               onClick={() => wrapSelection("*", "*", "italic text")}
               title="Italic (*text*)"
               className="hover:text-text cursor-pointer rounded p-1.5 transition-colors hover:bg-white hover:shadow-2xs"
@@ -178,6 +202,7 @@ export function WritingToolbar({
             {/* Underline */}
             <button
               type="button"
+              onMouseDown={(e) => e.preventDefault()}
               onClick={() => wrapSelection("<u>", "</u>", "underline text")}
               title="Underline (<u>text</u>)"
               className="hover:text-text cursor-pointer rounded p-1.5 transition-colors hover:bg-white hover:shadow-2xs"
@@ -190,6 +215,7 @@ export function WritingToolbar({
             {/* Link Dialog Trigger */}
             <button
               type="button"
+              onMouseDown={(e) => e.preventDefault()}
               onClick={() => {
                 const textarea = textareaRef.current;
                 if (textarea) {
@@ -210,7 +236,8 @@ export function WritingToolbar({
             {/* Heading 2 */}
             <button
               type="button"
-              onClick={() => wrapSelection("\n## ", "\n", "Heading 2")}
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => wrapSelection("## ", "", "Heading 2", true)}
               title="Heading 2 (## Section Title)"
               className="hover:text-text flex cursor-pointer items-center gap-0.5 rounded px-2 py-1 text-[11px] font-bold transition-colors hover:bg-white hover:shadow-2xs"
             >
@@ -220,7 +247,8 @@ export function WritingToolbar({
             {/* Heading 3 */}
             <button
               type="button"
-              onClick={() => wrapSelection("\n### ", "\n", "Heading 3")}
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => wrapSelection("### ", "", "Heading 3", true)}
               title="Heading 3 (### Sub-section Title)"
               className="hover:text-text flex cursor-pointer items-center gap-0.5 rounded px-2 py-1 text-[11px] font-bold transition-colors hover:bg-white hover:shadow-2xs"
             >
@@ -232,7 +260,8 @@ export function WritingToolbar({
             {/* Bullet List */}
             <button
               type="button"
-              onClick={() => wrapSelection("\n- ", "\n- ", "List item")}
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => wrapSelection("- ", "", "List item", true)}
               title="Bulleted List (- item)"
               className="hover:text-text cursor-pointer rounded p-1.5 transition-colors hover:bg-white hover:shadow-2xs"
             >
@@ -242,7 +271,8 @@ export function WritingToolbar({
             {/* Numbered List */}
             <button
               type="button"
-              onClick={() => wrapSelection("\n1. ", "\n2. ", "Numbered item")}
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => wrapSelection("1. ", "", "Numbered item", true)}
               title="Numbered List (1. item)"
               className="hover:text-text cursor-pointer rounded p-1.5 transition-colors hover:bg-white hover:shadow-2xs"
             >
@@ -252,9 +282,8 @@ export function WritingToolbar({
             {/* Quote */}
             <button
               type="button"
-              onClick={() =>
-                wrapSelection("\n> ", "\n", "Quotation or key announcement")
-              }
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => wrapSelection("> ", "", "Quotation", true)}
               title="Quote (> Quote text)"
               className="hover:text-text cursor-pointer rounded p-1.5 transition-colors hover:bg-white hover:shadow-2xs"
             >
@@ -264,7 +293,8 @@ export function WritingToolbar({
             {/* Divider */}
             <button
               type="button"
-              onClick={() => wrapSelection("\n---\n", "", "")}
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => wrapSelection("---", "", "", true)}
               title="Horizontal Divider (---)"
               className="hover:text-text cursor-pointer rounded p-1.5 transition-colors hover:bg-white hover:shadow-2xs"
             >
@@ -278,6 +308,7 @@ export function WritingToolbar({
               <div className="relative">
                 <button
                   type="button"
+                  onMouseDown={(e) => e.preventDefault()}
                   onClick={() => setIsImagePickerOpen(!isImagePickerOpen)}
                   className="inline-flex cursor-pointer items-center gap-1 rounded bg-[#e8f3ee] px-2 py-1 text-[11px] font-semibold text-[#0b2e1e] transition-colors hover:bg-[#d8eade]"
                   title="Insert an image from this article's photo gallery"

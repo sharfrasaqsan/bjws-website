@@ -149,32 +149,42 @@ export function getArticleBySlug(
   const cleanSlug = decodeURIComponent(slug).toLowerCase();
   const base = extractBaseSlug(cleanSlug);
 
-  // 1. Direct match with locale
+  // 1. Direct match with requested locale
   let match = liveArticlesStore.find(
     (a) => a.slug.toLowerCase() === cleanSlug && a.locale === locale
   );
   if (match) return match;
 
-  // 2. Base slug match with specified locale
+  // 2. Base slug match with requested locale
   match = liveArticlesStore.find(
     (a) => extractBaseSlug(a.slug.toLowerCase()) === base && a.locale === locale
   );
   if (match) return match;
 
-  // 3. Exact slug match with any locale
-  match = liveArticlesStore.find((a) => a.slug.toLowerCase() === cleanSlug);
-  if (match) return match;
+  // 3. Exact slug match only if matching requested locale or English (never cross-pollinate Tamil into Sinhala)
+  if (locale !== "si") {
+    match = liveArticlesStore.find(
+      (a) =>
+        a.slug.toLowerCase() === cleanSlug &&
+        (a.locale === locale || a.locale === "en")
+    );
+    if (match) return match;
+  }
 
-  // 4. Base slug with English fallback
+  // 4. Base slug with English fallback (safe universal fallback)
   match = liveArticlesStore.find(
     (a) => extractBaseSlug(a.slug.toLowerCase()) === base && a.locale === "en"
   );
   if (match) return match;
 
-  // 5. Any matching base slug
-  return liveArticlesStore.find(
-    (a) => extractBaseSlug(a.slug.toLowerCase()) === base
-  );
+  // 5. For non-Sinhala routes only, any matching base slug
+  if (locale !== "si") {
+    return liveArticlesStore.find(
+      (a) => extractBaseSlug(a.slug.toLowerCase()) === base
+    );
+  }
+
+  return undefined;
 }
 
 export function addArticleStore(article: Article): void {

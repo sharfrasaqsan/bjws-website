@@ -91,18 +91,6 @@ export function JanazaTicker({ notices = [], className }: JanazaTickerProps) {
   // On desktop: default to expanded. On mobile: default to compact capsule pill
   const isExpanded = userExpanded !== null ? userExpanded : !isMobile;
 
-  // Auto-collapse on scroll down so site reading is never obstructed
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 80) {
-        setUserExpanded(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   // Lock body scroll and close on Escape key when modal is open
   useEffect(() => {
     if (!activeModalNotice) return;
