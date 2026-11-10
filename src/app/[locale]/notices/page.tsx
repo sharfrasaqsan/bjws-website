@@ -56,38 +56,21 @@ export default async function NoticesPage({
         .eq("locale", locale)
         .order("published_at", { ascending: false });
 
-      if (!error && data && data.length > 0) {
+      if (!error && data) {
         notices = data.map((d) => ({
           ...d,
           image_url: d.image_url || undefined,
         }));
-      } else {
-        // Fallback to any published notice if language-specific not yet published
-        const { data: fallbackData } = await supabase
-          .from("notices")
-          .select("*")
-          .eq("is_published", true)
-          .order("published_at", { ascending: false });
-
-        if (fallbackData && fallbackData.length > 0) {
-          notices = fallbackData.map((d) => ({
-            ...d,
-            image_url: d.image_url || undefined,
-          }));
-        }
       }
     } catch (err) {
       console.warn("Could not fetch notices from Supabase:", err);
     }
   }
 
-  // Fallback to in-memory store if DB query returned nothing
-  if (notices.length === 0) {
+  // Fallback to in-memory store ONLY if Supabase is NOT configured (demo mode)
+  if (notices.length === 0 && !isSupabaseConfigured()) {
     const live = getAllNotices();
     notices = live.filter((n) => n.is_published && n.locale === locale);
-    if (notices.length === 0) {
-      notices = live.filter((n) => n.is_published);
-    }
   }
 
   const breadcrumbs = [

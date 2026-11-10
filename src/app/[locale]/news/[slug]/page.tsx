@@ -132,7 +132,7 @@ export async function generateMetadata({
     }
   }
 
-  if (!article) {
+  if (!article && !isSupabaseConfigured()) {
     article = getArticleBySlug(slug, locale) || null;
   }
 
@@ -239,7 +239,7 @@ export default async function ArticleDetailPage({
     }
   }
 
-  if (!article) {
+  if (!article && !isSupabaseConfigured()) {
     article = getArticleBySlug(slug, locale) || null;
   }
 
@@ -247,9 +247,49 @@ export default async function ArticleDetailPage({
     notFound();
   }
 
-  const relatedArticles = getArticles(locale)
-    .filter((a) => a.slug !== article.slug)
-    .slice(0, 3);
+  let relatedArticles: Article[] = [];
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = createPublicClient();
+      const { data } = await supabase
+        .from("articles")
+        .select("*")
+        .eq("is_published", true)
+        .eq("locale", locale)
+        .neq("slug", article.slug)
+        .order("published_at", { ascending: false })
+        .limit(3);
+
+      if (data) {
+        relatedArticles = data.map((d) => ({
+          id: d.id,
+          slug: d.slug,
+          title: d.title,
+          excerpt: d.excerpt,
+          content: d.content,
+          category: (d.category as Article["category"]) || "general",
+          categoryLabel: { en: d.category, ta: "செய்திகள்", si: "පුවත්" },
+          author: d.author || "BJWS Secretariat",
+          image_url:
+            d.image_url ||
+            "/images/gallery/home-service-community-shramadana-campaigns.webp",
+          locale: (d.locale as "en" | "ta" | "si") || "en",
+          published_at: d.published_at,
+          is_published: d.is_published,
+          read_time_minutes: Math.max(
+            1,
+            Math.ceil((d.content?.split(/\s+/).length || 200) / 180)
+          ),
+        }));
+      }
+    } catch {
+      relatedArticles = [];
+    }
+  } else {
+    relatedArticles = getArticles(locale)
+      .filter((a) => a.slug !== article.slug)
+      .slice(0, 3);
+  }
 
   const currentUrl = `${SITE_URL}/${locale}/news/${article.slug}`;
 

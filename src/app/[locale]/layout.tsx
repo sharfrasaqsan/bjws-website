@@ -11,7 +11,10 @@ import { NextIntlClientProvider } from "next-intl";
 import { routing, type Locale } from "@/i18n/routing";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
-import { createPublicClient } from "@/lib/supabase/server";
+import {
+  createPublicClient,
+  isSupabaseConfigured,
+} from "@/lib/supabase/server";
 import { SITE_URL } from "@/lib/seo";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -197,8 +200,8 @@ export default async function LocaleLayout({
     notices = [];
   }
 
-  // Guaranteed fallback to in-memory store so notices are always available
-  if (notices.length === 0) {
+  // Fallback to in-memory store ONLY if Supabase is not configured (demo mode)
+  if (notices.length === 0 && !isSupabaseConfigured()) {
     notices = getAllNotices().map((n) => ({
       id: n.id,
       title: n.title,
