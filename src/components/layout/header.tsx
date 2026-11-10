@@ -516,6 +516,25 @@ export function Header({ notices = [] }: HeaderProps) {
             </div>
           </div>
         </Container>
+
+        {/* Decorative Institutional Signature Bottom Ribbon */}
+        <div
+          className="relative h-[3px] w-full overflow-visible"
+          aria-hidden="true"
+        >
+          {/* Base gradient accent line: Forest Green -> Islamic Gold -> Forest Green */}
+          <div className="h-[2.5px] w-full bg-gradient-to-r from-[#062115] via-[#c99a45] via-50% to-[#062115]" />
+
+          {/* Central Radiant Gold Highlight with Soft Ambient Sheen */}
+          <div className="absolute inset-x-0 top-0 h-[2.5px] bg-gradient-to-r from-transparent via-[#fae8b2] via-50% to-transparent opacity-85" />
+
+          {/* Center Ornamental Islamic Diamond Accent */}
+          <div className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-1.5">
+            <span className="h-1 w-1 rounded-full bg-[#c99a45]/60" />
+            <span className="h-2 w-2 rotate-45 rounded-[1px] border border-white bg-[#c99a45] shadow-xs dark:border-[#0c2117]" />
+            <span className="h-1 w-1 rounded-full bg-[#c99a45]/60" />
+          </div>
+        </div>
       </header>
 
       {/* Floating Dynamic Island Notice Announcement Widget (Replaced old top bar) */}

@@ -50,6 +50,7 @@ import {
   isSupabaseConfigured,
 } from "@/lib/supabase/server";
 import { getSiteAssets } from "@/content/site-assets";
+import type { HeroBanner } from "@/content/hero-banners";
 
 export async function generateMetadata({
   params,
@@ -305,43 +306,37 @@ export default async function HomePage({
     },
   ];
 
-  const heroSlides = [
-    {
-      src: assets.heroSlide1 || "/images/hero/hero-banner-1-updated.webp",
-      alt: "Buhary Janaza Welfare Society Official Community Services & Funeral Care, Mullipothana",
-      label: "Official Society",
-    },
-    {
-      src: assets.heroSlide2 || "/images/hero/hero-banner-2-updated.webp",
-      alt: "24/7 Dignified Islamic Janaza, Washing, Shrouding & Funeral Assistance Services",
-      label: "24/7 Janaza Care",
-    },
-    {
-      src: assets.heroSlide3 || "/images/hero/hero-banner-3-updated.webp",
-      alt: "Mahallah Cemetery Grounds Preservation, Landscaping and Cleanliness Upkeep",
-      label: "Cemetery Upkeep",
-    },
-    {
-      src: assets.heroSlide4 || "/images/hero/hero-banner-4-updated.webp",
-      alt: "Community Shramadana Cleanliness and Youth Volunteering Campaigns",
-      label: "Community Shramadana",
-    },
-    {
-      src: assets.heroSlide5 || "/images/hero/hero-banner-5-updated.webp",
-      alt: "Essential Needs Food Packs & Ongoing Welfare Relief for Vulnerable Families",
-      label: "Welfare & Relief",
-    },
-    {
-      src: assets.heroSlide6 || "/images/hero/hero-banner-6-updated.webp",
-      alt: "Youth Sunnah Ghusl, Kafan & Funeral Awareness Educational Workshops",
-      label: "Sunnah Workshops",
-    },
-    {
-      src: assets.heroSlide7 || "/images/hero/hero-banner-7-updated.webp",
-      alt: "Kafalah Orphan Care and Vulnerable Household Sustenance Sponsorship",
-      label: "Kafalah Sponsorship",
-    },
-  ];
+  // Load active hero slideshow banners directly from DB (no hardcoded fallbacks)
+  let heroSlides: HeroBanner[] = [];
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = createPublicClient();
+      const { data, error } = await supabase
+        .from("hero_banners")
+        .select("*")
+        .eq("is_active", true)
+        .order("order_index", { ascending: true });
+
+      if (!error && data) {
+        heroSlides = data.map((d) => ({
+          id: d.id,
+          src: d.src,
+          alt: d.alt,
+          label: d.label || undefined,
+          title: d.title || undefined,
+          subtitle: d.subtitle || undefined,
+          order_index: d.order_index ?? 0,
+          is_active: d.is_active ?? true,
+        }));
+      } else {
+        heroSlides = [];
+      }
+    } catch {
+      heroSlides = [];
+    }
+  } else {
+    heroSlides = [];
+  }
 
   return (
     <>

@@ -312,6 +312,45 @@ export interface Database {
         };
         Relationships: [];
       };
+      hero_banners: {
+        Row: {
+          id: string;
+          src: string;
+          alt: string;
+          label: string | null;
+          title: string | null;
+          subtitle: string | null;
+          order_index: number;
+          is_active: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          src: string;
+          alt: string;
+          label?: string | null;
+          title?: string | null;
+          subtitle?: string | null;
+          order_index?: number;
+          is_active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          src?: string;
+          alt?: string;
+          label?: string | null;
+          title?: string | null;
+          subtitle?: string | null;
+          order_index?: number;
+          is_active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;

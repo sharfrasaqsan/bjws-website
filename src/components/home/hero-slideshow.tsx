@@ -10,43 +10,7 @@ export interface HeroSlide {
   label?: string;
 }
 
-export const DEFAULT_HERO_SLIDES: HeroSlide[] = [
-  {
-    src: "/images/hero/hero-banner-1-updated.webp",
-    alt: "Buhary Janaza Welfare Society Official Community Services & Funeral Care, Mullipothana",
-    label: "Official Society",
-  },
-  {
-    src: "/images/hero/hero-banner-2-updated.webp",
-    alt: "24/7 Dignified Islamic Janaza, Washing, Shrouding & Funeral Assistance Services",
-    label: "24/7 Janaza Care",
-  },
-  {
-    src: "/images/hero/hero-banner-3-updated.webp",
-    alt: "Mahallah Cemetery Grounds Preservation, Landscaping and Cleanliness Upkeep",
-    label: "Cemetery Upkeep",
-  },
-  {
-    src: "/images/hero/hero-banner-4-updated.webp",
-    alt: "Community Shramadana Cleanliness and Youth Volunteering Campaigns",
-    label: "Community Shramadana",
-  },
-  {
-    src: "/images/hero/hero-banner-5-updated.webp",
-    alt: "Essential Needs Food Packs & Ongoing Welfare Relief for Vulnerable Families",
-    label: "Welfare & Relief",
-  },
-  {
-    src: "/images/hero/hero-banner-6-updated.webp",
-    alt: "Youth Sunnah Ghusl, Kafan & Funeral Awareness Educational Workshops",
-    label: "Sunnah Workshops",
-  },
-  {
-    src: "/images/hero/hero-banner-7-updated.webp",
-    alt: "Kafalah Orphan Care and Vulnerable Household Sustenance Sponsorship",
-    label: "Kafalah Sponsorship",
-  },
-];
+export const DEFAULT_HERO_SLIDES: HeroSlide[] = [];
 
 interface HeroSlideshowProps {
   slides?: HeroSlide[];
@@ -63,12 +27,11 @@ interface HeroSlideshowProps {
  * - Optimized with Next.js image priority for LCP performance and zero layout shift.
  */
 export function HeroSlideshow({
-  slides = DEFAULT_HERO_SLIDES,
+  slides = [],
   intervalMs = 5000,
   className = "",
 }: HeroSlideshowProps) {
-  const activeSlides =
-    slides && slides.length > 0 ? slides : DEFAULT_HERO_SLIDES;
+  const activeSlides = slides || [];
   const [currentIndex, setCurrentIndex] = React.useState(0);
   const [isPaused, setIsPaused] = React.useState(false);
   const [touchStart, setTouchStart] = React.useState<number | null>(null);
@@ -76,10 +39,12 @@ export function HeroSlideshow({
   const total = activeSlides.length;
 
   const goToNext = React.useCallback(() => {
+    if (total === 0) return;
     setCurrentIndex((prev) => (prev + 1) % total);
   }, [total]);
 
   const goToPrev = React.useCallback(() => {
+    if (total === 0) return;
     setCurrentIndex((prev) => (prev - 1 + total) % total);
   }, [total]);
 
@@ -122,6 +87,18 @@ export function HeroSlideshow({
     else if (diff < -50) goToPrev();
     setTouchStart(null);
   };
+
+  if (total === 0) {
+    return (
+      <div
+        className={`absolute inset-0 z-0 overflow-hidden bg-gradient-to-br from-[#062416] via-[#041a10] to-[#021009] ${className}`}
+        aria-hidden="true"
+      >
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#04190f]/85 via-[#062416]/50 to-[#04190f]/15 sm:bg-gradient-to-r" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-[#072115] via-[#072115]/50 to-transparent" />
+      </div>
+    );
+  }
 
   const currentSlide = activeSlides[currentIndex] || activeSlides[0];
 

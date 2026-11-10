@@ -46,6 +46,14 @@ import {
   getAllNotices,
   type NoticeRecord,
 } from "@/content/notices";
+import {
+  addHeroBannerStore,
+  updateHeroBannerStore,
+  deleteHeroBannerStore,
+  toggleHeroBannerActiveStore,
+  reorderHeroBannersStore,
+  type HeroBanner,
+} from "@/content/hero-banners";
 
 // ====================================================================
 // Contact Messages Actions
@@ -2440,4 +2448,321 @@ export async function renameGalleryCategoryAction(
   revalidatePath("/[locale]", "page");
 
   return { success: true, updatedCount };
+}
+
+// ====================================================================
+// Hero Banners Actions
+// ====================================================================
+
+export async function createHeroBannerAction(formData: FormData) {
+  const session = await getAdminSession();
+  if (!session) throw new Error("Unauthorized");
+
+  const file = formData.get("image_file") as File | null;
+  const srcUrl = (formData.get("src") as string)?.trim() || "";
+
+  let src = srcUrl;
+  if (file && file.size > 0) {
+    try {
+      src = await saveUploadedImageFile(file, "hero");
+    } catch (err: unknown) {
+      return {
+        error:
+          err instanceof Error
+            ? `Failed to upload hero image: ${err.message}`
+            : "Failed to upload hero image.",
+      };
+    }
+  }
+
+  if (!src) {
+    return { error: "An image file or valid image URL is required." };
+  }
+
+  const alt =
+    (formData.get("alt") as string)?.trim() ||
+    "Buhary Janaza Welfare Society Official Community Services & Funeral Care";
+  const label = (formData.get("label") as string)?.trim() || undefined;
+  const title = (formData.get("title") as string)?.trim() || undefined;
+  const subtitle = (formData.get("subtitle") as string)?.trim() || undefined;
+  const isActive =
+    formData.get("is_active") === "on" || formData.get("is_active") === "true";
+
+  let nextOrder = 1;
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createAdminClient();
+      const { data } = await supabase
+        .from("hero_banners")
+        .select("order_index")
+        .order("order_index", { ascending: false })
+        .limit(1);
+      if (data && data.length > 0) {
+        nextOrder = (data[0].order_index ?? 0) + 1;
+      }
+    } catch {
+      nextOrder = 1;
+    }
+  }
+
+  const newBanner: HeroBanner = {
+    id: `hero-${Date.now()}`,
+    src,
+    alt,
+    label,
+    title,
+    subtitle,
+    order_index: nextOrder,
+    is_active: isActive,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  };
+
+  // 1. Update in-memory store
+  addHeroBannerStore(newBanner);
+
+  // 2. Persist to Supabase if configured
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createAdminClient();
+      const { error } = await supabase.from("hero_banners").insert({
+        id: newBanner.id,
+        src: newBanner.src,
+        alt: newBanner.alt,
+        label: newBanner.label,
+        title: newBanner.title,
+        subtitle: newBanner.subtitle,
+        order_index: newBanner.order_index,
+        is_active: newBanner.is_active,
+        created_at: newBanner.created_at,
+        updated_at: newBanner.updated_at,
+      });
+
+      if (error) {
+        console.warn("Supabase insert hero_banners warning:", error.message);
+      }
+    } catch (err) {
+      console.warn("Supabase insert hero_banners exception:", err);
+    }
+  }
+
+  revalidatePath("/admin/hero");
+  revalidatePath("/admin");
+  revalidatePath("/[locale]", "page");
+  revalidatePath("/en");
+  revalidatePath("/ta");
+  revalidatePath("/si");
+
+  return { success: true, id: newBanner.id };
+}
+
+export async function updateHeroBannerAction(id: string, formData: FormData) {
+  const session = await getAdminSession();
+  if (!session) throw new Error("Unauthorized");
+
+  const file = formData.get("image_file") as File | null;
+  const srcUrl = (formData.get("src") as string)?.trim();
+  const alt = (formData.get("alt") as string)?.trim();
+  const label = (formData.get("label") as string)?.trim();
+  const title = (formData.get("title") as string)?.trim();
+  const subtitle = (formData.get("subtitle") as string)?.trim();
+
+  let newSrc: string | undefined = undefined;
+  if (file && file.size > 0) {
+    try {
+      newSrc = await saveUploadedImageFile(file, "hero");
+    } catch (err: unknown) {
+      return {
+        error:
+          err instanceof Error
+            ? `Failed to upload hero image: ${err.message}`
+            : "Failed to upload hero image.",
+      };
+    }
+  } else if (srcUrl) {
+    newSrc = srcUrl;
+  }
+
+  const updates: Partial<HeroBanner> = {
+    ...(newSrc ? { src: newSrc } : {}),
+    ...(alt !== undefined ? { alt } : {}),
+    ...(label !== undefined ? { label: label || undefined } : {}),
+    ...(title !== undefined ? { title: title || undefined } : {}),
+    ...(subtitle !== undefined ? { subtitle: subtitle || undefined } : {}),
+    ...(formData.has("is_active")
+      ? {
+          is_active:
+            formData.get("is_active") === "on" ||
+            formData.get("is_active") === "true",
+        }
+      : {}),
+    updated_at: new Date().toISOString(),
+  };
+
+  // 1. Update in-memory store
+  updateHeroBannerStore(id, updates);
+
+  // 2. Persist to Supabase if configured
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createAdminClient();
+      const { error } = await supabase
+        .from("hero_banners")
+        .update(updates)
+        .eq("id", id);
+
+      if (error) {
+        console.warn("Supabase update hero_banners warning:", error.message);
+      }
+    } catch (err) {
+      console.warn("Supabase update hero_banners exception:", err);
+    }
+  }
+
+  revalidatePath("/admin/hero");
+  revalidatePath("/admin");
+  revalidatePath("/[locale]", "page");
+  revalidatePath("/en");
+  revalidatePath("/ta");
+  revalidatePath("/si");
+
+  return { success: true };
+}
+
+export async function deleteHeroBannerAction(
+  id: string
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const session = await getAdminSession();
+    if (!session) return { success: false, error: "Unauthorized" };
+
+    // 1. Delete from in-memory store
+    deleteHeroBannerStore(id);
+
+    // 2. Delete from Supabase if configured
+    if (isSupabaseConfigured()) {
+      try {
+        const supabase = await createAdminClient();
+        const { error } = await supabase
+          .from("hero_banners")
+          .delete()
+          .eq("id", id);
+
+        if (error) {
+          console.warn("Supabase delete hero_banners warning:", error.message);
+        }
+      } catch (err) {
+        console.warn("Supabase delete hero_banners exception:", err);
+      }
+    }
+
+    revalidatePath("/admin/hero");
+    revalidatePath("/admin");
+    revalidatePath("/[locale]", "page");
+    revalidatePath("/en");
+    revalidatePath("/ta");
+    revalidatePath("/si");
+
+    return { success: true };
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Failed to delete banner.",
+    };
+  }
+}
+
+export async function toggleHeroBannerActiveAction(
+  id: string
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const session = await getAdminSession();
+    if (!session) return { success: false, error: "Unauthorized" };
+
+    // 1. Toggle in in-memory store
+    toggleHeroBannerActiveStore(id);
+
+    // 2. Toggle in Supabase if configured
+    if (isSupabaseConfigured()) {
+      try {
+        const supabase = await createAdminClient();
+        const { data } = await supabase
+          .from("hero_banners")
+          .select("is_active")
+          .eq("id", id)
+          .single();
+
+        if (data) {
+          await supabase
+            .from("hero_banners")
+            .update({
+              is_active: !data.is_active,
+              updated_at: new Date().toISOString(),
+            })
+            .eq("id", id);
+        }
+      } catch (err) {
+        console.warn("Supabase toggle hero_banners exception:", err);
+      }
+    }
+
+    revalidatePath("/admin/hero");
+    revalidatePath("/admin");
+    revalidatePath("/[locale]", "page");
+    revalidatePath("/en");
+    revalidatePath("/ta");
+    revalidatePath("/si");
+
+    return { success: true };
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error:
+        err instanceof Error ? err.message : "Failed to toggle banner status.",
+    };
+  }
+}
+
+export async function reorderHeroBannersAction(
+  orderedIds: string[]
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const session = await getAdminSession();
+    if (!session) return { success: false, error: "Unauthorized" };
+
+    // 1. Reorder in in-memory store
+    reorderHeroBannersStore(orderedIds);
+
+    // 2. Reorder in Supabase if configured
+    if (isSupabaseConfigured()) {
+      try {
+        const supabase = await createAdminClient();
+        for (let i = 0; i < orderedIds.length; i++) {
+          await supabase
+            .from("hero_banners")
+            .update({
+              order_index: i + 1,
+              updated_at: new Date().toISOString(),
+            })
+            .eq("id", orderedIds[i]);
+        }
+      } catch (err) {
+        console.warn("Supabase reorder hero_banners exception:", err);
+      }
+    }
+
+    revalidatePath("/admin/hero");
+    revalidatePath("/admin");
+    revalidatePath("/[locale]", "page");
+    revalidatePath("/en");
+    revalidatePath("/ta");
+    revalidatePath("/si");
+
+    return { success: true };
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Failed to reorder banners.",
+    };
+  }
 }

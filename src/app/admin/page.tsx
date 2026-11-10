@@ -10,6 +10,7 @@ import { getAllTeamMembersAdmin } from "@/content/team";
 import { getAllGalleryImagesAdmin } from "@/content/gallery";
 import { getUnifiedArticlesAdmin } from "@/content/news";
 import { getUnifiedNoticesAdmin } from "@/content/notices";
+import { getAllHeroBannersAdmin } from "@/content/hero-banners";
 import {
   MessageSquare,
   Users,
@@ -25,6 +26,7 @@ import {
   CheckCircle2,
   Inbox,
   Megaphone,
+  Sparkles,
 } from "lucide-react";
 
 export default async function AdminDashboardPage() {
@@ -60,6 +62,12 @@ export default async function AdminDashboardPage() {
     published: fallbackArticles.filter((a) => a.is_published).length,
   };
 
+  const fallbackHero = getAllHeroBannersAdmin();
+  let heroStats = {
+    total: fallbackHero.length,
+    active: fallbackHero.filter((h) => h.is_active).length,
+  };
+
   let recentMessages: Array<{
     id: string;
     name: string;
@@ -92,6 +100,7 @@ export default async function AdminDashboardPage() {
         { data: dbTeam },
         { data: dbGallery },
         { data: dbArticles },
+        { data: dbHeroBanners },
       ] = await Promise.all([
         supabase
           .from("contact_messages")
@@ -112,6 +121,7 @@ export default async function AdminDashboardPage() {
         supabase
           .from("articles")
           .select("id, slug, locale, is_published, published_at"),
+        supabase.from("hero_banners").select("id, is_active"),
       ]);
 
       if (messages) {
@@ -197,6 +207,13 @@ export default async function AdminDashboardPage() {
           published: unifiedArticles.filter((a) => a.is_published).length,
         };
       }
+
+      if (dbHeroBanners && dbHeroBanners.length > 0) {
+        heroStats = {
+          total: dbHeroBanners.length,
+          active: dbHeroBanners.filter((h) => h.is_active).length,
+        };
+      }
     } catch (err) {
       console.warn("Failed to load dashboard metrics from Supabase:", err);
     }
@@ -249,6 +266,14 @@ export default async function AdminDashboardPage() {
             >
               <Plus className="h-3.5 w-3.5 text-[#124d34] dark:text-[#c99a45]" />
               <span>Add Report</span>
+            </Link>
+
+            <Link
+              href="/admin/hero"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[#e6e4dc] bg-white px-3.5 py-2 text-xs font-semibold text-[#1c2420] shadow-2xs transition-all hover:border-[#124d34] hover:bg-[#fbfaf6] dark:border-[#1a432f] dark:bg-[#0c2419] dark:text-[#e2f0e8] dark:hover:bg-[#123624]"
+            >
+              <Sparkles className="h-3.5 w-3.5 text-[#124d34] dark:text-[#c99a45]" />
+              <span>Hero Banners</span>
             </Link>
 
             <Link
@@ -346,35 +371,62 @@ export default async function AdminDashboardPage() {
           </Link>
         </div>
 
-        {/* Content & Governance Directory (5 Individual Cards) */}
+        {/* Content & Governance Directory (6 Individual Cards) */}
         <div>
           <h2 className="mb-3.5 text-xs font-bold tracking-wider text-[#6b7280] uppercase dark:text-[#9ca3af]">
             Content & Governance Directory
           </h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-            {/* Team Directory */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
+            {/* Hero Banners */}
             <Link
-              href="/admin/team"
+              href="/admin/hero"
               className="group rounded-2xl border border-[#e6e4dc] bg-white p-5 shadow-2xs transition-all hover:border-[#124d34] hover:shadow-xs dark:border-[#1a432f] dark:bg-[#0c2419] dark:hover:border-[#c99a45]"
             >
               <div className="flex items-center justify-between">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#e8f3ee] text-[#124d34] dark:bg-[#14553a]/40 dark:text-[#a7c5b6]">
-                  <UserCheck className="h-4.5 w-4.5" />
+                  <Sparkles className="h-4.5 w-4.5" />
                 </div>
                 <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-bold text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300">
-                  {teamStats.active} Active
+                  {heroStats.active} Live
                 </span>
               </div>
               <div className="mt-3">
                 <div className="font-serif text-2xl font-bold text-[#0b2e1e] dark:text-white">
-                  {teamStats.total}
+                  {heroStats.total}
                 </div>
                 <div className="text-xs font-medium text-[#6b7280] dark:text-[#9ca3af]">
-                  Officers & Council
+                  Hero Slideshow
                 </div>
               </div>
               <div className="mt-3 flex items-center justify-between border-t border-[#f3f1ea] pt-2.5 text-[11px] font-semibold text-[#124d34] dark:border-[#1a432f] dark:text-[#c99a45]">
-                <span>Manage Team</span>
+                <span>Manage Banners</span>
+                <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+              </div>
+            </Link>
+
+            {/* Community Notices */}
+            <Link
+              href="/admin/notices"
+              className="group rounded-2xl border border-[#e6e4dc] bg-white p-5 shadow-2xs transition-all hover:border-[#124d34] hover:shadow-xs dark:border-[#1a432f] dark:bg-[#0c2419] dark:hover:border-[#c99a45]"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#e8f3ee] text-[#124d34] dark:bg-[#14553a]/40 dark:text-[#a7c5b6]">
+                  <Megaphone className="h-4.5 w-4.5" />
+                </div>
+                <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-bold text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300">
+                  {noticeStats.published} Active
+                </span>
+              </div>
+              <div className="mt-3">
+                <div className="font-serif text-2xl font-bold text-[#0b2e1e] dark:text-white">
+                  {noticeStats.total}
+                </div>
+                <div className="text-xs font-medium text-[#6b7280] dark:text-[#9ca3af]">
+                  Community Notices
+                </div>
+              </div>
+              <div className="mt-3 flex items-center justify-between border-t border-[#f3f1ea] pt-2.5 text-[11px] font-semibold text-[#124d34] dark:border-[#1a432f] dark:text-[#c99a45]">
+                <span>Manage Notices</span>
                 <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
               </div>
             </Link>
@@ -433,29 +485,29 @@ export default async function AdminDashboardPage() {
               </div>
             </Link>
 
-            {/* Community Notices */}
+            {/* Team Directory */}
             <Link
-              href="/admin/notices"
+              href="/admin/team"
               className="group rounded-2xl border border-[#e6e4dc] bg-white p-5 shadow-2xs transition-all hover:border-[#124d34] hover:shadow-xs dark:border-[#1a432f] dark:bg-[#0c2419] dark:hover:border-[#c99a45]"
             >
               <div className="flex items-center justify-between">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#e8f3ee] text-[#124d34] dark:bg-[#14553a]/40 dark:text-[#a7c5b6]">
-                  <Megaphone className="h-4.5 w-4.5" />
+                  <UserCheck className="h-4.5 w-4.5" />
                 </div>
                 <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-bold text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300">
-                  {noticeStats.published} Active
+                  {teamStats.active} Active
                 </span>
               </div>
               <div className="mt-3">
                 <div className="font-serif text-2xl font-bold text-[#0b2e1e] dark:text-white">
-                  {noticeStats.total}
+                  {teamStats.total}
                 </div>
                 <div className="text-xs font-medium text-[#6b7280] dark:text-[#9ca3af]">
-                  Community Notices
+                  Officers & Council
                 </div>
               </div>
               <div className="mt-3 flex items-center justify-between border-t border-[#f3f1ea] pt-2.5 text-[11px] font-semibold text-[#124d34] dark:border-[#1a432f] dark:text-[#c99a45]">
-                <span>Manage Notices</span>
+                <span>Manage Team</span>
                 <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
               </div>
             </Link>
