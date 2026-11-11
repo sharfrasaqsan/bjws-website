@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { cookies } from "next/headers";
 import { Inter, Playfair_Display } from "next/font/google";
 import { getAdminSession, logoutAdminAction } from "@/lib/admin-auth";
@@ -103,15 +104,20 @@ export default async function AdminLayout({
             {/* Top Identity & Controls Tier */}
             <div className="border-b border-[#1a432f]/80">
               <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-                {/* Organization Emblem & Monogram */}
+                {/* Organization Emblem & Logo */}
                 <Link
                   href="/admin"
                   className="group flex items-center gap-3 transition-opacity hover:opacity-95"
                 >
-                  <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#124d34] to-[#041a10] shadow-inner ring-1 ring-[#c99a45]/40">
-                    <span className="font-serif text-xs font-bold tracking-wider text-[#f5eedf]">
-                      BJWS
-                    </span>
+                  <div className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-emerald-900/15 bg-white p-1 shadow-inner ring-1 ring-[#c99a45]/40 sm:h-11 sm:w-11">
+                    <Image
+                      src="/images/bjws logo.webp"
+                      alt="Buhary Janaza Welfare Society Logo"
+                      width={44}
+                      height={44}
+                      priority
+                      className="h-full w-full object-contain"
+                    />
                     <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-[#c99a45] ring-2 ring-[#062316]" />
                   </div>
                   <div className="flex flex-col">
@@ -184,16 +190,27 @@ export default async function AdminLayout({
 
         {/* Institutional Admin Footer */}
         {session && (
-          <footer className="border-t border-[#e6e4dc] bg-white py-6 text-center text-xs text-[#4b5563]">
-            <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 sm:px-6 lg:px-8">
-              <div className="flex items-center gap-2 text-[11px]">
-                <span className="font-semibold text-[#0b2e1e]">
-                  Buhary Janaza Welfare Society
-                </span>
-                <span>•</span>
-                <span>Registration: DS/TH/SS/VSSO/2023/01</span>
+          <footer className="border-t border-[#e6e4dc] bg-white py-6 text-center text-xs text-[#4b5563] dark:border-[#1a432f] dark:bg-[#071c12]">
+            <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 sm:flex-row sm:px-6 lg:px-8">
+              <div className="flex items-center gap-2.5">
+                <div className="relative h-6 w-6 shrink-0 overflow-hidden rounded-md border border-[#e6e4dc] bg-white p-0.5 shadow-2xs dark:border-[#1a432f]">
+                  <Image
+                    src="/images/bjws logo.webp"
+                    alt="BJWS Emblem"
+                    width={24}
+                    height={24}
+                    className="h-full w-full object-contain"
+                  />
+                </div>
+                <div className="flex items-center gap-2 text-[11px]">
+                  <span className="font-semibold text-[#0b2e1e] dark:text-[#f5eedf]">
+                    Buhary Janaza Welfare Society
+                  </span>
+                  <span>•</span>
+                  <span>Registration: DS/TH/SS/VSSO/2023/01</span>
+                </div>
               </div>
-              <p className="text-[11px] text-[#6b7280]">
+              <p className="text-[11px] text-[#6b7280] dark:text-[#a7c5b6]">
                 Mullipothana, Eastern Province, Sri Lanka • Official Management
                 System
               </p>

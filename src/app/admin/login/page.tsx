@@ -3,6 +3,7 @@
 import * as React from "react";
 import { useActionState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { loginAdminAction } from "@/lib/admin-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,14 +23,17 @@ export default function AdminLoginPage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-[#fbfaf6] px-4 py-12">
       <div className="w-full max-w-md">
-        {/* Institutional Monogram & Header */}
+        {/* Institutional Logo & Header */}
         <div className="mb-6 text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#124d34] to-[#062316] p-0.5 shadow-md ring-2 ring-[#c99a45]/50">
-            <div className="flex h-full w-full items-center justify-center rounded-[14px] border border-[#c99a45]/30 bg-[#062316]/60">
-              <span className="font-serif text-lg font-bold tracking-widest text-[#f5eedf]">
-                BJWS
-              </span>
-            </div>
+          <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl border border-emerald-900/15 bg-white p-2 shadow-md ring-2 ring-[#c99a45]/50">
+            <Image
+              src="/images/bjws logo.webp"
+              alt="Buhary Janaza Welfare Society Logo"
+              width={72}
+              height={72}
+              priority
+              className="h-full w-full object-contain"
+            />
           </div>
 
           <div className="inline-flex items-center gap-1.5 rounded-full border border-[#c99a45]/30 bg-[#f5eedf]/60 px-3 py-0.5 text-[11px] font-semibold text-[#8b651e]">
