@@ -16,7 +16,7 @@ import {
   isSupabaseConfigured,
 } from "@/lib/supabase/server";
 import { SITE_URL } from "@/lib/seo";
-import { Analytics } from "@vercel/analytics/react";
+import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeScript } from "@/components/theme-script";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
