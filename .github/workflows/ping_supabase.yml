@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - name: Install Supabase Client
         run: npm install @supabase/supabase-js
@@ -27,6 +27,10 @@ jobs:
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY || secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || secrets.SUPABASE_ANON_KEY || secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
           node -e "
+          if (typeof WebSocket === 'undefined') {
+            globalThis.WebSocket = class {};
+          }
+
           const { createClient } = require('@supabase/supabase-js');
           const url = process.env.SUPABASE_URL;
           const key = process.env.SUPABASE_KEY;
