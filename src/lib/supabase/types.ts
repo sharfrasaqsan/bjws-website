@@ -351,12 +351,56 @@ export interface Database {
         };
         Relationships: [];
       };
+      site_visit_stats: {
+        Row: {
+          visit_date: string;
+          page_views: number;
+          unique_visitors: number;
+          updated_at: string;
+        };
+        Insert: {
+          visit_date?: string;
+          page_views?: number;
+          unique_visitors?: number;
+          updated_at?: string;
+        };
+        Update: {
+          visit_date?: string;
+          page_views?: number;
+          unique_visitors?: number;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      record_and_get_visit_stats: {
+        Args: {
+          is_new_visitor?: boolean;
+        };
+        Returns: {
+          today: number;
+          todayViews: number;
+          thisMonth: number;
+          thisMonthViews: number;
+          allTime: number;
+          allTimeViews: number;
+        };
+      };
+      get_visit_stats: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          today: number;
+          todayViews: number;
+          thisMonth: number;
+          thisMonthViews: number;
+          allTime: number;
+          allTimeViews: number;
+        };
+      };
     };
     Enums: {
       [_ in never]: never;

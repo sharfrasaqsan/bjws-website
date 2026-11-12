@@ -52,7 +52,16 @@
     "quickLinks": "Quick Navigation",
     "servicesTitle": "Key Services",
     "rights": "All rights reserved. Buhary Janaza Welfare Society (BJWS).",
-    "privacyNotice": "Registered nonprofit welfare society operating in Mullipothana."
+    "privacyNotice": "Registered nonprofit welfare society operating in Mullipothana.",
+    "visitorCounter": {
+      "title": "Portal Activity",
+      "subtitle": "Continuous Community Service • 24/7 Welfare Access",
+      "today": "Today",
+      "thisMonth": "This Month",
+      "allTime": "All Time",
+      "visitors": "Visitors",
+      "views": "Views"
+    }
   },
   "home": {
     "heroEyebrow": "Community Funeral & Welfare Society • Mullipothana",

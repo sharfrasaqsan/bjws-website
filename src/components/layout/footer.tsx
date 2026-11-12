@@ -4,6 +4,8 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Container } from "@/components/ui/container";
 import { IslamicPattern } from "@/components/ui/islamic-pattern";
+import { VisitorCounter } from "@/components/layout/visitor-counter";
+import type { VisitorStats } from "@/lib/visitor-stats";
 import {
   MapPin,
   Phone,
@@ -15,7 +17,11 @@ import {
   Code2,
 } from "lucide-react";
 
-export function Footer() {
+export function Footer({
+  initialStats,
+}: {
+  initialStats?: VisitorStats;
+} = {}) {
   const t = useTranslations();
 
   const navLinks = [
@@ -240,6 +246,9 @@ export function Footer() {
                 </a>
               </div>
             </div>
+
+            {/* Live Portal Activity Box */}
+            <VisitorCounter initialStats={initialStats} />
           </div>
         </div>
 

@@ -16,6 +16,7 @@ import {
   isSupabaseConfigured,
 } from "@/lib/supabase/server";
 import { SITE_URL } from "@/lib/seo";
+import { getVisitorStats } from "@/lib/visitor-stats";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeScript } from "@/components/theme-script";
@@ -217,6 +218,9 @@ export default async function LocaleLayout({
   const themeCookie = cookieStore.get("bjws-theme")?.value;
   const isDark = themeCookie === "dark";
 
+  // Pre-fetch live visitor reach metrics for seamless SSR/ISR rendering
+  const visitorStats = await getVisitorStats();
+
   const scriptClass =
     locale === "ta"
       ? "font-tamil"
@@ -256,7 +260,7 @@ export default async function LocaleLayout({
           >
             {children}
           </main>
-          <Footer />
+          <Footer initialStats={visitorStats} />
           <EmergencyHotlinePill />
           <Analytics />
           <SpeedInsights />
