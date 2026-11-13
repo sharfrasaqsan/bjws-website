@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Container } from "@/components/ui/container";
 import { PageHeader } from "@/components/layout/page-header";
@@ -12,8 +13,16 @@ import {
   HeartHandshake,
   Sparkles,
   Users,
+  Clock,
+  Building2,
+  MapPin,
+  PhoneCall,
+  ArrowRight,
 } from "lucide-react";
 import { getSiteAssets } from "@/content/site-assets";
+
+// Feature flag: Set to true when opening online membership registration
+const IS_ONLINE_REGISTRATION_OPEN = false;
 
 export async function generateMetadata({
   params,
@@ -256,23 +265,98 @@ export default async function MembershipPage({
               </div>
             </ScrollReveal>
 
-            {/* Right Column: Premium Registration Form Card */}
+            {/* Right Column: Registration Form or Coming Soon Announcement */}
             <ScrollReveal variant="fade-up" delay={2} className="lg:col-span-7">
               <div className="rounded-3xl border border-[#0b2e1e]/10 bg-white p-8 shadow-sm sm:p-10 lg:p-12">
-                <div className="mb-8 border-b border-[#0b2e1e]/10 pb-6">
-                  <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-[#e8f3ee] px-3 py-1 text-xs font-semibold text-[#0b2e1e]">
-                    <HeartHandshake className="h-3.5 w-3.5 text-[#0b2e1e]" />
-                    Official Application
-                  </div>
-                  <h2 className="font-display text-2xl font-bold tracking-tight text-[#0b2e1e] sm:text-3xl">
-                    {t("formHeading")}
-                  </h2>
-                  <p className="mt-2 text-sm leading-relaxed text-[#4b5563]">
-                    {t("formSubheading")}
-                  </p>
-                </div>
+                {IS_ONLINE_REGISTRATION_OPEN ? (
+                  <>
+                    <div className="mb-8 border-b border-[#0b2e1e]/10 pb-6">
+                      <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-[#e8f3ee] px-3 py-1 text-xs font-semibold text-[#0b2e1e]">
+                        <HeartHandshake className="h-3.5 w-3.5 text-[#0b2e1e]" />
+                        Official Application
+                      </div>
+                      <h2 className="font-display text-2xl font-bold tracking-tight text-[#0b2e1e] sm:text-3xl">
+                        {t("formHeading")}
+                      </h2>
+                      <p className="mt-2 text-sm leading-relaxed text-[#4b5563]">
+                        {t("formSubheading")}
+                      </p>
+                    </div>
 
-                <MembershipForm translations={formTranslations} />
+                    <MembershipForm translations={formTranslations} />
+                  </>
+                ) : (
+                  <div className="space-y-8">
+                    {/* Coming Soon Notice Header */}
+                    <div>
+                      <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-amber-200/80 bg-amber-50 px-3.5 py-1.5 text-xs font-semibold text-amber-900 shadow-xs">
+                        <Clock className="h-3.5 w-3.5 text-amber-600 animate-pulse" />
+                        <span>{t("comingSoonBadge")}</span>
+                      </div>
+                      <h2 className="font-display text-2xl font-bold tracking-tight text-[#0b2e1e] sm:text-3xl">
+                        {t("comingSoonHeading")}
+                      </h2>
+                      <p className="mt-3 text-sm leading-relaxed text-[#4b5563]">
+                        {t("comingSoonSubheading")}
+                      </p>
+                    </div>
+
+                    {/* How to Register Meanwhile Card */}
+                    <div className="rounded-2xl border border-[#0b2e1e]/10 bg-[#fbfaf6] p-6 sm:p-7 space-y-5">
+                      <div className="flex items-center gap-2.5 text-[#0b2e1e]">
+                        <Building2 className="h-5 w-5 text-[#b8952b]" />
+                        <h3 className="font-display text-base font-bold text-[#0b2e1e]">
+                          {t("comingSoonNoticeTitle")}
+                        </h3>
+                      </div>
+                      <p className="text-xs sm:text-sm leading-relaxed text-[#4b5563]">
+                        {t("comingSoonNoticeText")}
+                      </p>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-[#0b2e1e]/10">
+                        {/* Option 1: In Person */}
+                        <div className="rounded-xl bg-white p-4 border border-[#0b2e1e]/5 shadow-xs">
+                          <div className="flex items-center gap-2 text-xs font-bold text-[#0b2e1e] uppercase tracking-wider mb-1.5">
+                            <MapPin className="h-4 w-4 text-[#b8952b]" />
+                            <span>{t("comingSoonInPersonTitle")}</span>
+                          </div>
+                          <p className="text-xs text-[#6b7280] leading-relaxed">
+                            {t("comingSoonInPersonDesc")}
+                          </p>
+                        </div>
+
+                        {/* Option 2: Direct Contact */}
+                        <div className="rounded-xl bg-white p-4 border border-[#0b2e1e]/5 shadow-xs">
+                          <div className="flex items-center gap-2 text-xs font-bold text-[#0b2e1e] uppercase tracking-wider mb-1.5">
+                            <PhoneCall className="h-4 w-4 text-[#0b2e1e]" />
+                            <span>{t("comingSoonContactDeskTitle")}</span>
+                          </div>
+                          <p className="text-xs text-[#6b7280] leading-relaxed">
+                            {t("comingSoonContactDeskDesc")}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Action Callouts */}
+                    <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                      <Link
+                        href={`/${locale}/contact`}
+                        className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#0b2e1e] px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#134931] hover:shadow-md focus:outline-hidden focus:ring-2 focus:ring-[#0b2e1e] focus:ring-offset-2"
+                      >
+                        <span>{t("comingSoonContactButton")}</span>
+                        <ArrowRight className="h-4 w-4" />
+                      </Link>
+                      <a
+                        href="tel:+94772782829"
+                        className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#0b2e1e]/20 bg-white px-6 py-3.5 text-sm font-semibold text-[#0b2e1e] shadow-xs transition-all hover:bg-[#fbfaf6] hover:border-[#0b2e1e]/40 focus:outline-hidden"
+                      >
+                        <PhoneCall className="h-4 w-4 text-[#b8952b]" />
+                        <span>{t("comingSoonHelplineButton")}</span>
+                      </a>
+                    </div>
+                  </div>
+                )}
               </div>
             </ScrollReveal>
           </div>

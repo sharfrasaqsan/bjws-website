@@ -435,7 +435,18 @@
     "referenceNotice": "Please save or screenshot this reference number for your records. An officer from the secretarial desk will contact you via WhatsApp or phone for verification.",
     "errorNicInvalid": "Please enter a valid Sri Lankan NIC number (9 digits + V/X or modern 12 digits).",
     "errorDuplicateNIC": "An application with this National Identity Card (NIC) is already registered in our system.",
-    "errorDuplicatePhone": "An application with this mobile phone number is already registered in our system."
+    "errorDuplicatePhone": "An application with this mobile phone number is already registered in our system.",
+    "comingSoonBadge": "Online Registration Opening Soon",
+    "comingSoonHeading": "Online Membership Registration Opening Soon",
+    "comingSoonSubheading": "We are currently digitizing and upgrading our community membership registry. Online self-registration and renewals will launch directly on this portal very soon.",
+    "comingSoonNoticeTitle": "How to register in the meantime",
+    "comingSoonNoticeText": "Community members residing in the Buhary Jummah Mosque Mahallah can register or renew their membership directly through their local Mahallah area collectors or by visiting the mosque administrative desk.",
+    "comingSoonInPersonTitle": "In-Person Registration",
+    "comingSoonInPersonDesc": "Visit the administrative office at 95th Buhary Jummah Mosque, Kandy Road, Mullipothana.",
+    "comingSoonContactDeskTitle": "Direct Officer Contact",
+    "comingSoonContactDeskDesc": "Contact the General Secretary (077 278 2829) or Organizer (077 622 7323) for immediate membership assistance.",
+    "comingSoonContactButton": "Contact Executive Officers",
+    "comingSoonHelplineButton": "Call Secretary Desk"
   },
   "reportsPage": {
     "pageTitle": "Annual Reports & Financial Transparency",

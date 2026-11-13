@@ -10,19 +10,19 @@ export interface VisitorStats {
   allTimeViews: number;
 }
 
-// Resilient baseline fallback reflecting BJWS community reach since 2023 foundation
+// Resilient fallback when database is initializing or connection is pending
 export const FALLBACK_VISITOR_STATS: VisitorStats = {
-  today: 85,
-  todayViews: 180,
-  thisMonth: 3450,
-  thisMonthViews: 7900,
-  allTime: 24650,
-  allTimeViews: 58200,
+  today: 0,
+  todayViews: 0,
+  thisMonth: 0,
+  thisMonthViews: 0,
+  allTime: 0,
+  allTimeViews: 0,
 };
 
 /**
  * Fetch current aggregated visitor stats from Firestore.
- * Safe for Server Components (ISR / SSR).
+ * Calculates 100% authentic live website traffic since launch.
  */
 export async function getVisitorStats(): Promise<VisitorStats> {
   const db = getFirebaseDb();
@@ -43,8 +43,8 @@ export async function getVisitorStats(): Promise<VisitorStats> {
     let todayViews = 0;
     let monthUnique = 0;
     let monthViews = 0;
-    let allTimeUnique = FALLBACK_VISITOR_STATS.allTime;
-    let allTimeViews = FALLBACK_VISITOR_STATS.allTimeViews;
+    let allTimeUnique = 0;
+    let allTimeViews = 0;
 
     snapshot.forEach((doc) => {
       const data = doc.data();
@@ -67,10 +67,10 @@ export async function getVisitorStats(): Promise<VisitorStats> {
     });
 
     return {
-      today: todayUnique || FALLBACK_VISITOR_STATS.today,
-      todayViews: todayViews || FALLBACK_VISITOR_STATS.todayViews,
-      thisMonth: monthUnique || FALLBACK_VISITOR_STATS.thisMonth,
-      thisMonthViews: monthViews || FALLBACK_VISITOR_STATS.thisMonthViews,
+      today: todayUnique,
+      todayViews: todayViews,
+      thisMonth: monthUnique,
+      thisMonthViews: monthViews,
       allTime: allTimeUnique,
       allTimeViews: allTimeViews,
     };

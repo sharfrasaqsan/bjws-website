@@ -88,9 +88,9 @@ export function VisitorCounter({ initialStats }: VisitorCounterProps) {
     return num.toLocaleString();
   };
 
-  const todayCount = stats?.today ?? initialStats?.today ?? 85;
-  const thisMonthCount = stats?.thisMonth ?? initialStats?.thisMonth ?? 3450;
-  const allTimeCount = stats?.allTime ?? initialStats?.allTime ?? 24650;
+  const todayCount = stats?.today ?? initialStats?.today ?? 0;
+  const thisMonthCount = stats?.thisMonth ?? initialStats?.thisMonth ?? 0;
+  const allTimeCount = stats?.allTime ?? initialStats?.allTime ?? 0;
 
   return (
     <div
