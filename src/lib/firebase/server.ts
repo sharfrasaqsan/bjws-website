@@ -1,12 +1,10 @@
 import "server-only";
 import { getApps, initializeApp, cert, type App } from "firebase-admin/app";
 import { getFirestore, type Firestore } from "firebase-admin/firestore";
-import { getAuth, type Auth } from "firebase-admin/auth";
 import { getStorage, type Storage } from "firebase-admin/storage";
 
 let app: App | undefined;
 let firestoreDb: Firestore | undefined;
-let firebaseAuth: Auth | undefined;
 let firebaseStorage: Storage | undefined;
 
 export function isFirebaseConfigured(): boolean {
@@ -74,13 +72,6 @@ export function getFirebaseDb(): Firestore | null {
   return firestoreDb;
 }
 
-export function getFirebaseAuth(): Auth | null {
-  if (firebaseAuth) return firebaseAuth;
-  const adminApp = getFirebaseAdminApp();
-  if (!adminApp) return null;
-  firebaseAuth = getAuth(adminApp);
-  return firebaseAuth;
-}
 
 export function getFirebaseStorage(): Storage | null {
   if (firebaseStorage) return firebaseStorage;
