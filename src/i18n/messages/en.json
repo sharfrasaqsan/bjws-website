@@ -420,13 +420,22 @@
     "errorPhoneInvalid": "Please provide a valid contact number (at least 9 digits).",
     "errorEmailInvalid": "Please enter a valid email address.",
     "errorAddressRequired": "Please specify your residential address or area.",
+    "errorMahallaRequired": "Please specify your Mahallah area or address.",
     "errorAddressMax": "Address cannot exceed 200 characters.",
     "errorFamilySizeMin": "Family size must be at least 1.",
     "errorFamilySizeMax": "Please enter a valid family size (max 25).",
     "errorConsentRequired": "You must accept the terms and privacy policy to apply.",
     "errorRateLimit": "Too many submissions. Please wait a few minutes before trying again.",
     "errorDatabaseFailed": "Unable to submit your application right now. Please contact the secretary directly.",
-    "errorGeneric": "An unexpected error occurred. Please try again or contact our officers directly."
+    "errorGeneric": "An unexpected error occurred. Please try again or contact our officers directly.",
+    "nicLabel": "National Identity Card (NIC) *",
+    "nicPlaceholder": "e.g. 199012345678 or 901234567V",
+    "nicHint": "Sri Lankan NIC required for household verification & official ledger record",
+    "referenceCodeLabel": "Application Reference No",
+    "referenceNotice": "Please save or screenshot this reference number for your records. An officer from the secretarial desk will contact you via WhatsApp or phone for verification.",
+    "errorNicInvalid": "Please enter a valid Sri Lankan NIC number (9 digits + V/X or modern 12 digits).",
+    "errorDuplicateNIC": "An application with this National Identity Card (NIC) is already registered in our system.",
+    "errorDuplicatePhone": "An application with this mobile phone number is already registered in our system."
   },
   "reportsPage": {
     "pageTitle": "Annual Reports & Financial Transparency",

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -12,7 +13,10 @@ import {
 import { FileText, ArrowLeft } from "lucide-react";
 
 export default async function AdminReportsPage() {
-  await getAdminSession();
+  const session = await getAdminSession();
+  if (!session) {
+    redirect("/admin/login");
+  }
 
   let reports: ReportRecord[] = [];
 

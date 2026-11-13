@@ -1,6 +1,7 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { getAdminSession } from "@/lib/admin-auth";
-import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import { getFirebaseDb } from "@/lib/firebase/server";
 import {
   MessagesManager,
   type ContactMessage,
@@ -8,23 +9,36 @@ import {
 import { MessageSquare, ArrowLeft } from "lucide-react";
 
 export default async function AdminMessagesPage() {
-  await getAdminSession();
+  const session = await getAdminSession();
+  if (!session) {
+    redirect("/admin/login");
+  }
 
   let messages: ContactMessage[] = [];
 
-  if (isSupabaseConfigured()) {
+  const db = getFirebaseDb();
+  if (db) {
     try {
-      const supabase = await createAdminClient();
-      const { data, error } = await supabase
-        .from("contact_messages")
-        .select("id, name, phone, email, message, locale, status, created_at")
-        .order("created_at", { ascending: false });
+      const snap = await db
+        .collection("contact_messages")
+        .orderBy("created_at", "desc")
+        .get();
 
-      if (!error && data) {
-        messages = data;
-      }
+      messages = snap.docs.map((doc) => {
+        const d = doc.data();
+        return {
+          id: doc.id,
+          name: d.name || "",
+          phone: d.phone || "",
+          email: d.email || null,
+          message: d.message || "",
+          locale: d.locale || "ta",
+          status: d.status || "new",
+          created_at: d.created_at || new Date().toISOString(),
+        } as ContactMessage;
+      });
     } catch (err) {
-      console.warn("Failed to fetch contact messages:", err);
+      console.warn("Failed to fetch contact messages from Firestore:", err);
     }
   }
 

@@ -11,9 +11,9 @@ const contentSecurityPolicy = `
   default-src 'self';
   script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com;
   style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-  img-src 'self' blob: data: https://*.supabase.co;
+  img-src 'self' blob: data: https://*.supabase.co https://firebasestorage.googleapis.com https://storage.googleapis.com https://*.firebasestorage.app;
   font-src 'self' data: https://fonts.gstatic.com;
-  connect-src 'self' https://*.supabase.co https://va.vercel-scripts.com https://vitals.vercel-insights.com;
+  connect-src 'self' https://*.supabase.co https://*.googleapis.com https://*.firebaseio.com https://*.firebasestorage.app https://va.vercel-scripts.com https://vitals.vercel-insights.com;
   frame-ancestors 'none';
   form-action 'self';
   base-uri 'self';
@@ -66,6 +66,18 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "*.supabase.co",
+      },
+      {
+        protocol: "https",
+        hostname: "firebasestorage.googleapis.com",
+      },
+      {
+        protocol: "https",
+        hostname: "storage.googleapis.com",
+      },
+      {
+        protocol: "https",
+        hostname: "*.firebasestorage.app",
       },
     ],
   },

@@ -22,6 +22,7 @@ import {
 export interface MembershipRequest {
   id: string;
   full_name: string;
+  nic?: string | null;
   phone: string;
   email: string | null;
   address_area: string;
@@ -30,6 +31,7 @@ export interface MembershipRequest {
   plan: "monthly" | "annual";
   consent: boolean;
   status: "pending" | "approved" | "rejected";
+  reference_no?: string | null;
   created_at: string;
 }
 
@@ -79,12 +81,16 @@ export function MembershipsManager({
         const query = searchQuery.toLowerCase();
         const matchesName = r.full_name.toLowerCase().includes(query);
         const matchesPhone = r.phone.toLowerCase().includes(query);
+        const matchesNic = r.nic?.toLowerCase().includes(query);
+        const matchesRef = r.reference_no?.toLowerCase().includes(query);
         const matchesEmail = r.email?.toLowerCase().includes(query);
         const matchesArea = r.address_area.toLowerCase().includes(query);
         const matchesPlan = r.plan.toLowerCase().includes(query);
         return (
           matchesName ||
           matchesPhone ||
+          Boolean(matchesNic) ||
+          Boolean(matchesRef) ||
           matchesEmail ||
           matchesArea ||
           matchesPlan
@@ -98,8 +104,10 @@ export function MembershipsManager({
   const handleExportCsv = () => {
     if (filtered.length === 0) return;
     const headers = [
+      "Reference No",
       "ID",
       "Full Name",
+      "NIC",
       "Phone",
       "Email",
       "Address / Area",
@@ -111,8 +119,10 @@ export function MembershipsManager({
     ];
 
     const rows = filtered.map((m) => [
+      `"${m.reference_no || ""}"`,
       `"${m.id}"`,
       `"${m.full_name.replace(/"/g, '""')}"`,
+      `"${m.nic || ""}"`,
       `"${m.phone}"`,
       `"${m.email || ""}"`,
       `"${(m.address_area || "").replace(/"/g, '""')}"`,
@@ -234,7 +244,7 @@ export function MembershipsManager({
             <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[#9ca3af]" />
             <input
               type="text"
-              placeholder="Search applicant, area, phone..."
+              placeholder="Search name, NIC, Ref #, area, phone..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full rounded-lg border border-[#e6e4dc] bg-[#fbfaf6] py-1.5 pr-3 pl-9 text-xs text-[#1c2420] placeholder-[#9ca3af] transition-colors focus:border-[#124d34] focus:bg-white focus:outline-none"
@@ -313,6 +323,15 @@ export function MembershipsManager({
                       <span className="font-serif text-base font-bold text-[#0b2e1e]">
                         {item.full_name}
                       </span>
+
+                      {item.reference_no && (
+                        <span
+                          className="rounded bg-[#f5eedf] px-2 py-0.5 font-mono text-[11px] font-bold text-[#8b651e] ring-1 ring-[#c99a45]/30"
+                          title="Application Reference Number"
+                        >
+                          {item.reference_no}
+                        </span>
+                      )}
 
                       {/* Status Badge */}
                       <span
@@ -401,9 +420,19 @@ export function MembershipsManager({
               <div className="grid grid-cols-1 gap-4 p-4 text-xs sm:grid-cols-2 sm:p-5 lg:grid-cols-4">
                 {/* Contact Phone & WhatsApp */}
                 <div className="rounded-xl border border-[#f3f1ea] bg-[#fbfaf6] p-3">
-                  <span className="block text-[11px] font-medium text-[#6b7280]">
-                    Phone &amp; WhatsApp
-                  </span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-medium text-[#6b7280]">
+                      Phone &amp; WhatsApp
+                    </span>
+                    {item.nic && (
+                      <span
+                        className="rounded bg-white px-1.5 py-0.5 font-mono text-[10px] font-bold text-[#0b2e1e] ring-1 ring-[#e6e4dc]"
+                        title="Applicant National Identity Card (NIC)"
+                      >
+                        NIC: {item.nic}
+                      </span>
+                    )}
+                  </div>
                   <div className="mt-1 flex items-center justify-between">
                     <a
                       href={`tel:${item.phone}`}

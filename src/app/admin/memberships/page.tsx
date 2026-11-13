@@ -1,6 +1,7 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { getAdminSession } from "@/lib/admin-auth";
-import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import { getFirebaseDb } from "@/lib/firebase/server";
 import {
   MembershipsManager,
   type MembershipRequest,
@@ -8,25 +9,41 @@ import {
 import { Users, ArrowLeft } from "lucide-react";
 
 export default async function AdminMembershipsPage() {
-  await getAdminSession();
+  const session = await getAdminSession();
+  if (!session) {
+    redirect("/admin/login");
+  }
 
   let requests: MembershipRequest[] = [];
 
-  if (isSupabaseConfigured()) {
+  const db = getFirebaseDb();
+  if (db) {
     try {
-      const supabase = await createAdminClient();
-      const { data, error } = await supabase
-        .from("membership_requests")
-        .select(
-          "id, full_name, phone, email, address_area, family_size, preferred_contact, plan, consent, status, created_at"
-        )
-        .order("created_at", { ascending: false });
+      const snap = await db
+        .collection("membership_requests")
+        .orderBy("created_at", "desc")
+        .get();
 
-      if (!error && data) {
-        requests = data;
-      }
+      requests = snap.docs.map((doc) => {
+        const d = doc.data();
+        return {
+          id: doc.id,
+          full_name: d.full_name || "",
+          nic: d.nic || null,
+          phone: d.phone || "",
+          email: d.email || null,
+          address_area: d.address_area || "",
+          family_size: d.family_size ? Number(d.family_size) : null,
+          preferred_contact: d.preferred_contact || "phone",
+          plan: d.plan || "monthly",
+          consent: Boolean(d.consent),
+          status: d.status || "pending",
+          reference_no: d.reference_no || null,
+          created_at: d.created_at || new Date().toISOString(),
+        } as MembershipRequest;
+      });
     } catch (err) {
-      console.warn("Failed to fetch membership requests:", err);
+      console.warn("Failed to fetch membership requests from Firestore:", err);
     }
   }
 

@@ -1,10 +1,11 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 import { getAdminSession } from "@/lib/admin-auth";
-import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import { getFirebaseDb } from "@/lib/firebase/server";
 import { formatAdminDate } from "@/lib/utils";
 import { getAllTeamMembersAdmin } from "@/content/team";
 import { getAllGalleryImagesAdmin } from "@/content/gallery";
@@ -30,7 +31,10 @@ import {
 } from "lucide-react";
 
 export default async function AdminDashboardPage() {
-  await getAdminSession();
+  const session = await getAdminSession();
+  if (!session) {
+    redirect("/admin/login");
+  }
 
   let messageStats = { total: 0, new: 0 };
   let membershipStats = { total: 0, pending: 0 };
@@ -85,51 +89,77 @@ export default async function AdminDashboardPage() {
     created_at: string;
   }> = [];
 
-  const isConfigured = isSupabaseConfigured();
+  const db = getFirebaseDb();
+  const isConfigured = Boolean(db);
 
-  if (isConfigured) {
+  if (db) {
     try {
-      const supabase = await createAdminClient();
-
-      // Parallel metric fetching across all 7 operational collections
+      // Parallel metric fetching across all 8 operational Firestore collections
       const [
-        { data: messages },
-        { data: memberships },
-        { data: notices },
-        { data: reports },
-        { data: dbTeam },
-        { data: dbGallery },
-        { data: dbArticles },
-        { data: dbHeroBanners },
+        messagesSnap,
+        membershipsSnap,
+        noticesSnap,
+        reportsSnap,
+        teamSnap,
+        gallerySnap,
+        articlesSnap,
+        heroSnap,
       ] = await Promise.all([
-        supabase
-          .from("contact_messages")
-          .select("id, name, phone, status, created_at")
-          .order("created_at", { ascending: false }),
-        supabase
-          .from("membership_requests")
-          .select("id, full_name, phone, plan, status, created_at")
-          .order("created_at", { ascending: false }),
-        supabase
-          .from("notices")
-          .select(
-            "id, title, body, locale, published_at, updated_at, is_published, image_url, show_on_homepage"
-          ),
-        supabase.from("reports").select("id, is_published"),
-        supabase.from("team_members").select("id, is_inactive"),
-        supabase.from("gallery_images").select("id, approved"),
-        supabase
-          .from("articles")
-          .select("id, slug, locale, is_published, published_at"),
-        supabase.from("hero_banners").select("id, is_active"),
+        db.collection("contact_messages").orderBy("created_at", "desc").get(),
+        db
+          .collection("membership_requests")
+          .orderBy("created_at", "desc")
+          .get(),
+        db.collection("notices").get(),
+        db.collection("reports").get(),
+        db.collection("team_members").get(),
+        db.collection("gallery_images").get(),
+        db.collection("articles").get(),
+        db.collection("hero_banners").get(),
       ]);
+
+      const messages = messagesSnap.docs.map((d) => ({
+        id: d.id,
+        ...d.data(),
+      })) as Record<string, unknown>[];
+      const memberships = membershipsSnap.docs.map((d) => ({
+        id: d.id,
+        ...d.data(),
+      })) as Record<string, unknown>[];
+      const notices = noticesSnap.docs.map((d) => ({
+        id: d.id,
+        ...d.data(),
+      })) as Record<string, unknown>[];
+      const reports = reportsSnap.docs.map((d) => ({
+        id: d.id,
+        ...d.data(),
+      })) as Record<string, unknown>[];
+      const dbTeam = teamSnap.docs.map((d) => ({
+        id: d.id,
+        ...d.data(),
+      })) as Record<string, unknown>[];
+      const dbGallery = gallerySnap.docs.map((d) => ({
+        id: d.id,
+        ...d.data(),
+      })) as Record<string, unknown>[];
+      const dbArticles = articlesSnap.docs.map((d) => ({
+        id: d.id,
+        ...d.data(),
+      })) as Record<string, unknown>[];
+      const dbHeroBanners = heroSnap.docs.map((d) => ({
+        id: d.id,
+        ...d.data(),
+      })) as Record<string, unknown>[];
 
       if (messages) {
         messageStats = {
           total: messages.length,
           new: messages.filter((m) => m.status === "new").length,
         };
-        recentMessages = messages.slice(0, 5);
+        recentMessages = messages.slice(
+          0,
+          5
+        ) as unknown as typeof recentMessages;
       }
 
       if (memberships) {
@@ -137,7 +167,10 @@ export default async function AdminDashboardPage() {
           total: memberships.length,
           pending: memberships.filter((m) => m.status === "pending").length,
         };
-        recentMemberships = memberships.slice(0, 5);
+        recentMemberships = memberships.slice(
+          0,
+          5
+        ) as unknown as typeof recentMemberships;
       }
 
       if (notices && notices.length > 0) {
@@ -215,7 +248,7 @@ export default async function AdminDashboardPage() {
         };
       }
     } catch (err) {
-      console.warn("Failed to load dashboard metrics from Supabase:", err);
+      console.warn("Failed to load dashboard metrics from Firestore:", err);
     }
   }
 
@@ -241,7 +274,7 @@ export default async function AdminDashboardPage() {
           <div className="flex flex-wrap items-center gap-2.5">
             <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-800 dark:text-emerald-300">
               <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
-              <span>{isConfigured ? "Supabase Live" : "Demo Mode"}</span>
+              <span>{isConfigured ? "Firestore Live" : "Demo Mode"}</span>
             </div>
 
             <Link

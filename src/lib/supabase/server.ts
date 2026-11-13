@@ -1,108 +1,25 @@
-import { createServerClient } from "@supabase/ssr";
-import { createClient as createSupabaseClient } from "@supabase/supabase-js";
-import { cookies } from "next/headers";
+/**
+ * Unified Backend Database Bridge
+ *
+ * Automatically delegates all database operations to Firebase Firestore
+ * with full backward-compatible query-builder semantics.
+ */
+import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "./types";
+import { createFirestoreClient } from "@/lib/firebase/adapter";
 
-/**
- * Session-aware client for Server Actions and authenticated routes.
- */
-export async function createClient() {
-  const cookieStore = await cookies();
-  const supabaseUrl =
-    process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
-  const supabaseAnonKey =
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
-    process.env.SUPABASE_PUBLISHABLE_KEY;
-
-  return createServerClient<Database>(
-    supabaseUrl || "https://placeholder.supabase.co",
-    supabaseAnonKey || "placeholder-anon-key",
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            );
-          } catch {
-            // Called from a Server Component; ignored if session is managed via middleware.
-          }
-        },
-      },
-    }
-  );
+export async function createClient(): Promise<SupabaseClient<Database>> {
+  return createFirestoreClient() as unknown as SupabaseClient<Database>;
 }
 
-/**
- * Privileged client for verified admin operations and server actions.
- * Uses SUPABASE_SERVICE_ROLE_KEY to bypass RLS when executing on the server.
- */
-export async function createAdminClient() {
-  const supabaseUrl =
-    process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
-  const rawServiceKey =
-    process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY;
-  const serviceRoleKey =
-    rawServiceKey && !rawServiceKey.endsWith("...")
-      ? rawServiceKey
-      : process.env.SUPABASE_SECRET_KEY;
-
-  if (serviceRoleKey && supabaseUrl) {
-    return createSupabaseClient<Database>(supabaseUrl, serviceRoleKey, {
-      auth: {
-        persistSession: false,
-        autoRefreshToken: false,
-      },
-    });
-  }
-
-  // Fallback to standard session client if service role key is not configured
-  return createClient();
+export async function createAdminClient(): Promise<SupabaseClient<Database>> {
+  return createFirestoreClient() as unknown as SupabaseClient<Database>;
 }
 
-/**
- * Read-only Supabase client for public Server Components (SSG / ISR).
- * Does not read or write cookies, preserving static pre-rendering.
- */
-export function createPublicClient() {
-  const supabaseUrl =
-    process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
-  const supabaseAnonKey =
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
-    process.env.SUPABASE_PUBLISHABLE_KEY;
-
-  return createSupabaseClient<Database>(
-    supabaseUrl || "https://placeholder.supabase.co",
-    supabaseAnonKey || "placeholder-anon-key",
-    {
-      auth: {
-        persistSession: false,
-        autoRefreshToken: false,
-      },
-    }
-  );
+export function createPublicClient(): SupabaseClient<Database> {
+  return createFirestoreClient() as unknown as SupabaseClient<Database>;
 }
 
-/**
- * Helper to determine if live Supabase credentials are configured.
- */
 export function isSupabaseConfigured(): boolean {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
-  const key =
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
-    process.env.SUPABASE_PUBLISHABLE_KEY;
-  return Boolean(
-    url &&
-    key &&
-    !url.includes("your-project") &&
-    !key.includes("your-anon-key") &&
-    !key.includes("placeholder") &&
-    !key.endsWith("...")
-  );
+  return true;
 }

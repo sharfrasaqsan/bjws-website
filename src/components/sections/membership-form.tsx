@@ -12,6 +12,9 @@ import { Badge } from "@/components/ui/badge";
 interface MembershipFormProps {
   translations: {
     fullNameLabel: string;
+    nicLabel: string;
+    nicPlaceholder: string;
+    nicHint: string;
     phoneLabel: string;
     emailLabel: string;
     emailOptional: string;
@@ -33,6 +36,8 @@ interface MembershipFormProps {
     submittingButton: string;
     successTitle: string;
     successMessage: string;
+    referenceCodeLabel: string;
+    referenceNotice: string;
     errors: Record<string, string>;
   };
 }
@@ -54,7 +59,7 @@ export function MembershipForm({ translations }: MembershipFormProps) {
 
   if (state.success) {
     return (
-      <div className="rounded-2xl border border-emerald-300 bg-emerald-50/80 p-8 text-center text-emerald-950 shadow-xs">
+      <div className="rounded-2xl border border-emerald-300 bg-emerald-50/80 p-6 text-center text-emerald-950 shadow-xs sm:p-8">
         <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-800">
           <svg
             className="h-7 w-7"
@@ -70,35 +75,37 @@ export function MembershipForm({ translations }: MembershipFormProps) {
             />
           </svg>
         </div>
-        <h3 className="text-xl font-bold text-emerald-900">
+        <h3 className="text-xl font-bold text-emerald-900 sm:text-2xl">
           {translations.successTitle}
         </h3>
         <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-emerald-800">
           {translations.successMessage}
         </p>
+
+        {state.referenceNo && (
+          <div className="mx-auto mt-6 max-w-sm rounded-xl border border-emerald-300 bg-white p-5 shadow-2xs">
+            <span className="text-[11px] font-bold tracking-wider text-emerald-700 uppercase">
+              {translations.referenceCodeLabel}
+            </span>
+            <div className="mt-1.5 font-mono text-2xl font-bold tracking-widest text-[#0b2e1e]">
+              {state.referenceNo}
+            </div>
+            <p className="mt-2.5 text-xs leading-relaxed text-emerald-800/80">
+              {translations.referenceNotice}
+            </p>
+          </div>
+        )}
       </div>
     );
   }
 
   return (
     <form action={formAction} className="space-y-6">
-      {/* Honeypot Spam Field */}
-      <div className="sr-only" aria-hidden="true">
-        <label htmlFor="organization_code">Leave blank</label>
-        <input
-          type="text"
-          id="organization_code"
-          name="organization_code"
-          tabIndex={-1}
-          autoComplete="off"
-        />
-      </div>
-
       {/* Global Error Alert */}
       {state.messageKey && !state.success && (
         <div
           role="alert"
-          className="border-destructive/40 text-destructive rounded-lg border bg-red-50 p-4 text-xs sm:text-sm"
+          className="border-destructive/40 text-destructive rounded-lg border bg-red-50 p-4 text-xs font-medium sm:text-sm"
         >
           {getErrorText(state.messageKey)}
         </div>
@@ -119,7 +126,24 @@ export function MembershipForm({ translations }: MembershipFormProps) {
         />
       </FormField>
 
-      {/* Primary Phone Number */}
+      {/* National Identity Card (NIC) */}
+      <FormField
+        id="nic"
+        label={translations.nicLabel}
+        hint={translations.nicHint}
+        required
+        error={getErrorText(state.fieldErrors?.nic)}
+      >
+        <Input
+          name="nic"
+          placeholder={translations.nicPlaceholder}
+          required
+          disabled={isPending}
+          className="font-mono tracking-wider uppercase"
+        />
+      </FormField>
+
+      {/* Primary Phone Number (Sri Lankan Mobile) */}
       <FormField
         id="phone"
         label={translations.phoneLabel}
@@ -129,7 +153,7 @@ export function MembershipForm({ translations }: MembershipFormProps) {
         <Input
           type="tel"
           name="phone"
-          placeholder="07X-XXXXXXX"
+          placeholder="07X XXXXXXX"
           required
           disabled={isPending}
         />
@@ -175,7 +199,7 @@ export function MembershipForm({ translations }: MembershipFormProps) {
           type="number"
           name="familySize"
           min={1}
-          max={20}
+          max={25}
           placeholder="e.g. 5"
           disabled={isPending}
         />

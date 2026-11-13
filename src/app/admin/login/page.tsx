@@ -136,7 +136,7 @@ export default function AdminLoginPage() {
               <ShieldCheck className="h-3.5 w-3.5 text-[#124d34]" />
               <span>
                 Protected by{" "}
-                <strong className="text-[#1c2420]">Supabase Auth</strong> &amp;
+                <strong className="text-[#1c2420]">Firebase Auth</strong> &amp;
                 256-Bit SSL
               </span>
             </p>

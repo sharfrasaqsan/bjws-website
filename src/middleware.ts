@@ -1,4 +1,3 @@
-import { createServerClient } from "@supabase/ssr";
 import createIntlMiddleware from "next-intl/middleware";
 import { NextResponse, type NextRequest } from "next/server";
 import { routing } from "./i18n/routing";
@@ -10,74 +9,11 @@ export default async function middleware(request: NextRequest) {
 
   // Intercept Admin routes
   if (pathname === "/admin" || pathname.startsWith("/admin/")) {
-    let response = NextResponse.next({
-      request: {
-        headers: request.headers,
-      },
-    });
-
-    let isAuthenticated = false;
-
-    // 1. Instant check for demo session cookie
+    const sessionCookie = request.cookies.get("bjws_admin_session");
     const demoCookie = request.cookies.get("bjws_admin_demo_session");
-    if (demoCookie?.value === "active") {
-      isAuthenticated = true;
-    }
-
-    const supabaseUrl =
-      process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
-    const supabaseAnonKey =
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
-      process.env.SUPABASE_PUBLISHABLE_KEY;
-    const isConfigured = Boolean(
-      supabaseUrl &&
-      supabaseAnonKey &&
-      !supabaseUrl.includes("your-project") &&
-      !supabaseAnonKey.includes("your-anon-key") &&
-      !supabaseUrl.includes("placeholder") &&
-      !supabaseAnonKey.endsWith("...")
+    const isAuthenticated = Boolean(
+      sessionCookie?.value || demoCookie?.value === "active"
     );
-
-    // 2. Check Supabase auth only if not already authenticated and Supabase session cookies exist
-    if (!isAuthenticated && isConfigured) {
-      const hasSupabaseCookie = request.cookies
-        .getAll()
-        .some((c) => c.name.startsWith("sb-"));
-
-      if (hasSupabaseCookie) {
-        try {
-          const supabase = createServerClient(supabaseUrl!, supabaseAnonKey!, {
-            cookies: {
-              getAll() {
-                return request.cookies.getAll();
-              },
-              setAll(cookiesToSet) {
-                cookiesToSet.forEach(({ name, value }) =>
-                  request.cookies.set(name, value)
-                );
-                response = NextResponse.next({
-                  request,
-                });
-                cookiesToSet.forEach(({ name, value, options }) =>
-                  response.cookies.set(name, value, options)
-                );
-              },
-            },
-          });
-
-          const {
-            data: { user },
-          } = await supabase.auth.getUser();
-
-          if (user) {
-            isAuthenticated = true;
-          }
-        } catch (err) {
-          console.error("Middleware Supabase auth error:", err);
-        }
-      }
-    }
 
     // Unauthenticated user attempting to access protected admin pages
     if (!isAuthenticated && pathname !== "/admin/login") {
@@ -91,7 +27,7 @@ export default async function middleware(request: NextRequest) {
       return NextResponse.redirect(adminUrl);
     }
 
-    return response;
+    return NextResponse.next();
   }
 
   // Force root "/" to always redirect to English ("/en") as the default language

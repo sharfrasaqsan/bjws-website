@@ -1,7 +1,5 @@
-import {
-  createPublicClient,
-  isSupabaseConfigured,
-} from "@/lib/supabase/server";
+import { getFirebaseDb } from "@/lib/firebase/server";
+import { FieldValue } from "firebase-admin/firestore";
 
 export interface VisitorStats {
   today: number;
@@ -23,68 +21,95 @@ export const FALLBACK_VISITOR_STATS: VisitorStats = {
 };
 
 /**
- * Fetch current aggregated visitor stats from Supabase.
+ * Fetch current aggregated visitor stats from Firestore.
  * Safe for Server Components (ISR / SSR).
  */
 export async function getVisitorStats(): Promise<VisitorStats> {
-  if (!isSupabaseConfigured()) {
+  const db = getFirebaseDb();
+  if (!db) {
     return FALLBACK_VISITOR_STATS;
   }
 
   try {
-    const supabase = createPublicClient();
-    const { data, error } = await supabase.rpc("get_visit_stats");
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const monthPrefix = todayStr.slice(0, 7);
 
-    if (error || !data) {
+    const snapshot = await db.collection("site_visit_stats").get();
+    if (snapshot.empty) {
       return FALLBACK_VISITOR_STATS;
     }
 
+    let todayUnique = 0;
+    let todayViews = 0;
+    let monthUnique = 0;
+    let monthViews = 0;
+    let allTimeUnique = FALLBACK_VISITOR_STATS.allTime;
+    let allTimeViews = FALLBACK_VISITOR_STATS.allTimeViews;
+
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      const date = data.visit_date || doc.id;
+      const views = Number(data.page_views) || 0;
+      const unique = Number(data.unique_visitors) || 0;
+
+      if (date === todayStr) {
+        todayUnique += unique;
+        todayViews += views;
+      }
+
+      if (typeof date === "string" && date.startsWith(monthPrefix)) {
+        monthUnique += unique;
+        monthViews += views;
+      }
+
+      allTimeUnique += unique;
+      allTimeViews += views;
+    });
+
     return {
-      today: Number(data.today) || FALLBACK_VISITOR_STATS.today,
-      todayViews: Number(data.todayViews) || FALLBACK_VISITOR_STATS.todayViews,
-      thisMonth: Number(data.thisMonth) || FALLBACK_VISITOR_STATS.thisMonth,
-      thisMonthViews:
-        Number(data.thisMonthViews) || FALLBACK_VISITOR_STATS.thisMonthViews,
-      allTime: Number(data.allTime) || FALLBACK_VISITOR_STATS.allTime,
-      allTimeViews:
-        Number(data.allTimeViews) || FALLBACK_VISITOR_STATS.allTimeViews,
+      today: todayUnique || FALLBACK_VISITOR_STATS.today,
+      todayViews: todayViews || FALLBACK_VISITOR_STATS.todayViews,
+      thisMonth: monthUnique || FALLBACK_VISITOR_STATS.thisMonth,
+      thisMonthViews: monthViews || FALLBACK_VISITOR_STATS.thisMonthViews,
+      allTime: allTimeUnique,
+      allTimeViews: allTimeViews,
     };
-  } catch {
+  } catch (err) {
+    console.warn("Failed to get visitor stats from Firestore:", err);
     return FALLBACK_VISITOR_STATS;
   }
 }
 
 /**
- * Record a visit and return updated stats atomically.
+ * Record a visit and return updated stats atomically using Firestore increment.
  */
 export async function recordVisit(
   isNewVisitor: boolean
 ): Promise<VisitorStats> {
-  if (!isSupabaseConfigured()) {
+  const db = getFirebaseDb();
+  if (!db) {
     return FALLBACK_VISITOR_STATS;
   }
 
   try {
-    const supabase = createPublicClient();
-    const { data, error } = await supabase.rpc("record_and_get_visit_stats", {
-      is_new_visitor: isNewVisitor,
-    });
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const docRef = db.collection("site_visit_stats").doc(todayStr);
 
-    if (error || !data) {
-      return FALLBACK_VISITOR_STATS;
-    }
+    await docRef.set(
+      {
+        visit_date: todayStr,
+        page_views: FieldValue.increment(1),
+        unique_visitors: isNewVisitor
+          ? FieldValue.increment(1)
+          : FieldValue.increment(0),
+        updated_at: new Date().toISOString(),
+      },
+      { merge: true }
+    );
 
-    return {
-      today: Number(data.today) || FALLBACK_VISITOR_STATS.today,
-      todayViews: Number(data.todayViews) || FALLBACK_VISITOR_STATS.todayViews,
-      thisMonth: Number(data.thisMonth) || FALLBACK_VISITOR_STATS.thisMonth,
-      thisMonthViews:
-        Number(data.thisMonthViews) || FALLBACK_VISITOR_STATS.thisMonthViews,
-      allTime: Number(data.allTime) || FALLBACK_VISITOR_STATS.allTime,
-      allTimeViews:
-        Number(data.allTimeViews) || FALLBACK_VISITOR_STATS.allTimeViews,
-    };
-  } catch {
+    return await getVisitorStats();
+  } catch (err) {
+    console.warn("Failed to record visit in Firestore:", err);
     return FALLBACK_VISITOR_STATS;
   }
 }

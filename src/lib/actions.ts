@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
-import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import { getFirebaseDb } from "@/lib/firebase/server";
 import { checkRateLimit } from "@/lib/rate-limit";
 
 // ====================================================================
@@ -37,6 +37,7 @@ export interface ActionResponse {
   success: boolean;
   messageKey?: string;
   fieldErrors?: Record<string, string>;
+  referenceNo?: string;
 }
 
 export async function submitContactAction(
@@ -93,34 +94,27 @@ export async function submitContactAction(
       return { success: false, fieldErrors };
     }
 
-    // 5. Insert into Supabase if configured
-    if (isSupabaseConfigured()) {
-      const supabase = await createAdminClient();
-      const { error } = await supabase.from("contact_messages").insert({
-        name: validated.data.name,
-        phone: validated.data.phone,
-        email: validated.data.email || null,
-        message: validated.data.message,
-        locale: validated.data.locale,
-        status: "new",
-      });
-
-      if (error) {
-        console.error(
-          "Supabase insert error (contact_messages):",
-          error.message
-        );
-        return { success: false, messageKey: "errorDatabaseFailed" };
-      }
-
-      revalidatePath("/admin/messages");
-      revalidatePath("/admin");
-    } else {
-      console.log(
-        "[Demo / Dev Mode] Contact message received (Supabase not configured):",
-        validated.data
-      );
+    // 5. Insert into Firebase Firestore
+    const db = getFirebaseDb();
+    if (!db) {
+      console.error("[Database Error] Firebase DB is not configured.");
+      return { success: false, messageKey: "errorDatabaseFailed" };
     }
+
+    const docRef = db.collection("contact_messages").doc();
+    await docRef.set({
+      id: docRef.id,
+      name: validated.data.name,
+      phone: validated.data.phone,
+      email: validated.data.email || null,
+      message: validated.data.message,
+      locale: validated.data.locale,
+      status: "new",
+      created_at: new Date().toISOString(),
+    });
+
+    revalidatePath("/admin/messages");
+    revalidatePath("/admin");
 
     return { success: true, messageKey: "successMessageSent" };
   } catch (err) {
@@ -134,11 +128,27 @@ export async function submitContactAction(
 // ====================================================================
 const membershipSchema = z.object({
   fullName: z.string().trim().min(3, "errorNameMin").max(120, "errorNameMax"),
+  nic: z
+    .string()
+    .trim()
+    .transform((v) => v.toUpperCase().replace(/\s+/g, ""))
+    .refine((v) => /^([0-9]{9}[VX]|[0-9]{12})$/.test(v), {
+      message: "errorNicInvalid",
+    }),
   phone: z
     .string()
     .trim()
-    .min(9, "errorPhoneInvalid")
-    .max(20, "errorPhoneInvalid"),
+    .transform((v) => v.replace(/[\s-]/g, ""))
+    .refine((v) => /^(?:\+94|0094|94|0)?7[0-9]{8}$/.test(v), {
+      message: "errorPhoneInvalid",
+    })
+    .transform((v) => {
+      if (v.startsWith("+94")) return "0" + v.slice(3);
+      if (v.startsWith("0094")) return "0" + v.slice(4);
+      if (v.startsWith("94")) return "0" + v.slice(2);
+      if (!v.startsWith("0")) return "0" + v;
+      return v;
+    }),
   email: z
     .string()
     .trim()
@@ -161,7 +171,6 @@ const membershipSchema = z.object({
     .default("phone"),
   plan: z.enum(["monthly", "annual"]).default("monthly"),
   consent: z.literal(true, { message: "errorConsentRequired" }),
-  bot_trap: z.string().max(0, "errorSpamDetected").optional().or(z.literal("")),
 });
 
 export async function submitMembershipAction(
@@ -189,6 +198,7 @@ export async function submitMembershipAction(
 
     const rawData = {
       fullName: formData.get("fullName"),
+      nic: formData.get("nic"),
       phone: formData.get("phone"),
       email: formData.get("email") || "",
       addressArea: formData.get("addressArea"),
@@ -197,12 +207,7 @@ export async function submitMembershipAction(
       plan: formData.get("plan") || "monthly",
       consent:
         formData.get("consent") === "on" || formData.get("consent") === "true",
-      bot_trap: formData.get("organization_code") || "",
     };
-
-    if (rawData.bot_trap) {
-      return { success: true, messageKey: "successMembershipSubmitted" };
-    }
 
     const validated = membershipSchema.safeParse(rawData);
     if (!validated.success) {
@@ -215,38 +220,78 @@ export async function submitMembershipAction(
       return { success: false, fieldErrors };
     }
 
-    if (isSupabaseConfigured()) {
-      const supabase = await createAdminClient();
-      const { error } = await supabase.from("membership_requests").insert({
-        full_name: validated.data.fullName,
-        phone: validated.data.phone,
-        email: validated.data.email || null,
-        address_area: validated.data.addressArea,
-        family_size: validated.data.familySize || null,
-        preferred_contact: validated.data.preferredContact,
-        plan: validated.data.plan,
-        consent: true,
-        status: "pending",
-      });
+    const currentYear = new Date().getFullYear();
+    const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+    const referenceNo = `BJWS-${currentYear}-${randomSuffix}`;
 
-      if (error) {
-        console.error(
-          "Supabase insert error (membership_requests):",
-          error.message
-        );
-        return { success: false, messageKey: "errorDatabaseFailed" };
-      }
-
-      revalidatePath("/admin/memberships");
-      revalidatePath("/admin");
-    } else {
-      console.log(
-        "[Demo / Dev Mode] Membership request received (Supabase not configured):",
-        validated.data
-      );
+    const db = getFirebaseDb();
+    if (!db) {
+      console.error("[Database Error] Firebase DB is not configured.");
+      return { success: false, messageKey: "errorDatabaseFailed" };
     }
 
-    return { success: true, messageKey: "successMembershipSubmitted" };
+    // 1. Strict Duplicate Check: Prevent multiple submissions by the same NIC
+    const existingNicSnap = await db
+      .collection("membership_requests")
+      .where("nic", "==", validated.data.nic)
+      .where("status", "in", ["pending", "approved"])
+      .limit(1)
+      .get();
+
+    if (!existingNicSnap.empty) {
+      return {
+        success: false,
+        fieldErrors: {
+          nic: "errorDuplicateNIC",
+        },
+        messageKey: "errorDuplicateNIC",
+      };
+    }
+
+    // 2. Strict Duplicate Check: Prevent multiple submissions with the same phone
+    const existingPhoneSnap = await db
+      .collection("membership_requests")
+      .where("phone", "==", validated.data.phone)
+      .where("status", "in", ["pending", "approved"])
+      .limit(1)
+      .get();
+
+    if (!existingPhoneSnap.empty) {
+      return {
+        success: false,
+        fieldErrors: {
+          phone: "errorDuplicatePhone",
+        },
+        messageKey: "errorDuplicatePhone",
+      };
+    }
+
+    // 3. Insert verified membership request with Reference No into Firestore
+    const newDocRef = db.collection("membership_requests").doc();
+    await newDocRef.set({
+      id: newDocRef.id,
+      full_name: validated.data.fullName,
+      nic: validated.data.nic,
+      phone: validated.data.phone,
+      email: validated.data.email || null,
+      address_area: validated.data.addressArea,
+      family_size: validated.data.familySize || null,
+      preferred_contact: validated.data.preferredContact,
+      plan: validated.data.plan,
+      consent: true,
+      status: "pending",
+      reference_no: referenceNo,
+      created_at: new Date().toISOString(),
+    });
+
+    revalidatePath("/admin/memberships");
+    revalidatePath("/admin");
+
+    return {
+      success: true,
+      messageKey: "successMembershipSubmitted",
+      referenceNo,
+    };
   } catch (err) {
     console.error("Unexpected error in submitMembershipAction:", err);
     return { success: false, messageKey: "errorGeneric" };

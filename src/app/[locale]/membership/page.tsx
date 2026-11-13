@@ -46,6 +46,9 @@ export default async function MembershipPage({
 
   const formTranslations = {
     fullNameLabel: t("fullNameLabel"),
+    nicLabel: t("nicLabel"),
+    nicPlaceholder: t("nicPlaceholder"),
+    nicHint: t("nicHint"),
     phoneLabel: t("phoneLabel"),
     emailLabel: t("emailLabel"),
     emailOptional: t("emailOptional"),
@@ -67,9 +70,15 @@ export default async function MembershipPage({
     submittingButton: t("submittingButton"),
     successTitle: t("successTitle"),
     successMessage: t("successMessage"),
+    referenceCodeLabel: t("referenceCodeLabel"),
+    referenceNotice: t("referenceNotice"),
     errors: {
       errorNameMin: t("errorNameMin"),
       errorNameMax: t("errorNameMax"),
+      errorNicInvalid: t("errorNicInvalid"),
+      errorDuplicateNIC: t("errorDuplicateNIC"),
+      errorDuplicatePhone: t("errorDuplicatePhone"),
+      errorMahallaRequired: t("errorMahallaRequired"),
       errorPhoneInvalid: t("errorPhoneInvalid"),
       errorEmailInvalid: t("errorEmailInvalid"),
       errorAddressRequired: t("errorAddressRequired"),

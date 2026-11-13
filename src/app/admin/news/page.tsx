@@ -4,6 +4,7 @@ import Link from "next/link";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
+import { redirect } from "next/navigation";
 import { getAdminSession } from "@/lib/admin-auth";
 import { getAllArticlesAdmin, type Article } from "@/content/news";
 import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/server";
@@ -17,7 +18,10 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminNewsPage() {
-  await getAdminSession();
+  const session = await getAdminSession();
+  if (!session) {
+    redirect("/admin/login");
+  }
 
   let articles: Article[] = [];
 

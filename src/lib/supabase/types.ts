@@ -54,6 +54,8 @@ export interface Database {
           plan: "monthly" | "annual";
           consent: boolean;
           status: "pending" | "approved" | "rejected";
+          nic: string | null;
+          reference_no: string | null;
           created_at: string;
         };
         Insert: {
@@ -67,6 +69,8 @@ export interface Database {
           plan?: "monthly" | "annual";
           consent: boolean;
           status?: "pending" | "approved" | "rejected";
+          nic?: string | null;
+          reference_no?: string | null;
           created_at?: string;
         };
         Update: {
@@ -80,6 +84,8 @@ export interface Database {
           plan?: "monthly" | "annual";
           consent?: boolean;
           status?: "pending" | "approved" | "rejected";
+          nic?: string | null;
+          reference_no?: string | null;
           created_at?: string;
         };
         Relationships: [];

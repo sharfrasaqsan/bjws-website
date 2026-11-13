@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -10,7 +11,10 @@ import { NoticesManager } from "@/components/admin/notices-manager";
 import { Megaphone, ArrowLeft } from "lucide-react";
 
 export default async function AdminNoticesPage() {
-  await getAdminSession();
+  const session = await getAdminSession();
+  if (!session) {
+    redirect("/admin/login");
+  }
 
   let notices: NoticeRecord[] = [];
 

@@ -4,7 +4,7 @@ import Image from "next/image";
 import { cookies } from "next/headers";
 import { Inter, Playfair_Display } from "next/font/google";
 import { getAdminSession, logoutAdminAction } from "@/lib/admin-auth";
-import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import { getFirebaseDb } from "@/lib/firebase/server";
 import { AdminNav } from "@/components/admin/admin-nav";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { ThemeScript } from "@/components/theme-script";
@@ -16,6 +16,7 @@ const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   display: "swap",
+  adjustFontFallback: true,
 });
 
 const playfair = Playfair_Display({
@@ -23,6 +24,7 @@ const playfair = Playfair_Display({
   subsets: ["latin"],
   weight: ["600", "700"],
   display: "swap",
+  adjustFontFallback: true,
 });
 
 export const metadata: Metadata = {
@@ -57,25 +59,24 @@ export default async function AdminLayout({
   const session = await getAdminSession();
 
   let counts = { messagesNew: 0, membershipsPending: 0 };
-  if (session && isSupabaseConfigured()) {
-    try {
-      const supabase = await createAdminClient();
-      const [{ count: msgCount }, { count: memCount }] = await Promise.all([
-        supabase
-          .from("contact_messages")
-          .select("*", { count: "exact", head: true })
-          .eq("status", "new"),
-        supabase
-          .from("membership_requests")
-          .select("*", { count: "exact", head: true })
-          .eq("status", "pending"),
-      ]);
-      counts = {
-        messagesNew: msgCount || 0,
-        membershipsPending: memCount || 0,
-      };
-    } catch (err) {
-      console.warn("Failed to query admin navbar counts:", err);
+  if (session) {
+    const db = getFirebaseDb();
+    if (db) {
+      try {
+        const [msgSnap, memSnap] = await Promise.all([
+          db.collection("contact_messages").where("status", "==", "new").get(),
+          db
+            .collection("membership_requests")
+            .where("status", "==", "pending")
+            .get(),
+        ]);
+        counts = {
+          messagesNew: msgSnap.size,
+          membershipsPending: memSnap.size,
+        };
+      } catch (err) {
+        console.warn("Failed to query admin navbar counts:", err);
+      }
     }
   }
 

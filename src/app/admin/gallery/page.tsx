@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { getAdminSession } from "@/lib/admin-auth";
 import {
   getAllGalleryImagesAdmin,
@@ -18,7 +19,10 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminGalleryPage() {
-  await getAdminSession();
+  const session = await getAdminSession();
+  if (!session) {
+    redirect("/admin/login");
+  }
 
   let images: GalleryImage[] = [];
 
